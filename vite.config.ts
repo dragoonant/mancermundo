@@ -13,12 +13,11 @@ export default defineConfig(({ mode }) => ({
     rolldownOptions: {
       input: {
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
-        vfx: fileURLToPath(new URL('./vfx.html', import.meta.url)),
       },
       output: {
-        // two entries (index.html, vfx.html) put shared modules and the bundler runtime into a common chunk that the react
-        // chunk imports and that imports react back (an invalid cycle that left the runtime helper undefined and broke
-        // every page); strict execution order keeps such chunks valid. tools/vfx/chunk-cycles.mjs checks a build for them.
+        // with more than one entry (the vfx gallery returns in S5b) shared modules and the bundler runtime can land in a
+        // common chunk that the react chunk imports and that imports react back (an invalid cycle that left the runtime
+        // helper undefined and broke every page); strict execution order keeps such chunks valid.
         strictExecutionOrder: true,
         // The menus need only react, the engine and the data; three.js and react-three-fiber/drei belong to the lazily
         // loaded battle, team-builder preview and gallery chunks (App.tsx), so they stay out of the first load.
