@@ -69,3 +69,14 @@ export function Die({ n, small, kind }: { n: number | null; small?: boolean; kin
     </span>
   )
 }
+
+// Phone layout: every button, field and link inside a menu screen, the HUD or a prompt is at least 44 px tall (touch targets).
+const TOUCH_CSS = `
+html[data-ff="compact"] .ms-menu button, html[data-ff="compact"] .ms-menu input, html[data-ff="compact"] .ms-menu select,
+html[data-ff="compact"] .ms-touch button { min-height: 44px; touch-action: manipulation; }
+html[data-ff="compact"] .ms-menu a { display: inline-flex; align-items: center; min-height: 44px; }
+`
+
+export function TouchStyle() {
+  return <style>{TOUCH_CSS}</style>
+}

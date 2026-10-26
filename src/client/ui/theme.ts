@@ -69,3 +69,56 @@ export const scrollList: CSSProperties = {
   flexDirection: 'column',
   gap: 4,
 }
+
+// ---- the underhive look of the menu screens (start, gangs, briefing, end): rust and brass on soot, hazard stripes, grating
+export const hive = {
+  soot: '#0b0a0c',
+  steel: '#1a1a1f',
+  rust: '#b4531f',
+  rustDark: '#6e2f12',
+  brass: '#d6a23a',
+  chalk: '#e6dccb',
+}
+
+/** The page backdrop: a dark vignette with a faint grating, fixed behind the content. */
+export const hivePage: CSSProperties = {
+  position: 'fixed',
+  inset: 0,
+  overflowY: 'auto',
+  color: colors.text,
+  fontFamily: fontStack,
+  background: [
+    'radial-gradient(ellipse at 50% -10%, rgba(180,83,31,0.28) 0%, rgba(11,10,12,0) 55%)',
+    'repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 2px, rgba(0,0,0,0) 2px 14px)',
+    'repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 2px, rgba(0,0,0,0) 2px 14px)',
+    hive.soot,
+  ].join(', '),
+}
+
+/** A yellow-and-black hazard rule, 8px tall. */
+export const hazardStripe: CSSProperties = {
+  height: 8,
+  borderRadius: 2,
+  background: `repeating-linear-gradient(-45deg, ${hive.brass} 0 10px, #15130f 10px 20px)`,
+  opacity: 0.85,
+}
+
+/** A raised metal plate for menu sections. */
+export const plate: CSSProperties = {
+  background: 'linear-gradient(180deg, rgba(34,33,38,0.96), rgba(22,21,26,0.96))',
+  border: '1px solid rgba(214,162,58,0.22)',
+  borderRadius: 8,
+  boxShadow: '0 4px 18px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)',
+  color: colors.text,
+  fontFamily: fontStack,
+  boxSizing: 'border-box',
+}
+
+export const sectionTitle: CSSProperties = {
+  margin: 0,
+  fontSize: 12,
+  letterSpacing: '0.18em',
+  textTransform: 'uppercase',
+  color: hive.brass,
+  fontWeight: 800,
+}

@@ -1,12 +1,12 @@
-// Hoverable / tappable game terms. <Keyword term="Piercing 1"> underlines the text with a dotted line and shows what the term
-// means and does in play (src/client/game/glossary.ts) in the shared Tooltip. <KeywordText text="..."/> does the same for every
-// glossary term found in a plain sentence. Unknown terms render as plain text.
+// Hoverable / tappable game terms. <Keyword term="Pinned"> underlines the text with a dotted line and shows what the term means and
+// does in play (src/client/game/glossary.ts) in the shared Tooltip. <KeywordText text="..."/> does the same for every glossary term
+// found in a plain sentence. Unknown terms render as plain text.
 //
-// Touch: a tap on a keyword in running text opens its tooltip and is swallowed here; a keyword inside a button (an order card,
-// an option) lets the tap through, so a tap anywhere on the button presses it, as it does with a mouse. A mouse click always
-// falls through to the parent. Do not put a Keyword inside the child of another <Tooltip>: both would open.
+// Touch: a tap on a keyword in running text opens its tooltip and is swallowed here; a keyword inside a button (an option, a card)
+// lets the tap through, so a tap anywhere on the button presses it, as it does with a mouse. A mouse click always falls through to
+// the parent. Do not put a Keyword inside the child of another <Tooltip>: both would open.
 import { Fragment, memo, useRef, type ReactNode, type SyntheticEvent } from 'react'
-import { KIND_LABEL, linkTerms, lookupTerm, weaponRuleParts, type GlossaryEntry, type GlossaryKind, type WeaponRuleUseLike } from '../game/glossary'
+import { KIND_LABEL, linkTerms, lookupTerm, traitParts, type GlossaryEntry, type GlossaryKind, type TraitUseLike } from '../game/glossary'
 import { colors } from './theme'
 import { Tooltip } from './Tooltip'
 
@@ -55,7 +55,7 @@ export function Keyword({ term, kind, children }: { term: string; kind?: Glossar
   return <KeywordTip entry={entry}>{label}</KeywordTip>
 }
 
-/** Free text with every glossary term linked. Cheap: segments are cached per string. `keywords={false}` leaves operative keywords (and names such as Boss Nob) plain. */
+/** Free text with every glossary term linked. Cheap: segments are cached per string. `keywords={false}` leaves characteristic names and skills plain. */
 export const KeywordText = memo(function KeywordText({ text, keywords }: { text: string; keywords?: boolean }) {
   const segs = linkTerms(text, { keywords })
   if (segs.length === 1 && typeof segs[0] === 'string') return <>{text}</>
@@ -74,17 +74,17 @@ export const KeywordText = memo(function KeywordText({ text, keywords }: { text:
   )
 })
 
-/** The rules on one weapon profile, each its own keyword ("Piercing 1, Blast 2″"). Renders `empty` when there are none. */
-export function WeaponRules({ rules, empty = null }: { rules: readonly WeaponRuleUseLike[] | undefined; empty?: ReactNode }) {
-  if (!rules || rules.length === 0) return <>{empty}</>
+/** The traits on one weapon profile, each its own keyword ("Rapid Fire (2), Blast (3\")"). Renders `empty` when there are none. */
+export function TraitList({ traits, nameOf, empty = null }: { traits: readonly TraitUseLike[] | undefined; nameOf: (id: string) => string; empty?: ReactNode }) {
+  if (!traits || traits.length === 0) return <>{empty}</>
   return (
     <>
-      {rules.map((r, i) => {
-        const { term, label } = weaponRuleParts(r)
+      {traits.map((t, i) => {
+        const { term, label } = traitParts(t, nameOf)
         return (
-          <Fragment key={`${r.rule}-${i}`}>
+          <Fragment key={`${t.trait}-${i}`}>
             {i > 0 && ', '}
-            <Keyword term={term} kind="weaponRule">
+            <Keyword term={term} kind="trait">
               {label}
             </Keyword>
           </Fragment>

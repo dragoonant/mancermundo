@@ -1,12 +1,14 @@
-// App shell: routes between the quick-setup screen and the battle from the session store; ?test=1 skips the menus and starts a
-// battle with the default gangs. The lab viewer (?lab) is routed by src/main.tsx. S5c puts the gang picker, briefing and end
-// screen into the same flow.
+// App shell: routes between the start screen, the gang picker, the briefing and the battle from the session store; ?test=1 skips the
+// menus and starts a battle with the default gangs. The lab viewer (?lab) is routed by src/main.tsx. The end screen is part of the battle.
 import { lazy, Suspense, useEffect } from 'react'
 import { loadBodyManifest } from './figures/bodyManifest'
 import { currentParams } from './params'
 import { installTestHooks } from './store/testHooks'
 import { startFromParams, useSession } from './store/session'
-import { QuickSetup } from './ui/QuickSetup'
+import { Briefing } from './ui/Briefing'
+import { GangPicker } from './ui/GangPicker'
+import { StartScreen } from './ui/StartScreen'
+import { TouchStyle } from './ui/widgets'
 
 // The 3D scene (three.js, react-three-fiber, drei) loads on demand so the start screen is light.
 const loadBattle = () => import('./ui/BattleScreen')
@@ -42,12 +44,20 @@ export function App() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  if (screen === 'battle') {
-    return (
-      <Suspense fallback={<Loading />}>
-        <BattleScreen />
-      </Suspense>
-    )
-  }
-  return <QuickSetup />
+  return (
+    <>
+      <TouchStyle />
+      {screen === 'battle' ? (
+        <Suspense fallback={<Loading />}>
+          <BattleScreen />
+        </Suspense>
+      ) : screen === 'gangs' ? (
+        <GangPicker />
+      ) : screen === 'briefing' ? (
+        <Briefing />
+      ) : (
+        <StartScreen />
+      )}
+    </>
+  )
 }

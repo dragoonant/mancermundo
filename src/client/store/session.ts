@@ -1,17 +1,25 @@
-// Menu-flow store: which screen is showing and the pre-game configuration (seats, scenario, board, starter gangs, seed). The game
-// itself lives in store/game.ts; this store only hands it a NewGameOptions. S5c grows the flow (gang picker, briefing, end screen).
+// Menu-flow store: which screen is showing (start -> gang picker -> briefing -> battle) and the pre-game configuration (opponent,
+// seat, scenario, board, starter gangs, seed). The game itself lives in store/game.ts; this store only hands it a NewGameOptions.
 import { create } from 'zustand'
 import type { Seat } from '@/engine'
 import { dataBundle, type SeatBuild } from '../game/adapter'
 import { defaultStarters, resolveBoard, resolveScenario, resolveStarter } from '../game/defaults'
 import type { SeatMode, UrlParams } from '../params'
+import { buildFixture } from '../dev/scenarios'
+import { useUi } from '../ui/uiStore'
 import { useGame, type NewGameOptions } from './game'
 import { clearSave, DISCARD_MESSAGE, readSave, summarize, type DiscardReason, type SaveSummary } from './saveGame'
 
-export type Screen = 'start' | 'battle'
+export type Screen = 'start' | 'gangs' | 'briefing' | 'battle'
+
+/** Who sits opposite: the random bot (you take one seat) or a second player on this screen (hotseat). */
+export type Opponent = 'bot' | 'hotseat'
 
 export interface Session {
   screen: Screen
+  opponent: Opponent
+  /** the seat you play against the bot (ignored in hotseat) */
+  humanSeat: Seat
   seats: Record<Seat, SeatMode>
   seed: string
   scenarioId: string
@@ -35,11 +43,16 @@ export interface Session {
   abandonGame(): void
   dismissSaveNotice(): void
   setSeat(seat: Seat, mode: SeatMode): void
+  setOpponent(opponent: Opponent): void
+  setHumanSeat(seat: Seat): void
+  setScreen(screen: Screen): void
   setSeed(seed: string): void
   setScenario(id: string): void
   setBoard(id: string): void
   setStarter(seat: Seat, starterId: string): void
   launch(prepare?: NewGameOptions['prepare']): void
+  /** start again with the same settings and a fresh seed */
+  playAgain(): void
   /** exchange the two sides (gangs, human/bot) and start again with a fresh seed */
   swapSeats(): void
   backToMenu(): void
@@ -49,11 +62,24 @@ export function randomSeed(): string {
   return `ms-${Math.floor(Math.random() * 1_000_000).toString(36)}`
 }
 
-function initial(): Pick<Session, 'seats' | 'seed' | 'scenarioId' | 'boardId' | 'builds'> {
+export function seatsFor(opponent: Opponent, humanSeat: Seat): Record<Seat, SeatMode> {
+  if (opponent === 'hotseat') return { A: 'human', B: 'human' }
+  return { A: humanSeat === 'A' ? 'human' : 'bot', B: humanSeat === 'B' ? 'human' : 'bot' }
+}
+
+/** The opponent and the human seat that a pair of seat modes means (a save, the address). */
+export function describeSeats(seats: Record<Seat, SeatMode>): { opponent: Opponent; humanSeat: Seat } {
+  if (seats.A === 'human' && seats.B === 'human') return { opponent: 'hotseat', humanSeat: 'A' }
+  return { opponent: 'bot', humanSeat: seats.B === 'human' ? 'B' : 'A' }
+}
+
+function initial(): Pick<Session, 'opponent' | 'humanSeat' | 'seats' | 'seed' | 'scenarioId' | 'boardId' | 'builds'> {
   const b = dataBundle()
   const scn = resolveScenario(b, null)
   const starters = defaultStarters(b)
   return {
+    opponent: 'bot',
+    humanSeat: 'A',
     seats: { A: 'human', B: 'bot' },
     seed: randomSeed(),
     scenarioId: scn.id,
@@ -108,7 +134,7 @@ export const useSession = create<Session>((set, get) => ({
       return false
     }
     const m = env.meta
-    set({ seats: { ...m.seats }, seed: m.seed, scenarioId: m.scenarioId, boardId: m.boardId, builds: m.builds, saveNotice: null, confirmReplace: false, screen: 'battle' })
+    set({ ...describeSeats(m.seats), seats: { ...m.seats }, seed: m.seed, scenarioId: m.scenarioId, boardId: m.boardId, builds: m.builds, saveNotice: null, confirmReplace: false, screen: 'battle' })
     return true
   },
   requestLaunch() {
@@ -127,12 +153,16 @@ export const useSession = create<Session>((set, get) => ({
   },
   dismissSaveNotice: () => set({ saveNotice: null }),
   setSeat: (seat, mode) => set((s) => ({ seats: { ...s.seats, [seat]: mode } })),
+  setOpponent: (opponent) => set((s) => ({ opponent, seats: seatsFor(opponent, s.humanSeat) })),
+  setHumanSeat: (humanSeat) => set((s) => ({ humanSeat, seats: seatsFor(s.opponent, humanSeat) })),
+  setScreen: (screen) => set({ screen }),
   setSeed: (seed) => set({ seed }),
   setScenario: (scenarioId) => set({ scenarioId, boardId: resolveBoard(dataBundle(), scenarioId, get().boardId) }),
   setBoard: (boardId) => set({ boardId }),
   setStarter: (seat, starterId) => set((s) => ({ builds: { ...s.builds, [seat]: { starterId } } })),
   launch(prepare) {
     const s = get()
+    useUi.setState({ selected: null, hoverFighter: null, hoverOption: null })
     useGame.getState().newGame({
       builds: s.builds,
       seats: s.seats,
@@ -144,9 +174,14 @@ export const useSession = create<Session>((set, get) => ({
     set({ screen: 'battle', saveNotice: null, confirmReplace: false })
     get().refreshSave()
   },
+  playAgain() {
+    set({ seed: randomSeed() })
+    get().launch()
+  },
   swapSeats() {
     const s = get()
-    set({ builds: { A: s.builds.B, B: s.builds.A }, seats: { A: s.seats.B, B: s.seats.A }, seed: randomSeed() })
+    const seats = { A: s.seats.B, B: s.seats.A }
+    set({ builds: { A: s.builds.B, B: s.builds.A }, seats, ...describeSeats(seats), seed: randomSeed() })
     get().launch()
   },
   backToMenu() {
@@ -164,12 +199,29 @@ export function startFromParams(p: UrlParams): void {
   const defaults = defaultStarters(b)
   const a = p.starters ? resolveStarter(b, p.starters[0], 0).id : p.gangs ? resolveStarter(b, p.gangs[0], 0).id : defaults.A
   const bb = p.starters ? resolveStarter(b, p.starters[1], 1).id : p.gangs ? resolveStarter(b, p.gangs[1], 1).id : defaults.B
+  const seats = { A: p.seats[0], B: p.seats[1] }
   useSession.setState({
-    seats: { A: p.seats[0], B: p.seats[1] },
+    ...describeSeats(seats),
+    seats,
     seed: p.seed ?? 'test',
     scenarioId: scn.id,
     boardId: resolveBoard(b, scn.id, p.board),
     builds: { A: { starterId: a }, B: { starterId: bb } },
   })
-  useSession.getState().launch()
+  const fixture = p.fixture
+  if (!fixture) {
+    useSession.getState().launch()
+    return
+  }
+  let select: string | null = null
+  useSession.getState().launch((state) => {
+    const built = buildFixture(fixture, state)
+    if (!built) {
+      console.warn(`[fixture] ${fixture} could not be reached; opening the battle at its start`)
+      return state
+    }
+    select = built.select
+    return built.state
+  })
+  if (select) useUi.setState({ selected: select })
 }

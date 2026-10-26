@@ -1,19 +1,20 @@
 // The battle screen: canvas, HUD, event feed, fighter card, decision prompt, banner and toasts. Phase changes and the Priority
-// roll show as short banners; a plain result panel takes over when the battle is over and presented (S5c brings the full end screen).
+// roll show as short banners; the end screen takes over when the battle is over and presented.
 import { useEffect, type CSSProperties } from 'react'
 import { BoardCanvas } from '../board/Board'
 import { cancelDecision, rotateFacing } from '../interaction/controller'
-import { gangName } from '../game/labels'
 import { useAnnouncementStore } from '../presentation/announceStore'
 import { useFeedStore } from '../presentation/feedStore'
 import { useDisplayState, useSettled } from '../presentation/presentedStore'
 import { useGame } from '../store/game'
-import { useSession } from '../store/session'
 import { BattleHud } from './BattleHud'
+import { CasualtyTray } from './CasualtyTray'
 import { DecisionPrompt } from './DecisionPrompt'
+import { EndScreen } from './EndScreen'
 import { EventFeed } from './EventFeed'
 import { FighterStrip } from './FighterStrip'
 import { RotatePrompt } from './RotatePrompt'
+import { ScenarioPanel } from './ScenarioPanel'
 import { useFormFactor } from './formFactor'
 import { colors, fontStack, panel } from './theme'
 import { useUi } from './uiStore'
@@ -71,29 +72,6 @@ function Toasts() {
   )
 }
 
-/** A plain result panel (S5c replaces it with the end screen: casualties, points by source, replay). */
-function ResultPanel() {
-  const state = useDisplayState()
-  const swapSeats = useSession((s) => s.swapSeats)
-  const backToMenu = useSession((s) => s.backToMenu)
-  if (!state?.result) return null
-  const r = state.result
-  return (
-    <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', background: 'rgba(5,5,10,0.55)', zIndex: 60, fontFamily: fontStack }}>
-      <div data-testid="result" style={{ ...panel, padding: '20px 28px', textAlign: 'center', minWidth: 300, borderTop: `4px solid ${r.winner === 'draw' ? colors.accent : seatColor(r.winner)}` }}>
-        <div style={{ fontSize: 22, fontWeight: 800 }}>{r.winner === 'draw' ? 'A draw' : `${gangName(state, r.winner)} wins`}</div>
-        <div style={{ color: colors.muted, margin: '6px 0 14px', fontSize: 13 }}>
-          {gangName(state, 'A')} {r.points.A} - {r.points.B} {gangName(state, 'B')} · {r.reason === 'scenario' ? 'by the scenario' : r.reason === 'roundLimit' ? 'at the round limit' : r.reason}
-        </div>
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-          <Btn variant="primary" data-testid="rematch" onClick={swapSeats}>Rematch (swap sides)</Btn>
-          <Btn data-testid="to-menu" onClick={backToMenu}>Main menu</Btn>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export function BattleScreen() {
   const state = useDisplayState()
   const settled = useSettled()
@@ -118,12 +96,14 @@ export function BattleScreen() {
   }, [decisionId])
   const over = !!state && state.phase === 'ended' && settled
   const column: CSSProperties = { position: 'absolute', left: 8, bottom: 10, display: 'flex', flexDirection: 'column', gap: 6, zIndex: 15, pointerEvents: 'none', maxWidth: 'calc(100vw - 16px)' }
-  const rail: CSSProperties = { position: 'absolute', top: ff.compact ? 120 : 76, right: 8, display: 'flex', flexDirection: 'column', gap: 6, zIndex: 20, pointerEvents: 'none' }
+  const rail: CSSProperties = { position: 'absolute', top: ff.compact ? 112 : 76, right: 8, display: 'flex', flexDirection: 'column', gap: 6, zIndex: 20, pointerEvents: 'none' }
   return (
     <div data-testid="battle" data-phase={state?.phase} data-round={state?.round} style={{ position: 'fixed', inset: 0, overflow: 'hidden', background: '#0a0a10' }}>
       <BoardCanvas />
       <div style={{ position: 'absolute', inset: 0, padding: 'var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left)', pointerEvents: 'none' }}>
         <BattleHud />
+        <CasualtyTray />
+        <ScenarioPanel />
         {!ff.compact && (
           <div style={column}>
             <EventFeed />
@@ -139,7 +119,7 @@ export function BattleScreen() {
         <Toasts />
       </div>
       <RotatePrompt />
-      {over && <ResultPanel />}
+      {over && <EndScreen />}
     </div>
   )
 }

@@ -242,7 +242,7 @@ function chooseLabel(p: Extract<DecisionOption['action'], { type: 'action.choose
   }
 }
 
-const HANDLED_FACTS = new Set(['maxInches', 'chance', 'need', 'plentiful', 'helpers', 'distance', 'band', 'cover', 'priority', 'hit', 'pHit', 'weapons', 'targets', 'doors', 'point', 'template', 'cost', 'auto', 'bonus', 'to', 'doorId', 'exit', 'from', 'contentsModifier'])
+const HANDLED_FACTS = new Set(['maxInches', 'chance', 'need', 'plentiful', 'helpers', 'distance', 'band', 'cover', 'priority', 'hit', 'pHit', 'weapons', 'targets', 'doors', 'point', 'template', 'cost', 'auto', 'bonus', 'to', 'doorId', 'exit', 'from', 'contentsModifier', 'pReach', 'visible', 'dice', 'reach', 'needs', 'perWeapon', 'weaponId'])
 const plural = (n: number, one: string, many = `${one}s`): string => `${n} ${n === 1 ? one : many}`
 
 /** Short engine facts to show beside an option's button: ranges, odds, needs (all read from `option.data`). */
@@ -263,6 +263,10 @@ export function optionFacts(opt: DecisionOption): string[] {
   if (typeof d.priority === 'string' && d.priority !== 'free') add(d.priority === 'closest' ? 'closest target' : 'priority test')
   if (typeof d.hit === 'number') add(`${pct(d.hit)} to hit`)
   if (typeof d.pHit === 'number') add(`${pct(d.pHit)} to hit`)
+  if (typeof d.pReach === 'number') add(`${pct(d.pReach)} to reach`)
+  if (d.visible === false) add('not in sight: -1 to hit')
+  if (typeof d.dice === 'number') add(`${d.dice} attack dice`)
+  if (d.reach === true) add('at weapon reach')
   if (d.auto === true) add('no roll needed')
   if (typeof d.cost === 'string') add(`${humanize(d.cost).toLowerCase()} action`)
   if (typeof d.weapons === 'number') add(d.weapons === 0 ? 'no weapon ready' : plural(d.weapons, 'weapon'))

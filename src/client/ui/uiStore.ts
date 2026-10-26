@@ -26,6 +26,10 @@ interface UiState {
   /** the verdict of the current hover position for the pending continuous decision */
   hoverNote: { ok: boolean; text: string } | null
   feedOpen: boolean
+  /** the scenario panel (objective, how to win, score) is open */
+  scenarioOpen: boolean
+  /** phone layout: the fighter card is open as a sheet (it is a small button otherwise) */
+  cardOpen: boolean
   cameraPreset: { id: CameraRequest; nonce: number } | null
   set(p: Partial<UiState>): void
   resetDecision(): void
@@ -43,6 +47,8 @@ export const useUi = create<UiState>((set) => ({
   hover: null,
   hoverNote: null,
   feedOpen: true,
+  scenarioOpen: false,
+  cardOpen: false,
   cameraPreset: null,
   set: (p) => set(p),
   resetDecision: () => set({ facing: null, focusDoor: null, hover: null, hoverNote: null, hoverOption: null }),

@@ -5,9 +5,14 @@
 import { useState, type CSSProperties, type ReactNode } from 'react'
 import { act, query, suggest, type DecisionOption, type GameState, type PendingDecision } from '@/engine'
 import { deployFacing, deployFighterFor, rotateFacing, cancelDecision } from '../interaction/controller'
-import { decisionHelp, decisionTitle, facingName, fighterName, optionFacts, optionLabel, withheldText, actionName, humanize, postureWord } from '../game/labels'
+import { facingName, fighterName, optionFacts, optionLabel, withheldText, actionName, humanize, postureWord } from '../game/labels'
+import { decisionInfo } from '../game/promptLabels'
 import { useSettled } from '../presentation/presentedStore'
 import { humanToAct, useGame } from '../store/game'
+import { AimPrompt, AllocatePrompt, FightAfterPrompt, FightSplitPrompt, FightWeaponsPrompt, TargetPrompt, WeaponPrompt } from './AttackPrompts'
+import { AssistPrompt, BottlePrompt, ConfirmPrompt, CrewPrompt, RecoveryPickPrompt, RerollPrompt, RolePrompt, SkillChoicePrompt, ZonePrompt } from './GamePrompts'
+import { Keyword, KeywordText } from './Keyword'
+import { Why } from './promptParts'
 import { Tooltip } from './Tooltip'
 import { useFormFactor } from './formFactor'
 import { colors, fontStack, panel } from './theme'
@@ -34,7 +39,15 @@ function OptionButton({ opt, state, variant = 'base' }: { opt: DecisionOption; s
       }}
       style={{ ...optionRow, whiteSpace: 'normal' }}
     >
-      <span>{optionLabel(opt, state)}</span>
+      <span>
+        {opt.action.type === 'action.choose' ? (
+          <Keyword term={actionName(state, opt.action.payload.action)} kind="action">
+            {optionLabel(opt, state)}
+          </Keyword>
+        ) : (
+          optionLabel(opt, state)
+        )}
+      </span>
       {facts.length > 0 && <span style={factStyle}>{facts.join(' · ')}</span>}
     </Btn>
   )
@@ -274,22 +287,6 @@ function MovePrompt({ pending, state }: { pending: PendingDecision; state: GameS
   )
 }
 
-function AimPrompt({ pending, state }: { pending: PendingDecision; state: GameState }) {
-  const dispatch = useGame((s) => s.dispatch)
-  const raw = pending.context.suggestions
-  const suggestions = Array.isArray(raw) ? (raw as { x?: number; z?: number; hits?: string[] }[]).filter((s) => typeof s.x === 'number' && typeof s.z === 'number') : []
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-      {suggestions.map((s, i) => (
-        <Btn key={i} onClick={() => dispatch(act.aim(pending, { x: s.x!, z: s.z! }))} style={{ ...optionRow }}>
-          <span>Suggested aim {i + 1}</span>
-          <span style={factStyle}>{(s.hits ?? []).map((h) => fighterName(state, h)).join(', ') || 'no one in the blast'}</span>
-        </Btn>
-      ))}
-    </div>
-  )
-}
-
 function CasketPrompt({ pending, state }: { pending: PendingDecision; state: GameState }) {
   const dispatch = useGame((s) => s.dispatch)
   return (
@@ -312,13 +309,43 @@ function Body({ pending, state }: { pending: PendingDecision; state: GameState }
     case 'action.activate':
     case 'action.group':
     case 'action.flee':
-    case 'setup.crew':
       return <FighterPick pending={pending} state={state} />
-    case 'shoot.aim':
-      return <AimPrompt pending={pending} state={state} />
+    case 'setup.role':
+      return <RolePrompt pending={pending} state={state} />
+    case 'setup.zone':
+      return <ZonePrompt pending={pending} state={state} />
+    case 'setup.crew':
+      return <CrewPrompt pending={pending} state={state} />
     case 'setup.casket':
       return <CasketPrompt pending={pending} state={state} />
+    case 'shoot.weapon':
+      return <WeaponPrompt pending={pending} state={state} />
+    case 'shoot.target':
+      return <TargetPrompt pending={pending} state={state} />
+    case 'shoot.aim':
+      return <AimPrompt pending={pending} state={state} />
+    case 'shoot.allocate':
+      return <AllocatePrompt pending={pending} state={state} />
+    case 'fight.weapons':
+      return <FightWeaponsPrompt pending={pending} state={state} />
+    case 'fight.split':
+      return <FightSplitPrompt pending={pending} state={state} />
+    case 'fight.after':
+      return <FightAfterPrompt pending={pending} state={state} />
+    case 'end.bottle':
+      return <BottlePrompt pending={pending} state={state} />
+    case 'end.assist':
+      return <AssistPrompt pending={pending} state={state} />
+    case 'end.recoveryPick':
+      return <RecoveryPickPrompt pending={pending} state={state} />
+    case 'skill.choice':
+      return <SkillChoicePrompt pending={pending} state={state} />
+    case 'dice.reroll':
+      return <RerollPrompt pending={pending} state={state} />
+    case 'confirm':
+      return <ConfirmPrompt pending={pending} state={state} />
     default:
+      // a decision kind the engine adds later still plays through the generic list
       return <OptionList pending={pending} state={state} />
   }
 }
@@ -354,13 +381,18 @@ export function DecisionPrompt(): ReactNode {
       </div>
     )
   }
-  const help = decisionHelp(pending)
+  const info = decisionInfo(pending, state)
   // a phone leaves the board its height: the prompt shrinks and sits lower
-  const fit: CSSProperties = ff.compact ? { maxHeight: '46vh', bottom: 6, padding: '6px 10px' } : {}
+  const fit: CSSProperties = ff.compact ? { maxHeight: '54vh', bottom: 6, padding: '6px 10px' } : {}
   return (
-    <div data-testid="prompt" data-kind={pending.kind} data-decision={pending.id} style={{ ...frame, ...fit, borderTop: `4px solid ${seatColor(pending.seat)}` }}>
-      <div style={{ fontWeight: 800, fontSize: 15, marginBottom: help ? 2 : 8 }}>{decisionTitle(pending, state)}</div>
-      {help && <div style={{ ...factStyle, marginBottom: 8, lineHeight: 1.35 }}>{help}</div>}
+    <div className="ms-touch" data-testid="prompt" data-kind={pending.kind} data-decision={pending.id} style={{ ...frame, ...fit, borderTop: `4px solid ${seatColor(pending.seat)}` }}>
+      <div data-testid="prompt-title" style={{ fontWeight: 800, fontSize: 15, marginBottom: info.hint ? 2 : 8 }}>{info.title}</div>
+      {info.hint && !(ff.compact && pending.kind === 'shoot.target') && (
+        <div style={{ ...factStyle, marginBottom: ff.compact || !info.why ? 8 : 2, lineHeight: 1.35 }}>
+          <KeywordText text={info.hint} keywords={false} />
+        </div>
+      )}
+      {!ff.compact && info.why && <div style={{ marginBottom: 8 }}><Why text={info.why} /></div>}
       <Body pending={pending} state={state} />
       {pending.canPass && pending.kind !== 'move.path' && !(pending.options ?? []).some((o) => o.action.type === 'pass') && (
         <Btn data-testid="opt-pass" style={{ marginTop: 6 }} onClick={() => useGame.getState().pass()}>

@@ -92,6 +92,10 @@ test('play: deploy, open a door, move, end the round against the random bot', as
   }
   expect(await phase(page)).toBe('action')
   await page.screenshot({ path: 'tools/out/s5a-play-1-deployed.png' })
+  // S5c: the HUD shows the round, the phase and who holds Priority
+  await expect(page.getByTestId('hud-round')).toContainText('Round 1')
+  await expect(page.getByTestId('hud-phase')).toContainText('Action phase')
+  await expect(page.locator('[data-testid^="priority-"]')).toHaveCount(1)
 
   // ---- the Action phase: activate the fighter that stands beside the door by clicking it on the board
   expect(doorId).not.toBeNull()
@@ -104,6 +108,10 @@ test('play: deploy, open a door, move, end the round against the random bot', as
   await focusOn(page, doorFighter.x, doorFighter.z)
   const fp = await pixel(page, doorFighter.x, 1, doorFighter.z)
   await page.mouse.click(fp.x, fp.y)
+  // S5c: the fighter's card shows all twelve characteristics, wounds and weapons
+  await expect(page.getByTestId('fighter-card')).toHaveAttribute('data-fighter', doorFighter.id)
+  await expect(page.getByTestId('fighter-card').locator('[data-stat]')).toHaveCount(12)
+  await expect(page.getByTestId('fighter-card').getByTestId('card-wounds')).toBeVisible()
   // a leader or champion may bring a group along: decline it
   await page.waitForFunction(() => ['action.choose', 'action.group'].includes((window as any).__ms.getPending()?.kind))
   if ((await kind(page)) === 'action.group') await page.getByTestId('opt-done').click()
@@ -159,7 +167,12 @@ test('play: deploy, open a door, move, end the round against the random bot', as
     }
     else if (k === 'move.path') await page.getByTestId('move-cancel').click()
     else if (k === 'setup.deploy') await page.getByTestId('deploy-auto').click()
-    else if (k) await page.locator('[data-testid^="opt-"]').first().click()
+    else if (k) {
+      // S5c: a shoot target prompt shows the engine's odds on every card; a weapon prompt shows the profiles
+      if (k === 'shoot.target' && (await page.getByTestId('odds-hit').count())) await expect(page.getByTestId('odds-hit').first()).toContainText('%')
+      if (k === 'shoot.weapon') await expect(page.getByTestId('weapon-cards')).toBeVisible()
+      await page.locator('[data-testid^="opt-"]').first().click()
+    }
   }
   if (shot) await expect(page.getByTestId('event-feed')).toContainText('shoots with')
   else test.info().annotations.push({ type: 'todo', description: 'Shoot was never offered to the human this round; assert the shot in the feed when it is' })

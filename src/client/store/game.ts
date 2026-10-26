@@ -319,6 +319,14 @@ export const useGame = create<GameStore>((set, get) => {
   }
 })
 
+/**
+ * Apply one action to a state without touching the store (dev fixtures play the engine forward with it). The store stays the only
+ * module that calls the engine's `step`.
+ */
+export function stepDetached(state: GameState, action: Action): ReturnType<typeof step> {
+  return step(state, action)
+}
+
 /** Seat whose decision is pending and who is a human (the UI may act for it). */
 export function humanToAct(): Seat | null {
   const { pending, seats, state } = useGame.getState()
