@@ -57,7 +57,7 @@ describe('query: derived status, effective characteristics and the engine-owned 
     expect(menu.options.map((o) => o.payload)).toEqual(r.pending!.options!.map((o) => o.action.payload))
     expect(menu).toMatchObject({ status: 'standingActive', actionsLeft: 2, canTurn: true })
     const reasons = new Map(menu.withheld.map((w) => [w.action, w.reason]))
-    expect(reasons.get('charge')).toBe('later') // close combat arrives in S3b; Shoot is offered since S3a
+    expect(reasons.get('charge')).toBe('noTarget') // no enemy within M + 3; Shoot is offered since S3a
     expect(menu.options.some((o) => o.payload.action === 'shoot')).toBe(true)
     expect(reasons.get('operateDoor')).toBe('noTarget')
     expect(reasons.has('standUp')).toBe(false) // not a Standing action at all

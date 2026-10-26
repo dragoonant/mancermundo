@@ -1,6 +1,6 @@
 // step(): envelope checks -> dispatch to the owner of pending.kind -> afterAction -> log + hash.
 // Rejections never throw and return the SAME state reference.
-import { drainNerve } from './casualties'
+import { drainNerve } from './fight'
 import { refreshEngagement } from './measure'
 import { moduleFor } from './modules'
 import { SeededRng, type Rng } from './rng'
@@ -73,7 +73,7 @@ export function validate(state: GameState, action: Action): Rejection | null {
  */
 function afterAction(ctx: Ctx): void {
   refreshEngagement(ctx)
-  // TODO(S3b): drainNerve resolves the queued nerve tests; until then it drops them
+  // nerve tests still owed (an action normally settles its own through activation.continueActivation); re-raises the decision
   drainNerve(ctx)
 }
 

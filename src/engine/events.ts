@@ -104,6 +104,8 @@ export type GameEventBody =
   | { type: 'Consolidated'; fighterId: string }
   // morale
   | { type: 'NerveTest'; fighterId: string; roll: number; need: number; passed: boolean }
+  // the Initiative tests of Retreat / Running for Cover from combat and of the enemies reacting to them (additive, S3b)
+  | { type: 'InitiativeTest'; fighterId: string; roll: number; need: number; passed: boolean; reason: string }
   | { type: 'RunningForCover'; fighterId: string }
   | { type: 'BottleTest'; seat: Seat; roll: number; down: number; crew: number; bottled: boolean; voluntary: boolean }
   | { type: 'FleeTest'; fighterId: string; roll: number; need: number; passed: boolean }

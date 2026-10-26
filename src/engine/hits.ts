@@ -3,14 +3,16 @@
 // further point roll an Injury dice, all dice of one hit rolled together and applied with the N23 stacking (any Out of
 // Action wins; the first Seriously Injured lays the fighter down, every further one is a Flesh Wound; Flesh Wounds lower T
 // and T 0 is Out of Action). Gas, Toxin and Flash replace the wound roll; Melta turns the Injury dice into Out of Action;
-// Scattershot, Shred, Rending, Knockback, Blaze and Concussion act on the hit. Also here: pinning (R-8.7), Blast markers
-// (R-9.5), door targets (R-15.8), and the S2 ports (door closing on a fighter, frag-trap casket) get their resolver.
+// Scattershot, Shred, Rending, Knockback, Blaze and Concussion act on the hit; the close-combat traits that change it are
+// Shock (no wound roll), Power (no save, +1 Damage, both set by fight.ts on a natural 6), Pulverise (a Flesh Wound becomes
+// Seriously Injured) and Sever (every Injury dice is Out of Action). Also here: pinning (R-8.7), Blast markers (R-9.5), door
+// targets (R-15.8), and the S2 ports (door closing on a fighter, frag-trap casket) get their resolver.
 import { blockers, coverFrom, targetSamples } from './los'
 import { damageDoor } from './board'
 import { injuryFace, rollExpr, toxinPasses, woundNeed, d6TestPasses } from './dice'
 import { runHook } from './hooks'
-import { refreshEngagement } from './measure'
-import { knockbackPush } from './movement'
+import { inContact, refreshEngagement } from './measure'
+import { afterInvoluntary, knockbackPush, slide, placeAlong } from './movement'
 import { registerBlastPort, registerHitPort } from './ports'
 import { stat } from './query'
 import type { Ctx } from './registry'
@@ -48,6 +50,12 @@ export interface HitInput {
   saves: boolean
   /** cause for the casualty log ('weapon id', 'door', 'casket', 'blaze', ...) */
   cause: string
+  /** Shock on a natural 6 to hit: the hit wounds without a wound roll (R-14.3) */
+  autoWound?: boolean
+  /** extra Damage on the first wounding hit (Power on a natural 6) */
+  extraDamage?: number
+  /** a melee attacker that follows up a Knockback to stay in base contact (ruling: always, when in base contact) */
+  followUp?: string | null
 }
 
 const has = (h: HitInput, id: string) => h.traits.some((t) => t.trait === id)
@@ -107,14 +115,19 @@ export function applyInjuries(ctx: Ctx, t: Fighter, results: readonly string[], 
   return applied
 }
 
-/** Roll `n` Injury dice together for one hit and apply them (Melta: every die is Out of Action, no roll). */
-export function rollInjuries(ctx: Ctx, t: Fighter, n: number, h: Pick<HitInput, 'attackerId' | 'cause' | 'melta' | 'weaponId'>): void {
+type InjurySource = Pick<HitInput, 'attackerId' | 'cause' | 'melta' | 'weaponId'> & { traits?: readonly TraitRef[] }
+
+/**
+ * Roll `n` Injury dice together for one hit and apply them. Melta and Sever: every die is Out of Action, no roll (R-11.11).
+ * Pulverise: after the roll a D6 >= the target's T (or a natural 6) turns one Flesh Wound into Seriously Injured (R-14.3).
+ */
+export function rollInjuries(ctx: Ctx, t: Fighter, n: number, h: InjurySource): void {
   let dice = n
   for (const r of runHook('injury.dice', { seat: t.seat, state: ctx.state, engine: ctx, fighterId: t.id, ...(h.attackerId ? { targetId: h.attackerId } : {}), data: { dice } })) {
     if (r.delta) dice += r.delta
   }
   if (dice <= 0) return
-  if (h.melta) {
+  if (h.melta || h.traits?.some((x) => x.trait === T.sever)) {
     ctx.emit({ type: 'InjuryRolled', targetId: t.id, faces: Array.from({ length: dice }, () => 'outOfAction'), applied: 'outOfAction' }, t.seat)
     takeOutOfAction(ctx, t, h.attackerId, h.cause)
     return
@@ -122,6 +135,10 @@ export function rollInjuries(ctx: Ctx, t: Fighter, n: number, h: Pick<HitInput, 
   const raw = ctx.roll('injury', dice, 'injury')
   const faces = raw.map((d) => injuryFace(ctx.state, d))
   const results = faces.slice()
+  if (h.traits?.some((x) => x.trait === T.pulverise) && results.includes('fleshWound')) {
+    const roll = ctx.roll('pulverise', 1)[0]!
+    if (roll === 6 || roll >= stat(ctx.state, t.id, 'T')) results[results.indexOf('fleshWound')] = 'seriouslyInjured'
+  }
   runHook('injury.applied', { seat: t.seat, state: ctx.state, engine: ctx, fighterId: t.id, data: { results } })
   // emitted before the results apply so the client shows the dice first; `applied` is filled in once they have
   ctx.emit({ type: 'InjuryRolled', targetId: t.id, faces: faces.slice(), applied: '' }, t.seat)
@@ -131,7 +148,7 @@ export function rollInjuries(ctx: Ctx, t: Fighter, n: number, h: Pick<HitInput, 
 }
 
 /** Damage (R-11.7): each point removes a Wound; the point that reaches 0 and every further point is one Injury dice. */
-export function applyDamage(ctx: Ctx, t: Fighter, amount: number, h: Pick<HitInput, 'attackerId' | 'cause' | 'melta' | 'weaponId'>): void {
+export function applyDamage(ctx: Ctx, t: Fighter, amount: number, h: InjurySource): void {
   let dice = 0
   for (let i = 0; i < amount; i++) {
     if (t.wounds > 0) {
@@ -185,8 +202,17 @@ export function resolveHit(ctx: Ctx, h: HitInput): void {
   if (has(h, T.knockback) && h.hitRoll !== null && h.knockFrom) {
     if (h.hitRoll >= stat(s, t.id, 'S')) {
       const k = constants(s).knockback
+      const follower = h.followUp ? s.fighters[h.followUp] : undefined
+      // a melee attacker in base contact (not across a barricade) follows up by the same vector (ruling: it always does)
+      const follows = !!follower && follower.location === 'board' && inContact(follower, t)
       const push = knockbackPush(ctx, t, h.knockFrom, k.distance)
       if (push.blocked) bonusDamage += k.blockedDamageBonus
+      if (follows && push.moved > 0) {
+        const len = Math.hypot(push.shift.x, push.shift.z)
+        const to = slide(s, follower, push.shift.x / len, push.shift.z / len, len)
+        if (Math.hypot(to.x - follower.pos.x, to.z - follower.pos.z) > 0) placeAlong(ctx, follower, 'knockback', to, len)
+      }
+      afterInvoluntary(ctx, t, follows ? [follower.id] : [])
       refreshEngagement(ctx)
     }
   }
@@ -212,6 +238,19 @@ export function resolveHit(ctx: Ctx, h: HitInput): void {
   const woundRolls = has(h, T.scattershot) ? ctx.roll('scattershot', 1)[0]! : 1
   for (let i = 0; i < woundRolls && t.location === 'board'; i++) {
     const toughness = stat(s, t.id, 'T')
+    if (h.autoWound) {
+      // Shock: a natural 6 to hit wounds automatically
+      ctx.emit({ type: 'WoundRolled', targetId: t.id, roll: 0, need: 0, wounded: true, auto: true }, t.seat)
+      if (saveRoll(ctx, t, h, h.ap)) continue
+      let amount = rollDamage(ctx, h.damage)
+      if (h.damage.kind !== 'none') {
+        amount += bonusDamage + (h.extraDamage ?? 0)
+        bonusDamage = 0
+        for (const r of runHook('damage.mods', { seat: t.seat, state: s, engine: ctx, fighterId: t.id, data: { amount } })) if (r.delta) amount += r.delta
+        applyDamage(ctx, t, Math.max(0, amount), h)
+      }
+      continue
+    }
     let need = woundNeed(h.strength, toughness)
     for (const r of runHook('wound.mods', { seat: t.seat, state: s, engine: ctx, fighterId: t.id, ...(h.attackerId ? { targetId: h.attackerId } : {}), data: { need } })) {
       if (r.delta) need -= r.delta
@@ -225,7 +264,7 @@ export function resolveHit(ctx: Ctx, h: HitInput): void {
     let amount = rollDamage(ctx, h.damage)
     if (h.damage.kind !== 'none') {
       if (has(h, T.rending) && roll === 6) amount += 1
-      amount += bonusDamage
+      amount += bonusDamage + (i === 0 ? (h.extraDamage ?? 0) : 0)
       bonusDamage = 0
       for (const r of runHook('damage.mods', { seat: t.seat, state: s, engine: ctx, fighterId: t.id, data: { amount } })) if (r.delta) amount += r.delta
       applyDamage(ctx, t, Math.max(0, amount), h)

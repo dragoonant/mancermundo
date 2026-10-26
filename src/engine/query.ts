@@ -1,7 +1,8 @@
 // query.*: every number or verdict the UI and the AI read (00 section 7.6). S2 holds status, stat, engagement, distances,
 // line of sight, vision arc and cover; `actionMenu` is added from activation.ts by index.ts (`query.actionMenu`). S3a adds
 // the shooting numbers (targets with priority, hit / wound / save / injury odds, expected outcome, blast and template
-// previews); S3b/S4 extend it with the fight, nerve, bottle and scenario numbers.
+// previews); S3b adds the close-combat and nerve numbers (charge targets with pReach, fight outcome, nerve and rally odds);
+// S4 the bottle and scenario numbers.
 import { runHook } from './hooks'
 import { coverOf, hasLos, inVisionArc, losLines, type CoverResult, type SightLine } from './los'
 import { baseGap, pathGap } from './measure'
@@ -37,6 +38,8 @@ import {
 import { armourSave, type SaveInfo } from './wargear'
 import { fightersUnderBlast } from './hits'
 import { blastRadius, hasTrait, isTemplate, meltaApplies, profileRanges, profileStrength, rapidFire, T as TRAIT } from './traits'
+import { attackDiceFor, chargeTargets as chargeTargetsFor, meleeHitChance, meleeNeedFor, meleeProfile, weaponCombos, weaponDice, type ChargeTarget, type MeleeNeed } from './fight'
+import { nerveInfo, rallyInfo, type CoolTestInfo } from './morale'
 
 export type DerivedStatus = 'standingActive' | 'standingEngaged' | 'pinned' | 'seriouslyInjured' | 'outOfAction'
 
@@ -327,4 +330,140 @@ export function templatePreview(state: GameState, shooterId: string, weaponId: s
   const shape = templateShape(state, f, Math.atan2(aim.x - f.pos.x, aim.z - f.pos.z))
   const v = problem ? [] : templateVictims(state, f, shape)
   return { polygon: shape.polygon, problem: problem ? problem.reason : null, enemies: v.filter((g) => g.seat !== f.seat).map((g) => g.id), friends: v.filter((g) => g.seat === f.seat).map((g) => g.id) }
+}
+
+// ---------------------------------------------------------------------------
+// Close combat and nerve (S3b)
+// ---------------------------------------------------------------------------
+
+/** Enemies the fighter can charge, with the inches each needs and the chance that M + D3 covers it (R-7.6). */
+export function chargeTargets(state: GameState, fighterId: string): ChargeTarget[] {
+  return chargeTargetsFor(state, getFighter(state, fighterId))
+}
+
+/** The nerve test a fighter would take now (R-12.2): need, supporters, exact chance. */
+export function nerveOdds(state: GameState, fighterId: string): CoolTestInfo {
+  return nerveInfo(state, getFighter(state, fighterId))
+}
+
+/** The Rally test a Broken fighter would take now (R-13.8). */
+export function rallyOdds(state: GameState, fighterId: string): CoolTestInfo {
+  return rallyInfo(state, getFighter(state, fighterId))
+}
+
+interface PerHit {
+  pWound: number
+  pUnsaved: number
+  /** per unsaved hit: Out of Action, Seriously Injured (and not Out of Action) */
+  pOoa: number
+  pSi: number
+  meanDamage: number
+}
+
+function perHitOdds(state: GameState, a: Fighter, t: Fighter, p: RuntimeProfile | null): PerHit {
+  const S = stat(state, a.id, 'S')
+  const backstab = !!p && hasTrait(p, TRAIT.backstab) && !inVisionArc(t, a)
+  const strength = (p ? profileStrength(p, S) : S) + (backstab ? 1 : 0)
+  const toughness = stat(state, t.id, 'T')
+  const pWound = woundChanceFor(woundNeed(strength, toughness))
+  const pUnsaved = 1 - saveChanceFor(armourSave(state, t, { ap: p?.ap ?? 0, from: a }).need)
+  const dmg = p?.dmg ?? { kind: 'fixed' as const, value: 1 }
+  const outcomes: { d: number; w: number }[] = []
+  if (dmg.kind === 'none') outcomes.push({ d: 0, w: 1 })
+  else if (dmg.kind === 'fixed') outcomes.push({ d: dmg.value, w: 1 })
+  else {
+    const e = parseDiceExpr(dmg.expr)
+    const sides = e.die === 'd3' ? [1, 2, 3] : e.die === 'd6' ? [1, 2, 3, 4, 5, 6] : [7]
+    for (const v of sides) outcomes.push({ d: v + e.add, w: 1 / sides.length })
+  }
+  const sever = !!p && hasTrait(p, TRAIT.sever)
+  let pOoa = 0
+  let pDown = 0
+  for (const { d, w } of outcomes) {
+    const n = t.wounds > 0 ? Math.max(0, d - t.wounds + 1) : d
+    const o = injuryOddsTable(state, n, { toughness, alreadySeriouslyInjured: t.posture === 'seriouslyInjured', melta: sever && n > 0 })
+    pOoa += w * o.pOutOfAction
+    pDown += w * (o.pOutOfAction + o.pSeriouslyInjured)
+  }
+  return { pWound, pUnsaved, pOoa, pSi: Math.max(0, pDown - pOoa), meanDamage: Math.min(expectedDamage(dmg), Math.max(t.wounds, 0)) }
+}
+
+export interface FightTargetOdds {
+  targetId: string
+  dice: number
+  need: number
+  pHitPerDie: number
+  expectedHits: number
+  expectedWounds: number
+  pSeriouslyInjured: number
+  pOutOfAction: number
+}
+
+export interface FightOutcome {
+  weaponIds: string[]
+  dice: number
+  targets: FightTargetOdds[]
+  /** the expected reaction attacks against the attacker afterwards (R-10.8), if every target stays Standing */
+  reactions: { fighterId: string; dice: number; need: number; expectedHits: number; expectedWounds: number }[]
+}
+
+function diceOdds(state: GameState, a: Fighter, t: Fighter, groups: { weaponId: string | null; dice: number }[], need: MeleeNeed): Omit<FightTargetOdds, 'targetId' | 'need'> {
+  const pHit = meleeHitChance(need)
+  let dice = 0
+  let eh = 0
+  let ew = 0
+  let keepUp = 1
+  let keepOn = 1
+  for (const g of groups) {
+    const o = perHitOdds(state, a, t, g.weaponId ? meleeProfile(state, a, g.weaponId) : null)
+    const per = pHit * o.pWound * o.pUnsaved
+    dice += g.dice
+    eh += g.dice * pHit
+    ew += g.dice * per * o.meanDamage
+    keepOn *= (1 - per * o.pOoa) ** g.dice
+    keepUp *= (1 - per * (o.pOoa + o.pSi)) ** g.dice
+  }
+  return { dice, pHitPerDie: pHit, expectedHits: eh, expectedWounds: ew, pOutOfAction: 1 - keepOn, pSeriouslyInjured: Math.max(0, keepOn - keepUp) }
+}
+
+/**
+ * Expected result of a Fight (00 section 7.6): the attacker's dice with `weaponIds` (default: the first offered combination)
+ * split evenly over `targetIds` (default: the engaged enemies in its arc), with exact per-die hit odds, and the reaction
+ * attacks of the engaged enemies against it. Independent dice, ignoring that earlier hits lower the target's Wounds.
+ */
+export function fightOutcome(state: GameState, attackerId: string, weaponIds?: string[], targetIds?: string[], opts: { charge?: boolean } = {}): FightOutcome {
+  const a = getFighter(state, attackerId)
+  const charge = opts.charge ?? false
+  const engaged = a.engagedWith.map((id) => getFighter(state, id))
+  const ts = (targetIds ?? engaged.filter((t) => inVisionArc(a, t) || engaged.every((e) => !inVisionArc(a, e))).map((t) => t.id)).map((id) => getFighter(state, id))
+  const combo = weaponIds ?? weaponCombos(state, a, ts, 'fight', charge)[0] ?? []
+  const n = attackDiceFor(state, a, combo, charge)
+  const perWeapon = weaponDice(state, a, combo, n)
+  const tokens: (string | null)[] = []
+  for (const w of perWeapon) for (let i = 0; i < w.dice; i++) tokens.push(w.weaponId)
+  const turned = ts.length > 0 && ts.every((t) => !inVisionArc(a, t))
+  const out: FightTargetOdds[] = []
+  ts.forEach((t, i) => {
+    const share = Math.floor(n / ts.length) + (i < n % ts.length ? 1 : 0)
+    const start = ts.slice(0, i).reduce((acc, _x, j) => acc + Math.floor(n / ts.length) + (j < n % ts.length ? 1 : 0), 0)
+    const groups: { weaponId: string | null; dice: number }[] = []
+    for (const w of tokens.slice(start, start + share)) {
+      const g = groups.find((x) => x.weaponId === w)
+      if (g) g.dice++
+      else groups.push({ weaponId: w, dice: 1 })
+    }
+    const need = meleeNeedFor(state, a, t, { role: 'fight', turned, charge, unseen: false, entangled: false })
+    out.push({ targetId: t.id, need: need.sixesOnly ? 6 : need.need, ...diceOdds(state, a, t, groups, need) })
+  })
+  const reactions: FightOutcome['reactions'] = []
+  for (const e of engaged) {
+    if (e.conditions.blaze) continue
+    const c = weaponCombos(state, e, [a], 'reaction', false)[0]
+    if (!c) continue
+    const k = attackDiceFor(state, e, c, false)
+    const need = meleeNeedFor(state, e, a, { role: 'reaction', turned: !inVisionArc(e, a), charge: false, unseen: false, entangled: false })
+    const o = diceOdds(state, e, a, weaponDice(state, e, c, k), need)
+    reactions.push({ fighterId: e.id, dice: k, need: need.sixesOnly ? 6 : need.need, expectedHits: o.expectedHits, expectedWounds: o.expectedWounds })
+  }
+  return { weaponIds: combo, dice: n, targets: out, reactions }
 }

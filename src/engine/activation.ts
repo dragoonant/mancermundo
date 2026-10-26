@@ -2,9 +2,11 @@
 // run-out when one side has no Ready fighters left, activation, group activation as a chain (`action.group` nominates, then
 // `action.activate` offers only the group), the action menu keyed by the derived status (R-6.3) with Simple / Basic / Double /
 // Free accounting (R-6.1), the free turn (R-4.1), and the end of an activation. Shoot, Aim, Blind Fire and Fire Through
-// Ductway (S3a) hand over to shoot.ts, which pays for the action when the attack is resolved. Actions whose rules arrive
-// later (Charge, Fight, Retreat, Coup de Grace, Running for Cover) are withheld, not offered.
-import { d6SumChance, twoD6TestChance } from './dice'
+// Ductway (S3a) hand over to shoot.ts; Charge, Fight, Retreat and Running for Cover (S3b) to fight.ts; each pays for the
+// action when it is resolved. A Broken fighter's only action is Running for Cover (R-12.3); a burning fighter's activation
+// is the Blaze sequence (R-3.13); a Blind one makes no attacks (R-3.11). Nerve tests owed by an action are settled before
+// the activation carries on (`continueActivation`).
+import { d6SumChance, d6TestChance, twoD6TestChance } from './dice'
 import { expireEffects } from './effects'
 import { runHook } from './hooks'
 import { refreshEngagement, withinPath } from './measure'
@@ -38,6 +40,10 @@ import {
   terminalsNear,
 } from './zm'
 import { runEndPhase } from './endphase'
+import { chargeTargets, coupDeGrace, coupDeGraceTargets, reachFights, settleNerve, startCharge, startEscape, startFight } from './fight'
+import { resolveHit } from './hits'
+import { blazeMove } from './movement'
+import { clearCondition } from './traits'
 import { attackOptions, linkedWeaponIds, startRangedAttack, type AttackOption } from './shoot'
 import { ductFireChoices } from './zm'
 import type {
@@ -75,6 +81,11 @@ export const IMPLEMENTED_ACTIONS: ReadonlySet<string> = new Set([
   'aim',
   'blindFire',
   'fireDuct',
+  'charge',
+  'fight',
+  'retreat',
+  'coupDeGrace',
+  'runForCover',
 ])
 
 const GROUP_RULE = 'core.r.group-activation'
@@ -195,13 +206,17 @@ export function actionMenu(state: GameState, fighterId: string): ActionMenu {
   let shootOpts: AttackOption[] | null = null
   const shootable = () => (shootOpts ??= blind ? [] : attackOptions(state, f, 'shoot', act.actionsLeft))
 
+  let reach: ReturnType<typeof reachFights> | null = null
+  const reachable = () => (reach ??= blind || st !== 'standingActive' ? [] : reachFights(state, f))
   for (const a of Object.values(state.data.actions)) {
-    // ending the activation is always possible (a Broken fighter's only other action, Running for Cover, arrives in S3b)
+    // ending the activation is always possible, except that a Broken fighter must Run for Cover when it can (below)
     if (a.id === 'end') {
       add('end', { action: 'end' })
       continue
     }
-    if (!statusAllows(a, st)) continue
+    // a Standing Active fighter with a Versatile weapon may Fight an enemy within its reach (R-14.3)
+    const versatileFight = a.id === 'fight' && st === 'standingActive' && reachable().length > 0
+    if (!statusAllows(a, st) && !versatileFight) continue
     if (!IMPLEMENTED_ACTIONS.has(a.id)) {
       withheld.push({ action: a.id, reason: 'later' })
       continue
@@ -306,8 +321,37 @@ export function actionMenu(state: GameState, fighterId: string): ActionMenu {
           if (opts.length > 0) add('fireDuct', { action: 'fireDuct', ductId: d.ductId }, { targets: d.targets, need: constants(state).hitModifiers.ductway }, d.ductId)
         }
         break
+      case 'charge':
+        if (blind) break
+        for (const c of chargeTargets(state, f)) {
+          const data = { pReach: c.pReach, cost: c.cost, visible: c.visible, distance: c.distance, ...(c.weaponId ? { weaponId: c.weaponId } : {}) }
+          add('charge', { action: 'charge', targetId: c.targetId, ...(c.weaponId ? { weaponId: c.weaponId } : {}) }, data, c.weaponId ? `${c.targetId}:${c.weaponId}` : c.targetId)
+        }
+        break
+      case 'fight':
+        if (blind) break
+        if (st === 'standingEngaged') add('fight', { action: 'fight' }, { targets: f.engagedWith.length })
+        else for (const r of reachable()) add('fight', { action: 'fight', weaponId: r.weaponId }, { targets: r.targets.length, reach: true }, r.weaponId)
+        break
+      case 'retreat': {
+        const need = stat(state, f.id, 'I')
+        add('retreat', { action: 'retreat' }, { need, chance: d6TestChance(need), engagedWith: f.engagedWith.length })
+        break
+      }
+      case 'coupDeGrace':
+        for (const t of coupDeGraceTargets(state, f)) add('coupDeGrace', { action: 'coupDeGrace', targetId: t.id }, undefined, t.id)
+        break
+      case 'runForCover':
+        add('runForCover', { action: 'runForCover' }, { engaged: f.engagedWith.length > 0 })
+        break
     }
     if (options.length === before) withheld.push({ action: a.id, reason: 'noTarget' })
+  }
+  // R-12.3: Running for Cover is mandatory for a Broken fighter; it may only end the activation when it cannot run
+  if (st === 'broken' && options.some((o) => o.payload.action === 'runForCover')) {
+    const at = options.findIndex((o) => o.payload.action === 'end')
+    if (at >= 0) options.splice(at, 1)
+    withheld.push({ action: 'end', reason: 'mandatory' })
   }
   return { ...base, options, withheld }
 }
@@ -454,6 +498,7 @@ function startActivation(ctx: Ctx, f: Fighter, leaderId?: string): void {
     turnedToFace: false,
     ...(leaderId ? { groupLeaderId: leaderId } : {}),
     declared: null,
+    casualtyMark: s.casualties.length,
   }
   ctx.emit({ type: 'FighterActivated', fighterId: f.id, ...(leaderId ? { group: true } : {}) }, f.seat)
   expireEffects(ctx, `startOfActivation:${f.id}`)
@@ -464,7 +509,61 @@ function startActivation(ctx: Ctx, f: Fighter, leaderId?: string): void {
     raiseGroup(ctx, f)
     return
   }
-  raiseChoose(ctx)
+  beginActions(ctx, f)
+}
+
+/** After activation (and any group nomination): a burning fighter's activation is the Blaze sequence, otherwise the menu. */
+function beginActions(ctx: Ctx, f: Fighter): void {
+  if (f.conditions.blaze) blazeActivation(ctx, f)
+  else raiseChoose(ctx)
+}
+
+/**
+ * R-3.13: a burning fighter takes no normal actions. (1) It suffers a S3 AP -1 Damage 1 hit; (2) Engaged or Seriously Injured
+ * it does not move, Pinned it becomes Active, and an Active one moves 2D6" in a random direction and then (ruling) always
+ * chooses to become Pinned; (3) D6 + 2 if Pinned + 1 per friendly Active fighter within 1": on 6+ the flames go out; (4) the
+ * activation ends.
+ */
+function blazeActivation(ctx: Ctx, f: Fighter): void {
+  const s = ctx.state
+  const k = constants(s).blaze
+  resolveHit(ctx, {
+    attackerId: null,
+    targetId: f.id,
+    weaponId: null,
+    strength: k.strength,
+    ap: k.ap,
+    damage: { kind: 'fixed', value: k.damage },
+    traits: [],
+    hitRoll: null,
+    knockFrom: null,
+    melta: false,
+    saveVs: null,
+    coverBonus: 0,
+    from: null,
+    saves: true,
+    cause: 'blaze',
+  })
+  refreshEngagement(ctx)
+  if (f.location === 'board') {
+    if (f.engagedWith.length === 0 && f.posture !== 'seriouslyInjured') {
+      if (f.posture === 'pinned') {
+        f.posture = 'standing'
+        ctx.emit({ type: 'StatusChanged', fighterId: f.id, from: 'pinned', to: 'standing', reason: 'blaze' }, f.seat)
+      }
+      blazeMove(ctx, f)
+      refreshEngagement(ctx)
+      if (f.posture === 'standing' && f.engagedWith.length === 0) {
+        f.posture = 'pinned'
+        ctx.emit({ type: 'StatusChanged', fighterId: f.id, from: 'standing', to: 'pinned', reason: 'blaze' }, f.seat)
+      }
+    }
+    const friends = onBoard(s).filter((g) => g.seat === f.seat && g.id !== f.id && status(s, g.id) === 'standingActive' && withinPath(s, f, g, k.friendRadius))
+    const bonus = (f.posture === 'pinned' ? k.pinnedBonus : 0) + friends.length * k.friendBonus
+    const roll = ctx.roll('extinguish', 1)[0]!
+    if (roll + bonus >= k.extinguishTarget) clearCondition(ctx, f, 'blaze', 'extinguished')
+  }
+  settleNerve(ctx, { kind: 'endActivation' })
 }
 
 export function endActivation(ctx: Ctx): void {
@@ -494,8 +593,57 @@ export function payAndContinue(ctx: Ctx, f: Fighter, key: string, turnAfter = fa
   act.declared = null
   ctx.emit({ type: 'ActionResolved', fighterId: f.id, action: key }, f.seat)
   refreshEngagement(ctx)
+  continueActivation(ctx)
+}
+
+/** After an action: settle the nerve tests it caused (R-12.1), then the next menu or the end of the activation. */
+export function continueActivation(ctx: Ctx): void {
+  const s = ctx.state
+  if (s.nerve.length > 0 && !s.attack) {
+    settleNerve(ctx, { kind: 'continue' })
+    return
+  }
+  const act = s.action.activation
+  if (!act) {
+    resumeFlow(ctx, s.action.turn ?? s.priority ?? 'A')
+    return
+  }
+  const f = getFighter(s, act.fighterId)
+  refreshEngagement(ctx)
   if (f.location !== 'board' || act.actionsLeft <= 0) endActivation(ctx)
   else raiseChoose(ctx)
+}
+
+/**
+ * Re-raise whatever decision comes next after an out-of-band interruption (nerve tests settled outside an action): the active
+ * fighter's menu, the rest of a group, or the next activation starting with `seat`.
+ */
+export function resumeFlow(ctx: Ctx, seat: Seat): void {
+  const s = ctx.state
+  if (s.phase !== 'action') return
+  const act = s.action.activation
+  if (act) {
+    const f = getFighter(s, act.fighterId)
+    if (f.location !== 'board' || act.actionsLeft <= 0) endActivation(ctx)
+    else raiseChoose(ctx)
+    return
+  }
+  const g = s.action.group
+  if (g) {
+    const remaining = g.members.filter((id) => !g.done.includes(id) && s.fighters[id]!.ready && s.fighters[id]!.location === 'board')
+    if (remaining.length > 0) {
+      raiseActivate(ctx, g.seat, remaining)
+      return
+    }
+    s.action.group = null
+  }
+  const first = readyFighters(s, seat).length > 0 ? seat : otherSeat(seat)
+  if (readyFighters(s, first).length === 0) {
+    endActionPhase(ctx)
+    return
+  }
+  s.action.turn = first
+  raiseActivate(ctx, first)
 }
 
 function declare(ctx: Ctx, f: Fighter, key: string, params?: Record<string, unknown>): void {
@@ -694,6 +842,40 @@ function handleChoose(state: GameState, action: Action): Handled {
           payAndContinue(ctx, f, 'aim')
         },
       }
+    case 'charge':
+      return {
+        run(ctx) {
+          const f = getFighter(ctx.state, fid)
+          declare(ctx, f, 'charge', { targetId: p.targetId, ...(p.weaponId ? { weaponId: p.weaponId } : {}) })
+          startCharge(ctx, f, p.targetId!, p.weaponId)
+        },
+      }
+    case 'fight':
+      return {
+        run(ctx) {
+          const f = getFighter(ctx.state, fid)
+          declare(ctx, f, 'fight', p.weaponId ? { weaponId: p.weaponId } : undefined)
+          startFight(ctx, f, p.weaponId)
+        },
+      }
+    case 'retreat':
+    case 'runForCover':
+      return {
+        run(ctx) {
+          const f = getFighter(ctx.state, fid)
+          declare(ctx, f, p.action)
+          startEscape(ctx, f, p.action as 'retreat' | 'runForCover')
+        },
+      }
+    case 'coupDeGrace':
+      return {
+        run(ctx) {
+          const f = getFighter(ctx.state, fid)
+          declare(ctx, f, 'coupDeGrace', { targetId: p.targetId })
+          coupDeGrace(ctx, f, p.targetId!, false)
+          payAndContinue(ctx, f, 'coupDeGrace')
+        },
+      }
     default:
       return reject('E_TODO', `${p.action} is not implemented yet`)
   }
@@ -732,7 +914,7 @@ function handleGroup(state: GameState, action: Action): Handled {
       }
       if (g.members.length > 0) ctx.emit({ type: 'GroupNominated', leaderId: leader.id, fighterIds: g.members.slice() }, leader.seat)
       else s.action.group = null
-      raiseChoose(ctx)
+      beginActions(ctx, leader)
     },
   }
 }

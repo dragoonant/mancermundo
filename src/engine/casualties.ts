@@ -1,7 +1,7 @@
 // Casualties (R-3.5, R-3.6, R-11.8, R-11.10, R-12.1): laying a fighter down Seriously Injured, taking it Out of Action, the
 // casualty log (who put whom down, how, which round) and the nerve tests a casualty owes. Nerve tests are queued on
 // `state.nerve` (one entry per friendly fighter within 3" of the casualty, by path) and drained after each step by
-// `drainNerve`, a no-op until the morale code lands. TODO(S3b): resolve the queue (nerve tests, Broken, Running for Cover).
+// the morale code (morale.ts; fight.ts `settleNerve` / `drainNerve`): nerve tests, Broken, Running for Cover.
 import { runHook } from './hooks'
 import { withinPath } from './measure'
 import type { Ctx } from './registry'
@@ -49,11 +49,6 @@ export function takeOutOfAction(ctx: Ctx, f: Fighter, by: string | null, cause: 
   ctx.emit({ type: 'FighterOutOfAction', fighterId: f.id, by, cause }, f.seat)
   recordCasualty(ctx, f, by, cause, 'outOfAction')
   runHook('fighter.downed', { seat: f.seat, state: ctx.state, engine: ctx, fighterId: f.id, ...(by ? { targetId: by } : {}), data: { kind: 'outOfAction', cause } })
-}
-
-/** apply.afterAction: resolve the nerve tests owed. TODO(S3b): nerve tests, Broken and Running for Cover; until then the queue is dropped. */
-export function drainNerve(ctx: Ctx): void {
-  if (ctx.state.nerve.length > 0) ctx.state.nerve = []
 }
 
 /** The casualty log, optionally for one seat's fighters. */

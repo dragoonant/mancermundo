@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { act, ScriptedRng, step, legalActions } from '@/engine'
-import { actionMenu } from '@/engine/activation'
+import { actionMenu, economy } from '@/engine/activation'
+import { answer, dice, meleeGame, optionWhere, TOUCH } from '../fixtures/melee'
 import { status } from '@/engine/query'
 import { bundleWith, corridorWithDoor, ductwayWall } from '../fixtures/boards'
 import { activate, edit, eventsOf, menuActions, moveTo, must, offered, place, startGame, take } from '../fixtures/helpers'
@@ -129,21 +130,6 @@ describe('ACT: actions, costs and the menu by status', () => {
     expect(menuActions(r.state)).toContain('turn')
   })
 
-  it('an Engaged fighter cannot Move or Reload; Fight and Retreat are withheld until the close combat stage', () => {
-    const s = place(startGame().state, { A3: { x: 0, z: -10, facing: 0 }, B3: { x: 0, z: -9.006, facing: Math.PI } })
-    const touching = edit(s, (d) => {
-      d.fighters.A3!.weapons[0]!.ammo = 'out'
-    })
-    let r = activate(touching, 'A3')
-    // the engagement refresh ran inside the activation step
-    expect(status(r.state, 'A3')).toBe('standingEngaged')
-    const m = actionMenu(r.state, 'A3')
-    expect(m.options.map((o) => o.payload.action)).not.toContain('move')
-    expect(m.options.map((o) => o.payload.action)).not.toContain('reload')
-    expect(m.withheld.filter((w) => w.reason === 'later').map((w) => w.action)).toEqual(expect.arrayContaining(['fight', 'retreat']))
-    r = must(step(r.state, act.endActivation(r.pending!)))
-  })
-
   it('Reload makes an Ammo test for an Out of Ammo weapon: a pass restores it, a fail leaves it', () => {
     const out = edit(place(startGame().state, { A3: { x: 0, z: -10 } }), (d) => {
       d.fighters.A3!.weapons[0]!.ammo = 'out'
@@ -167,5 +153,65 @@ describe('ACT: actions, costs and the menu by status', () => {
     const legal = legalActions(r.state)!
     expect(legal.length).toBeGreaterThan(0)
     expect(offered(r.state)).toContain('end')
+  })
+})
+
+describe('ACT: close-combat actions (S3b)', () => {
+  const N = 0
+  const S = Math.PI
+
+  it('ACT-003 a free Fight after a Charge plus a Basic Fight in the same activation is rejected', () => {
+    const s = meleeGame({ spots: { A3: { x: 0, z: -10, facing: N }, B3: { x: 0, z: -10 + TOUCH, facing: S } }, active: 'A3' })
+    const fight = s.data.actions.fight!
+    const base = s.action.activation!
+    // the Charge records its free Fight: a Basic Fight with an action somehow left is a repeat (R-6.1)
+    expect(economy({ ...base, actionsLeft: 1, performed: [{ action: 'charge', type: 'double' }, { action: 'fight', type: 'free' }] }, fight)).toBe('repeat')
+    const afterCharge = edit(s, (d) => {
+      d.action.activation!.performed = [{ action: 'fight', type: 'free' }]
+      d.action.activation!.actionsLeft = 1
+    })
+    const menu = actionMenu(afterCharge, 'A3')
+    expect(menu.options.map((o) => o.payload.action)).not.toContain('fight')
+    expect(menu.withheld).toContainEqual({ action: 'fight', reason: 'repeat' })
+    // and a real Charge pays Charge (Double) and records the free Fight
+    const charge = meleeGame({ spots: { A3: { x: 0, z: -10, facing: N }, B3: { x: 0, z: -6, facing: S } }, active: 'A3' })
+    const r = must(answer(charge, optionWhere(charge, { action: 'charge', targetId: 'B3' }), dice(1, 1, 1, 1)))
+    expect(eventsOf(r.events, 'ActionResolved').map((e) => e.action)).toEqual(['charge'])
+    expect(eventsOf(r.events, 'ActivationEnded')[0]!.actionsUsed).toBe(2)
+  })
+
+  it('ACT-006 an Engaged fighter may not Move, Shoot or Reload; Fight and Retreat are offered', () => {
+    const s = meleeGame({
+      spots: { A3: { x: 0, z: -10, facing: N }, B3: { x: 0, z: -10 + TOUCH, facing: S } },
+      loadouts: { A3: { weapons: ['test.w.rifle'] } },
+      tweak: (d) => {
+        d.fighters.A3!.weapons.push({ weaponId: 'atk.w.plain', ammo: 'out', lostProfiles: [] })
+      },
+      active: 'A3',
+    })
+    expect(status(s, 'A3')).toBe('standingEngaged')
+    const actions = menuActions(s)
+    for (const a of ['move', 'shoot', 'reload', 'charge', 'takeCover']) expect(actions).not.toContain(a)
+    expect(actions).toEqual(expect.arrayContaining(['fight', 'retreat', 'end']))
+    expect(step(s, { type: 'action.choose', seat: 'A', decisionId: s.pending!.id, payload: { action: 'move' } }).rejection?.code).toBe('E_ACTION_RESTRICTED')
+    expect(step(s, { type: 'action.choose', seat: 'A', decisionId: s.pending!.id, payload: { action: 'reload', weaponId: 'atk.w.plain' } }).rejection?.code).toBe('E_ACTION_RESTRICTED')
+  })
+
+  it('ACT-007 Coup de Grace takes a Seriously Injured enemy within 1" and in arc Out of Action; it is rejected while the actor is Engaged', () => {
+    const spots = { A3: { x: 0, z: -10, facing: N }, B3: { x: 0, z: -10 + 2 * 0.492 + 0.5, facing: S, posture: 'seriouslyInjured' as const } }
+    const s = meleeGame({ spots, active: 'A3' })
+    const r = must(take(s, { action: 'coupDeGrace', targetId: 'B3' }))
+    expect(r.state.fighters.B3!.location).toBe('outOfAction')
+    expect(eventsOf(r.events, 'FighterOutOfAction')[0]).toMatchObject({ fighterId: 'B3', by: 'A3', cause: 'coupDeGrace' })
+    expect(r.state.action.activation!.actionsLeft).toBe(1) // a Simple action
+    // behind it (outside the vision arc) it is not offered
+    const behind = meleeGame({ spots: { ...spots, A3: { x: 0, z: -10, facing: S } }, active: 'A3' })
+    expect(menuActions(behind)).not.toContain('coupDeGrace')
+    // Engaged with another enemy: not offered, and refused if asked for
+    const busy = meleeGame({ spots: { ...spots, B4: { x: -0.986, z: -10, facing: Math.PI / 2 } }, active: 'A3' })
+    expect(status(busy, 'A3')).toBe('standingEngaged')
+    expect(menuActions(busy)).not.toContain('coupDeGrace')
+    const refused = step(busy, { type: 'action.choose', seat: 'A', decisionId: busy.pending!.id, payload: { action: 'coupDeGrace', targetId: 'B3' } })
+    expect(refused.rejection?.code).toBe('E_ACTION_RESTRICTED')
   })
 })

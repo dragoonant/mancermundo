@@ -355,6 +355,8 @@ export interface Activation {
   /** set when activated as part of a group (cannot start its own group) */
   groupLeaderId?: string
   declared: { action: string; params?: Record<string, unknown> } | null
+  /** length of the casualty log when the activation began (R-10.11: a free Coup de Grace on a fighter downed in this activation owes no extra nerve test) */
+  casualtyMark?: number
 }
 
 export interface GroupState {

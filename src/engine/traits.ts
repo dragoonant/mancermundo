@@ -2,8 +2,9 @@
 // Smoke, Melta, Plentiful, Scarce, Single Shot, Limited, Unstable, Grenade, Scattershot, Shred, Rending, Blaze, Concussion,
 // Sidearm, Unwieldy, Silent. Most of them are read where the sequence needs them (shoot.ts, hits.ts) through the helpers
 // below; the ones with a lifetime of their own (Concussion until the end of the round, Smoke clouds in the End phase,
-// Blind until the next activation) are hook handlers installed here. TODO(S3b): Parry, Power, Shock, Disarm, Entangle,
-// Versatile, Paired, Backstab, Pulverise, Sever (close-combat traits).
+// Blind until the next activation) are hook handlers installed here. S3b adds the close-combat traits: Parry, Power, Shock,
+// Disarm, Entangle, Versatile, Paired and Backstab are read by fight.ts through the helpers below, Pulverise and Sever by
+// hits.ts; Disarm's "rest of the round" is the `disarmed` condition, cleared at the end of the round here.
 import { registerHook } from './hooks'
 import { constants, getFighter } from './state'
 import type { Ctx } from './registry'
@@ -35,21 +36,19 @@ export const T = {
   silent: 'core.t.silent',
   melee: 'core.t.melee',
   versatile: 'core.t.versatile',
+  parry: 'core.t.parry',
+  power: 'core.t.power',
+  shock: 'core.t.shock',
+  disarm: 'core.t.disarm',
+  entangle: 'core.t.entangle',
+  paired: 'core.t.paired',
+  backstab: 'core.t.backstab',
+  pulverise: 'core.t.pulverise',
+  sever: 'core.t.sever',
 } as const
 
 /** Traits whose rules the engine knows (S3a shooting set + S3b close-combat set, which are inert at range). */
-const KNOWN: ReadonlySet<string> = new Set([
-  ...Object.values(T),
-  'core.t.parry',
-  'core.t.power',
-  'core.t.shock',
-  'core.t.disarm',
-  'core.t.entangle',
-  'core.t.paired',
-  'core.t.backstab',
-  'core.t.pulverise',
-  'core.t.sever',
-])
+const KNOWN: ReadonlySet<string> = new Set(Object.values(T))
 
 type HasTraits = { traits: readonly TraitRef[] }
 
@@ -88,6 +87,17 @@ export function isRangedProfile(p: RuntimeProfile): boolean {
   if (p.range.long === 'E') return false
   if (hasTrait(p, T.versatile)) return false
   return true
+}
+
+/** A profile usable in close combat (R-10.3): Melee or Sidearm, an engaged-only ('E') profile, or a Versatile reach. */
+export function isMeleeProfile(p: RuntimeProfile): boolean {
+  return p.range.long === 'E' || hasTrait(p, T.melee) || hasTrait(p, T.sidearm) || hasTrait(p, T.versatile)
+}
+
+/** Versatile (R-14.3): the reach in inches (the profile's Long range), or null. */
+export function versatileReach(p: RuntimeProfile): number | null {
+  if (!hasTrait(p, T.versatile)) return null
+  return typeof p.range.long === 'number' ? p.range.long : null
 }
 
 /** Short and Long range in inches for this wielder (Grenade: Long = S x multiplier, no Short; Template: none). */
@@ -130,7 +140,7 @@ export function makesWoundRoll(p: RuntimeProfile): boolean {
 // Conditions with a lifetime (hook handlers)
 // ---------------------------------------------------------------------------
 
-function clearCondition(ctx: Ctx, f: Fighter, condition: string, reason: string): void {
+export function clearCondition(ctx: Ctx, f: Fighter, condition: string, reason: string): void {
   if (!f.conditions[condition]) return
   delete f.conditions[condition]
   ctx.emit({ type: 'ConditionChanged', fighterId: f.id, condition, on: false, reason }, f.seat)
@@ -180,6 +190,17 @@ export function installTraitHooks(): void {
       return null
     },
     'trait.smoke.clear',
+  )
+  // Disarm lasts for the rest of the round (R-14.3)
+  registerHook(
+    'round.end',
+    (h) => {
+      const ctx = h.engine
+      if (!ctx) return null
+      for (const f of Object.values(ctx.state.fighters)) clearCondition(ctx, f, 'disarmed', 'roundEnd')
+      return null
+    },
+    'trait.disarm.expire',
   )
   // Blind lasts until the fighter's next activation (R-3.11)
   registerHook(

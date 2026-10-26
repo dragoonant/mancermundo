@@ -98,8 +98,8 @@ export class RandomBot {
       groups.get(key)!.push(a)
     }
     const keys = [...groups.keys()]
-    // finishing early and turning are less interesting than acting: half weight
-    const weights = keys.map((k) => (k === 'end' || k === 'turn' ? 0.5 : 1))
+    // finishing early and turning are less interesting than acting: half weight; close combat a little more (so the sim exercises it)
+    const weights = keys.map((k) => (k === 'end' || k === 'turn' ? 0.5 : k === 'charge' || k === 'fight' || k === 'coupDeGrace' ? 2 : 1))
     let roll = this.float() * weights.reduce((x, y) => x + y, 0)
     let pickKey = keys[keys.length - 1]!
     for (let i = 0; i < keys.length; i++) {
@@ -143,9 +143,10 @@ export class RandomBot {
     for (let i = 0; i < 60; i++) {
       const roll = this.float()
       let wps: { x: number; z: number }[] | null = null
-      if (roll < 0.35 && nearest) {
+      // half of the moves step toward the nearest enemy, so fighters meet and the close-combat code runs
+      if (roll < 0.5 && nearest) {
         wps = planToward(state, f, kind, max, approachPoint(state, f, nearest))
-      } else if (roll < 0.55) {
+      } else if (roll < 0.65) {
         // toward a random board point by the engine's own route
         const to = { x: round3((this.float() - 0.5) * 22), z: round3((this.float() - 0.5) * 34) }
         wps = planToward(state, f, kind, max, to)
@@ -171,6 +172,11 @@ export class RandomBot {
       const a = act.path(pending, [])
       if (!validate(state, a)) return a
     }
+    // a Retreat cannot be passed once its dice are rolled: take the engine's suggestion
+    if (!pending.canPass) {
+      const s = suggest(state, pending)
+      if (s) return s
+    }
     return act.pass(pending)
   }
 }
@@ -179,7 +185,7 @@ export class RandomBot {
 // Invariants
 // ---------------------------------------------------------------------------
 
-const VOLUNTARY: ReadonlySet<string> = new Set(['move', 'takeCover', 'crawl', 'carry'])
+const VOLUNTARY: ReadonlySet<string> = new Set(['move', 'takeCover', 'crawl', 'carry', 'retreat', 'consolidate', 'runForCover'])
 
 export function checkInvariants(prev: GameState, next: GameState, _action: Action, events: GameEvent[]): string[] {
   const out: string[] = []
@@ -356,6 +362,16 @@ export function playGame(setup: GameSetup, bundle: EngineBundle, seed: string, g
       else if (ev.type === 'StatusChanged' && ev.to === 'seriouslyInjured') bump(stats, 'seriouslyInjured')
       else if (ev.type === 'FighterOutOfAction') bump(stats, 'outOfAction')
       else if (ev.type === 'WeaponStateChanged' && ev.ammo !== 'ok') bump(stats, `ammo:${ev.ammo}`)
+      else if (ev.type === 'ActionDeclared' && ev.action === 'charge') bump(stats, 'charges')
+      else if (ev.type === 'FightStarted') bump(stats, ev.charge ? 'fights:charge' : 'fights')
+      else if (ev.type === 'ReactionStarted') bump(stats, 'reactions')
+      else if (ev.type === 'NerveTest') bump(stats, ev.passed ? 'nerve:passed' : 'nerve:failed')
+      else if (ev.type === 'ConditionChanged' && ev.condition === 'broken' && ev.on) bump(stats, 'broken')
+      else if (ev.type === 'ConditionChanged' && ev.condition === 'blaze' && ev.on) bump(stats, 'blaze')
+      else if (ev.type === 'RunningForCover') bump(stats, 'runForCover')
+      else if (ev.type === 'CoupDeGrace') bump(stats, 'coupDeGrace')
+      else if (ev.type === 'Consolidated') bump(stats, 'consolidated')
+      else if (ev.type === 'Parried') bump(stats, 'parried')
     }
     for (const m of checkInvariants(prev, state, action, r.events)) violate('invariant', m)
     const key = progressKey(state)
