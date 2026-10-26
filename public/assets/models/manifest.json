@@ -1,0 +1,1154 @@
+{
+  "attachments": {},
+  "bodies": {
+    "escher-death-maiden-needle-pistol": {
+      "file": "bodies/escher-death-maiden-needle-pistol.glb",
+      "archetype": "escher-death-maiden-needle-pistol",
+      "heightIn": 1.32,
+      "figureHeightIn": 1.2,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.78,
+          -0.304
+        ],
+        "beltR": [
+          -0.574,
+          0.6,
+          0.054
+        ],
+        "beltL": [
+          0.931,
+          0.6,
+          -0.109
+        ],
+        "shoulderR": [
+          -0.317,
+          1.02,
+          -0.127
+        ],
+        "shoulderL": [
+          0.283,
+          1.02,
+          -0.204
+        ],
+        "head": [
+          -0.054,
+          1.32,
+          -0.131
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "escher-little-sister-stub-gun-knife-b": {
+      "file": "bodies/escher-little-sister-stub-gun-knife-b.glb",
+      "archetype": "escher-little-sister-stub-gun-knife-b",
+      "heightIn": 1.07,
+      "figureHeightIn": 0.95,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.642,
+          -0.22
+        ],
+        "beltR": [
+          -0.292,
+          0.5,
+          0.034
+        ],
+        "beltL": [
+          0.391,
+          0.5,
+          0.072
+        ],
+        "shoulderR": [
+          -0.106,
+          0.832,
+          -0.119
+        ],
+        "shoulderL": [
+          0.422,
+          0.832,
+          -0.068
+        ],
+        "head": [
+          0.239,
+          1.07,
+          -0.138
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "escher-little-sister-stub-gun-knife": {
+      "file": "bodies/escher-little-sister-stub-gun-knife.glb",
+      "archetype": "escher-little-sister-stub-gun-knife",
+      "heightIn": 1.07,
+      "figureHeightIn": 0.95,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.642,
+          -0.183
+        ],
+        "beltR": [
+          -0.335,
+          0.5,
+          0.012
+        ],
+        "beltL": [
+          0.456,
+          0.5,
+          0.235
+        ],
+        "shoulderR": [
+          -0.177,
+          0.832,
+          0.025
+        ],
+        "shoulderL": [
+          0.47,
+          0.832,
+          -0.042
+        ],
+        "head": [
+          0.232,
+          1.07,
+          -0.064
+        ]
+      },
+      "weaponsBaked": true,
+      "variants": [
+        "escher-little-sister-stub-gun-knife-b"
+      ]
+    },
+    "escher-matriarch-boltgun": {
+      "file": "bodies/escher-matriarch-boltgun.glb",
+      "archetype": "escher-matriarch-boltgun",
+      "heightIn": 1.32,
+      "figureHeightIn": 1.2,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.78,
+          -0.35
+        ],
+        "beltR": [
+          -0.372,
+          0.6,
+          -0.242
+        ],
+        "beltL": [
+          0.39,
+          0.6,
+          -0.115
+        ],
+        "shoulderR": [
+          -0.09,
+          1.02,
+          -0.197
+        ],
+        "shoulderL": [
+          0.571,
+          1.02,
+          -0.167
+        ],
+        "head": [
+          0.203,
+          1.32,
+          -0.231
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "escher-matriarch-lasgun": {
+      "file": "bodies/escher-matriarch-lasgun.glb",
+      "archetype": "escher-matriarch-lasgun",
+      "heightIn": 1.32,
+      "figureHeightIn": 1.2,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.78,
+          -0.307
+        ],
+        "beltR": [
+          -0.415,
+          0.6,
+          -0.053
+        ],
+        "beltL": [
+          0.721,
+          0.6,
+          0.172
+        ],
+        "shoulderR": [
+          -0.218,
+          1.02,
+          -0.141
+        ],
+        "shoulderL": [
+          0.638,
+          1.02,
+          0.033
+        ],
+        "head": [
+          0.187,
+          1.32,
+          -0.147
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "escher-queen-lasgun-shock-whip": {
+      "file": "bodies/escher-queen-lasgun-shock-whip.glb",
+      "archetype": "escher-queen-lasgun-shock-whip",
+      "heightIn": 1.37,
+      "figureHeightIn": 1.25,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.808,
+          -0.306
+        ],
+        "beltR": [
+          -0.691,
+          0.62,
+          -0.197
+        ],
+        "beltL": [
+          0.383,
+          0.62,
+          -0.037
+        ],
+        "shoulderR": [
+          -0.452,
+          1.058,
+          -0.208
+        ],
+        "shoulderL": [
+          0.519,
+          1.058,
+          -0.235
+        ],
+        "head": [
+          0.223,
+          1.37,
+          0.029
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "escher-queen-plasma-pistol": {
+      "file": "bodies/escher-queen-plasma-pistol.glb",
+      "archetype": "escher-queen-plasma-pistol",
+      "heightIn": 1.37,
+      "figureHeightIn": 1.25,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.808,
+          -0.652
+        ],
+        "beltR": [
+          -0.482,
+          0.62,
+          -0.303
+        ],
+        "beltL": [
+          0.389,
+          0.62,
+          0.246
+        ],
+        "shoulderR": [
+          -0.526,
+          1.058,
+          -0.374
+        ],
+        "shoulderL": [
+          0.094,
+          1.058,
+          -0.469
+        ],
+        "head": [
+          -0.04,
+          1.37,
+          -0.31
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "escher-sister-lasgun-b": {
+      "file": "bodies/escher-sister-lasgun-b.glb",
+      "archetype": "escher-sister-lasgun-b",
+      "heightIn": 1.27,
+      "figureHeightIn": 1.15,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.752,
+          -0.247
+        ],
+        "beltR": [
+          -0.395,
+          0.58,
+          0.097
+        ],
+        "beltL": [
+          0.503,
+          0.58,
+          0.16
+        ],
+        "shoulderR": [
+          -0.503,
+          0.982,
+          -0.144
+        ],
+        "shoulderL": [
+          0.102,
+          0.982,
+          0.135
+        ],
+        "head": [
+          -0.181,
+          1.27,
+          0.019
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "escher-sister-lasgun": {
+      "file": "bodies/escher-sister-lasgun.glb",
+      "archetype": "escher-sister-lasgun",
+      "heightIn": 1.27,
+      "figureHeightIn": 1.15,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.752,
+          -0.178
+        ],
+        "beltR": [
+          -0.368,
+          0.58,
+          0.083
+        ],
+        "beltL": [
+          0.425,
+          0.58,
+          0.109
+        ],
+        "shoulderR": [
+          -0.421,
+          0.982,
+          -0.104
+        ],
+        "shoulderL": [
+          0.176,
+          0.982,
+          0.073
+        ],
+        "head": [
+          -0.137,
+          1.27,
+          -0.02
+        ]
+      },
+      "weaponsBaked": true,
+      "variants": [
+        "escher-sister-lasgun-b"
+      ]
+    },
+    "escher-sister-specialist-grenade-launcher": {
+      "file": "bodies/escher-sister-specialist-grenade-launcher.glb",
+      "archetype": "escher-sister-specialist-grenade-launcher",
+      "heightIn": 1.27,
+      "figureHeightIn": 1.15,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.752,
+          -0.182
+        ],
+        "beltR": [
+          -0.421,
+          0.58,
+          0.055
+        ],
+        "beltL": [
+          0.259,
+          0.58,
+          -0.034
+        ],
+        "shoulderR": [
+          -0.239,
+          0.982,
+          -0.046
+        ],
+        "shoulderL": [
+          0.512,
+          0.982,
+          -0.105
+        ],
+        "head": [
+          0.136,
+          1.27,
+          -0.038
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "escher-sister-specialist-needle-rifle": {
+      "file": "bodies/escher-sister-specialist-needle-rifle.glb",
+      "archetype": "escher-sister-specialist-needle-rifle",
+      "heightIn": 1.27,
+      "figureHeightIn": 1.15,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.752,
+          -0.261
+        ],
+        "beltR": [
+          -0.504,
+          0.58,
+          0.067
+        ],
+        "beltL": [
+          0.673,
+          0.58,
+          0.171
+        ],
+        "shoulderR": [
+          -0.647,
+          0.982,
+          -0.065
+        ],
+        "shoulderL": [
+          0.006,
+          0.982,
+          0.131
+        ],
+        "head": [
+          -0.337,
+          1.27,
+          0.035
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "escher-wyld-runner-wyld-bow-b": {
+      "file": "bodies/escher-wyld-runner-wyld-bow-b.glb",
+      "archetype": "escher-wyld-runner-wyld-bow-b",
+      "heightIn": 1.07,
+      "figureHeightIn": 0.95,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.642,
+          -0.163
+        ],
+        "beltR": [
+          -0.096,
+          0.5,
+          0.003
+        ],
+        "beltL": [
+          0.415,
+          0.5,
+          -0.187
+        ],
+        "shoulderR": [
+          -0.314,
+          0.832,
+          0.142
+        ],
+        "shoulderL": [
+          0.313,
+          0.832,
+          0.0
+        ],
+        "head": [
+          0.057,
+          1.07,
+          -0.055
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "escher-wyld-runner-wyld-bow": {
+      "file": "bodies/escher-wyld-runner-wyld-bow.glb",
+      "archetype": "escher-wyld-runner-wyld-bow",
+      "heightIn": 1.07,
+      "figureHeightIn": 0.95,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.642,
+          -0.367
+        ],
+        "beltR": [
+          -0.219,
+          0.5,
+          -0.148
+        ],
+        "beltL": [
+          0.343,
+          0.5,
+          0.217
+        ],
+        "shoulderR": [
+          -0.341,
+          0.832,
+          -0.199
+        ],
+        "shoulderL": [
+          0.301,
+          0.832,
+          -0.17
+        ],
+        "head": [
+          0.139,
+          1.07,
+          -0.073
+        ]
+      },
+      "weaponsBaked": true,
+      "variants": [
+        "escher-wyld-runner-wyld-bow-b"
+      ]
+    },
+    "goliath-bruiser-boltgun": {
+      "file": "bodies/goliath-bruiser-boltgun.glb",
+      "archetype": "goliath-bruiser-boltgun",
+      "heightIn": 1.47,
+      "figureHeightIn": 1.35,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.863,
+          -0.347
+        ],
+        "beltR": [
+          -0.325,
+          0.66,
+          -0.087
+        ],
+        "beltL": [
+          0.278,
+          0.66,
+          -0.087
+        ],
+        "shoulderR": [
+          -0.355,
+          1.133,
+          -0.172
+        ],
+        "shoulderL": [
+          0.475,
+          1.133,
+          0.308
+        ],
+        "head": [
+          -0.007,
+          1.47,
+          -0.003
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "goliath-bruiser-combat-shotgun": {
+      "file": "bodies/goliath-bruiser-combat-shotgun.glb",
+      "archetype": "goliath-bruiser-combat-shotgun",
+      "heightIn": 1.47,
+      "figureHeightIn": 1.35,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.863,
+          -0.32
+        ],
+        "beltR": [
+          -0.529,
+          0.66,
+          0.041
+        ],
+        "beltL": [
+          0.192,
+          0.66,
+          0.176
+        ],
+        "shoulderR": [
+          -0.532,
+          1.133,
+          0.004
+        ],
+        "shoulderL": [
+          0.568,
+          1.133,
+          -0.003
+        ],
+        "head": [
+          -0.21,
+          1.47,
+          0.036
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "goliath-bruiser-specialist-grenade-launcher": {
+      "file": "bodies/goliath-bruiser-specialist-grenade-launcher.glb",
+      "archetype": "goliath-bruiser-specialist-grenade-launcher",
+      "heightIn": 1.47,
+      "figureHeightIn": 1.35,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.863,
+          -0.539
+        ],
+        "beltR": [
+          -0.405,
+          0.66,
+          -0.284
+        ],
+        "beltL": [
+          0.341,
+          0.66,
+          -0.231
+        ],
+        "shoulderR": [
+          -0.263,
+          1.133,
+          -0.348
+        ],
+        "shoulderL": [
+          0.331,
+          1.133,
+          -0.237
+        ],
+        "head": [
+          -0.034,
+          1.47,
+          -0.182
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "goliath-bruiser-stub-cannon": {
+      "file": "bodies/goliath-bruiser-stub-cannon.glb",
+      "archetype": "goliath-bruiser-stub-cannon",
+      "heightIn": 1.47,
+      "figureHeightIn": 1.35,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.863,
+          -0.486
+        ],
+        "beltR": [
+          0.063,
+          0.66,
+          -0.155
+        ],
+        "beltL": [
+          1.042,
+          0.66,
+          0.367
+        ],
+        "shoulderR": [
+          -0.919,
+          1.133,
+          0.027
+        ],
+        "shoulderL": [
+          0.668,
+          1.133,
+          -0.132
+        ],
+        "head": [
+          0.314,
+          1.47,
+          -0.109
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "goliath-bully-axe": {
+      "file": "bodies/goliath-bully-axe.glb",
+      "archetype": "goliath-bully-axe",
+      "heightIn": 1.07,
+      "figureHeightIn": 0.95,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.643,
+          -0.373
+        ],
+        "beltR": [
+          -0.141,
+          0.5,
+          -0.274
+        ],
+        "beltL": [
+          0.295,
+          0.5,
+          -0.154
+        ],
+        "shoulderR": [
+          -0.411,
+          0.833,
+          -0.303
+        ],
+        "shoulderL": [
+          0.285,
+          0.833,
+          -0.101
+        ],
+        "head": [
+          0.142,
+          1.07,
+          -0.153
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "goliath-bully-brute-cleaver-b": {
+      "file": "bodies/goliath-bully-brute-cleaver-b.glb",
+      "archetype": "goliath-bully-brute-cleaver-b",
+      "heightIn": 1.07,
+      "figureHeightIn": 0.95,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.642,
+          -0.285
+        ],
+        "beltR": [
+          -0.119,
+          0.5,
+          -0.201
+        ],
+        "beltL": [
+          0.293,
+          0.5,
+          -0.133
+        ],
+        "shoulderR": [
+          -0.378,
+          0.832,
+          -0.234
+        ],
+        "shoulderL": [
+          0.279,
+          0.832,
+          -0.059
+        ],
+        "head": [
+          0.168,
+          1.07,
+          -0.149
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "goliath-bully-brute-cleaver": {
+      "file": "bodies/goliath-bully-brute-cleaver.glb",
+      "archetype": "goliath-bully-brute-cleaver",
+      "heightIn": 1.07,
+      "figureHeightIn": 0.95,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.642,
+          -0.357
+        ],
+        "beltR": [
+          -0.152,
+          0.5,
+          -0.294
+        ],
+        "beltL": [
+          0.305,
+          0.5,
+          -0.192
+        ],
+        "shoulderR": [
+          -0.408,
+          0.832,
+          -0.277
+        ],
+        "shoulderL": [
+          0.284,
+          0.832,
+          -0.107
+        ],
+        "head": [
+          0.168,
+          1.07,
+          -0.193
+        ]
+      },
+      "weaponsBaked": true,
+      "variants": [
+        "goliath-bully-brute-cleaver-b"
+      ]
+    },
+    "goliath-forge-born-knife-b": {
+      "file": "bodies/goliath-forge-born-knife-b.glb",
+      "archetype": "goliath-forge-born-knife-b",
+      "heightIn": 1.07,
+      "figureHeightIn": 0.95,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.642,
+          -0.325
+        ],
+        "beltR": [
+          -0.019,
+          0.5,
+          -0.357
+        ],
+        "beltL": [
+          0.27,
+          0.5,
+          -0.266
+        ],
+        "shoulderR": [
+          -0.176,
+          0.832,
+          -0.255
+        ],
+        "shoulderL": [
+          0.265,
+          0.832,
+          -0.16
+        ],
+        "head": [
+          0.15,
+          1.07,
+          -0.254
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "goliath-forge-born-knife": {
+      "file": "bodies/goliath-forge-born-knife.glb",
+      "archetype": "goliath-forge-born-knife",
+      "heightIn": 1.07,
+      "figureHeightIn": 0.95,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.642,
+          -0.18
+        ],
+        "beltR": [
+          -0.464,
+          0.5,
+          0.147
+        ],
+        "beltL": [
+          0.302,
+          0.5,
+          -0.125
+        ],
+        "shoulderR": [
+          -0.122,
+          0.832,
+          -0.002
+        ],
+        "shoulderL": [
+          0.192,
+          0.832,
+          -0.004
+        ],
+        "head": [
+          -0.083,
+          1.07,
+          -0.01
+        ]
+      },
+      "weaponsBaked": true,
+      "variants": [
+        "goliath-forge-born-knife-b"
+      ]
+    },
+    "goliath-forge-boss-boltgun": {
+      "file": "bodies/goliath-forge-boss-boltgun.glb",
+      "archetype": "goliath-forge-boss-boltgun",
+      "heightIn": 1.52,
+      "figureHeightIn": 1.4,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.89,
+          -0.695
+        ],
+        "beltR": [
+          -0.674,
+          0.68,
+          0.145
+        ],
+        "beltL": [
+          0.756,
+          0.68,
+          -0.413
+        ],
+        "shoulderR": [
+          -0.831,
+          1.17,
+          0.384
+        ],
+        "shoulderL": [
+          1.046,
+          1.17,
+          -0.511
+        ],
+        "head": [
+          0.079,
+          1.52,
+          -0.289
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "goliath-forge-boss-combat-shotgun": {
+      "file": "bodies/goliath-forge-boss-combat-shotgun.glb",
+      "archetype": "goliath-forge-boss-combat-shotgun",
+      "heightIn": 1.52,
+      "figureHeightIn": 1.4,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.89,
+          -0.529
+        ],
+        "beltR": [
+          0.04,
+          0.68,
+          -0.009
+        ],
+        "beltL": [
+          0.656,
+          0.68,
+          0.372
+        ],
+        "shoulderR": [
+          -0.06,
+          1.17,
+          0.018
+        ],
+        "shoulderL": [
+          0.608,
+          1.17,
+          0.096
+        ],
+        "head": [
+          0.194,
+          1.52,
+          0.003
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "goliath-forge-tyrant-chainaxe": {
+      "file": "bodies/goliath-forge-tyrant-chainaxe.glb",
+      "archetype": "goliath-forge-tyrant-chainaxe",
+      "heightIn": 1.57,
+      "figureHeightIn": 1.45,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.917,
+          -0.696
+        ],
+        "beltR": [
+          -0.196,
+          0.7,
+          -0.552
+        ],
+        "beltL": [
+          0.415,
+          0.7,
+          0.099
+        ],
+        "shoulderR": [
+          -0.388,
+          1.207,
+          -0.658
+        ],
+        "shoulderL": [
+          0.395,
+          1.207,
+          -0.333
+        ],
+        "head": [
+          -0.081,
+          1.57,
+          -0.534
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "goliath-forge-tyrant-renderizer": {
+      "file": "bodies/goliath-forge-tyrant-renderizer.glb",
+      "archetype": "goliath-forge-tyrant-renderizer",
+      "heightIn": 1.57,
+      "figureHeightIn": 1.45,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.917,
+          -0.353
+        ],
+        "beltR": [
+          -0.031,
+          0.7,
+          -0.18
+        ],
+        "beltL": [
+          0.76,
+          0.7,
+          0.115
+        ],
+        "shoulderR": [
+          -0.804,
+          1.207,
+          -0.287
+        ],
+        "shoulderL": [
+          0.597,
+          1.207,
+          0.061
+        ],
+        "head": [
+          0.414,
+          1.57,
+          -0.147
+        ]
+      },
+      "weaponsBaked": true
+    },
+    "goliath-stimmer-pulveriser-paired": {
+      "file": "bodies/goliath-stimmer-pulveriser-paired.glb",
+      "archetype": "goliath-stimmer-pulveriser-paired",
+      "heightIn": 1.52,
+      "figureHeightIn": 1.4,
+      "baseTopIn": 0.12,
+      "baseMm": 25,
+      "measured": true,
+      "sockets": {
+        "back": [
+          0.0,
+          0.89,
+          -0.227
+        ],
+        "beltR": [
+          -0.874,
+          0.68,
+          -0.051
+        ],
+        "beltL": [
+          0.898,
+          0.68,
+          -0.0
+        ],
+        "shoulderR": [
+          -0.109,
+          1.17,
+          0.02
+        ],
+        "shoulderL": [
+          0.202,
+          1.17,
+          0.067
+        ],
+        "head": [
+          0.07,
+          1.52,
+          -0.089
+        ]
+      },
+      "weaponsBaked": true
+    }
+  }
+}

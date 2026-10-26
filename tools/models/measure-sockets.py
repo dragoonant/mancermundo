@@ -20,62 +20,26 @@ import trimesh
 ROOT = Path(__file__).resolve().parents[2]
 BODIES = ROOT / "public" / "assets" / "models" / "bodies"
 MANIFEST = ROOT / "public" / "assets" / "models" / "manifest.json"
-UNITS = ROOT / "tools" / "local-gen" / "ms_units.json"
 # v2 bodies (docs/spec/30-figures.md section 7): dynamic pose, default weapons fused into the mesh. No hand sockets are
 # measured for them and the manifest entry gets `weaponsBaked`; VARIANTS lists the other poses of the same archetype.
 V2_UNITS = ROOT / "tools" / "local-gen" / "v2_units.json"
 VARIANTS: dict[str, list[str]] = {
-    "aod-intercessor-warrior": ["aod-intercessor-warrior-kneeling"],
-    "kom-boy": ["kom-boy-b", "kom-boy-c"],
-    "pf-shasla": ["pf-shasla-b", "pf-shasla-c"],
-    "ht-immortal-guardian": ["ht-immortal-guardian-b"],
-    "pm-plague-marine-warrior": ["pm-plague-marine-warrior-b"],
-    "wb-neophyte-warrior": ["wb-neophyte-warrior-b", "wb-neophyte-warrior-c"],
-    "lg-warrior": ["lg-warrior-b"],
-    "ha-agent": ["ha-agent-b"],
-    "hc-skitarii-ranger-warrior": ["hc-skitarii-ranger-warrior-b"],
-    "hc-skitarii-vanguard-warrior": ["hc-skitarii-vanguard-warrior-b"],
-    "hc-sicarian-infiltrator-warrior": ["hc-sicarian-infiltrator-warrior-b"],
-    "hc-sicarian-ruststalker-warrior": ["hc-sicarian-ruststalker-warrior-b"],
-    "hk-warrior": ["hk-warrior-b", "hk-warrior-c"],
-    "ks-trooper": ["ks-trooper-b"],
-    "nv-purgatus": ["nv-purgatus-b"],
-    "ph-infiltrator-warrior": ["ph-infiltrator-warrior-b"],
-    "ph-incursor-warrior": ["ph-incursor-warrior-b"],
-    "wc-rubric-marine-warrior": ["wc-rubric-marine-warrior-b"],
-    "fk-hound": ["fk-hound-b"],
-    "nb-armsman": ["nb-armsman-b"],
-    "bl-trooper": ["bl-trooper-b"],
-    "fg-warrior-bludgeon": ["fg-warrior-bludgeon-b"],
-    "fg-warrior-cleaver": ["fg-warrior-cleaver-b"],
-    "cc-blessed-blade": ["cc-blessed-blade-b"],
-    "cc-devotee": ["cc-devotee-b", "cc-devotee-c"],
-    "cc-mutant": ["cc-mutant-b"],
-    "cc-torment": ["cc-torment-b"],
-    "gm-aspirant": ["gm-aspirant-b", "gm-aspirant-c"],
-    "ss-warrior-shotgun": ["ss-warrior-shotgun-b"],
-    "ss-warrior-boltgun": ["ss-warrior-boltgun-b"],
-    "ss-warrior-bolt-pistol-blade": ["ss-warrior-bolt-pistol-blade-b"],
-    "ta-trooper": ["ta-trooper-b", "ta-trooper-c"],
+    "goliath-bully-brute-cleaver": ["goliath-bully-brute-cleaver-b"],
+    "goliath-forge-born-knife": ["goliath-forge-born-knife-b"],
+    "escher-sister-lasgun": ["escher-sister-lasgun-b"],
+    "escher-wyld-runner-wyld-bow": ["escher-wyld-runner-wyld-bow-b"],
+    "escher-little-sister-stub-gun-knife": ["escher-little-sister-stub-gun-knife-b"],
 }
 
-DEFAULT_BAND = (0.20, 0.60)  # spec says 35-60%; these hands hang lower, so the band reaches down to the fists
-HAND_BAND: dict[str, tuple[float, float]] = {
-    # banner poles and a raised bionic arm sit inside the default band; keep the band on the hanging fists
-    "pm-plague-marine-icon-bearer": (0.12, 0.36),
-    "wb-neophyte-icon-bearer": (0.12, 0.36),
-    "pf-blooded": (0.15, 0.42),
-    "pm-plague-marine-heavy-gunner": (0.2, 0.32),
-}
-# wings or cloaks stick out sideways past the arms; ignore vertices wider than this (|x|, inches) when measuring the hands
-HAND_XMAX = {"ha-skysplinter-assassin": 0.5}
-NO_HANDS = {"kom-bomb-squig"}
-# hose loops and pouches pull the measured hand behind the body; force the z of both hands (inches, +Z front)
-HAND_Z = {"pm-plague-marine-heavy-gunner": 0.1}
+DEFAULT_BAND = (0.20, 0.60)  # only used for v1 bodies with hand sockets; v2 bodies skip hand measurement
+HAND_BAND: dict[str, tuple[float, float]] = {}
+HAND_XMAX: dict[str, float] = {}
+NO_HANDS: set[str] = set()
+HAND_Z: dict[str, float] = {}
 # Facing is +Z by contract; the feet-based vote below is a diagnostic. List a slug here (verified in ?gallery) if
 # its mesh really faces -Z. Sockets are then measured on the mesh turned 180 degrees about y, i.e. ALL sockets in
 # the manifest are in the displayed +Z-facing frame, and the renderer turns such a body by PI (manifest `facing`).
-FACING: dict[str, str] = {}  # all 20 verified +Z in ?gallery (the feet vote wrongly flags 6 of them)
+FACING: dict[str, str] = {}  # per-slug "-Z" overrides; the feet vote is unreliable on dynamic poses
 
 
 def r3(v):
@@ -166,7 +130,6 @@ V2: set[str] = set(json.loads(V2_UNITS.read_text(encoding="utf-8")).keys()) if V
 
 
 def main():
-    units = json.loads(UNITS.read_text(encoding="utf-8"))
     v2_units = json.loads(V2_UNITS.read_text(encoding="utf-8")) if V2_UNITS.exists() else {}
     man = json.loads(MANIFEST.read_text(encoding="utf-8")) if MANIFEST.exists() else {}
     man.setdefault("attachments", {})
@@ -181,7 +144,7 @@ def main():
             "heightIn": m["heightIn"],
             "figureHeightIn": m["figureHeightIn"],
             "baseTopIn": m["baseTopIn"],
-            "baseMm": (v2_units.get(slug) or units.get(slug, {})).get("base"),
+            "baseMm": v2_units.get(slug, {}).get("base"),
             "measured": True,
             "sockets": m["sockets"],
         }
