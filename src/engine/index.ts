@@ -1,13 +1,19 @@
 // Public engine API (frozen after M2): createGame / step / legalActions / validate / replay / view / suggest /
 // save / load / undo. The client store and tools/sim-core.ts are the only callers of `step`.
 import { step, validate } from './apply'
-import type { EngineBundle } from './bundle'
-import { createGame, ENGINE_VERSION } from './setup'
+import { bundleFromData, rosterFromStarter, type EngineBundle } from './bundle'
+import { actionMenu } from './activation'
+import * as queryCore from './query'
+import { suggestMovePath } from './movement'
+import { createGame, ENGINE_VERSION, suggestDeploy } from './setup'
 import { EngineInvariantError } from './state'
 import type { Action, GameSetup, GameState, PendingDecision, SaveFile, StepResult } from './types'
 import { view } from './view'
 
-export { createGame, ENGINE_VERSION, step, validate, view, EngineInvariantError }
+export { createGame, ENGINE_VERSION, step, validate, view, EngineInvariantError, bundleFromData, rosterFromStarter }
+
+/** query.*: every number or verdict the UI and the AI read (00 section 7.6). */
+export const query = { ...queryCore, actionMenu }
 export type { EngineBundle }
 export * from './types'
 export type { GameEvent, GameEventBody } from './events'
@@ -90,11 +96,20 @@ export function undo(state: GameState, bundle: EngineBundle): StepResult | null 
 
 
 /**
- * Engine default for a decision: the first offered option of a finite decision. S2 refines this to the engine's best
- * deploy spot, casket spot, aim point and legal path toward a point for the continuous kinds, which return null until
- * then. Used by auto options, the random bot and the AI fallback.
+ * Engine default for a decision: the first offered option of a finite decision; for the continuous kinds, the engine's best
+ * deploy spot and a short legal path toward the nearest enemy (or a cancel when none exists). Casket and aim spots arrive
+ * with S3a / S4 and return null until then. Used by auto options, the random bot and the AI fallback.
  */
 export function suggest(state: GameState, pending: PendingDecision | null = state.pending): Action | null {
-  const first = pending?.options?.[0]
-  return first ? first.action : null
+  if (!pending) return null
+  const first = pending.options?.[0]
+  if (first) return first.action
+  switch (pending.kind) {
+    case 'setup.deploy':
+      return suggestDeploy(state, pending)
+    case 'move.path':
+      return suggestMovePath(state, pending)
+    default:
+      return null
+  }
 }

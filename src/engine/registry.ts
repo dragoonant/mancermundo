@@ -163,3 +163,17 @@ export function requireModule(map: Map<string, ModuleDef>, kind: string): Module
   if (!mod) throw new EngineInvariantError(`no module owns decision kind ${kind}`)
   return mod
 }
+
+/**
+ * End the battle at once (resign, concede, round limit, scenario victory): sets the result, emits GameEnded and closes the
+ * phase. `loser` is the seat that resigned or conceded; without it the points decide.
+ */
+export function endGame(ctx: Ctx, reason: 'resign' | 'concede' | 'roundLimit' | 'scenario', loser?: Seat): void {
+  const s = ctx.state
+  const points = { A: s.players.A.points, B: s.players.B.points }
+  const winner = loser ? (loser === 'A' ? 'B' : 'A') : points.A === points.B ? 'draw' : points.A > points.B ? 'A' : 'B'
+  s.result = { winner, points, reason }
+  s.phase = 'ended'
+  s.pending = null
+  ctx.emit({ type: 'GameEnded', result: s.result }, null)
+}

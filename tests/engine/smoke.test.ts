@@ -31,10 +31,10 @@ describe('engine smoke', () => {
     expect(legalActions(state)).toHaveLength(2)
     expect(events.map((e) => e.type)).toEqual(expect.arrayContaining(['GameCreated', 'DiceRolled', 'DecisionRequested']))
     expect(events.find((e) => e.type === 'DiceRolled')).toMatchObject({ die: 'd6', final: true })
-    // every offered option is a well-formed answer to this decision (validate itself says E_TODO until S2 builds the rule)
+    // every offered option is a well-formed answer to this decision and passes validate
     for (const action of legalActions(state)!) {
       expect(action).toMatchObject({ type: 'setup.role', seat: pending!.seat, decisionId: pending!.id })
-      expect(validate(state, action)?.code).toBe('E_TODO')
+      expect(validate(state, action)).toBeNull()
     }
   })
 
@@ -54,11 +54,13 @@ describe('engine smoke', () => {
     expect(notOffered.rejection?.code).toBe('E_NOT_AN_OPTION')
   })
 
-  it('SMOKE-004 rules that are not built yet reject with E_TODO instead of throwing', () => {
+  it('SMOKE-004 answering the role choice moves set-up on to the first crew or half decision', () => {
     const { state, pending } = createGame(makeSetup(), 'seed-1', testBundle)
     const r = step(state, act.role(pending!, 'first'))
-    expect(r.state).toBe(state)
-    expect(r.rejection?.code).toBe('E_TODO')
+    expect(r.rejection).toBeUndefined()
+    expect(r.state).not.toBe(state)
+    expect(r.pending?.kind).toBe('setup.zone')
+    expect(r.state.setup.first).toBe(pending!.seat)
   })
 
   it('SMOKE-005 resigning ends the battle for the other seat and no further action is accepted', () => {

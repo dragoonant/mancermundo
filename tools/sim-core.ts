@@ -1,35 +1,28 @@
-// Headless simulation core: two random-legal bots play seeded games while the invariants of
-// docs/spec/60-testing.md section 3 are checked after every step. The game loop here (like the
-// client store) is the only caller of `step`.
-import { act } from '@/engine/actions'
-import { effectiveApl } from '@/engine/state'
-import { chargeUnderConceal, maxRepeats } from '@/engine/abilities'
-import { enemiesInControlRange } from '@/engine/measure'
-import { providerAny } from '@/engine/team-rules'
-import { placementProblem, terrainOf } from '@/engine/terrain'
+// Headless simulation core: two random-legal bots play seeded games while the invariants below are checked after every step.
+// The game loop here (like the client store) is the only caller of `step`. Until the End phase lands in S4 a game ends by
+// the round cap (`GameSetup.options.maxRounds`, reason 'roundLimit') or by R-5.8 when one gang is gone.
 import {
   createGame,
   legalActions,
   replay,
   step,
-  suggestPlacement,
+  suggest,
   validate,
   view,
   SeededRng,
+  act,
   type Action,
   type EngineBundle,
   type GameEvent,
   type GameSetup,
   type GameState,
   type PendingDecision,
-  type Waypoint,
 } from '@/engine'
-import { polygonBBox, round3 } from '@/engine/geometry'
-import { playableTeams, realSetup } from '@/engine/bundle'
-import { flatMap, terrainMap } from '../tests/fixtures/maps'
-import { makeSetup } from '../tests/fixtures/team'
-import { createAiDecider } from '../src/ai/decider'
-import type { Tier } from '../src/ai/tiers'
+import { circleOverlapsPolygon, polygonBBox, round3 } from '@/engine/geometry'
+import { insideOutline } from '@/engine/board'
+import { baseGap } from '@/engine/measure'
+import { approachPoint, planToward } from '@/engine/movement'
+import type { VoluntaryKind } from '@/engine/movement'
 
 export interface Violation {
   rule: string
@@ -42,11 +35,13 @@ export interface GameReport {
   seed: string
   ended: boolean
   decisions: number
-  turningPoints: number
+  rounds: number
   rejections: number
   violations: Violation[]
   hashMismatch: boolean
   actions: Action[]
+  /** counters for the summary line */
+  stats: Record<string, number>
 }
 
 export interface SimReport {
@@ -56,10 +51,11 @@ export interface SimReport {
   rejections: number
   violations: number
   failing: GameReport[]
+  stats: Record<string, number>
   ms: number
 }
 
-export const MAX_DECISIONS = 3000
+export const MAX_DECISIONS = 4000
 export const STALL_LIMIT = 200
 
 // ---------------------------------------------------------------------------
@@ -82,34 +78,42 @@ export class RandomBot {
 
   decide(state: GameState, pending: PendingDecision): Action {
     const legal = legalActions(state, pending)
-    if (legal) return legal[this.int(legal.length)]!
+    if (legal) return pending.kind === 'action.choose' ? this.choose(legal) : legal[this.int(legal.length)]!
     if (pending.kind === 'setup.deploy') return this.deploy(state, pending)
     if (pending.kind === 'move.path') return this.move(state, pending)
-    if (pending.kind === 'setup.equipMarker') return this.equip(pending)
-    if (pending.kind === 'marker.place') return this.place(state, pending)
+    const s = suggest(state, pending)
+    if (s) return s
     if (pending.canPass) return act.pass(pending)
     throw new Error(`bot cannot answer ${pending.kind}`)
   }
 
-  /** M2b-game: equipment placement answers with the engine's own suggestion (a legal spot at the time the decision was raised). */
-  private equip(pending: PendingDecision): Action {
-    const s = pending.context.suggestion as { x: number; z: number; yaw: number }
-    return { type: 'setup.equipMarker', seat: pending.seat, decisionId: pending.id, payload: { x: s.x, z: s.z, yaw: s.yaw } }
-  }
-
-  /** M2b-game: Place Marker puts the carried marker where the carrier stands, or cancels. */
-  private place(state: GameState, pending: PendingDecision): Action {
-    const op = state.operatives[String(pending.context.operativeId)]
-    if (!op || this.float() < 0.3) return act.pass(pending)
-    // batch C shared: a team spot filter lists the spots it accepts
-    const spots = pending.context.spots as { x: number; z: number }[] | undefined
-    const at = spots && spots.length > 0 ? spots[Math.floor(this.float() * spots.length)]! : { x: op.pos.x, z: op.pos.z }
-    return { type: 'marker.place', seat: pending.seat, decisionId: pending.id, payload: at }
+  /** Pick an action type uniformly first (so a rare option such as a door is not drowned by 18 turn facings), then an option of it. */
+  private choose(legal: Action[]): Action {
+    const groups = new Map<string, Action[]>()
+    for (const a of legal) {
+      const key = a.type === 'action.choose' ? a.payload.action : a.type
+      if (!groups.has(key)) groups.set(key, [])
+      groups.get(key)!.push(a)
+    }
+    const keys = [...groups.keys()]
+    // finishing early and turning are less interesting than acting: half weight
+    const weights = keys.map((k) => (k === 'end' || k === 'turn' ? 0.5 : 1))
+    let roll = this.float() * weights.reduce((x, y) => x + y, 0)
+    let pickKey = keys[keys.length - 1]!
+    for (let i = 0; i < keys.length; i++) {
+      roll -= weights[i]!
+      if (roll < 0) {
+        pickKey = keys[i]!
+        break
+      }
+    }
+    const list = groups.get(pickKey)!
+    return list[this.int(list.length)]!
   }
 
   private deploy(state: GameState, pending: PendingDecision): Action {
     const c = pending.constraints!
-    const ids = c.operativeIds!
+    const ids = c.fighterIds!
     const box = polygonBBox(c.region!)
     for (let i = 0; i < 80; i++) {
       const id = ids[this.int(ids.length)]!
@@ -118,78 +122,51 @@ export class RandomBot {
         id,
         round3(box.minX + this.float() * (box.maxX - box.minX)),
         round3(box.minZ + this.float() * (box.maxZ - box.minZ)),
+        round3((this.float() - 0.5) * 2 * Math.PI),
       )
       if (!validate(state, a)) return a
     }
-    const spot = suggestPlacement(state, pending, undefined, this.int(1000))
-    if (!spot) throw new Error('no legal deploy spot')
-    return act.deploy(pending, spot.operativeId, spot.x, spot.z, spot.y)
+    const s = suggest(state, pending)
+    if (!s) throw new Error('no legal deploy spot')
+    return s
   }
 
   private move(state: GameState, pending: PendingDecision): Action {
     const c = pending.constraints!
-    const op = state.operatives[c.operativeId!]!
-    const enemies = Object.values(state.operatives).filter((o) => o.status === 'active' && o.seat !== op.seat)
-    const idx = terrainOf(state.map)
-    const vantage = idx.solids.filter((s) => s.floors.length > 0)
-    const max = c.maxInches ?? 6
-    const toward = (tx: number, tz: number, len: number): { x: number; z: number } => {
-      const dx = tx - op.pos.x
-      const dz = tz - op.pos.z
-      const d = Math.hypot(dx, dz) || 1
-      const l = Math.min(len, d)
-      return { x: round3(op.pos.x + (dx / d) * l), z: round3(op.pos.z + (dz / d) * l) }
-    }
-    for (let i = 0; i < 80; i++) {
-      let wps: Waypoint[]
+    const f = state.fighters[c.fighterId!]!
+    const max = c.maxInches ?? 0
+    const enemies = Object.values(state.fighters).filter((e) => e.location === 'board' && e.seat !== f.seat)
+    const nearest = enemies.length ? enemies.reduce((a, b) => (Math.hypot(a.pos.x - f.pos.x, a.pos.z - f.pos.z) < Math.hypot(b.pos.x - f.pos.x, b.pos.z - f.pos.z) ? a : b)) : null
+    const kind = c.kind as VoluntaryKind
+    for (let i = 0; i < 60; i++) {
       const roll = this.float()
-      const nearest = enemies.length
-        ? enemies.reduce((a, b) => (Math.hypot(a.pos.x - op.pos.x, a.pos.z - op.pos.z) < Math.hypot(b.pos.x - op.pos.x, b.pos.z - op.pos.z) ? a : b))
-        : null
-      if (c.kind === 'charge' && enemies.length > 0) {
-        const e = this.float() < 0.6 && nearest ? nearest : enemies[this.int(enemies.length)]!
-        const dx = e.pos.x - op.pos.x
-        const dz = e.pos.z - op.pos.z
-        const d = Math.hypot(dx, dz) || 1
-        const stop = e.baseRadius + op.baseRadius + 0.05 + this.float() * 0.6
-        wps = [{ x: round3(e.pos.x - (dx / d) * stop), z: round3(e.pos.z - (dz / d) * stop), y: e.pos.y }]
-      } else if (c.kind === 'fallBack' && nearest) {
-        const away = toward(2 * op.pos.x - nearest.pos.x, 2 * op.pos.z - nearest.pos.z, 1 + this.float() * Math.max(1, max - 1))
-        wps = [{ x: away.x, z: away.z, y: op.pos.y }]
-      } else if (op.pos.y > 2 && roll < 0.35) {
-        // on Vantage: jump (to the floor or another roof) or just step off
-        const ang = this.float() * Math.PI * 2
-        const len = 1 + this.float() * 3
-        const x = round3(op.pos.x + Math.sin(ang) * len)
-        const z = round3(op.pos.z + Math.cos(ang) * len)
-        wps = this.float() < 0.5 ? [{ x, z, y: this.float() < 0.5 ? 0 : op.pos.y, jump: true }] : [{ x, z, y: 0 }]
-      } else if (roll < 0.3 && vantage.length > 0) {
-        const s = vantage[this.int(vantage.length)]!
-        const tx = round3(s.bbox.minX + this.float() * (s.bbox.maxX - s.bbox.minX))
-        const tz = round3(s.bbox.minZ + this.float() * (s.bbox.maxZ - s.bbox.minZ))
-        const d = Math.hypot(tx - op.pos.x, tz - op.pos.z)
-        if (d <= max) wps = [{ x: tx, z: tz, y: s.floors[0] }]
-        else {
-          const w = toward(tx, tz, max)
-          wps = [{ x: w.x, z: w.z, y: op.pos.y }]
-        }
-      } else if (roll < 0.55 && nearest) {
-        const w = toward(nearest.pos.x, nearest.pos.z, 0.5 + this.float() * max)
-        wps = [{ x: w.x, z: w.z, y: op.pos.y }]
+      let wps: { x: number; z: number }[] | null = null
+      if (roll < 0.35 && nearest) {
+        wps = planToward(state, f, kind, max, approachPoint(state, f, nearest))
+      } else if (roll < 0.55) {
+        // toward a random board point by the engine's own route
+        const to = { x: round3((this.float() - 0.5) * 22), z: round3((this.float() - 0.5) * 34) }
+        wps = planToward(state, f, kind, max, to)
       } else {
-        const n = 1 + this.int(2)
+        const n = 1 + this.int(3)
+        let x = f.pos.x
+        let z = f.pos.z
         wps = []
-        let x = op.pos.x
-        let z = op.pos.z
         for (let k = 0; k < n; k++) {
           const ang = this.float() * Math.PI * 2
-          const len = 0.5 + this.float() * Math.max(0.5, max / n - 0.5)
+          const len = 0.25 + this.float() * Math.max(0.25, max / n)
           x = round3(x + Math.sin(ang) * len)
           z = round3(z + Math.cos(ang) * len)
-          wps.push({ x, z, y: op.pos.y })
+          wps.push({ x, z })
         }
       }
-      const a = act.path(pending, wps)
+      if (!wps || wps.length === 0) continue
+      const facing = this.float() < 0.3 ? round3((this.float() - 0.5) * 2 * Math.PI) : undefined
+      const a = act.path(pending, wps, facing)
+      if (!validate(state, a)) return a
+    }
+    if (kind === 'takeCover') {
+      const a = act.path(pending, [])
       if (!validate(state, a)) return a
     }
     return act.pass(pending)
@@ -197,124 +174,105 @@ export class RandomBot {
 }
 
 // ---------------------------------------------------------------------------
-// Invariants (60-testing section 3)
+// Invariants
 // ---------------------------------------------------------------------------
 
-function finiteState(s: GameState): string | null {
-  for (const o of Object.values(s.operatives)) {
-    for (const v of [o.pos.x, o.pos.y, o.pos.z, o.wounds, o.facing, o.baseRadius]) {
-      if (!Number.isFinite(v)) return `operative ${o.id} has a non-finite number`
-    }
-  }
-  for (const seat of ['A', 'B'] as const) {
-    if (!Number.isFinite(s.players[seat].cp) || !Number.isFinite(s.players[seat].vp)) return `player ${seat} has a non-finite number`
-  }
-  return null
-}
+const VOLUNTARY: ReadonlySet<string> = new Set(['move', 'takeCover', 'crawl', 'carry'])
 
-/** OperativeMoved actions another rule places the operative by (movement.applyForcedMove, Timesplinter): exempt from MOVE. */
-export const FORCED_MOVES: ReadonlySet<string> = new Set(['forced', 'timesplinter'])
-
-export function checkInvariants(prev: GameState, next: GameState, action: Action, events: GameEvent[]): string[] {
+export function checkInvariants(prev: GameState, next: GameState, _action: Action, events: GameEvent[]): string[] {
   const out: string[] = []
   const add = (rule: string, msg: string) => out.push(`${rule}: ${msg}`)
 
-  const nf = finiteState(next)
-  if (nf) add('finite', nf)
-
-  for (const o of Object.values(next.operatives)) {
-    if (o.wounds < 0 || o.wounds > o.maxWounds) add('wounds', `${o.id} has ${o.wounds}/${o.maxWounds}`)
-    // an incapacitated operative stays until the whole Shoot/Fight action has finished (R-5.14), i.e. while `attack` is open
-    if (o.status === 'active' && o.wounds <= 0 && !next.attack && !next.removal) add('SIM-004', `${o.id} is on the board with ${o.wounds} wounds`)
-    if (o.status === 'active') {
-      const problem = placementProblem(next, { id: o.id, pos: o.pos, radius: o.baseRadius, height: o.height })
-      if (problem) add('SIM-007', `${o.id} at ${o.pos.x},${o.pos.y},${o.pos.z}: ${problem.reason}`)
-    }
-  }
-
-  const act_ = next.firefight.activation
-  if (act_) {
-    const op = next.operatives[act_.operativeId]!
-    // AP must be within the APL when it is spent: an APL that drops later in the activation (Medic!'s -1 on the saved
-    // operative) does not make earlier spending illegal, so only a step that spends AP is checked, against the
-    // higher of the APL before and after the step
-    const before = prev.operatives[op.id]
-    const cap = act_.counteract ? 0 : Math.max(effectiveApl(op), before ? effectiveApl(before) : 0)
-    const spent = events.some((e) => e.type === 'ApSpent' && e.operativeId === op.id)
-    if (!act_.counteract && spent && act_.apSpent > cap) add('SIM-005', `${op.id} spent ${act_.apSpent} AP with APL ${cap}`)
-    // an action repeats only where a team rule allows it (ASTARTES, Krumpin' Time) or after a free action
-    if (!act_.counteract && !act_.frame) {
-      for (const a of new Set(act_.performed)) {
-        const n = act_.performed.filter((p) => p === a).length
-        if (n > maxRepeats(next, op, a, act_.performed) && !act_.performed.some((p) => p.startsWith('ability:'))) add('ORD-005', `${op.id} repeated an action: ${act_.performed.join(',')}`)
+  for (const f of Object.values(next.fighters)) {
+    for (const v of [f.pos.x, f.pos.y, f.pos.z, f.facing, f.baseRadius, f.wounds, f.fleshWounds]) {
+      if (!Number.isFinite(v)) {
+        add('finite', `fighter ${f.id} has a non-finite number`)
+        break
       }
     }
-    if (op.order === 'conceal' && !act_.counteract) {
-      if (act_.performed.includes('charge') && !chargeUnderConceal(next, op)) add('ORD-002', `${op.id} charged under Conceal`)
+    if (f.wounds < 0 || f.wounds > f.maxWounds) add('wounds', `${f.id} has ${f.wounds}/${f.maxWounds} wounds`)
+    if (f.fleshWounds < 0 || f.fleshWounds > f.stats.T) add('flesh', `${f.id} has ${f.fleshWounds} Flesh Wounds with T ${f.stats.T}`)
+    if (f.location !== 'board') continue
+    const c = { x: f.pos.x, z: f.pos.z }
+    if (!insideOutline(next.board.def, c)) add('SIM-007', `${f.id} is off the board at ${c.x},${c.z}`)
+    for (const w of next.board.def.walls) if (circleOverlapsPolygon(c, f.baseRadius, w.poly)) add('SIM-007', `${f.id} overlaps wall ${w.id}`)
+    for (const d of next.board.def.doors) {
+      if (next.board.doors[d.id]?.state === 'closed' && circleOverlapsPolygon(c, f.baseRadius, d.poly)) add('SIM-007', `${f.id} overlaps closed door ${d.id}`)
+    }
+    for (const o of next.board.def.obstacles) if (circleOverlapsPolygon(c, f.baseRadius, o.poly)) add('SIM-007', `${f.id} stands on obstacle ${o.id}`)
+    for (const g of Object.values(next.fighters)) {
+      if (g.id <= f.id || g.location !== 'board') continue
+      if (Math.hypot(g.pos.x - f.pos.x, g.pos.z - f.pos.z) < f.baseRadius + g.baseRadius - 1e-6) add('SIM-007', `${f.id} overlaps ${g.id}`)
+    }
+    // engagement rules
+    if (f.engagedWith.length > 0) {
+      if (f.posture !== 'standing') add('STATUS', `${f.id} is ${f.posture} and Engaged`)
+      for (const id of f.engagedWith) {
+        const e = next.fighters[id]
+        if (!e || e.posture !== 'standing' || e.location !== 'board') add('STATUS', `${f.id} is Engaged with ${id} which is not Standing on the board`)
+        else if (e.seat === f.seat) add('STATUS', `${f.id} is Engaged with a friend ${id}`)
+      }
     }
   }
+
+  const a = next.action.activation
+  if (a) {
+    if (a.actionsLeft < 0 || a.actionsLeft > 2) add('ACT', `${a.fighterId} has ${a.actionsLeft} actions left`)
+    const spent = a.performed.reduce((n, p) => n + (p.type === 'double' ? 2 : p.type === 'free' ? 0 : 1), 0)
+    if (spent > 2) add('ACT', `${a.fighterId} spent ${spent} actions: ${a.performed.map((p) => p.action).join(',')}`)
+    if (spent + a.actionsLeft !== 2) add('ACT', `${a.fighterId} spent ${spent} with ${a.actionsLeft} left`)
+    const basics = a.performed.filter((p) => p.type === 'basic').map((p) => p.action)
+    if (new Set(basics).size !== basics.length) add('ACT', `${a.fighterId} repeated a Basic action: ${basics.join(',')}`)
+    a.performed.forEach((p, i) => {
+      if (p.type === 'double' && i > 0 && a.performed.slice(0, i).some((q) => q.type !== 'free')) add('ACT', `${a.fighterId} did a Double after another action`)
+    })
+  }
+  if (next.action.group && next.action.group.members.length > 2) add('GROUP', `a group of ${next.action.group.members.length} members`)
 
   for (const ev of events) {
-    // ORD-002: a Conceal operative shoots only with a Silent weapon, or through a viewpoint / team rule that lets it
-    // (Magnify). Checked once, on the step the weapon is picked, against the weapon actually used: the old check
-    // (any Silent weapon carried, on every later step of the activation) both missed a non-Silent profile fired next
-    // to a Silent one and flagged Magnify shots after the proxy had moved on.
-    if (ev.type === 'ShootStarted') {
-      const op = next.operatives[ev.operativeId]
-      const silent = !!next.data.weapons[ev.weaponId]?.rules.some((r) => /silent$/i.test(r.rule))
-      const viewpoint = (action.type === 'shoot.weapon' && action.payload.viewpointId) || next.attack?.viewpointId
-      const counteract = next.firefight.activation?.counteract && next.firefight.activation.operativeId === op?.id
-      if (op && op.order === 'conceal' && !silent && !counteract && !viewpoint && !providerAny(next, op, 'shootUnderConceal')) {
-        add('ORD-002', `${op.id} shot ${ev.weaponId} under Conceal`)
+    if (ev.type === 'DiceRolled') {
+      if (ev.die === 'scatter') {
+        for (const d of ev.dice) if (!Number.isInteger(d) || d < 0 || d >= 360) add('dice', `scatter ${d} out of range`)
+      } else {
+        for (const d of ev.dice) if (!Number.isInteger(d) || d < 1 || d > 6) add('dice', `die ${d} out of range`)
+        if (ev.faces) for (const face of ev.faces) if (typeof face !== 'string' || face === '') add('dice', 'a die face has no name')
       }
     }
-    if (ev.type === 'DiceRolled') {
-      for (const d of ev.dice) if (!Number.isInteger(d) || d < 1 || d > 6) add('dice', `die ${d} out of range`)
-    }
-    if (ev.type === 'OperativeMoved') {
-      const op = next.operatives[ev.operativeId]!
-      const inCr = enemiesInControlRange(next, op, op.seat).length > 0
-      if (ev.action === 'charge' && !inCr) add('MOVE-006', `${op.id} charged but is not in an enemy control range`)
-      // a forced move (Knux Smash pushes, Timesplinter's swap) is placed by another operative's rule: the mover's own
-      // control range restrictions do not apply to it, so it may end in an enemy control range
-      if (ev.action !== 'charge' && !FORCED_MOVES.has(ev.action) && inCr) add('MOVE', `${op.id} finished a ${ev.action} in an enemy control range`)
+    if (ev.type === 'FighterMoved' && VOLUNTARY.has(ev.kind)) {
+      const f = next.fighters[ev.fighterId]!
+      for (const e of Object.values(next.fighters)) {
+        if (e.location !== 'board' || e.seat === f.seat || e.posture === 'seriouslyInjured') continue
+        const gap = baseGap(f, e)
+        const startGap = Math.hypot(e.pos.x - ev.from.x, e.pos.z - ev.from.z) - e.baseRadius - f.baseRadius
+        if (gap < 1 - 1e-6 && gap < startGap - 1e-6) add('MOVE', `${f.id} ended a ${ev.kind} ${gap.toFixed(2)}" from ${e.id}`)
+      }
+      if (ev.length > ev.maxInches + 0.005) add('MOVE', `${f.id} moved ${ev.length} of ${ev.maxInches}`)
     }
   }
 
-  for (const seat of ['A', 'B'] as const) {
-    if (next.players[seat].cp < 0) add('SIM-005', `${seat} has ${next.players[seat].cp} CP`)
-    // VP only falls when an incapacitated operative returns (Reanimation Protocols, reserve returns): the kill
-    // grade drops and missions.onOperativeReturned takes the kill op VP back with a negative VpScored. Any other
-    // loss, or a loss bigger than those events, is a bug.
-    const returned = events.some((e) => e.type === 'OperativeReturned')
-    const takenBack = returned
-      ? events.reduce((n, e) => (e.type === 'VpScored' && e.seat === seat && e.amount < 0 ? n - e.amount : n), 0)
-      : 0
-    if (next.players[seat].vp < prev.players[seat].vp - takenBack) add('vp', `${seat} lost VP (${prev.players[seat].vp} -> ${next.players[seat].vp}${returned ? `, ${takenBack} taken back by a return` : ''})`)
-    if (next.players[seat].vp > 99) add('vp', `${seat} has implausible VP`)
-  }
   if (next.seq !== prev.seq + 1) add('seq', `seq jumped from ${prev.seq} to ${next.seq}`)
-  if (next.turningPoint > 4) add('SIM-003', `turning point ${next.turningPoint}`)
-
   if (next.phase === 'ended') {
     if (next.pending) add('pending', 'a pending decision remains after the battle ended')
+    if (!next.result) add('pending', 'the battle ended with no result')
   } else if (!next.pending) {
     add('pending', 'no pending decision before the battle ended')
   } else {
-    const legal = legalActions(next, next.pending)
+    const p = next.pending
+    const legal = legalActions(next, p)
     if (legal === null) {
-      if (!next.pending.canPass) {
-        if (next.pending.kind === 'setup.deploy') {
-          if (!suggestPlacement(next, next.pending)) add('SIM-001', 'no legal deploy spot exists')
-        } else if (next.pending.kind === 'setup.equipMarker') {
-          if (!next.pending.context.suggestion) add('SIM-001', 'no suggested equipment spot')
-        } else add('SIM-001', `${next.pending.kind} is continuous with no way to pass`)
+      if (!p.canPass) {
+        const s = suggest(next, p)
+        if (!s) add('SIM-001', `${p.kind} is continuous with no way to pass and no suggestion`)
+        else {
+          const rej = validate(next, s)
+          if (rej) add('SIM-001', `the suggestion for ${p.kind} fails validate: ${rej.code} ${rej.reason}`)
+        }
       }
     } else {
-      if (legal.length === 0) add('SIM-001', `${next.pending.kind} has no legal action`)
-      for (const a of legal) {
-        const rej = validate(next, a)
-        if (rej) add('SIM-001', `a listed action fails validate: ${a.type} ${rej.code} ${rej.reason}`)
+      if (legal.length === 0) add('SIM-001', `${p.kind} has no legal action`)
+      for (const l of legal) {
+        const rej = validate(next, l)
+        if (rej) add('SIM-001', `a listed action fails validate: ${l.type} ${rej.code} ${rej.reason}`)
       }
     }
   }
@@ -326,19 +284,21 @@ export function checkInvariants(prev: GameState, next: GameState, action: Action
 // ---------------------------------------------------------------------------
 
 function progressKey(s: GameState): string {
-  const a = s.firefight.activation
-  const ready = Object.values(s.operatives).filter((o) => o.ready).length
-  const placed = Object.values(s.operatives).filter((o) => o.status === 'active').length
-  return `${s.phase}|${s.turningPoint}|${ready}|${placed}|${a ? `${a.operativeId}:${a.apSpent}:${a.performed.length}` : '-'}|${s.players.A.cp}|${s.players.B.cp}`
+  const a = s.action.activation
+  const ready = Object.values(s.fighters).filter((f) => f.ready).length
+  const deployed = Object.values(s.fighters).filter((f) => f.location === 'board').length
+  return `${s.phase}|${s.round}|${ready}|${deployed}|${a ? `${a.fighterId}:${a.actionsLeft}:${a.performed.length}` : '-'}|${s.setup.step}|${s.setup.crewDone.length}`
+}
+
+const bump = (stats: Record<string, number>, key: string, n = 1) => {
+  stats[key] = (stats[key] ?? 0) + n
 }
 
 export function playGame(setup: GameSetup, bundle: EngineBundle, seed: string, game = 0): GameReport {
   const violations: Violation[] = []
+  const stats: Record<string, number> = {}
   const bots = { A: new RandomBot(`${seed}:A`), B: new RandomBot(`${seed}:B`) }
-  // `--decider easy|normal` (sim.ts passes argv through): both seats play with the AI instead of the random bot
-  const tierArg = process.argv.includes('--decider') ? (process.argv[process.argv.indexOf('--decider') + 1] as Tier) : null
-  const ai = tierArg ? { A: createAiDecider(tierArg, { seed: `${seed}:A` }), B: createAiDecider(tierArg, { seed: `${seed}:B` }) } : null
-  let result = createGame(setup, seed, bundle)
+  const result = createGame(setup, seed, bundle)
   let state = result.state
   const hashes: string[] = [state.hash]
   let decisions = 0
@@ -346,16 +306,14 @@ export function playGame(setup: GameSetup, bundle: EngineBundle, seed: string, g
   let stall = 0
   let lastKey = progressKey(state)
   let hashMismatch = false
-
   const violate = (rule: string, message: string) => violations.push({ rule, message, decision: decisions })
 
   while (state.pending && decisions < MAX_DECISIONS) {
     const pending = state.pending
-    const pv = view(state, pending.seat)
-    void pv // deciders only ever see the redacted view; the bot reads engine state through helpers above
+    void view(state, pending.seat) // deciders only ever see the redacted view; the bot reads engine state through helpers
     let action: Action
     try {
-      action = ai ? ai[pending.seat].decideSync(pv, pending, legalActions(state, pending)).action : bots[pending.seat].decide(state, pending)
+      action = bots[pending.seat].decide(state, pending)
     } catch (e) {
       violate('bot', (e as Error).message)
       break
@@ -366,7 +324,7 @@ export function playGame(setup: GameSetup, bundle: EngineBundle, seed: string, g
     try {
       r = step(state, action)
     } catch (e) {
-      violate('SIM-002', `step threw: ${(e as Error).message}`)
+      violate('SIM-002', `step threw: ${(e as Error).stack ?? (e as Error).message}`)
       break
     }
     if (r.rejection) {
@@ -376,10 +334,17 @@ export function playGame(setup: GameSetup, bundle: EngineBundle, seed: string, g
     }
     state = r.state
     hashes.push(state.hash)
+    for (const ev of r.events) {
+      if (ev.type === 'FighterMoved') bump(stats, `moved:${ev.kind}`)
+      else if (ev.type === 'DoorChanged') bump(stats, `door:${ev.state}`)
+      else if (ev.type === 'GroupNominated') bump(stats, 'groups')
+      else if (ev.type === 'ActivationEnded') bump(stats, 'activations')
+      else if (ev.type === 'DuctUsed') bump(stats, 'ducts')
+      else if (ev.type === 'EngagementChanged' && ev.engagedWith.length > 0) bump(stats, 'engaged')
+    }
     for (const m of checkInvariants(prev, state, action, r.events)) violate('invariant', m)
     const key = progressKey(state)
-    if (key === lastKey) stall++
-    else stall = 0
+    stall = key === lastKey ? stall + 1 : 0
     lastKey = key
     if (stall >= STALL_LIMIT) {
       violate('stall', `${STALL_LIMIT} decisions without progress at ${key}`)
@@ -390,7 +355,7 @@ export function playGame(setup: GameSetup, bundle: EngineBundle, seed: string, g
   const ended = state.phase === 'ended'
   if (!ended && violations.length === 0) violate('SIM-003', `game did not end within ${MAX_DECISIONS} decisions`)
 
-  // SIM-006: the same seed and the same action list reproduce every hash.
+  // SIM-006: the same seed and the same action list reproduce every hash
   if (violations.length === 0) {
     const rep = replay(setup, seed, state.log, bundle)
     if (rep.rejection || rep.hashes.length !== hashes.length || rep.hashes.some((h, i) => h !== hashes[i])) {
@@ -398,17 +363,22 @@ export function playGame(setup: GameSetup, bundle: EngineBundle, seed: string, g
       violate('SIM-006', 'replay did not reproduce the recorded hashes')
     }
   }
-  return {
-    game,
-    seed,
-    ended,
-    decisions,
-    turningPoints: state.turningPoint,
-    rejections,
-    violations,
-    hashMismatch,
-    actions: state.log,
+  return { game, seed, ended, decisions, rounds: state.round, rejections, violations, hashMismatch, actions: state.log, stats }
+}
+
+/** Play one game with the random bots and keep every event (board-svg --sim draws from this). Stops at the first rejection. */
+export function simulate(setup: GameSetup, bundle: EngineBundle, seed: string): { state: GameState; events: GameEvent[] } {
+  const bots = { A: new RandomBot(`${seed}:A`), B: new RandomBot(`${seed}:B`) }
+  const first = createGame(setup, seed, bundle)
+  let state = first.state
+  const events: GameEvent[] = [...first.events]
+  for (let i = 0; i < MAX_DECISIONS && state.pending; i++) {
+    const r = step(state, bots[state.pending.seat].decide(state, state.pending))
+    if (r.rejection) break
+    state = r.state
+    events.push(...r.events)
   }
+  return { state, events }
 }
 
 export interface SimOptions {
@@ -422,6 +392,7 @@ export interface SimOptions {
 export function runSim(opts: SimOptions): SimReport {
   const t0 = Date.now()
   const failing: GameReport[] = []
+  const stats: Record<string, number> = {}
   let completed = 0
   let decisions = 0
   let rejections = 0
@@ -432,54 +403,9 @@ export function runSim(opts: SimOptions): SimReport {
     decisions += r.decisions
     rejections += r.rejections
     violations += r.violations.length
+    for (const [k, v] of Object.entries(r.stats)) bump(stats, k, v)
     if (r.violations.length > 0 || !r.ended) failing.push(r)
     opts.onGame?.(r)
   }
-  return { games: opts.games, completed, decisions, rejections, violations, failing, ms: Date.now() - t0 }
-}
-
-/** Roster sizes cycle so batch set-up is exercised; odd games use the terrain layout. */
-export function setupFor(game: number): GameSetup {
-  const sizes = [3, 3, 6, 4]
-  const size = sizes[game % sizes.length]!
-  return makeSetup({ map: game % 2 === 0 ? flatMap() : terrainMap(), sizeA: size, sizeB: size })
-}
-
-/**
- * M2b-game: every pairing of the playable teams (team.json `playable` not false) with their default rosters,
- * built through the data adapter. With only Angels of Death and Kommandos playable this is exactly the
- * original AoD-vs-Kommandos rotation. Seats swap every game, the pairing changes every two games, and the
- * killzone layouts rotate; each official card plays its own map, the engine rolls the crit op, and the bots place the objective
- * markers and the equipment themselves.
- */
-export function realSetupFor(bundle: EngineBundle): (game: number) => GameSetup {
-  const layouts = Object.keys(bundle.layouts ?? {}).sort()
-  const teams = playableTeams(bundle)
-  const n = teams.length
-  // M10 batch D shared: game g fills seat slots 2g and 2g + 1 of a sequence that lists every playable team once per
-  // cycle of n slots (cycle c orders them j * m_c + c mod n, m_c a multiplier coprime with n), so over G games every
-  // team plays at least floor(2G / n) times (40 games, 24 teams: 3 each) and the opponents change with m_c; the lower
-  // team index takes seat A in even games, seat B in odd ones (two teams: the original AoD-vs-Kommandos rotation).
-  const mults: number[] = []
-  for (let m = 1; m <= n - 2; m++) if (gcd(m, n) === 1) mults.push(m)
-  if (mults.length === 0) mults.push(1)
-  const slotTeam = (k: number): number => {
-    const c = Math.floor(k / n)
-    return ((k % n) * mults[c % mults.length]! + c) % n
-  }
-  return (game) => {
-    const swap = game % 2 === 1
-    const i = slotTeam(2 * game)
-    const j = n > 1 ? slotTeam(2 * game + 1) : i
-    const a = teams[Math.min(i, j)]!
-    const b = teams[Math.max(i, j)]!
-    return realSetup(bundle, {
-      teams: swap ? [b, a] : [a, b],
-      layoutId: layouts[game % layouts.length]!,
-    })
-  }
-}
-
-function gcd(a: number, b: number): number {
-  return b === 0 ? a : gcd(b, a % b)
+  return { games: opts.games, completed, decisions, rejections, violations, failing, stats, ms: Date.now() - t0 }
 }

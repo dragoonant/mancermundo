@@ -1,5 +1,6 @@
 // State helpers: fighters, seats, immutable updates, canonical hashing.
 import { fnv1a } from './rng'
+import type { ConstantsData } from '../data/types'
 import type { Fighter, GameState, Seat, Vec3 } from './types'
 
 export class EngineInvariantError extends Error {
@@ -126,4 +127,37 @@ export function hashState(state: GameState): string {
     parts.push(JSON.stringify(k) + ':' + canon(v))
   }
   return fnv1a('{' + parts.join(',') + '}')
+}
+
+// ---------------------------------------------------------------------------
+// Fighter geometry and condition helpers (S2)
+// ---------------------------------------------------------------------------
+
+export function isBroken(f: Fighter): boolean {
+  return f.conditions.broken !== undefined
+}
+
+export function hasCondition(f: Fighter, name: string): boolean {
+  return f.conditions[name] !== undefined
+}
+
+/** The footprint of a fighter's base on the floor plane. */
+export function centreOf(f: { pos: Vec3 }): { x: number; z: number } {
+  return { x: f.pos.x, z: f.pos.z }
+}
+
+/** The fighter currently activated, or null. */
+export function activeFighter(state: GameState): Fighter | null {
+  const a = state.action.activation
+  return a ? (state.fighters[a.fighterId] ?? null) : null
+}
+
+/** Enemies on the board of a fighter that are Standing or Pinned (the ones the 1" rule protects, R-7.3). */
+export function oneInchEnemies(state: GameState, f: { seat: Seat }): Fighter[] {
+  return onBoard(state).filter((e) => e.seat !== f.seat && e.posture !== 'seriouslyInjured')
+}
+
+/** The rule constants of the snapshot (core/constants.json shape). */
+export function constants(state: GameState): ConstantsData {
+  return state.data.constants as unknown as ConstantsData
 }

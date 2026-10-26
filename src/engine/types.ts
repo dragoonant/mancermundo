@@ -161,11 +161,20 @@ export interface RuntimeScenario {
   roles: boolean
   crews: { attacker?: CrewMethod; defender?: CrewMethod; both?: CrewMethod }
   crewCap: { min: number; max: number; cap: number }[] | null
-  deployment: { kind: 'standard' | 'tile'; minFromCentreline?: number; defenderFirst?: boolean }
+  deployment: { kind: 'standard' | 'tile'; minFromCentreline?: number; defenderFirst?: boolean; withinOfEdge?: number; enemyClearance?: number }
   caskets?: Record<string, unknown>
   scoring: Record<string, unknown>[]
   victory: { by: 'points' | 'caskets' } | { code: string }
   special: { code: string }[]
+}
+
+/** A pre-built starter gang (13-gangs.md): the data an engine-side `rosterFromStarter` turns into a `GameSetup` roster. */
+export interface RuntimeStarterGang {
+  id: string
+  houseId: string
+  name: string
+  credits: number
+  fighters: { name: string; typeId: string; weapons: string[]; wargear: string[]; skills: string[] }[]
 }
 
 /** Snapshot of every record a game uses; copied into the state so `step` needs no bundle. */
@@ -316,6 +325,12 @@ export interface PlayerState {
 
 export interface SetupState {
   step: 'role' | 'crew' | 'casket' | 'zone' | 'deploy' | 'done'
+  /** the seat that picks its half and deploys first (set once the role step is answered) */
+  first: Seat | null
+  /** crew selection order, the plan per seat (scenario method, Forgotten Riches cap applied) and the seats done */
+  crewOrder: Seat[]
+  crewPlan: Record<Seat, CrewMethod> | null
+  crewDone: Seat[]
   /** the automatic roll-off: last dice per seat and the winner */
   rollOff: { rolls: Record<Seat, number>; winner: Seat } | null
   roleChoice: string | null

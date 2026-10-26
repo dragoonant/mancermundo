@@ -3,11 +3,15 @@
 // handle (pistol, Rapid Fire basic gun, blast launcher, flamer template, Parry melee, power weapon) and flak armour.
 // Not the real gangs, so rules tests survive data corrections. Numbers are test values, not printed values.
 import type { EngineBundle } from '@/engine/bundle'
+import { runtimeActions } from '@/engine/bundle'
+import actionsJson from '@/data/core/actions.json'
+import constantsJson from '@/data/core/constants.json'
+import type { ActionData } from '@/data/types'
 import type {
   BoardDef,
   GameSetup,
   RosterFighter,
-  RuntimeAction,
+  RuntimeConstants,
   RuntimeFighterType,
   RuntimeScenario,
   RuntimeSkill,
@@ -130,22 +134,8 @@ const skills: RuntimeSkill[] = [
   { id: 'test.s.sprint', name: 'Test Sprint', kind: 'skill', set: 'agility' },
 ]
 
-// --- actions (a small subset of the R-6.3 catalogue) -----------------------------------------------------------------
-const act = (id: string, name: string, type: RuntimeAction['type'], statuses: string[]): RuntimeAction => ({ id, name, type, statuses })
-const ACTIVE = ['standingActive']
-const actions: RuntimeAction[] = [
-  act('move', 'Move', 'simple', [...ACTIVE]),
-  act('charge', 'Charge', 'double', [...ACTIVE]),
-  act('shoot', 'Shoot', 'basic', [...ACTIVE, 'standingEngaged']),
-  act('aim', 'Aim', 'basic', [...ACTIVE]),
-  act('takeCover', 'Take Cover', 'simple', [...ACTIVE]),
-  act('reload', 'Reload', 'basic', [...ACTIVE]),
-  act('fight', 'Fight', 'basic', ['standingEngaged']),
-  act('standUp', 'Stand Up', 'simple', ['pinned']),
-  act('crawl', 'Crawl', 'simple', ['seriouslyInjured']),
-  act('turn', 'Turn', 'free', [...ACTIVE]),
-  act('end', 'End Activation', 'free', [...ACTIVE, 'standingEngaged', 'pinned', 'seriouslyInjured']),
-]
+// --- actions: the full R-6.3 catalogue through the same mapping the data adapter uses ----------------------------------
+const actions = Object.values(runtimeActions(actionsJson as unknown as ActionData[]))
 
 // --- fighter types -----------------------------------------------------------------------------------------------------
 type StatInput = Partial<Record<StatKey, number>>
@@ -236,7 +226,8 @@ export const testBundle: EngineBundle = {
     injury: ['fleshWound', 'fleshWound', 'seriouslyInjured', 'seriouslyInjured', 'outOfAction', 'outOfAction'],
     scatter: ['hit', 'hit', 'arrow', 'arrow', 'arrow', 'arrow'],
   },
-  constants: { nerveRadius: 3, groupRadius: 3, leadingByExampleRadius: 12, assistRadius: 1, rallyRadius: 3 },
+  // the rule numbers are printed values and not synthetic: the real constants file
+  constants: constantsJson as unknown as RuntimeConstants,
   scenarios: { [TEST_SCENARIO]: scenario },
   boards: { [TEST_BOARD]: emptyBoard() },
 }

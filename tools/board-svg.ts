@@ -5,13 +5,17 @@
  * red), terminals, ductways, obstacles, casket spots, the deployment regions of the scenarios the board lists, and a 1" grid.
  * The picture is drawn from the compiled BoardDef, so it shows exactly the geometry the rules measure. Top of the picture is
  * low z (seat A's end of a 2x3 board); x runs to the right, z down the page, as seen from above in the 3D view.
- * Stage S2 adds `--sim <seed>` (fighters, arcs and move paths of a simulated game).
+ * `--sim <seed> [--board <id>] [--rounds n] [--scenario id]` plays a seeded random-bot game of the first Goliath gang against the
+ * first Escher gang and draws the final position instead: fighters (blue seat A, red seat B) with their 90 degree vision arcs,
+ * Pinned fighters dashed, every move path of the game as a polyline, open doors hollow, to tools/out/boards/<id>-sim-<seed>.svg.
  */
 import fs from 'node:fs'
 import path from 'node:path'
 import { loadBundle } from '../src/data'
 import { compileBoard, deploymentRegions, fitBases, initialDoors, SMALL_BASE_RADIUS } from '../src/engine/board'
-import type { BoardDef, Polygon } from '../src/engine/types'
+import type { BoardDef, GameEvent, GameState, Polygon } from '../src/engine/types'
+import { realBundle, realSetup } from '../tests/fixtures/real'
+import { simulate } from './sim-core'
 
 const PX = 22 // pixels per inch
 const PAD = 2.5 // inches of margin around the board
@@ -27,7 +31,7 @@ function poly(points: Polygon, attrs: string): string {
   return `<polygon points="${points.map((p) => `${num(p.x)},${num(p.z)}`).join(' ')}" ${attrs}/>`
 }
 
-function svgFor(def: BoardDef, scenarioLabels: string[], regionLayers: string[], title: string): string {
+function svgFor(def: BoardDef, scenarioLabels: string[], regionLayers: string[], title: string, overlay: string[] = [], openDoors: ReadonlySet<string> = new Set()): string {
   const { minX, maxX, minZ, maxZ } = def.bounds
   const w = maxX - minX + PAD * 2
   const h = maxZ - minZ + PAD * 2
@@ -73,13 +77,15 @@ function svgFor(def: BoardDef, scenarioLabels: string[], regionLayers: string[],
 
   // doors
   for (const d of def.doors) {
-    out.push(poly(d.poly, `fill="${d.lockedAtStart ? '#d8403a' : '#e39b2f'}" stroke="#fff" stroke-width="0.05"`))
+    out.push(poly(d.poly, openDoors.has(d.id) ? `fill="none" stroke="${d.lockedAtStart ? '#d8403a' : '#e39b2f'}" stroke-width="0.12" stroke-dasharray="0.3 0.2"` : `fill="${d.lockedAtStart ? '#d8403a' : '#e39b2f'}" stroke="#fff" stroke-width="0.05"`))
     out.push(`<text x="${num((d.seg.a.x + d.seg.b.x) / 2)}" y="${num((d.seg.a.z + d.seg.b.z) / 2 + 0.28)}" font-size="0.8" fill="#14161a" text-anchor="middle" font-weight="700">${d.lockedAtStart ? 'L' : 'D'}</text>`)
     for (const m of d.terminals) out.push(`<rect x="${num(m.pos.x - 0.3)}" y="${num(m.pos.z - 0.3)}" width="0.6" height="0.6" fill="#4a8cff" stroke="#fff" stroke-width="0.05"/>`)
   }
 
   // casket spots (1" discs)
   for (const s of def.casketSpots) out.push(`<circle cx="${num(s.x)}" cy="${num(s.z)}" r="0.5" fill="#f2c94c" fill-opacity="0.85" stroke="#fff" stroke-width="0.05"/>`)
+
+  out.push(...overlay)
 
   // axis labels every 6"
   for (let x = Math.ceil(minX / 6) * 6; x <= maxX; x += 6) out.push(`<text x="${x}" y="${num(minZ - 0.8)}" font-size="0.9" fill="#9aa3b2" text-anchor="middle">${x}</text>`)
@@ -94,7 +100,61 @@ function svgFor(def: BoardDef, scenarioLabels: string[], regionLayers: string[],
   return out.join('\n')
 }
 
+const SEAT_COLOUR = { A: '#4f9bff', B: '#ff6b5e' } as const
+
+/** Fighters, arcs and move paths of a finished simulated game, as SVG fragments. */
+function simOverlay(state: GameState, events: GameEvent[]): string[] {
+  const out: string[] = []
+  for (const e of events) {
+    if (e.type !== 'FighterMoved' || e.path.length < 2) continue
+    const colour = SEAT_COLOUR[state.fighters[e.fighterId]!.seat]
+    out.push(`<polyline points="${e.path.map((p) => `${num(p.x)},${num(p.z)}`).join(' ')}" fill="none" stroke="${colour}" stroke-opacity="0.55" stroke-width="0.12" stroke-linejoin="round"/>`)
+  }
+  for (const f of Object.values(state.fighters)) {
+    if (f.location !== 'board') continue
+    const colour = SEAT_COLOUR[f.seat]
+    const { x, z } = f.pos
+    if (f.posture === 'standing') {
+      const r = 3
+      const a0 = f.facing - Math.PI / 4
+      const a1 = f.facing + Math.PI / 4
+      out.push(`<path d="M ${num(x)} ${num(z)} L ${num(x + Math.sin(a0) * r)} ${num(z + Math.cos(a0) * r)} A ${r} ${r} 0 0 0 ${num(x + Math.sin(a1) * r)} ${num(z + Math.cos(a1) * r)} Z" fill="${colour}" fill-opacity="0.14" stroke="${colour}" stroke-opacity="0.4" stroke-width="0.05"/>`)
+    }
+    const dash = f.posture === 'pinned' ? ' stroke-dasharray="0.25 0.15"' : ''
+    out.push(`<circle cx="${num(x)}" cy="${num(z)}" r="${f.baseRadius}" fill="${colour}" fill-opacity="${f.posture === 'standing' ? 0.85 : 0.4}" stroke="#fff" stroke-width="0.08"${dash}/>`)
+    out.push(`<line x1="${num(x)}" y1="${num(z)}" x2="${num(x + Math.sin(f.facing) * f.baseRadius)}" y2="${num(z + Math.cos(f.facing) * f.baseRadius)}" stroke="#fff" stroke-width="0.1"/>`)
+    out.push(`<text x="${num(x)}" y="${num(z - f.baseRadius - 0.15)}" font-size="0.7" fill="#e7ebf2" text-anchor="middle">${f.id}</text>`)
+  }
+  return out
+}
+
+function argValue(name: string, fallback: string): string {
+  const i = process.argv.indexOf(`--${name}`)
+  return i >= 0 && process.argv[i + 1] !== undefined ? process.argv[i + 1]! : fallback
+}
+
+function simMain(): void {
+  const seed = argValue('sim', '1')
+  const bundle = realBundle()
+  const scenarioId = argValue('scenario', 'scn.tunnel-skirmish')
+  const options = { maxRounds: Number(argValue('rounds', '4')) }
+  const setup = realSetup({ scenarioId, ...(process.argv.includes('--board') ? { boardId: argValue('board', '') } : {}), options })
+  const { state, events } = simulate(setup, bundle, seed)
+  const def = state.board.def
+  const open = new Set(Object.entries(state.board.doors).filter(([, d]) => d.state !== 'closed').map(([id]) => id))
+  const moves = events.filter((e) => e.type === 'FighterMoved').length
+  const title = `${def.id} - sim seed ${seed}: round ${state.round}, ${moves} moves, ${Object.values(state.fighters).filter((f) => f.location === 'board').length} fighters, doors open ${open.size}`
+  fs.mkdirSync(OUT, { recursive: true })
+  const file = path.join(OUT, `${def.id}-sim-${seed}.svg`)
+  fs.writeFileSync(file, svgFor(def, [`${setup.gangs.A.name} (blue) vs ${setup.gangs.B.name} (red)`], [], title, simOverlay(state, events), open))
+  console.log(path.relative(process.cwd(), file))
+}
+
 function main(): void {
+  if (process.argv.includes('--sim')) {
+    simMain()
+    return
+  }
   const bundle = loadBundle()
   const want = process.argv.slice(2).filter((a) => !a.startsWith('--'))
   const ids = Object.keys(bundle.boards).sort()

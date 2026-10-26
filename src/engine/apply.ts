@@ -1,10 +1,11 @@
 // step(): envelope checks -> dispatch to the owner of pending.kind -> afterAction -> log + hash.
 // Rejections never throw and return the SAME state reference.
+import { refreshEngagement } from './measure'
 import { moduleFor } from './modules'
 import { SeededRng, type Rng } from './rng'
 import { canon, cloneState, EngineInvariantError, hashState, SEATS } from './state'
-import { createCtx, reject, type Ctx, type Handled } from './registry'
-import type { Action, GameState, PendingDecision, Rejection, Seat, StepResult } from './types'
+import { createCtx, endGame, reject, type Ctx, type Handled } from './registry'
+import type { Action, GameState, PendingDecision, Rejection, StepResult } from './types'
 import type { GameEvent } from './events'
 
 function rejectionResult(state: GameState, action: Action | undefined, rejection: Rejection): StepResult {
@@ -26,19 +27,7 @@ function matchesOption(pending: PendingDecision, action: Action): boolean {
   return pending.options.some((o) => o.action.type === action.type && canon(o.action.payload ?? {}) === payload)
 }
 
-/**
- * End the battle at once (resign, concede, round limit): sets the result, emits GameEnded and closes the phase. The
- * scenario module (S4) calls this for victory too; `loser` is the seat that resigned or conceded.
- */
-export function endGame(ctx: Ctx, reason: 'resign' | 'concede' | 'roundLimit' | 'scenario', loser?: Seat): void {
-  const s = ctx.state
-  const points = { A: s.players.A.points, B: s.players.B.points }
-  const winner = loser ? (loser === 'A' ? 'B' : 'A') : points.A === points.B ? 'draw' : points.A > points.B ? 'A' : 'B'
-  s.result = { winner, points, reason }
-  s.phase = 'ended'
-  s.pending = null
-  ctx.emit({ type: 'GameEnded', result: s.result }, null)
-}
+export { endGame }
 
 /** Envelope + dispatch. Returns either a rejection or the closure that applies the action. */
 function evaluate(state: GameState, action: Action): Handled {
@@ -82,8 +71,9 @@ export function validate(state: GameState, action: Action): Rejection | null {
  * drain, casualty settling. Stubs until S2 (engagement) and S3b (nerve) fill them in; `apply.ts` stays the one place that
  * orders them.
  */
-function afterAction(_ctx: Ctx): void {
-  // TODO(S2): refreshEngagement(ctx); TODO(S3b): drainNerve(ctx); TODO(S3a): settleCasualties(ctx)
+function afterAction(ctx: Ctx): void {
+  refreshEngagement(ctx)
+  // TODO(S3b): drainNerve(ctx); TODO(S3a): settleCasualties(ctx)
 }
 
 export function step(state: GameState, action: Action, rng?: Rng): StepResult {

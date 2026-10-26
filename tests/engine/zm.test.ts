@@ -1,0 +1,297 @@
+import { afterEach, describe, expect, it } from 'vitest'
+import { act, ScriptedRng, step } from '@/engine'
+import { registerBlastPort, registerHitPort, type BlastSpec, type HitSpec } from '@/engine/ports'
+import { pathGap, withinPath, computeEngagedWith } from '@/engine/measure'
+import { pathDistance } from '@/engine/query'
+import { barricadePair, bundleWith, corridorWithDoor, ductwayWall, openBox, makeBoard } from '../fixtures/boards'
+import { activate, edit, eventsOf, menuActions, moveTo, must, offered, place, startGame, take } from '../fixtures/helpers'
+import type { BoardDef } from '@/engine/types'
+
+const game = (board: BoardDef) => startGame({ bundle: bundleWith(board), setup: { boardId: board.id } }).state
+
+afterEach(() => {
+  registerHitPort(null)
+  registerBlastPort(null)
+})
+
+describe('ZM: Zone Mortalis walls, doors, terminals, ductways, barricades and caskets', () => {
+  it('ZM-002 movement paths and range measurements never pass through walls or board edges', () => {
+    const solid = place(game(ductwayWall()), { A3: { x: 0, z: -2 }, B3: { x: 0, z: 2 } })
+    let r = take(activate(solid, 'A3').state, { action: 'move' })
+    expect(step(r.state, act.path(r.pending!, [{ x: 0, z: 2 }])).rejection?.code).toBe('E_NO_PATH')
+    // the wall spans the whole board: no way round, so the path distance is infinite and nothing is "within" any distance
+    expect(pathDistance(solid, 'A3', 'B3')).toBe(Infinity)
+    expect(withinPath(solid, solid.fighters.A3!, solid.fighters.B3!, 12)).toBe(false)
+    // the board edge is a wall too
+    const edge = place(game(openBox()), { A3: { x: 11, z: -10 } })
+    r = take(activate(edge, 'A3').state, { action: 'move' })
+    expect(step(r.state, act.path(r.pending!, [{ x: 13, z: -10 }])).rejection).toBeDefined()
+    expect(step(r.state, act.path(r.pending!, [{ x: 11.4, z: -10 }])).rejection?.code).toBe('E_NO_PATH')
+    must(step(r.state, act.path(r.pending!, [{ x: 11.25, z: -10 }])))
+    // a gap in the wall: the path round it is long
+    const gap = place(game(makeBoard({ id: 'test.gap', walls: [{ a: { x: -12, z: 0 }, b: { x: 6, z: 0 } }] })), { A3: { x: 0, z: -2 }, B3: { x: 0, z: 2 } })
+    expect(pathGap(gap, gap.fighters.A3!, gap.fighters.B3!)).toBeGreaterThan(8)
+  })
+
+  it('ZM-003 all doors start closed; a closed door blocks movement and line of sight and an open one does not', () => {
+    const board = corridorWithDoor()
+    const s = place(game(board), { A3: { x: 0, z: -1.5 }, B3: { x: 6, z: 3 } })
+    expect(Object.values(s.board.doors).every((d) => d.state === 'closed')).toBe(true)
+    let r = take(activate(s, 'A3').state, { action: 'move' })
+    expect(step(r.state, act.path(r.pending!, [{ x: 0, z: 2 }])).rejection?.code).toBe('E_NO_PATH')
+    // Operate Door (Simple) opens it, then the same path is legal
+    r = activate(s, 'A3')
+    expect(menuActions(r.state)).toContain('operateDoor')
+    r = must(take(r.state, { action: 'operateDoor', doorId: 'door1' }))
+    expect(r.state.board.doors.door1!.state).toBe('open')
+    expect(eventsOf(r.events, 'DoorChanged')[0]).toMatchObject({ doorId: 'door1', state: 'open', locked: false })
+    r = take(r.state, { action: 'move' })
+    must(step(r.state, act.path(r.pending!, [{ x: 0, z: 2 }])))
+  })
+
+  it('Operate Door closes an open door as well, and only within 1 inch', () => {
+    const board = corridorWithDoor()
+    const open = edit(place(game(board), { A3: { x: 0, z: -1.5 }, A4: { x: 0, z: -6 } }), (d) => {
+      d.board.doors.door1!.state = 'open'
+    })
+    const r = activate(open, 'A3')
+    const opt = r.pending!.options!.find((o) => (o.action.payload as { action: string }).action === 'operateDoor')!
+    expect(opt.data).toMatchObject({ to: 'close' })
+    const far = activate(open, 'A4')
+    expect(menuActions(far.state)).not.toContain('operateDoor')
+    expect(step(far.state, act.choose(far.pending!, 'operateDoor', { doorId: 'door1' })).rejection?.code).toBe('E_OUT_OF_RANGE')
+  })
+
+  it('ZM-004 closing a door on a fighter in the doorway: an Initiative pass moves it up to 2 inches clear, a fail hits it (S3 D2) and then moves it clear', () => {
+    const hits: HitSpec[] = []
+    registerHitPort((_ctx, spec) => hits.push(spec))
+    const board = corridorWithDoor()
+    const open = edit(place(game(board), { A3: { x: 0, z: -1.5 }, B3: { x: 0, z: 0.1 } }), (d) => {
+      d.board.doors.door1!.state = 'open'
+    })
+    // I 4+: a 5 passes
+    const pass = must(take(activate(open, 'A3').state, { action: 'operateDoor' }, new ScriptedRng([5])))
+    expect(pass.state.board.doors.door1!.state).toBe('closed')
+    const moved = eventsOf(pass.events, 'FighterMoved').find((e) => e.fighterId === 'B3')!
+    expect(moved.kind).toBe('doorPush')
+    expect(moved.length).toBeLessThanOrEqual(2)
+    expect(pass.state.fighters.B3!.pos.z).toBeGreaterThan(0.74)
+    expect(hits).toHaveLength(0)
+    // a natural 1 fails: the S3 Damage 2 hit goes to the attack code, then the fighter is moved clear
+    const fail = must(take(activate(open, 'A3').state, { action: 'operateDoor' }, new ScriptedRng([1])))
+    expect(hits).toEqual([{ targetId: 'B3', strength: 3, ap: 0, damage: 2, source: 'door' }])
+    expect(fail.state.fighters.B3!.pos.z).toBeGreaterThan(0.74)
+    expect(fail.state.fighters.B3!.location).toBe('board')
+  })
+
+  it('ZM-004 a fighter exactly in the middle of the doorway is moved to a random side, the free one', () => {
+    const board = corridorWithDoor()
+    const open = edit(place(game(board), { A3: { x: 0, z: -1.5 }, B3: { x: 0, z: 0 } }), (d) => {
+      d.board.doors.door1!.state = 'open'
+    })
+    // I test passes (5), then the side die (1-3 = north first; 4-6 = south first, which A3 occupies)
+    for (const side of [2, 5]) {
+      const r = must(take(activate(open, 'A3').state, { action: 'operateDoor' }, new ScriptedRng([5, side])))
+      expect(r.state.fighters.B3!.pos.z).toBeGreaterThan(0.74)
+    }
+  })
+
+  it('ZM-005 a locked door rejects Operate Door from a non-defender; Access Terminal passes on an Int test at -2 and opens it from range', () => {
+    const board = corridorWithDoor({ locked: true })
+    const s = place(game(board), { A3: { x: -1.6, z: -1.6 }, A4: { x: 0, z: -1.5 } })
+    expect(s.board.doors.door1!.locked).toBe(true)
+    // next to the door but not a defender
+    const near = activate(s, 'A4')
+    expect(menuActions(near.state)).not.toContain('operateDoor')
+    const denied = step(near.state, act.choose(near.pending!, 'operateDoor', { doorId: 'door1' }))
+    expect(denied.rejection?.code).toBe('E_ACTION_RESTRICTED')
+    expect(denied.state).toBe(near.state)
+    // the terminal is 1 inch from A3's base; Int 7+ with -2 needs a total of 9
+    const t = activate(s, 'A3')
+    const opt = t.pending!.options!.find((o) => (o.action.payload as { action: string }).action === 'accessTerminal')!
+    expect(opt.data).toMatchObject({ doorId: 'door1' })
+    const failed = must(step(t.state, opt.action, new ScriptedRng([4, 4])))
+    expect(failed.state.board.doors.door1).toMatchObject({ state: 'closed', locked: true })
+    expect(eventsOf(failed.events, 'TerminalAccessed')).toHaveLength(1)
+    const passed = must(step(t.state, opt.action, new ScriptedRng([4, 5])))
+    expect(passed.state.board.doors.door1).toMatchObject({ state: 'open', locked: false })
+    expect(eventsOf(passed.events, 'DoorChanged')[0]).toMatchObject({ doorId: 'door1', state: 'open', locked: false })
+    // a 2 always fails, however good the modifier
+    const two = must(step(t.state, opt.action, new ScriptedRng([1, 1])))
+    expect(two.state.board.doors.door1!.state).toBe('closed')
+  })
+
+  it('ZM-005 a scenario defender holds the codes and can operate a locked door', () => {
+    const board = corridorWithDoor({ locked: true })
+    const s = edit(place(game(board), { A4: { x: 0, z: -1.5 } }), (d) => {
+      d.players.A.role = 'defender'
+    })
+    const r = activate(s, 'A4')
+    expect(menuActions(r.state)).toContain('operateDoor')
+    const opened = must(take(r.state, { action: 'operateDoor', doorId: 'door1' }))
+    expect(opened.state.board.doors.door1).toMatchObject({ state: 'open', locked: false })
+  })
+
+  it('ZM-006 Force Door opens on D6 + S >= 9, with +2 for each other friend in base contact with the door', () => {
+    const board = corridorWithDoor({ locked: true })
+    // S 3: a 6 is the only pass alone
+    const alone = place(game(board), { A3: { x: 0, z: -1.5 } })
+    const r = activate(alone, 'A3')
+    const opt = r.pending!.options!.find((o) => (o.action.payload as { action: string }).action === 'forceDoor')!
+    expect(opt.data).toMatchObject({ helpers: 0, need: 6 })
+    expect((opt.data as { chance: number }).chance).toBeCloseTo(1 / 6)
+    expect(must(step(r.state, opt.action, new ScriptedRng([5]))).state.board.doors.door1!.state).toBe('closed')
+    const six = must(step(r.state, opt.action, new ScriptedRng([6])))
+    expect(six.state.board.doors.door1).toMatchObject({ state: 'open', locked: false })
+    // a friend touching the door adds 2: a 4 is enough
+    const helped = place(game(board), { A3: { x: -0.6, z: -0.742 }, A4: { x: 0.6, z: -0.742 } })
+    const h = activate(helped, 'A3')
+    const hopt = h.pending!.options!.find((o) => (o.action.payload as { action: string }).action === 'forceDoor')!
+    expect(hopt.data).toMatchObject({ helpers: 1, need: 4 })
+    expect(must(step(h.state, hopt.action, new ScriptedRng([3]))).state.board.doors.door1!.state).toBe('closed')
+    expect(must(step(h.state, hopt.action, new ScriptedRng([4]))).state.board.doors.door1!.state).toBe('open')
+    // an enemy touching the door does not help
+    const enemy = place(game(board), { A3: { x: -0.6, z: -0.742 }, B4: { x: 0.6, z: -0.742 } })
+    const e = activate(enemy, 'A3')
+    expect((e.pending!.options!.find((o) => (o.action.payload as { action: string }).action === 'forceDoor')!.data as { helpers: number }).helpers).toBe(0)
+  })
+
+  it('ZM-008 Crawl Through Ductway places the fighter within 1 inch of the far end, and is refused if every spot is within 1 inch of an enemy', () => {
+    const board = ductwayWall()
+    const s = place(game(board), { A3: { x: 0, z: -1.2, facing: 0 } })
+    let r = activate(s, 'A3')
+    const opt = r.pending!.options!.find((o) => (o.action.payload as { action: string }).action === 'crawlDuct')!
+    const spot = (opt.action.payload as { spot: { x: number; z: number } }).spot
+    expect(spot.z).toBeGreaterThan(0.7)
+    expect(Math.hypot(spot.x - 0, spot.z - 0.3) - 0.492).toBeLessThanOrEqual(1 + 1e-9)
+    r = must(step(r.state, opt.action))
+    const f = r.state.fighters.A3!
+    expect(f.pos).toMatchObject({ x: spot.x, z: spot.z })
+    expect(f.facing).toBeCloseTo(0, 3)
+    expect(eventsOf(r.events, 'DuctUsed')[0]).toMatchObject({ ductId: 'duct1', fighterId: 'A3' })
+    expect(eventsOf(r.events, 'FighterMoved')[0]).toMatchObject({ kind: 'duct' })
+    // a Double: the activation is over
+    expect(r.pending).toMatchObject({ kind: 'action.activate', seat: 'B' })
+    // an enemy right at the exit leaves no spot 1 inch clear of it
+    const blocked = place(game(board), { A3: { x: 0, z: -1.2 }, B3: { x: 0, z: 1.0 } })
+    const b = activate(blocked, 'A3')
+    expect(menuActions(b.state)).not.toContain('crawlDuct')
+    const rejected = step(b.state, act.choose(b.pending!, 'crawlDuct', { ductId: 'duct1', spot: { x: 0, z: 1 } }))
+    expect(rejected.rejection).toBeDefined()
+    // from the north side the duct works the other way
+    const back = place(game(board), { A3: { x: 0, z: 1.2 } })
+    const o = activate(back, 'A3').pending!.options!.find((x) => (x.action.payload as { action: string }).action === 'crawlDuct')!
+    expect((o.action.payload as { spot: { z: number } }).spot.z).toBeLessThan(-0.7)
+  })
+
+  it('ZM-010 two enemies touching opposite sides of a barricade and within 1 inch of each other are Engaged', () => {
+    const board = barricadePair()
+    const s = place(game(board), { A3: { x: 0, z: -0.742 }, B3: { x: 0, z: 0.742 } })
+    expect(computeEngagedWith(s, s.fighters.A3!)).toEqual(['B3'])
+    expect(computeEngagedWith(s, s.fighters.B3!)).toEqual(['A3'])
+    // the refresh runs after every step and stores the derived list
+    const r = activate(s, 'A3')
+    expect(r.state.fighters.A3!.engagedWith).toEqual(['B3'])
+    expect(r.state.fighters.B3!.engagedWith).toEqual(['A3'])
+    expect(eventsOf(r.events, 'EngagementChanged').map((e) => e.fighterId).sort()).toEqual(['A3', 'B3'])
+    // not touching the barricade, or more than 1 inch apart: not Engaged
+    const away = place(s, { B3: { x: 0, z: 0.742 + 0.3 } })
+    expect(computeEngagedWith(away, away.fighters.A3!)).toEqual([])
+    const tall = place(s, { B3: { x: 0, z: 0.742 + 0.6 } })
+    expect(computeEngagedWith(tall, tall.fighters.A3!)).toEqual([])
+    // two friends never engage, and the same positions without the barricade are not contact
+    const friends = place(s, { B3: { x: 0, z: 0.742 } })
+    expect(computeEngagedWith(friends, friends.fighters.B3!)).toEqual(['A3'])
+    const open = place(game(openBox()), { A3: { x: 0, z: -0.742 }, B3: { x: 0, z: 0.742 } })
+    expect(computeEngagedWith(open, open.fighters.A3!)).toEqual([])
+    // plain base contact engages too; Pinned and Seriously Injured fighters never are
+    const touch = place(open, { A3: { x: 0, z: -0.497 }, B3: { x: 0, z: 0.497 } })
+    expect(computeEngagedWith(touch, touch.fighters.A3!)).toEqual(['B3'])
+    const lying = place(touch, { B3: { x: 0, z: 0.497, posture: 'seriouslyInjured' } })
+    expect(computeEngagedWith(lying, lying.fighters.A3!)).toEqual([])
+    expect(computeEngagedWith(lying, lying.fighters.B3!)).toEqual([])
+  })
+
+  it('ZM-011 Smash Open succeeds on D6 + S >= 6 and applies -1 to the contents roll (minimum 1)', () => {
+    const casketed = (extra: Parameters<typeof place>[1] = {}) =>
+      edit(place(startGame().state, { A3: { x: 0, z: -10 }, ...extra }), (d) => {
+        d.board.caskets.k1 = { pos: { x: 0, z: -8.5 }, state: 'closed', carriedBy: null }
+      })
+    const s = casketed()
+    const r = activate(s, 'A3')
+    const smash = r.pending!.options!.find((o) => (o.action.payload as { action: string }).action === 'smashCasket')!
+    expect((smash.data as { contentsModifier: number }).contentsModifier).toBe(-1)
+    // S 3: a roll of 2 is 5 and fails; the contents are not rolled
+    const failed = must(step(r.state, smash.action, new ScriptedRng([2])))
+    expect(failed.state.board.caskets.k1!.state).toBe('closed')
+    expect(eventsOf(failed.events, 'CasketOpened')).toHaveLength(0)
+    // 3 + 3 = 6 passes; contents 4 becomes 3 (nothing) instead of an ammo cache
+    const opened = must(step(r.state, smash.action, new ScriptedRng([3, 4])))
+    expect(eventsOf(opened.events, 'CasketOpened')[0]).toMatchObject({ casketId: 'k1', by: 'A3', roll: 4, result: 'nothing' })
+    expect(opened.state.board.caskets.k1).toMatchObject({ state: 'opened', openedBy: 'A' })
+    expect(opened.state.scenario.caskets.opened).toBe(1)
+    // 5 - 1 = 4 is an ammo cache
+    const cache = must(step(r.state, smash.action, new ScriptedRng([6, 5])))
+    expect(cache.state.board.caskets.k1!.state).toBe('ammoCache')
+    // a contents roll of 1 stays at 1 (booby trapped), never 0: the blast goes to the attack code
+    const blasts: BlastSpec[] = []
+    registerBlastPort((_ctx, spec) => blasts.push(spec))
+    const trapped = must(step(r.state, smash.action, new ScriptedRng([6, 1])))
+    expect(eventsOf(trapped.events, 'CasketOpened')[0]).toMatchObject({ roll: 1, result: 'fragTrap' })
+    expect(blasts).toEqual([expect.objectContaining({ centre: { x: 0, z: -8.5 }, strength: 3, damage: 1, source: 'casket' })])
+  })
+
+  it('Bypass Lock opens a casket on an Int test with the contents roll unmodified', () => {
+    const s = edit(place(startGame().state, { A3: { x: 0, z: -10 } }), (d) => {
+      d.board.caskets.k1 = { pos: { x: 0, z: -8.5 }, state: 'closed', carriedBy: null }
+    })
+    const r = activate(s, 'A3')
+    expect(menuActions(r.state)).toEqual(expect.arrayContaining(['smashCasket', 'bypassCasket', 'carryCasket']))
+    const hacked = must(take(r.state, { action: 'bypassCasket' }, new ScriptedRng([4, 3, 4])))
+    expect(eventsOf(hacked.events, 'CasketOpened')[0]).toMatchObject({ roll: 4, result: 'ammoCache' })
+    const missed = must(take(r.state, { action: 'bypassCasket' }, new ScriptedRng([3, 3])))
+    expect(missed.state.board.caskets.k1!.state).toBe('closed')
+  })
+
+  it('a scenario that lets only the attacker open caskets withholds Smash and Bypass from the defender', () => {
+    const base = edit(place(startGame().state, { A3: { x: 0, z: -10 } }), (d) => {
+      d.board.caskets.k1 = { pos: { x: 0, z: -8.5 }, state: 'closed', carriedBy: null }
+      d.data = { ...d.data, scenario: { ...d.data.scenario, caskets: { openBy: 'attacker' } } }
+      d.players.A.role = 'defender'
+    })
+    const r = activate(base, 'A3')
+    expect(menuActions(r.state)).toContain('carryCasket')
+    expect(menuActions(r.state)).not.toContain('smashCasket')
+    expect(menuActions(r.state)).not.toContain('bypassCasket')
+  })
+
+  it('Carry Casket moves the casket with the fighter and puts it down in base contact', () => {
+    const s = edit(place(startGame().state, { A3: { x: 0, z: -10, facing: 0 } }), (d) => {
+      d.board.caskets.k1 = { pos: { x: 0, z: -8.5 }, state: 'closed', carriedBy: null }
+    })
+    let r = take(activate(s, 'A3').state, { action: 'carryCasket' })
+    expect(r.pending!.constraints).toMatchObject({ kind: 'carry', maxInches: 5 })
+    r = must(moveTo(r.state, [{ x: 3, z: -10 }], 0))
+    const c = r.state.board.caskets.k1!
+    const f = r.state.fighters.A3!
+    expect(Math.hypot(c.pos.x - f.pos.x, c.pos.z - f.pos.z)).toBeCloseTo(0.492 + 0.5 + 0.01, 2)
+    expect(eventsOf(r.events, 'CasketMoved')[0]).toMatchObject({ casketId: 'k1', carriedBy: 'A3' })
+    expect(r.state.action.activation!.performed.map((p) => p.action)).toEqual(['carryCasket'])
+  })
+
+  it('a fighter within 1 inch of an ammo cache gets +2 to its Reload Ammo test, and a natural 6 exhausts the cache', () => {
+    const s = edit(place(startGame().state, { A3: { x: 0, z: -10 } }), (d) => {
+      d.board.caskets.k1 = { pos: { x: 0, z: -8.5 }, state: 'ammoCache', carriedBy: null }
+      d.fighters.A3!.weapons[0]!.ammo = 'out'
+    })
+    const r = activate(s, 'A3')
+    const opt = r.pending!.options!.find((o) => (o.action.payload as { action: string }).action === 'reload')!
+    expect(opt.data).toMatchObject({ need: 4, bonus: 2 })
+    const two = must(step(r.state, opt.action, new ScriptedRng([2])))
+    expect(two.state.fighters.A3!.weapons[0]!.ammo).toBe('ok')
+    expect(two.state.board.caskets.k1!.state).toBe('ammoCache')
+    const six = must(step(r.state, opt.action, new ScriptedRng([6])))
+    expect(six.state.board.caskets.k1!.state).toBe('exhausted')
+    expect(offered(r.state)).toContain('end')
+  })
+})
