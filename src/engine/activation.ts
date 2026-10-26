@@ -6,7 +6,8 @@
 // action when it is resolved. A Broken fighter's only action is Running for Cover (R-12.3); a burning fighter's activation
 // is the Blaze sequence (R-3.13); a Blind one makes no attacks (R-3.11). Nerve tests owed by an action are settled before
 // the activation carries on (`continueActivation`).
-import { d6SumChance, d6TestChance, twoD6TestChance } from './dice'
+import { fleeFighter, seriouslyInjure } from './casualties'
+import { d6SumChance, d6TestChance, d6TestPasses, twoD6TestChance } from './dice'
 import { expireEffects } from './effects'
 import { runHook } from './hooks'
 import { refreshEngagement, withinPath } from './measure'
@@ -21,7 +22,8 @@ import {
 } from './movement'
 import { stat, status, type DerivedStatus } from './query'
 import { reject, type Ctx, type Handled, type ModuleDef, type OptionInput } from './registry'
-import { constants, getFighter, isBroken, onBoard, otherSeat, readyFighters } from './state'
+import { horrorsCheck, lockedConfirmDue, raiseLockedConfirm } from './scenarios'
+import { constants, getFighter, isBroken, onBoard, otherSeat, readyFighters, seatFighters } from './state'
 import {
   accessTerminal,
   ammoCacheNear,
@@ -431,9 +433,85 @@ export function beginActionPhase(ctx: Ctx): void {
   s.phase = 'action'
   s.action = { turn: s.priority, activation: null, group: null, flightDone: [] }
   ctx.emit({ type: 'PhaseStarted', name: 'action' }, null)
-  // TODO(S4): voluntary flight of a bottled seat (action.flee) is raised here
+  // R-13.4: a bottled gang may leave the battlefield before the first activation
+  if (raiseFlee(ctx)) return
   nextTurn(ctx, null)
 }
+
+// ---------------------------------------------------------------------------
+// Voluntary flight (R-13.4)
+// ---------------------------------------------------------------------------
+
+/** Fighters that may leave: on the battlefield and not Seriously Injured. */
+function flightCandidates(state: GameState, seat: Seat): Fighter[] {
+  return seatFighters(state, seat).filter((f) => f.posture !== 'seriouslyInjured')
+}
+
+/**
+ * Ask the next bottled seat (Priority player first) which fighters leave, one at a time; `{ done }` ends a seat's flight. Seats
+ * that are not bottled or have nobody eligible are marked done without a decision. True when a decision was raised.
+ */
+function raiseFlee(ctx: Ctx): boolean {
+  const s = ctx.state
+  const order: Seat[] = [s.priority ?? 'A', otherSeat(s.priority ?? 'A')]
+  for (const seat of order) {
+    if (s.action.flightDone.includes(seat)) continue
+    const cands = s.players[seat].bottled ? flightCandidates(s, seat) : []
+    if (cands.length === 0) {
+      s.action.flightDone.push(seat)
+      continue
+    }
+    ctx.raise({
+      kind: 'action.flee',
+      seat,
+      window: 'action.phaseStart',
+      context: { round: s.round, eligible: cands.map((f) => f.id) },
+      options: [
+        { id: 'done', labelKey: 'action.flee.done', type: 'action.flee', payload: { done: true } },
+        ...cands.map((f) => {
+          const engaged = f.engagedWith.length > 0
+          const need = stat(s, f.id, 'I')
+          return { id: f.id, labelKey: 'action.flee.leave', type: 'action.flee' as const, payload: { fighterId: f.id }, data: { engaged, ...(engaged ? { need, chance: d6TestChance(need) } : {}) } }
+        }),
+      ],
+    })
+    return true
+  }
+  return false
+}
+
+function handleFlee(state: GameState, action: Action): Handled {
+  if (action.type !== 'action.flee') return reject('E_WRONG_DECISION', `expected action.flee, got ${action.type}`)
+  const p = action.payload
+  return {
+    run(ctx) {
+      const s = ctx.state
+      const seat = action.seat
+      if (p.done || !p.fighterId) {
+        s.action.flightDone.push(seat)
+      } else {
+        const f = getFighter(s, p.fighterId)
+        if (f.engagedWith.length > 0) {
+          // R-13.4: an Engaged fighter must pass an Initiative test or is left Seriously Injured instead
+          const need = stat(s, f.id, 'I')
+          const roll = ctx.roll('fleeInitiative', 1)[0]!
+          const passed = d6TestPasses(roll, need)
+          ctx.emit({ type: 'InitiativeTest', fighterId: f.id, roll, need, passed, reason: 'flee' }, f.seat)
+          if (passed) fleeFighter(ctx, f, true)
+          else seriouslyInjure(ctx, f, null, 'flee')
+        } else fleeFighter(ctx, f, true)
+      }
+      if (s.phase === 'ended') return
+      refreshEngagement(ctx)
+      if (s.nerve.length > 0) {
+        settleNerve(ctx, { kind: 'reraise', seat: s.priority ?? 'A' })
+        return
+      }
+      if (!raiseFlee(ctx)) nextTurn(ctx, null)
+    },
+  }
+}
+
 
 function seatToAct(state: GameState, justActed: Seat | null): Seat | null {
   const first = justActed ? otherSeat(justActed) : (state.priority ?? 'A')
@@ -445,6 +523,11 @@ function seatToAct(state: GameState, justActed: Seat | null): Seat | null {
 
 function nextTurn(ctx: Ctx, justActed: Seat | null): void {
   const s = ctx.state
+  // a locked Smash & Grab win is put to its winner before the next activation (M-3.9 ruling)
+  if (lockedConfirmDue(s)) {
+    raiseLockedConfirm(ctx, justActed)
+    return
+  }
   const seat = seatToAct(s, justActed)
   if (!seat) {
     endActionPhase(ctx)
@@ -503,6 +586,16 @@ function startActivation(ctx: Ctx, f: Fighter, leaderId?: string): void {
   ctx.emit({ type: 'FighterActivated', fighterId: f.id, ...(leaderId ? { group: true } : {}) }, f.seat)
   expireEffects(ctx, `startOfActivation:${f.id}`)
   runHook('activation.start', { seat: f.seat, state: s, engine: ctx, fighterId: f.id })
+  // M-4.5 (Forgotten Riches): a fighter alone in the dark may lose actions or its life
+  const allowed = horrorsCheck(ctx, f, s.action.activation!.actionsLeft)
+  if (allowed !== s.action.activation!.actionsLeft) {
+    s.action.activation!.actionsLeft = allowed
+    s.action.activation!.allowance = allowed
+  }
+  if (f.location !== 'board') {
+    endActivation(ctx)
+    return
+  }
   const x = leaderId ? 0 : groupSize(f)
   if (x > 0 && groupCandidates(s, f, []).length > 0) {
     s.action.group = { leaderId: f.id, seat: f.seat, members: [], done: [] }
@@ -514,6 +607,11 @@ function startActivation(ctx: Ctx, f: Fighter, leaderId?: string): void {
 
 /** After activation (and any group nomination): a burning fighter's activation is the Blaze sequence, otherwise the menu. */
 function beginActions(ctx: Ctx, f: Fighter): void {
+  // no actions left to take (Horrors in the Dark): the activation is over
+  if (ctx.state.action.activation!.actionsLeft <= 0) {
+    endActivation(ctx)
+    return
+  }
   if (f.conditions.blaze) blazeActivation(ctx, f)
   else raiseChoose(ctx)
 }
@@ -566,11 +664,16 @@ function blazeActivation(ctx: Ctx, f: Fighter): void {
   settleNerve(ctx, { kind: 'endActivation' })
 }
 
+/** The locked result was answered with 'continue': play carries on with the turn that was interrupted. */
+export function resumeAfterConfirm(ctx: Ctx, justActed: Seat | null): void {
+  nextTurn(ctx, justActed)
+}
+
 export function endActivation(ctx: Ctx): void {
   const s = ctx.state
   const act = s.action.activation!
   const f = getFighter(s, act.fighterId)
-  ctx.emit({ type: 'ActivationEnded', fighterId: f.id, actionsUsed: 2 - act.actionsLeft }, f.seat)
+  ctx.emit({ type: 'ActivationEnded', fighterId: f.id, actionsUsed: (act.allowance ?? 2) - act.actionsLeft }, f.seat)
   runHook('activation.end', { seat: f.seat, state: s, engine: ctx, fighterId: f.id })
   expireEffects(ctx, 'activation')
   s.action.activation = null
@@ -628,6 +731,8 @@ export function resumeFlow(ctx: Ctx, seat: Seat): void {
     else raiseChoose(ctx)
     return
   }
+  // voluntary flight (R-13.4) interrupted by nerve tests carries on before the first activation
+  if (!s.action.group && s.action.flightDone.length < 2 && raiseFlee(ctx)) return
   const g = s.action.group
   if (g) {
     const remaining = g.members.filter((id) => !g.done.includes(id) && s.fighters[id]!.ready && s.fighters[id]!.location === 'board')
@@ -980,10 +1085,12 @@ export const activationModule: ModuleDef = {
         return handleActivate(state, action)
       case 'action.group':
         return handleGroup(state, action)
+      case 'action.flee':
+        return handleFlee(state, action)
       case 'action.choose':
         return handleChoose(state, action)
       default:
-        return reject('E_TODO', `${pending.kind} is not implemented yet (voluntary flight arrives in S4)`)
+        return reject('E_TODO', `${pending.kind} is not implemented yet `)
     }
   },
   explain,

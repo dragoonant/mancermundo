@@ -86,7 +86,7 @@ export function briefingFor(s: ScenarioData): Briefing {
   }
 
   let howToWin: string
-  if ('by' in s.victory) howToWin = s.victory.by === 'caskets' ? 'Have the most caskets secured on your own tile when the battle ends. Ties fall back on points.' : 'Have more points than the other gang when the battle ends. Level points is a draw.'
+  if ('by' in s.victory) howToWin = s.victory.by === 'caskets' ? 'Have the most caskets secured on your own tile when the battle ends. Level caskets is a draw.' : 'Have more points than the other gang when the battle ends. Level points is a draw.'
   else howToWin = s.id.includes('smash') ? 'The attackers win by cracking three caskets before the battle ends; otherwise the defenders hold.' : 'The scenario has its own victory test; the score panel shows how it stands.'
 
   return { id: s.id, name: s.name, objective: s.text, crew, deployment, scoring, howToWin, rounds: ROUND_LINES, roles: s.roles }

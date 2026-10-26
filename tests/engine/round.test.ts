@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { act, step, ScriptedRng } from '@/engine'
-import { edit, endRound, eventsOf, must, offered, place, startGame, take } from '../fixtures/helpers'
+import { act, step, ScriptedRng, type GameState } from '@/engine'
+import { attackBundle, dice } from '../fixtures/attack'
+import { edit, endRound, eventsOf, must, offered, place, playOut, startGame, take } from '../fixtures/helpers'
 
 describe('ROUND: rounds, the Priority phase, alternation and group activation', () => {
   it('ROUND-001 round 1 priority ties re-roll; a later tie hands priority to the player who did not hold it last round', () => {
@@ -155,5 +156,79 @@ describe('ROUND: rounds, the Priority phase, alternation and group activation', 
     expect(eventsOf(end.events, 'ActivationEnded').length).toBeGreaterThan(0)
     expect(eventsOf(end.events, 'PhaseEnded').map((e) => e.name)).toEqual(['action', 'end', 'priority'])
     expect(eventsOf(end.events, 'RoundEnded')[0]!.round).toBe(1)
+  })
+})
+
+describe('ROUND: the End phase order and the end of the battle', () => {
+  const PRIORITY = [3, 4]
+  const everyoneApart = (s: GameState) => {
+    const spots: Parameters<typeof place>[1] = {}
+    ;['A', 'B'].forEach((seat, i) => ['1', '2', '3', '4', '5'].forEach((n, k) => (spots[seat + n] = { x: -10 + k * 5, z: i === 0 ? -16 : 16 })))
+    return place(s, spots)
+  }
+
+  it('ROUND-006 the End phase runs Bottle, Flee, Recovery, Rally in that order, then the clean-up', () => {
+    // A: A4 and A5 Out of Action, A3 Seriously Injured (3 down of 5: a Bottle roll of 3 makes 6 and bottles the gang), A2 Broken.
+    // Fighters of A close together so the Leader's example carries A2 and A3; a Smoke cloud waits for the clean-up.
+    const base = startGame({ bundle: attackBundle }).state
+    const s = edit(everyoneApart(base), (d) => {
+      for (const id of ['A4', 'A5']) {
+        d.fighters[id]!.location = 'outOfAction'
+        d.fighters[id]!.ready = false
+      }
+      d.fighters.A3!.posture = 'seriouslyInjured'
+      d.fighters.A3!.ready = false
+      d.fighters.A2!.conditions.broken = { since: 1 }
+      d.fighters.A2!.ready = false
+      d.fighters.A1!.pos = { x: 0, y: 0, z: -15 }
+      d.fighters.A2!.pos = { x: 3, y: 0, z: -15 }
+      d.fighters.A3!.pos = { x: -3, y: 0, z: -15 }
+      d.board.smoke.push({ id: 'smoke1', pos: { x: 0, z: 0 }, radius: 2.5, placedRound: 1 })
+    })
+    // Bottle 3 (bottled), Leader flee 6 + 6 (passes, carries A2 and A3), recovery of A3: 1 (Flesh Wound), Rally of A2: 6 + 6, smoke 2 (cleared), Priority
+    const run = playOut(s, dice(3, 6, 6, 1, 6, 6, 2, ...PRIORITY))
+    const order = run.events
+      .filter((e) => ['BottleTest', 'FleeTest', 'RecoveryTest', 'RallyTest', 'SmokeCleared', 'PhaseEnded', 'RoundEnded'].includes(e.type) && (e.type !== 'PhaseEnded' || e.name === 'end'))
+      .map((e) => e.type)
+    expect(order).toEqual(['BottleTest', 'FleeTest', 'FleeTest', 'FleeTest', 'RecoveryTest', 'RallyTest', 'SmokeCleared', 'PhaseEnded', 'RoundEnded'])
+    expect(run.state.fighters.A3).toMatchObject({ posture: 'pinned', fleshWounds: 1 })
+    expect(run.state.fighters.A2!.conditions.broken).toBeUndefined()
+    expect(run.state.board.smoke).toHaveLength(0)
+    expect(run.state.round).toBe(2)
+  })
+
+  it('ROUND-007 the battle ends at the end of a round when only one gang has non-Seriously-Injured fighters on the board', () => {
+    const base = startGame({ bundle: attackBundle }).state
+    // B keeps one Seriously Injured fighter on the board and the rest are gone: B counts as nobody standing
+    const over = edit(everyoneApart(base), (d) => {
+      for (const id of ['B2', 'B3', 'B4', 'B5']) {
+        d.fighters[id]!.location = 'outOfAction'
+        d.fighters[id]!.ready = false
+      }
+      d.fighters.B1!.posture = 'seriouslyInjured'
+      d.fighters.B1!.ready = false
+      d.players.A.points = 3
+    })
+    // B's Bottle roll 1 (5 down of 5: 6 > 5 bottles it anyway), its flee test for B1 (6 + 6), B1's recovery die 4 (stays down)
+    const run = playOut(over, dice(1, 6, 6, 4))
+    expect(run.state.phase).toBe('ended')
+    expect(run.state.result).toMatchObject({ winner: 'A', reason: 'scenario', points: { A: 3, B: 0 } })
+    expect(eventsOf(run.events, 'GameEnded')).toHaveLength(1)
+    expect(eventsOf(run.events, 'RoundEnded')).toHaveLength(1)
+    expect(run.state.pending).toBeNull()
+
+    // both gangs still have a Standing fighter: the round counter moves on
+    const both = playOut(everyoneApart(base), dice(...PRIORITY))
+    expect(both.state.phase).toBe('action')
+    expect(both.state.round).toBe(2)
+    // a gang whose recovering fighter gets up (Pinned is not Seriously Injured) is still in the battle
+    const rising = edit(over, (d) => {
+      d.players.A.points = 0
+    })
+    const up = playOut(rising, dice(1, 6, 6, 1, ...PRIORITY))
+    // B1 fled (6 + 6 passed): it is still there; the Flesh Wound result stands it up as a Pinned fighter, so B is not out of the battle
+    expect(up.state.fighters.B1).toMatchObject({ location: 'board', posture: 'pinned' })
+    expect(up.state.phase).toBe('action')
+    expect(up.state.round).toBe(2)
   })
 })

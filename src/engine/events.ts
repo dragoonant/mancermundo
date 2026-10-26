@@ -108,7 +108,7 @@ export type GameEventBody =
   | { type: 'InitiativeTest'; fighterId: string; roll: number; need: number; passed: boolean; reason: string }
   | { type: 'RunningForCover'; fighterId: string }
   | { type: 'BottleTest'; seat: Seat; roll: number; down: number; crew: number; bottled: boolean; voluntary: boolean }
-  | { type: 'FleeTest'; fighterId: string; roll: number; need: number; passed: boolean }
+  | { type: 'FleeTest'; fighterId: string; roll: number; need: number; passed: boolean; auto?: string }
   | { type: 'RecoveryTest'; fighterId: string; faces: string[]; applied: string; assistedBy?: string }
   | { type: 'RallyTest'; fighterId: string; roll: number; need: number; passed: boolean }
   // board

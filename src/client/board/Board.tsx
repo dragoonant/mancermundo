@@ -8,7 +8,7 @@ import { SRGBColorSpace } from 'three'
 import type { GameState } from '@/engine'
 import { BattleFighter, placedFromState } from '../figures/BattleFighter'
 import { useBodyManifest } from '../figures/bodyManifest'
-import { ActionableDoors, DeployLayer, FX_CSS, FxLayer, MovePreviewLayer, SpotLayer, TargetBadges } from '../interaction/Overlays'
+import { ActionableDoors, DeployLayer, FX_CSS, MovePreviewLayer, SpotLayer, TargetBadges } from '../interaction/Overlays'
 import { cancelDecision, clickDoor, clickFighter, clickPoint, hoverPoint, optionForFighter } from '../interaction/controller'
 import type { PlacedFighter } from '../lab/placement'
 import { setRepaint } from '../presentation/animStore'
@@ -17,6 +17,8 @@ import { useDisplayState, useSettled } from '../presentation/presentedStore'
 import { humanToAct, useGame } from '../store/game'
 import { useUi } from '../ui/uiStore'
 import { CameraRig, homePose, type CameraPreset } from './CameraRig'
+import { Vfx } from './Vfx'
+import { Zones } from './Zones'
 import { ZmBoard } from './ZmBoard'
 
 /** The battle frames the board a little wider than the lab does: the HUD above and the prompt below cover its edges. */
@@ -119,6 +121,7 @@ function Scene({ state }: { state: GameState }) {
       />
       <directionalLight position={[18, 14, -22]} intensity={0.8} color="#ffa968" />
       <ZmBoard def={def} doors={state.board.doors} onDoorClick={clickDoor} />
+      <Zones state={state} />
       <Ground {...def.bounds} />
       <Suspense fallback={null}>
         {onBoard.map((f) => (
@@ -142,7 +145,7 @@ function Scene({ state }: { state: GameState }) {
       {pending && human && (pending.kind === 'setup.casket' || pending.kind === 'shoot.aim') && <SpotLayer pending={pending} />}
       {pending && human && (pending.kind === 'shoot.target' || pending.kind === 'shoot.allocate' || pending.kind === 'fight.after') && <TargetBadges state={state} pending={pending} />}
       {pending && human && <ActionableDoors def={def} pending={pending} />}
-      <FxLayer />
+      <Vfx />
       <CameraRig halfX={halfX} halfZ={halfZ} preset={camPreset} />
       <Repaint />
     </>

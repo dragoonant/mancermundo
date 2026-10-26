@@ -168,9 +168,7 @@ describe('setup: roles, crews, halves and deployment', () => {
     }
   })
 
-  it('refuses set-ups it cannot run: tile deployment (S4), overweight loadouts, two armour items, a board that does not fit', () => {
-    const tile = withScenario({ deployment: { kind: 'tile', withinOfEdge: 3 } })
-    expect(() => createGame(makeSetup({ scenarioId: 'test.alt' }), 's', tile)).toThrow(/tile deployment/)
+  it('refuses set-ups it cannot run: overweight loadouts, two armour items, a board that does not fit', () => {
     const heavy = makeSetup()
     heavy.gangs.A.roster[2] = { ...heavy.gangs.A.roster[2]!, weapons: ['test.w.pistol', 'test.w.rifle', 'test.w.blade', 'test.w.flamer'] }
     expect(() => createGame(heavy, 's', testBundle)).toThrow(/weapon slots/)

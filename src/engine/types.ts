@@ -344,8 +344,10 @@ export interface SetupState {
 export interface Activation {
   fighterId: string
   seat: Seat
-  /** 2 at start */
+  /** 2 at start (fewer after Horrors in the Dark) */
   actionsLeft: number
+  /** the actions this activation started with when that is not 2 (Horrors in the Dark, M-4.5) */
+  allowance?: number
   performed: { action: string; type: ActionCostType }[]
   /** true before the first action and after each move (R-4.1) */
   canTurn: boolean
@@ -382,6 +384,10 @@ export interface EndPhaseState {
   rallyQueue: string[]
   /** assisters already used this End phase (R-13.6) */
   assistsUsed: string[]
+  /** S4: seats still to be asked for assistance, the recovering fighter -> assister pairs chosen, and the assisted roll awaiting `end.recoveryPick` */
+  assistSeats: Seat[]
+  assists: Record<string, string>
+  pick: { fighterId: string; assisterId: string; faces: string[] } | null
 }
 
 /** The Shoot or Fight sequence in progress; stages and queues are owned by shoot.ts / fight.ts / hits.ts. */
@@ -428,7 +434,8 @@ export interface ScenarioState {
   crewCap: number | null
   caskets: { opened: number; secured: number }
   points: Record<Seat, number>
-  locked: { winner: Seat; reason: string } | null
+  /** a result no longer in doubt (Smash & Grab: three caskets cracked); `asked` once the `confirm` decision was answered */
+  locked: { winner: Seat; reason: string; asked?: boolean } | null
   deployTiles: Partial<Record<Seat, string>>
 }
 
@@ -436,6 +443,8 @@ export interface GameResult {
   winner: Seat | 'draw'
   points: Record<Seat, number>
   reason: 'scenario' | 'resign' | 'concede' | 'roundLimit'
+  /** S4: caskets secured per gang at the end (Forgotten Riches, Smash & Grab: cracked) */
+  caskets?: Record<Seat, number>
 }
 
 export interface GameState {

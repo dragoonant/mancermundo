@@ -52,7 +52,8 @@ describe('STATUS: statuses and conditions (R-3)', () => {
         d.fighters.B4!.ready = false
       },
     })
-    const r = endRound(s)
+    // End phase dice: B's Bottle roll (1: no), B3's recovery (3: stays down), B4's Rally (6 + 6: steadies), round 2 Priority (3, 4)
+    const r = endRound(s, dice(1, 3, 6, 6, 3, 4))
     expect(r.state.round).toBe(2)
     expect(r.state.fighters.B3!.ready).toBe(true)
     expect(r.state.fighters.B4!.ready).toBe(true)
@@ -67,7 +68,8 @@ describe('STATUS: statuses and conditions (R-3)', () => {
         d.fighters.B3!.ready = false
       },
     })
-    const next = endRound(blindDone)
+    // End phase: B's Bottle roll (1: no), B3's recovery (3: stays down), round 2 Priority (3, 4)
+    const next = endRound(blindDone, dice(1, 3, 3, 4))
     expect(next.state.round).toBe(2)
     expect(next.state.fighters.B3!.ready).toBe(false)
     expect(next.state.fighters.A3!.ready).toBe(true)

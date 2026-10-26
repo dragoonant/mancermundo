@@ -1,9 +1,13 @@
 // Presentation director: turns each accepted step's events into timed beats (feed lines, dice log, banners, move tweens,
 // tracers, impact flashes, wound overrides, the deployment and shot cameras) and only then advances the presented-seq cursor, so
 // no result shows before it is played. 'instant' speed skips every pause, banner, effect and camera flight. Batches queue FIFO;
-// the idle flag is true when the queue is empty. The sound, vfx and dice-tray beats arrive with S5b through the same loop.
+// the idle flag is true when the queue is empty. The dice tray is fed from the same loop (dice/trayEvents.ts); sounds play from it too (audio/eventSounds.ts); the vfx beats join it the same way.
 import type { GameEvent, GameState, Seat } from '@/engine'
+import { playEventSounds, shotSound } from '../audio/eventSounds'
+import { audio } from '../audio/instance'
 import { cameraApi, type CameraView } from '../board/cameraApi'
+import { trayClear } from '../dice/trayStore'
+import { trayEvent } from '../dice/trayEvents'
 import { describeEvent, diceOf, gangName } from '../game/labels'
 import { clearAnnouncement, holdAnnouncement } from './announceStore'
 import { endMoveAnim, requestRepaint, startMoveAnim } from './animStore'
@@ -11,10 +15,14 @@ import { deployBeats, deployTimes, DEPLOY_FOCUS_DISTANCE, returnView, viewsDiffe
 import { pushDice, pushFeed } from './feedStore'
 import { clearFx, clearOverrides, setWoundOverride, spawnFx } from './fxStore'
 import { planLandings } from './heldVolley'
+import { addMark, clearMarks } from './markStore'
 import { setPresentationIdle } from './idleStore'
 import { catchUpPresented, setPresentedSeq } from './presentedStore'
 import { speedFactor, useSettings } from './settings'
 import { cinematicOn, closeupViewClear, shotTimes, shoulderViewClear, volleyBeat, type Body } from './shotCamera'
+import { d6TestPasses } from '@/engine/dice'
+import * as vfx from '../vfx/api'
+import { vfxOf } from '../vfx/families'
 
 export interface Batch {
   /** the seq of the last event of the step (the cursor value once played) */
@@ -95,8 +103,6 @@ export function moveDurationMs(length: number): number {
   return Math.min(1700, Math.max(260, length * 150))
 }
 
-const SEAT_RING: Record<Seat, string> = { A: '#4fb0ff', B: '#ff6a4f' }
-
 const bodyOf = (state: GameState, id: string): Body | null => {
   const f = state.fighters[id]
   return f ? { x: f.pos.x, y: 0, z: f.pos.z, height: 1.9 } : null
@@ -112,6 +118,15 @@ function effectAt(state: GameState, id: string, kind: 'impact' | 'text', color: 
 
 const isDiceLine = (ev: GameEvent): boolean => ev.type === 'DiceRolled' || ev.type === 'HitRolled' || ev.type === 'WoundRolled' || ev.type === 'SaveRolled'
 
+/** The weapon (and profile) of the attack a batch resolves, for the kill style of a casualty. */
+function attackWeapon(b: Batch): { id: string; profileId: string | null } | null {
+  for (const e of b.events) {
+    if (e.type === 'ShootStarted') return { id: e.weaponId, profileId: e.profileId }
+    if (e.type === 'FightStarted' && e.weapons[0]) return { id: e.weapons[0], profileId: null }
+  }
+  return null
+}
+
 async function playEvent(ev: GameEvent, b: Batch): Promise<void> {
   const f = factor()
   const state = b.state
@@ -119,6 +134,8 @@ async function playEvent(ev: GameEvent, b: Batch): Promise<void> {
   if (line) pushFeed(ev.seq, ev.seat, line, isDiceLine(ev))
   const dice = diceOf(ev)
   if (dice && ev.type === 'DiceRolled') pushDice(ev.seq, ev.seat, dice.purpose, dice.dice, dice.faces)
+  trayEvent(ev, state)
+  if (f > 0) playEventSounds((id, opts) => audio.play(id, opts), [ev], { state, perspective })
   const beat = Math.round(beatMs(ev) * f)
   switch (ev.type) {
     case 'FighterMoved': {
@@ -164,10 +181,75 @@ async function playEvent(ev: GameEvent, b: Batch): Promise<void> {
       effectAt(state, ev.fighterId, 'text', '#f5d95a', 'Pinned')
       await sleep(beat)
       break
-    case 'FighterOutOfAction':
+    case 'FighterOutOfAction': {
       effectAt(state, ev.fighterId, 'text', '#ff6a5f', 'Out of action')
+      const down = f > 0 ? vfx.bodyOf(state, ev.fighterId) : null
+      if (down) {
+        const weapon = attackWeapon(b)
+        vfx.death(down, weapon ? vfxOf(state, weapon.id, weapon.profileId).family : null, ev.by ? vfx.bodyOf(state, ev.by) : null)
+        requestRepaint()
+      }
       await sleep(beat)
       break
+    }
+    case 'CaughtFire': {
+      const burning = f > 0 ? vfx.bodyOf(state, ev.targetId) : null
+      if (burning) {
+        vfx.ignite(burning)
+        requestRepaint()
+      }
+      await sleep(beat)
+      break
+    }
+    case 'TemplatePlaced':
+      if (f > 0) addMark({ kind: 'template', polygon: ev.polygon })
+      await sleep(beat)
+      break
+    case 'BlastPlaced':
+      if (f > 0) addMark({ kind: 'blast', centre: ev.centre, radius: ev.radius })
+      // a blast aimed at a fighter is drawn by the volley; one on the floor (a point aim, a scenario explosion) is drawn here
+      if (f > 0 && !b.events.some((e) => e.type === 'TargetDeclared' && e.targetId)) {
+        vfx.blastAt(ev.centre.x, 0, ev.centre.z, Math.max(0.7, ev.radius * 0.3))
+        requestRepaint()
+      }
+      await sleep(beat)
+      break
+    case 'FightStarted': {
+      const a = f > 0 ? vfx.bodyOf(state, ev.attackerId) : null
+      const d = f > 0 && ev.targets[0] ? vfx.bodyOf(state, ev.targets[0]) : null
+      if (a && d) {
+        vfx.fightIntro(state, a, d, ev.weapons[0] ?? null, null)
+        requestRepaint()
+      }
+      await sleep(beat)
+      break
+    }
+    case 'FightHitRolled': {
+      const started = b.events.find((e) => e.type === 'FightStarted')
+      const a = f > 0 && started?.type === 'FightStarted' ? vfx.bodyOf(state, started.attackerId) : null
+      const d = f > 0 ? vfx.bodyOf(state, ev.targetId) : null
+      if (a && d) {
+        ev.dice.forEach((roll, i) => {
+          if (!d6TestPasses(roll, ev.need)) return
+          setTimeout(() => {
+            vfx.strike(state, a, d, { id: ev.weaponId === 'unarmed' ? null : ev.weaponId }, roll === 6, i)
+            requestRepaint()
+          }, Math.round(i * 170 * f))
+        })
+      }
+      await sleep(beat)
+      break
+    }
+    case 'Parried': {
+      const blocker = f > 0 ? vfx.bodyOf(state, ev.by) : null
+      const started = b.events.find((e) => e.type === 'FightStarted')
+      if (blocker) {
+        vfx.parry(blocker, started?.type === 'FightStarted' ? vfx.bodyOf(state, started.attackerId) : null, false)
+        requestRepaint()
+      }
+      await sleep(beat)
+      break
+    }
     case 'DoorChanged':
       requestRepaint()
       await sleep(beat)
@@ -177,7 +259,7 @@ async function playEvent(ev: GameEvent, b: Batch): Promise<void> {
   }
 }
 
-/** The volley of a Shoot step: the shot camera behind the shooter, a tracer per hit, a close-up when something got through. */
+/** The volley of a Shoot step: the shot camera behind the shooter, the weapon's effects (muzzle flash, a tracer per hit), a close-up when something got through. */
 async function fireVolley(b: Batch, shooterId: string, gen: number): Promise<void> {
   const plan = planLandings(b.events)
   const targetId = plan.shots.find((s) => s.targetId)?.targetId ?? null
@@ -185,18 +267,26 @@ async function fireVolley(b: Batch, shooterId: string, gen: number): Promise<voi
   const shooter = bodyOf(b.state, shooterId)
   const target = targetId ? bodyOf(b.state, targetId) : null
   if (!shooter || !target || !targetId || f <= 0) return
-  const seat = b.state.fighters[shooterId]?.seat ?? 'A'
   const cam = cameraApi.current
   const t = shotTimes(f)
   const cine = cinematicOn(useSettings.getState().cinematicShots, f, !!cam)
   const back = cam && cine ? cam.snapshot() : null
   if (cam && cine) await cam.flyTo(shoulderViewClear(shooter, target), t.shoulder)
-  for (const shot of plan.shots) {
-    if (gen !== generation) return
-    spawnFx({ kind: 'tracer', from: [shooter.x, 1.2, shooter.z], to: [target.x, 1.1, target.z], color: SEAT_RING[seat], dur: 220 })
+  if (gen !== generation) return
+  const started = b.events.find((e) => e.type === 'ShootStarted')
+  const declared = b.events.find((e) => e.type === 'TargetDeclared')
+  const from = vfx.bodyOf(b.state, shooterId)
+  const to = vfx.bodyOf(b.state, targetId)
+  if (started && started.type === 'ShootStarted' && from && to) {
+    const inCover = declared?.type === 'TargetDeclared' && declared.cover !== 'none'
+    const times = vfx.volley(b.state, from, to, { id: started.weaponId, profileId: started.profileId }, plan.shots.map((s) => (s.outcome === 'miss' ? 'fail' : 'normal')), false, inCover, (die) => {
+      const outcome = plan.shots[die]?.outcome
+      if (outcome === 'damage') vfx.flesh(to, from, 1, false)
+      else if (outcome === 'blocked') vfx.shield(to, 1, inCover)
+      requestRepaint()
+    })
     requestRepaint()
-    await sleep(Math.round(260 * f))
-    if (shot.outcome !== 'miss') effectAt(b.state, targetId, 'impact', shot.outcome === 'damage' ? '#ff5a4f' : '#9fe3ff', '')
+    await sleep(Math.round((times.duration + 0.2) * 1000 * Math.max(f, 0.5)))
   }
   if (cam && cine) {
     if (volleyBeat(plan) === 'closeup') {
@@ -229,6 +319,14 @@ async function deployTrip(b: Batch, visits: { x: number; z: number }[], gen: num
   if (gen === generation) await cam.flyTo(back, t.fly)
 }
 
+/** The weapon of a Shoot step sounds once, when its volley fires (or at the end of the step when no volley is shown). */
+function playShotSound(b: Batch): void {
+  const started = b.events.find((e) => e.type === 'ShootStarted')
+  if (!started || started.type !== 'ShootStarted' || factor() <= 0) return
+  const s = shotSound(b.state, started.weaponId, started.profileId)
+  audio.play(s.id, s.opts)
+}
+
 async function playBatch(b: Batch, gen: number): Promise<void> {
   const beats = deployBeats(b.events, b.state.phase, { perspective, botSeats, factor: factor() })
   const visits: { x: number; z: number }[] = []
@@ -241,6 +339,7 @@ async function playBatch(b: Batch, gen: number): Promise<void> {
       const started = b.events.find((e) => e.type === 'ShootStarted')
       if (started && started.type === 'ShootStarted') {
         volleyDone = true
+        playShotSound(b)
         try {
           await fireVolley(b, started.fighterId, gen)
         } catch (err) {
@@ -252,6 +351,7 @@ async function playBatch(b: Batch, gen: number): Promise<void> {
     if (beat?.kind === 'record') lastPlayerView = cameraApi.current?.snapshot() ?? lastPlayerView
     else if (beat?.kind === 'visit') visits.push({ x: beat.x, z: beat.z })
   }
+  if (!volleyDone) playShotSound(b)
   if (visits.length > 0 && gen === generation) {
     try {
       await deployTrip(b, visits, gen)
@@ -304,5 +404,8 @@ export function resetDirector(): void {
   lastPlayerView = null
   clearAnnouncement()
   clearFx()
+  vfx.resetFx()
+  clearMarks()
+  trayClear()
   setPresentationIdle(true)
 }

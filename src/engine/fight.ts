@@ -16,6 +16,7 @@
 // Every die is rolled inside a step; decisions are raised only for real choices and are never empty.
 import { continueActivation, endActivation, payAndContinue, resumeFlow } from './activation'
 import { addEffect, effectsOf } from './effects'
+import { continueEndPhase } from './endphase'
 import { d6TestChance, d6TestPasses, firepowerFace, rollExpr } from './dice'
 import { runHook } from './hooks'
 import { resolveHit, type HitInput } from './hits'
@@ -100,6 +101,8 @@ export type Resume =
   | { kind: 'continue' }
   | { kind: 'reraise'; seat: Seat }
   | { kind: 'endActivation' }
+  /** nerve tests owed in the End phase (S4): carry on with the End phase afterwards */
+  | { kind: 'endPhase' }
 
 interface FightSeq {
   stack: Frame[]
@@ -495,6 +498,9 @@ function finish(ctx: Ctx, resume: Resume): void {
       return
     case 'endActivation':
       endActivation(ctx)
+      return
+    case 'endPhase':
+      continueEndPhase(ctx)
       return
   }
 }

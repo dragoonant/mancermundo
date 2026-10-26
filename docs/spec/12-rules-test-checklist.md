@@ -130,6 +130,8 @@ END-006 | R-13.5 | Recovery roll Seriously Injured unassisted adds a Flesh Wound
 END-007 | R-13.6 | An assisting Active friend within 1" adds one Injury die and the owner picks the result; one fighter may assist only one recovery per End phase.
 END-008 | R-13.7 | A fighter that became Seriously Injured during this round's Action phase makes a recovery test this End phase; one Out of Action does not.
 END-009 | R-13.8 | Rally: Broken fighter passes a Cool test with +1 per friend within 3" not Broken or Seriously Injured and loses Broken.
+END-010 | R-13.4 | A bottled gang is asked at the start of each Action phase which fighters leave; Active and Pinned fighters go at once, an Engaged one passes an Initiative test or is left Seriously Injured.
+END-011 | R-13.5, R-12.3 | Nerve tests caused by a recovery roll (an Out of Action result) are taken in the End phase; a friend that breaks runs for cover before the Rally tests.
 
 ## TRAIT - weapon traits
 
@@ -170,3 +172,10 @@ SCEN-005 | M-4.2 | Forgotten Riches crew cap follows the 2D6 table (7 on a roll 
 SCEN-006 | M-4.5 | Horrors in the Dark triggers only for a fighter activating more than 8" from every other fighter; a 1 that leaves it Seriously Injured removes it.
 SCEN-007 | M-4.7 | Forgotten Riches counts a casket only if it ends on the owner's deployment tile within 3" of the board edge.
 SCEN-008 | M-1.10 | A gang that voluntarily bottles and flees loses Smash & Grab and Forgotten Riches outright.
+SCEN-009 | M-4.3, M-4.4 | Forgotten Riches starts: five caskets one per tile with the first in the centre, casket-free outer tiles are the deployment choices, fighters set up within 3" of the tile's outer edge.
+SCEN-010 | M-4.4 | When the two deployment tiles touch no fighter is set up within 6" of an enemy.
+SCEN-011 | M-3.4 | Smash & Grab: the defender places 5 caskets in its own half, 4" from every edge, 6" apart and clear of walls, after choosing its half and before deployment.
+
+## GOLDEN
+
+GOLDEN-001 | R-5 to R-13 | One forced-dice round of the Goliath and Escher starter gangs (charges, shots, fights, nerve, the End phase) reproduces its pinned digest.

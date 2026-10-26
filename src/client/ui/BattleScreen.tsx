@@ -2,6 +2,7 @@
 // roll show as short banners; the end screen takes over when the battle is over and presented.
 import { useEffect, type CSSProperties } from 'react'
 import { BoardCanvas } from '../board/Board'
+import { DiceTray } from '../dice/DiceTray'
 import { cancelDecision, rotateFacing } from '../interaction/controller'
 import { useAnnouncementStore } from '../presentation/announceStore'
 import { useFeedStore } from '../presentation/feedStore'
@@ -109,11 +110,10 @@ export function BattleScreen() {
             <EventFeed />
           </div>
         )}
-        {showCard && (
-          <div style={rail}>
-            <FighterStrip />
-          </div>
-        )}
+        <div style={rail}>
+          {showCard && <FighterStrip />}
+          <DiceTray />
+        </div>
         <DecisionPrompt />
         <Banner />
         <Toasts />

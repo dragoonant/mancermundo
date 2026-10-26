@@ -5,6 +5,7 @@
 import { runHook } from './hooks'
 import { withinPath } from './measure'
 import type { Ctx } from './registry'
+import { scoreCasualty } from './scenarios'
 import { constants, onBoard } from './state'
 import type { CasualtyRecord, Fighter, GameState, Seat } from './types'
 
@@ -48,11 +49,73 @@ export function takeOutOfAction(ctx: Ctx, f: Fighter, by: string | null, cause: 
   f.downedBy = { by, cause }
   ctx.emit({ type: 'FighterOutOfAction', fighterId: f.id, by, cause }, f.seat)
   recordCasualty(ctx, f, by, cause, 'outOfAction')
+  scoreCasualty(ctx, f, 'outOfAction')
   runHook('fighter.downed', { seat: f.seat, state: ctx.state, engine: ctx, fighterId: f.id, ...(by ? { targetId: by } : {}), data: { kind: 'outOfAction', cause } })
+}
+
+/**
+ * A fighter leaves the battlefield (R-13.2, R-13.4): a failed flee test in the End phase or voluntary flight at the start of
+ * the Action phase. It counts as Out of Action for the Bottle test, the scenario and the battle end (R-13.1), but it is not a
+ * casualty that shakes its friends (ruling): no nerve tests are queued.
+ */
+export function fleeFighter(ctx: Ctx, f: Fighter, voluntary: boolean): void {
+  if (f.location !== 'board') return
+  f.location = 'fled'
+  f.ready = false
+  f.engagedWith = []
+  f.carrying = null
+  f.downedBy = { by: null, cause: voluntary ? 'fledVoluntary' : 'fled' }
+  ctx.emit({ type: 'FighterFled', fighterId: f.id, voluntary }, f.seat)
+  recordCasualty(ctx, f, null, f.downedBy.cause, 'fled')
+  scoreCasualty(ctx, f, 'fled', voluntary)
+  runHook('fighter.downed', { seat: f.seat, state: ctx.state, engine: ctx, fighterId: f.id, data: { kind: 'fled', cause: f.downedBy.cause } })
 }
 
 /** The casualty log, optionally for one seat's fighters. */
 export function casualtiesOf(state: GameState, seat?: Seat): CasualtyRecord[] {
   if (!seat) return state.casualties.slice()
   return state.casualties.filter((c) => state.fighters[c.fighterId]?.seat === seat)
+}
+
+/** Fighters of a seat that count as down for the Bottle test (R-13.1): Seriously Injured, Out of Action or fled (fled count as Out of Action). */
+export function downCount(state: GameState, seat: Seat): number {
+  let n = 0
+  for (const f of Object.values(state.fighters)) {
+    if (f.seat !== seat) continue
+    if (f.location === 'outOfAction' || f.location === 'fled' || (f.location === 'board' && f.posture === 'seriouslyInjured')) n++
+  }
+  return n
+}
+
+export interface BottleInfo {
+  seat: Seat
+  /** fighters down now */
+  down: number
+  /** the gang's starting crew (the number the D6 + down must beat) */
+  crew: number
+  bottled: boolean
+  voluntary: boolean
+  /** the gang must test this End phase: not bottled and at least one fighter down */
+  mustTest: boolean
+  /** the smallest D6 result that bottles the gang (7 = it cannot bottle now) */
+  need: number
+  /** exact chance the test bottles the gang now */
+  pBottle: number
+}
+
+/** R-13.1: D6 + fighters down must be greater than the starting crew. */
+export function bottleInfo(state: GameState, seat: Seat): BottleInfo {
+  const p = state.players[seat]
+  const down = downCount(state, seat)
+  const need = Math.max(1, Math.min(7, p.startingCrew - down + 1))
+  return {
+    seat,
+    down,
+    crew: p.startingCrew,
+    bottled: p.bottled,
+    voluntary: p.bottledVoluntarily,
+    mustTest: !p.bottled && down > 0,
+    need,
+    pBottle: p.bottled ? 1 : down === 0 ? 0 : (7 - need) / 6,
+  }
 }

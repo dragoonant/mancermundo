@@ -11,6 +11,7 @@ import { findClearSpot, spotProblem, standUpContacted } from './movement'
 import { resolveBlast, resolveHit } from './ports'
 import { stat } from './query'
 import type { Ctx } from './registry'
+import { casketBlast, onCasketOpened, scenarioCasketOutcome } from './scenarios'
 import { constants, onBoard } from './state'
 import type { CasketStateName, Fighter, GameState, Vec2 } from './types'
 
@@ -143,7 +144,8 @@ export function closeDoor(ctx: Ctx, doorId: string): void {
       // failed the test, or no room to dodge: a S3 D2 hit, then clear the doorway by the shortest way (R-15.6)
       resolveHit(ctx, { targetId: g.id, strength: k.strength, ap: k.ap, damage: k.damage, source: 'door' })
       if (g.location !== 'board') continue
-      to = fits(8, true) ?? fits(8, false)
+      // a crowded doorway: the nearest clear spot on either side, searching wider than the usual push (S4 sim finding)
+      to = fits(8, true) ?? fits(8, false) ?? findClearSpot(s, g, clearTo(start, order[0]!), 6)
       if (!to) throw new Error(`no clear spot for ${g.id} after door ${doorId} closed`)
     }
     const from = { ...g.pos }
@@ -253,7 +255,7 @@ export function mayOpenCaskets(state: GameState, f: Fighter): boolean {
   return state.players[f.seat].role === openBy
 }
 
-/** The contents table result for a D6 (clamped to 1..6). Scenario tables (S4) replace this through code hooks. */
+/** The core contents table result for a D6 (clamped to 1..6). A scenario table (scenarios.ts `scenarioCasketOutcome`) replaces it. */
 export function casketContents(state: GameState, roll: number): string {
   const r = Math.max(1, Math.min(6, roll))
   const row = constants(state).casket.contents.find((c) => r >= c.min && r <= c.max)
@@ -268,12 +270,23 @@ function openCasket(ctx: Ctx, f: Fighter, casketId: string, contentsModifier: nu
   const result = casketContents(s, effective)
   c.openedBy = f.seat
   s.scenario.caskets.opened += 1
+  // a scenario's own table replaces the core one (Smash & Grab, M-3.7): the casket is removed once opened
+  const own = scenarioCasketOutcome(s, effective)
+  if (own) {
+    c.state = own.remove ? 'removed' : 'opened'
+    ctx.emit({ type: 'CasketOpened', casketId, by: f.id, roll, result: own.result }, f.seat)
+    if (own.blast) casketBlast(ctx, c.pos, own.blast)
+    onCasketOpened(ctx, f)
+    return
+  }
   c.state = result === 'ammoCache' ? 'ammoCache' : 'opened'
   ctx.emit({ type: 'CasketOpened', casketId, by: f.id, roll, result }, f.seat)
   if (result === 'fragTrap') {
     // R-15.11 ruling: an immediate frag-grenade explosion centred on the casket, no hit roll
+    ctx.emit({ type: 'BlastPlaced', centre: { ...c.pos }, radius: 1.5 }, null)
     resolveBlast(ctx, { centre: { ...c.pos }, radius: 1.5, strength: 3, ap: 0, damage: 1, source: 'casket', knockback: true })
   }
+  onCasketOpened(ctx, f)
 }
 
 /** Smash Open (Basic): D6 + S >= 6, then -1 on the contents roll (minimum 1). */

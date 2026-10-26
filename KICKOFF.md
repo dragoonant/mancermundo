@@ -30,7 +30,7 @@ A skirmish between two underhive gangs of individual fighters (typically 5-15 a 
 | Stack | Murder Squad copied wholesale (Vite 8, React 19, R3F 9, zustand 5, TS 7, Vitest 5, Playwright, ajv) | Fastest path; the mobile layer, presentation and audio come with it |
 | Engine shape | Murder Squad contracts and module split; rules modules rewritten: `priority` (was strategy), `action` phase (was firefight, two actions, no orders), `end` phase (bottle, recovery), `shoot`/`fight` with hit/wound/save and Injury dice, `traits` (was weapon rules), Zone Mortalis `terrain` (walls, doors) | Alternating activations already fit |
 | Data | JSON per gang (`fighters`, `weapons`, `wargear`, `skills`, `house rules`), `source` per record, ajv schemas | Fidelity rule |
-| Figures | Fresh MGSD body per fighter archetype, bare-handed with sockets; weapons as attachment GLBs; Murder Squad attachments reused where the weapon matches (chainsword, knives, flamer-type, pistols) | Owner's modular-figure direction from Murder Squad |
+| Figures | v2: one Hunyuan GLB per fighter role, posed with its default weapon fused in (27 bodies); equipment on sockets only (see `PLAN.md`) | Murder Squad owner decision 2026-10-18 that bare-handed A-poses look generic |
 | Terrain | Procedural Zone Mortalis walls, doors and floor tiles with painted textures; props as Hunyuan GLBs if time allows | Image-to-3D cannot do flat terrain |
 | Audio | Murder Squad's weapon sounds as the first batch; new SFX and underhive music via Audio Studio | Zero credit spend |
 | AI | Murder Squad's utility decider re-scored for Necromunda (pinning, injuries, bottle) ; bench gate normal beats random >= 95% | AI is the product |

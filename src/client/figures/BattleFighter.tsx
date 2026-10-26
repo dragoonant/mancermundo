@@ -1,8 +1,8 @@
 // A fighter on the battle board: the lab's figure (body GLB from the manifest, else the procedural stand-in) at the engine
 // position, with status cues - pinned lies face up, seriously injured lies face down (a tilt), a coloured ring under the base
 // for Pinned / Seriously Injured / Broken, a green ring while Ready, a gold one while it is the active fighter - plus selection,
-// hover, a wounds readout and the walking tween the director drives through animStore. S5b replaces this with figures/Fighter.tsx
-// (attachment GLBs, cues, tokens); the props stay the same shape.
+// hover, a wounds readout, pips and condition chips (FighterPips) and the walking tween the director drives through animStore.
+// Attachment GLBs and shoot / fight cues are the lab figure's job when its manifest grows them; the props stay the same shape.
 import { useMemo, useRef } from 'react'
 import { Html } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
@@ -14,6 +14,7 @@ import { FighterBody, SEAT_COLOR } from '../lab/LabFighter'
 import { baseRadiusOf, heightOf, type PlacedFighter } from '../lab/placement'
 import { animPosition } from '../presentation/animStore'
 import { colors } from '../ui/theme'
+import { FighterPips } from './FighterPips'
 
 const slug = (s: string): string => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
 
@@ -167,6 +168,7 @@ export function BattleFighter({ f, placed, wounds, selected, hovered, choosable,
         <cylinderGeometry args={[R * 1.3, R * 1.3, 2.2, 10]} />
         <meshBasicMaterial />
       </mesh>
+      <FighterPips f={f} y={tilt === 0 ? placed.height + 0.2 : 1.1} ready={showReady} wounds={shown} />
       {(hurt || selected || hovered || active || statusColour) && (
         <Html position={[0, placed.height + 0.55, 0]} center zIndexRange={[10, 0]} style={{ pointerEvents: 'none' }}>
           <div

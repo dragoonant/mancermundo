@@ -40,6 +40,10 @@ import { fightersUnderBlast } from './hits'
 import { blastRadius, hasTrait, isTemplate, meltaApplies, profileRanges, profileStrength, rapidFire, T as TRAIT } from './traits'
 import { attackDiceFor, chargeTargets as chargeTargetsFor, meleeHitChance, meleeNeedFor, meleeProfile, weaponCombos, weaponDice, type ChargeTarget, type MeleeNeed } from './fight'
 import { nerveInfo, rallyInfo, type CoolTestInfo } from './morale'
+import { bottleInfo, downCount, type BottleInfo } from './casualties'
+import { casketRules, projectedWinner, securedBySeat } from './scenarios'
+import { tileIndexAt } from './board'
+import type { Seat } from './types'
 
 export type DerivedStatus = 'standingActive' | 'standingEngaged' | 'pinned' | 'seriouslyInjured' | 'outOfAction'
 
@@ -466,4 +470,74 @@ export function fightOutcome(state: GameState, attackerId: string, weaponIds?: s
     reactions.push({ fighterId: e.id, dice: k, need: need.sixesOnly ? 6 : need.need, expectedHits: o.expectedHits, expectedWounds: o.expectedWounds })
   }
   return { weaponIds: combo, dice: n, targets: out, reactions }
+}
+
+// ---------------------------------------------------------------------------
+// S4: the Bottle test and the scenario panel
+// ---------------------------------------------------------------------------
+
+/**
+ * The Bottle test of a gang now (R-13.1): fighters down (Seriously Injured, Out of Action, fled) against its starting crew,
+ * the smallest D6 that bottles it and the exact chance. `pBottle` is 1 for a gang that has bottled and 0 with nobody down.
+ */
+export function bottleOdds(state: GameState, seat: Seat): BottleInfo {
+  return bottleInfo(state, seat)
+}
+
+export interface ScenarioView {
+  id: string
+  name: string
+  round: number
+  points: Record<Seat, number>
+  /** fighters on the battlefield that are not Seriously Injured (the gangs R-5.8 counts) */
+  standing: Record<Seat, number>
+  /** fighters down: Seriously Injured, Out of Action or fled (the Bottle test count) */
+  down: Record<Seat, number>
+  bottled: Record<Seat, BottleInfo>
+  /** loot caskets on the board (Smash & Grab, Forgotten Riches) with the tile they lie in and the gang whose deployment spot they are secured on */
+  caskets: { id: string; pos: { x: number; z: number }; state: string; tile: string | null; securedBy: Seat | null }[]
+  /** caskets cracked open so far, and the number Smash & Grab needs */
+  opened: number
+  goal: { kind: 'opened'; needed: number; seat: Seat | null } | null
+  /** Forgotten Riches: loot caskets on a gang's own deployment tile within 3" of the edge right now */
+  secured: Record<Seat, number>
+  deployTiles: Partial<Record<Seat, string>>
+  crewCap: number | null
+  locked: { winner: Seat; reason: string } | null
+  /** who would win if the battle ended now */
+  leading: Seat | 'draw'
+}
+
+/** Everything the scenario panel and the end screen show about how the scenario stands (11-scenarios.md). */
+export function scenarioView(state: GameState): ScenarioView {
+  const seats: Seat[] = ['A', 'B']
+  const standing = { A: 0, B: 0 }
+  for (const f of Object.values(state.fighters)) if (f.location === 'board' && f.posture !== 'seriouslyInjured') standing[f.seat]++
+  const secured = securedBySeat(state)
+  const def = state.board.def
+  const code = 'code' in state.data.scenario.victory ? state.data.scenario.victory.code : null
+  const goal = code === 'smashAndGrabVictory' ? { kind: 'opened' as const, needed: 3, seat: seats.find((x) => state.players[x].role === 'attacker') ?? null } : null
+  const caskets = Object.entries(state.board.caskets).map(([id, c]) => {
+    const i = tileIndexAt(def, c.pos)
+    const tile = i >= 0 ? def.tiles[i]!.id : null
+    const owner = seats.find((x) => tile !== null && state.scenario.deployTiles[x] === tile) ?? null
+    return { id, pos: { ...c.pos }, state: c.state, tile, securedBy: owner && (c.state === 'closed' || c.state === 'opened') ? owner : null }
+  })
+  return {
+    id: state.scenario.id,
+    name: state.data.scenario.name,
+    round: state.round,
+    points: { A: state.players.A.points, B: state.players.B.points },
+    standing,
+    down: { A: downCount(state, 'A'), B: downCount(state, 'B') },
+    bottled: { A: bottleInfo(state, 'A'), B: bottleInfo(state, 'B') },
+    caskets: casketRules(state) ? caskets : [],
+    opened: state.scenario.caskets.opened,
+    goal,
+    secured,
+    deployTiles: { ...state.scenario.deployTiles },
+    crewCap: state.scenario.crewCap,
+    locked: state.scenario.locked ? { winner: state.scenario.locked.winner, reason: state.scenario.locked.reason } : null,
+    leading: projectedWinner(state),
+  }
 }

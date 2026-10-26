@@ -154,7 +154,7 @@ export function setCondition(ctx: Ctx, f: Fighter, condition: string, reason: st
   return true
 }
 
-/** Smoke clouds (R-14.3): in each End phase roll a D6 per cloud, removed on 1-4. TODO(S4): move into the End phase clean-up step. */
+/** Smoke clouds (R-14.3): in each End phase roll a D6 per cloud, removed on 1-4. Called by the phase.end hook below, which the End phase runs in its clean-up step (after the Rally tests). */
 export function clearSmoke(ctx: Ctx): void {
   const s = ctx.state
   const k = constants(s).smoke

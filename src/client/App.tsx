@@ -1,6 +1,8 @@
 // App shell: routes between the start screen, the gang picker, the briefing and the battle from the session store; ?test=1 skips the
 // menus and starts a battle with the default gangs. The lab viewer (?lab) is routed by src/main.tsx. The end screen is part of the battle.
 import { lazy, Suspense, useEffect } from 'react'
+import { audio, installClickSounds, startMusicDirector } from './audio'
+import { AudioControl } from './audio/AudioControl'
 import { loadBodyManifest } from './figures/bodyManifest'
 import { currentParams } from './params'
 import { installTestHooks } from './store/testHooks'
@@ -29,6 +31,10 @@ function preloadBattleWhenIdle(): void {
   else setTimeout(run, 2000)
 }
 installTestHooks()
+// sound: unlocks on the first gesture; the music director follows the screen and the presented game state
+audio.attachAutoUnlock()
+startMusicDirector(audio)
+installClickSounds()
 
 let autoStarted = false
 
@@ -47,6 +53,7 @@ export function App() {
   return (
     <>
       <TouchStyle />
+      <AudioControl />
       {screen === 'battle' ? (
         <Suspense fallback={<Loading />}>
           <BattleScreen />
