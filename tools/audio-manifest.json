@@ -1,631 +1,681 @@
 {
-  "_comment": "Mancermundo audio manifest. Owned by the M6 audio task. All prompts and lines are original wording. Run `npx tsx tools/gen-audio.ts` to (re)generate missing public/audio/<id>.mp3 via the local Audio Studio (http://localhost:7890); items with copyFrom are copied from the sibling Mallet-42k checkout instead (see docs/audio.md).",
-  "voice": {
-    "model": "qwen-design",
-    "language": "English"
+ "_comment": "Mancermundo audio manifest. Owned by the M6 audio task. All prompts and lines are original wording. Run `npx tsx tools/gen-audio.ts` to (re)generate missing public/audio/<id>.mp3 via the local Audio Studio (http://localhost:7890); items with copyFrom are copied from the sibling Mallet-42k checkout instead (see docs/audio.md).",
+ "voice": {
+  "model": "qwen-design",
+  "language": "English"
+ },
+ "items": [
+  {
+   "id": "wpn-bolt-rifle",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "copyFrom": "bolter-burst.mp3"
   },
-  "items": [
-    {
-      "id": "wpn-bolt-rifle",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "copyFrom": "bolter-burst.mp3"
-    },
-    {
-      "id": "wpn-auto-bolt-rifle",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "prompt": "five separate gunshots in rapid succession, each one a single sharp transient crack, dry, percussive, with a heavy thump, clear gaps between rounds, close-miked, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 2.5
-    },
-    {
-      "id": "wpn-stalker-bolt-rifle",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "prompt": "single sharp transient crack, dry, percussive, close-miked, one heavy rifle shot with a deep thump, bolt action clack afterwards, short tail, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 2
-    },
-    {
-      "id": "wpn-heavy-bolt-pistol",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "prompt": "single sharp transient crack, dry, percussive, close-miked, one large calibre pistol shot with a punchy boom and a short metallic ring, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 1.5
-    },
-    {
-      "id": "wpn-bolt-pistol",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "copyFrom": "wpn-bolt-pistol.mp3"
-    },
-    {
-      "id": "wpn-plasma-pistol",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "copyFrom": "wpn-plasma-pistol.mp3"
-    },
-    {
-      "id": "wpn-plasma-pistol-supercharge",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "prompt": "a short rising electrical whine for half a second then one single sharp transient crack, dry, percussive energy discharge, bright and dangerous, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 2
-    },
-    {
-      "id": "wpn-hand-flamer",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "copyFrom": "flamer.mp3"
-    },
-    {
-      "id": "wpn-heavy-bolter",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "copyFrom": "wpn-heavy-bolter.mp3"
-    },
-    {
-      "id": "wpn-bolt-sniper-rifle",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "prompt": "suppressed sniper rifle shot, a muffled low pop and a soft metallic clack of the action, very quiet, dry, no echo, no crack, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 1.5
-    },
-    {
-      "id": "wpn-grenade-launcher",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "copyFrom": "wpn-grenade-launcher.mp3"
-    },
-    {
-      "id": "wpn-grenade-frag",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "prompt": "fragmentation grenade explosion, sharp bang with a spray of metal fragments pattering on stone, short debris tail, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 3
-    },
-    {
-      "id": "wpn-grenade-krak",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "prompt": "armour piercing shaped charge detonation, a focused violent bang with a metallic punching crunch, dry, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 2.5
-    },
-    {
-      "id": "wpn-chainsword-rev",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "copyFrom": "melee-chainsword.mp3"
-    },
-    {
-      "id": "wpn-chainsword-hit",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "prompt": "spinning chainsaw teeth biting into armour, harsh metallic grinding rasp with sparks, motor labouring then pulling free, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 2.5
-    },
-    {
-      "id": "wpn-power-fist",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "copyFrom": "wpn-power-fist.mp3"
-    },
-    {
-      "id": "wpn-power-weapon",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "copyFrom": "wpn-power-weapon.mp3"
-    },
-    {
-      "id": "wpn-thunder-hammer",
-      "kind": "sfx",
-      "group": "weapons-aod",
-      "prompt": "huge hammer strike with an electrical discharge, a deep earth shaking boom and a crackling thunderclap, heavy sub bass impact, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 3
-    },
-    {
-      "id": "wpn-slugga",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "copyFrom": "wpn-slugga.mp3"
-    },
-    {
-      "id": "wpn-dakka-shoota",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "copyFrom": "shoota-spray.mp3"
-    },
-    {
-      "id": "wpn-rokkit-launcha",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "copyFrom": "wpn-rokkit-launcha.mp3"
-    },
-    {
-      "id": "wpn-burna",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "copyFrom": "wpn-heavy-flamer.mp3"
-    },
-    {
-      "id": "wpn-shokka-pistol",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "prompt": "one single sharp transient electrical crack, dry, percussive zap from a crude pistol, short buzz after the crack, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 1.5
-    },
-    {
-      "id": "wpn-scoped-big-shoota",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "prompt": "two slow heavy rifle shots, each a single sharp transient crack with a deep boom, dry, percussive, long silent gap between shots, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 3
-    },
-    {
-      "id": "wpn-throwing-knives",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "prompt": "two knives thrown, a fast whip through the air then a sharp thunk of steel sticking into wood and flesh, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 1.5
-    },
-    {
-      "id": "wpn-choppa",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "copyFrom": "wpn-choppa.mp3"
-    },
-    {
-      "id": "wpn-big-choppa",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "copyFrom": "wpn-big-choppa.mp3"
-    },
-    {
-      "id": "wpn-power-klaw",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "copyFrom": "power-klaw-crunch.mp3"
-    },
-    {
-      "id": "wpn-breacha-ram",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "prompt": "heavy battering ram smashing into a metal door, an enormous clanging impact with buckling steel and falling debris, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 3
-    },
-    {
-      "id": "wpn-twin-choppas",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "prompt": "two heavy cleavers chopping in quick succession, double meaty chop with a metallic scrape, fast, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 2
-    },
-    {
-      "id": "wpn-grot-choppa",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "prompt": "small rusty hatchet chopping, a light scrappy thwack with a tinny rattle, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 1.2
-    },
-    {
-      "id": "wpn-squig-bite",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "prompt": "small animal jaws snapping shut with a wet crunch and a snarl, short, angry creature bite, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 1.2
-    },
-    {
-      "id": "wpn-explosives",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "prompt": "large crude bomb detonation, a deep roaring boom with a shock wave, shattered stone and debris raining down, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 4
-    },
-    {
-      "id": "wpn-dynamite",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "prompt": "bundle of dynamite with a hissing fuse then a sharp bang, rubble and dust falling, short, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 3.5
-    },
-    {
-      "id": "wpn-harpoon",
-      "kind": "sfx",
-      "group": "weapons-kom",
-      "prompt": "harpoon gun, a compressed air thump, a rope whistling out fast, then a heavy thunk of the barb striking, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 2.5
-    },
-    {
-      "id": "hit-flesh",
-      "kind": "sfx",
-      "group": "impacts",
-      "copyFrom": "hit-impact.mp3"
-    },
-    {
-      "id": "hit-armour",
-      "kind": "sfx",
-      "group": "impacts",
-      "copyFrom": "armour-save-clank.mp3"
-    },
-    {
-      "id": "block-clang",
-      "kind": "sfx",
-      "group": "impacts",
-      "prompt": "two steel blades meeting in a hard parry, a ringing metallic clang with a bright shimmer and a short decay, sword block, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 1.5
-    },
-    {
-      "id": "death-marine",
-      "kind": "sfx",
-      "group": "deaths",
-      "prompt": "armoured soldier killed, a short helmet radio crackle and static burst, a deep exhaled grunt, then a long weighty crash of heavy armour plates collapsing and scraping on a hard floor, final faint electronic hiss, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 4.5
-    },
-    {
-      "id": "death-marine-classic",
-      "kind": "sfx",
-      "group": "deaths",
-      "copyFrom": "death-space-marines.mp3"
-    },
-    {
-      "id": "death-ork",
-      "kind": "sfx",
-      "group": "deaths",
-      "copyFrom": "death-orks.mp3"
-    },
-    {
-      "id": "death-ork-roar",
-      "kind": "sfx",
-      "group": "deaths",
-      "prompt": "huge brutish creature dying, a deep guttural bellow breaking into a rasping gasp, then a heavy thud of a large body falling, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 3.5
-    },
-    {
-      "id": "death-grot",
-      "kind": "sfx",
-      "group": "deaths",
-      "prompt": "small goblin creature squealing in panic, a high pitched shrill squeal cut short, a tiny thud, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 1.5
-    },
-    {
-      "id": "death-squig",
-      "kind": "sfx",
-      "group": "deaths",
-      "prompt": "small round creature popping, a wet squelchy pop and a deflating squeak, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 1.2
-    },
-    {
-      "id": "death-generic",
-      "kind": "sfx",
-      "group": "deaths",
-      "copyFrom": "model-death.mp3"
-    },
-    {
-      "id": "shout-ork",
-      "kind": "sfx",
-      "group": "deaths",
-      "copyFrom": "ork-war-cry.mp3"
-    },
-    {
-      "id": "shout-marine",
-      "kind": "sfx",
-      "group": "deaths",
-      "copyFrom": "marine-shout.mp3"
-    },
-    {
-      "id": "move-marine-steps",
-      "kind": "sfx",
-      "group": "movement",
-      "prompt": "heavy armoured boots walking on a metal grate, four slow weighty footsteps, servo whine and plate rattle between steps, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 3.5
-    },
-    {
-      "id": "move-ork-boots",
-      "kind": "sfx",
-      "group": "movement",
-      "prompt": "heavy hobnailed boots stomping on rubble, four uneven stomps with a clatter of loose gear and chains, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 3
-    },
-    {
-      "id": "move-climb",
-      "kind": "sfx",
-      "group": "movement",
-      "prompt": "a heavy figure climbing a metal ladder, hands and boots clanking rung after rung, creaking steel, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 3
-    },
-    {
-      "id": "move-drop",
-      "kind": "sfx",
-      "group": "movement",
-      "prompt": "a heavy armoured figure dropping from a ledge, a short rush of air then a hard landing thud with a metallic rattle, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 1.8
-    },
-    {
-      "id": "ui-dice-rattle",
-      "kind": "sfx",
-      "group": "ui",
-      "copyFrom": "dice-rattle.mp3"
-    },
-    {
-      "id": "ui-dice-land",
-      "kind": "sfx",
-      "group": "ui",
-      "copyFrom": "dice-land.mp3"
-    },
-    {
-      "id": "ui-order-engage",
-      "kind": "sfx",
-      "group": "ui",
-      "prompt": "a sharp metallic token flip and a firm click, bold and decisive, tabletop game marker turned over, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 0.9
-    },
-    {
-      "id": "ui-order-conceal",
-      "kind": "sfx",
-      "group": "ui",
-      "prompt": "a soft muffled token flip with a quiet cloth rustle and a gentle click, stealthy, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 0.9
-    },
-    {
-      "id": "ui-ap-spend",
-      "kind": "sfx",
-      "group": "ui",
-      "prompt": "a single crisp mechanical switch click, short and dry, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 0.5
-    },
-    {
-      "id": "ui-cp-gained",
-      "kind": "sfx",
-      "group": "ui",
-      "copyFrom": "cp-gained-click.mp3"
-    },
-    {
-      "id": "ui-vp-scored",
-      "kind": "sfx",
-      "group": "ui",
-      "copyFrom": "objective-captured-chime.mp3"
-    },
-    {
-      "id": "ui-marker-pickup",
-      "kind": "sfx",
-      "group": "ui",
-      "prompt": "a small metal object picked up, a quick scrape and a bright little chime, light, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 0.9
-    },
-    {
-      "id": "ui-turning-point-sting",
-      "kind": "sfx",
-      "group": "ui",
-      "prompt": "a deep ominous bell toll with a low brass swell and a short metallic ring, grim announcement sting, no music, no voices",
-      "negative": "voices, speech, singing, hiss",
-      "seconds": 3.5
-    },
-    {
-      "id": "ui-initiative-won",
-      "kind": "sfx",
-      "group": "ui",
-      "prompt": "a short confident rising brass fanfare with a snare roll and a final hit, brief triumphant sting, no music, no voices",
-      "negative": "voices, speech, singing, hiss",
-      "seconds": 3
-    },
-    {
-      "id": "ui-victory-sting",
-      "kind": "sfx",
-      "group": "ui",
-      "prompt": "a triumphant heroic brass and drum finale, a rising fanfare with timpani and a long resolved final chord, no music, no voices",
-      "negative": "voices, speech, singing, hiss",
-      "seconds": 5
-    },
-    {
-      "id": "ui-defeat-sting",
-      "kind": "sfx",
-      "group": "ui",
-      "copyFrom": "defeat-sting.mp3"
-    },
-    {
-      "id": "amb-industrial-wind",
-      "kind": "sfx",
-      "group": "ambience",
-      "prompt": "wind howling through a ruined industrial structure, steady low moan, loose sheet metal creaking and rattling in the distance, hollow empty atmosphere, no music, no voices",
-      "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
-      "seconds": 20,
-      "loop": true
-    },
-    {
-      "id": "amb-distant-battle",
-      "kind": "sfx",
-      "group": "ambience",
-      "copyFrom": "ambient-battlefield-loop.mp3",
-      "loop": true
-    },
-    {
-      "id": "narr-turning-point-one",
-      "kind": "voice",
-      "group": "narrator",
-      "text": "Turning point one.",
-      "instruct": "a calm, kind and steady male narrator in his forties, warm low voice, clear measured delivery, serious and reassuring, slight military authority, studio quality",
-      "language": "English",
-      "seed": 40421
-    },
-    {
-      "id": "narr-strategy-phase",
-      "kind": "voice",
-      "group": "narrator",
-      "text": "Strategy phase.",
-      "instruct": "a calm, kind and steady male narrator in his forties, warm low voice, clear measured delivery, serious and reassuring, slight military authority, studio quality",
-      "language": "English",
-      "seed": 40421
-    },
-    {
-      "id": "narr-firefight-phase",
-      "kind": "voice",
-      "group": "narrator",
-      "text": "Firefight phase.",
-      "instruct": "a calm, kind and steady male narrator in his forties, warm low voice, clear measured delivery, serious and reassuring, slight military authority, studio quality",
-      "language": "English",
-      "seed": 40421
-    },
-    {
-      "id": "narr-initiative-aod",
-      "kind": "voice",
-      "group": "narrator",
-      "text": "Initiative to the Angels of Death.",
-      "instruct": "a calm, kind and steady male narrator in his forties, warm low voice, clear measured delivery, serious and reassuring, slight military authority, studio quality",
-      "language": "English",
-      "seed": 40421
-    },
-    {
-      "id": "narr-initiative-kom",
-      "kind": "voice",
-      "group": "narrator",
-      "text": "Initiative to the Kommandos.",
-      "instruct": "a calm, kind and steady male narrator in his forties, warm low voice, clear measured delivery, serious and reassuring, slight military authority, studio quality",
-      "language": "English",
-      "seed": 40421
-    },
-    {
-      "id": "narr-operative-down",
-      "kind": "voice",
-      "group": "narrator",
-      "text": "Operative down.",
-      "instruct": "a calm, kind and steady male narrator in his forties, warm low voice, clear measured delivery, serious and reassuring, slight military authority, studio quality",
-      "language": "English",
-      "seed": 40421
-    },
-    {
-      "id": "narr-objective-secured",
-      "kind": "voice",
-      "group": "narrator",
-      "text": "Objective secured.",
-      "instruct": "a calm, kind and steady male narrator in his forties, warm low voice, clear measured delivery, serious and reassuring, slight military authority, studio quality",
-      "language": "English",
-      "seed": 40421
-    },
-    {
-      "id": "narr-counteract",
-      "kind": "voice",
-      "group": "narrator",
-      "text": "Counteract.",
-      "instruct": "a calm, kind and steady male narrator in his forties, warm low voice, clear measured delivery, serious and reassuring, slight military authority, studio quality",
-      "language": "English",
-      "seed": 40421
-    },
-    {
-      "id": "narr-final-turning-point",
-      "kind": "voice",
-      "group": "narrator",
-      "text": "Final turning point.",
-      "instruct": "a calm, kind and steady male narrator in his forties, warm low voice, clear measured delivery, serious and reassuring, slight military authority, studio quality",
-      "language": "English",
-      "seed": 40421
-    },
-    {
-      "id": "narr-victory",
-      "kind": "voice",
-      "group": "narrator",
-      "text": "Victory.",
-      "instruct": "a calm, kind and steady male narrator in his forties, warm low voice, clear measured delivery, serious and reassuring, slight military authority, studio quality",
-      "language": "English",
-      "seed": 40421
-    },
-    {
-      "id": "narr-defeat",
-      "kind": "voice",
-      "group": "narrator",
-      "text": "Defeat.",
-      "instruct": "a calm, kind and steady male narrator in his forties, warm low voice, clear measured delivery, serious and reassuring, slight military authority, studio quality",
-      "language": "English",
-      "seed": 40421
-    },
-    {
-      "id": "narr-draw",
-      "kind": "voice",
-      "group": "narrator",
-      "text": "Draw.",
-      "instruct": "a calm, kind and steady male narrator in his forties, warm low voice, clear measured delivery, serious and reassuring, slight military authority, studio quality",
-      "language": "English",
-      "seed": 40421
-    },
-    {
-      "id": "music-title",
-      "kind": "music",
-      "group": "music",
-      "prompt": "grimdark industrial orchestral instrumental, slow ominous low strings and brass, pounding anvil percussion and metallic hits, distant tolling bell, deep drones, building dread, cinematic, original composition, no vocals",
-      "duration": 60,
-      "bpm": 70,
-      "key": "D minor",
-      "timesig": "4"
-    },
-    {
-      "id": "music-battle-a",
-      "kind": "music",
-      "group": "music",
-      "prompt": "grimdark industrial orchestral instrumental, driving war drums, aggressive low staccato strings, grinding distorted bass, tense brass stabs, relentless rhythm, cinematic combat music, original composition, no vocals",
-      "duration": 90,
-      "bpm": 120,
-      "key": "E minor",
-      "timesig": "4"
-    },
-    {
-      "id": "music-battle-b",
-      "kind": "music",
-      "group": "music",
-      "prompt": "dark orchestral instrumental, tense stealthy pulsing synth bass, ticking metallic percussion, sparse low piano notes, rising string tension, slow burn, industrial textures, cinematic, original composition, no vocals",
-      "duration": 90,
-      "bpm": 100,
-      "key": "A minor",
-      "timesig": "4"
-    },
-    {
-      "id": "music-victory",
-      "kind": "music",
-      "group": "music",
-      "prompt": "triumphant orchestral fanfare, heroic brass melody over rolling timpani and sweeping strings, builds to a big resolved major chord that is held and rings out until the end, grand and victorious, no vocals",
-      "duration": 12,
-      "bpm": 100,
-      "key": "D major",
-      "timesig": "4"
-    },
-    {
-      "id": "music-defeat",
-      "kind": "music",
-      "group": "music",
-      "prompt": "sombre orchestral lament, slow falling low strings and a muted solo brass melody, deep drone sustained throughout, bleak and mournful, slowly fading at the very end, no vocals",
-      "duration": 12,
-      "bpm": 60,
-      "key": "D minor",
-      "timesig": "4"
-    }
-  ]
+  {
+   "id": "wpn-auto-bolt-rifle",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "prompt": "five separate gunshots in rapid succession, each one a single sharp transient crack, dry, percussive, with a heavy thump, clear gaps between rounds, close-miked, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 2.5,
+   "candidates": 4
+  },
+  {
+   "id": "wpn-stalker-bolt-rifle",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "prompt": "single sharp transient crack, dry, percussive, close-miked, one heavy rifle shot with a deep thump, bolt action clack afterwards, short tail, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 2,
+   "candidates": 4
+  },
+  {
+   "id": "wpn-heavy-bolt-pistol",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "prompt": "single sharp transient crack, dry, percussive, close-miked, one large calibre pistol shot with a punchy boom and a short metallic ring, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 1.5,
+   "candidates": 4
+  },
+  {
+   "id": "wpn-bolt-pistol",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "prompt": "single sharp transient crack, dry, percussive, close-miked, one pistol shot with a punchy bang and a tiny metallic slide clack, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 1.2,
+   "candidates": 4
+  },
+  {
+   "id": "wpn-plasma-pistol",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "prompt": "single sharp transient crack, dry, percussive energy discharge, a bright electrical zap with a short sizzle, one shot only, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 1.2,
+   "candidates": 4
+  },
+  {
+   "id": "wpn-plasma-pistol-supercharge",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "prompt": "one single extremely sharp electrical crack like a thunderclap, instant attack, dry and percussive, followed by a very short sizzle, bright and dangerous, no rising whine, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 1.5,
+   "candidates": 4
+  },
+  {
+   "id": "wpn-hand-flamer",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "copyFrom": "flamer.mp3"
+  },
+  {
+   "id": "wpn-heavy-bolter",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "copyFrom": "wpn-heavy-bolter.mp3"
+  },
+  {
+   "id": "wpn-bolt-sniper-rifle",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "prompt": "suppressed sniper rifle shot, a muffled low pop and a soft metallic clack of the action, very quiet, dry, no echo, no crack, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 1.5,
+   "candidates": 4
+  },
+  {
+   "id": "wpn-grenade-launcher",
+   "kind": "sfx",
+   "group": "weapons-explosives",
+   "prompt": "single sharp transient thump, dry, percussive, close-miked, one grenade launcher shot, a hard hollow pop with a heavy low thump and a brief metallic clink, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 1.5,
+   "candidates": 4
+  },
+  {
+   "id": "wpn-grenade-frag",
+   "kind": "sfx",
+   "group": "weapons-explosives",
+   "prompt": "fragmentation grenade explosion, sharp bang with a spray of metal fragments pattering on stone, short debris tail, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 3
+  },
+  {
+   "id": "wpn-grenade-krak",
+   "kind": "sfx",
+   "group": "weapons-explosives",
+   "prompt": "armour piercing shaped charge detonation, a focused violent bang with a metallic punching crunch, dry, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 2.5
+  },
+  {
+   "id": "wpn-chainsword-rev",
+   "kind": "sfx",
+   "group": "weapons-melee",
+   "copyFrom": "melee-chainsword.mp3"
+  },
+  {
+   "id": "wpn-chainsword-hit",
+   "kind": "sfx",
+   "group": "weapons-melee",
+   "prompt": "spinning chainsaw teeth biting into armour, harsh metallic grinding rasp with sparks, motor labouring then pulling free, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 2.5
+  },
+  {
+   "id": "wpn-power-fist",
+   "kind": "sfx",
+   "group": "weapons-melee",
+   "copyFrom": "wpn-power-fist.mp3"
+  },
+  {
+   "id": "wpn-power-weapon",
+   "kind": "sfx",
+   "group": "weapons-melee",
+   "copyFrom": "wpn-power-weapon.mp3"
+  },
+  {
+   "id": "wpn-thunder-hammer",
+   "kind": "sfx",
+   "group": "weapons-melee",
+   "prompt": "huge hammer strike with an electrical discharge, a deep earth shaking boom and a crackling thunderclap, heavy sub bass impact, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 3
+  },
+  {
+   "id": "wpn-slugga",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "prompt": "single extremely sharp transient crack, instant attack, dry and percussive, close-miked, one loud crude revolver shot with a flat bang then silence, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 1,
+   "candidates": 4
+  },
+  {
+   "id": "wpn-dakka-shoota",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "copyFrom": "shoota-spray.mp3"
+  },
+  {
+   "id": "wpn-rokkit-launcha",
+   "kind": "sfx",
+   "group": "weapons-explosives",
+   "copyFrom": "wpn-rokkit-launcha.mp3"
+  },
+  {
+   "id": "wpn-burna",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "copyFrom": "wpn-heavy-flamer.mp3"
+  },
+  {
+   "id": "wpn-shokka-pistol",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "prompt": "one single sharp transient electrical crack, dry, percussive zap from a crude pistol, short buzz after the crack, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 1.5,
+   "candidates": 4
+  },
+  {
+   "id": "wpn-scoped-big-shoota",
+   "kind": "sfx",
+   "group": "weapons-guns",
+   "prompt": "two slow heavy rifle shots, each a single sharp transient crack with a deep boom, dry, percussive, long silent gap between shots, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 3,
+   "candidates": 4
+  },
+  {
+   "id": "wpn-throwing-knives",
+   "kind": "sfx",
+   "group": "weapons-melee",
+   "prompt": "two knives thrown, a fast whip through the air then a sharp thunk of steel sticking into wood and flesh, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 1.5
+  },
+  {
+   "id": "wpn-choppa",
+   "kind": "sfx",
+   "group": "weapons-melee",
+   "copyFrom": "wpn-choppa.mp3"
+  },
+  {
+   "id": "wpn-big-choppa",
+   "kind": "sfx",
+   "group": "weapons-melee",
+   "copyFrom": "wpn-big-choppa.mp3"
+  },
+  {
+   "id": "wpn-power-klaw",
+   "kind": "sfx",
+   "group": "weapons-melee",
+   "copyFrom": "power-klaw-crunch.mp3"
+  },
+  {
+   "id": "wpn-breacha-ram",
+   "kind": "sfx",
+   "group": "weapons-explosives",
+   "prompt": "heavy battering ram smashing into a metal door, an enormous clanging impact with buckling steel and falling debris, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 3
+  },
+  {
+   "id": "wpn-twin-choppas",
+   "kind": "sfx",
+   "group": "weapons-melee",
+   "prompt": "two heavy cleavers chopping in quick succession, double meaty chop with a metallic scrape, fast, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 2
+  },
+  {
+   "id": "wpn-explosives",
+   "kind": "sfx",
+   "group": "weapons-explosives",
+   "prompt": "large crude bomb detonation, a deep roaring boom with a shock wave, shattered stone and debris raining down, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 4
+  },
+  {
+   "id": "wpn-dynamite",
+   "kind": "sfx",
+   "group": "weapons-explosives",
+   "prompt": "bundle of dynamite with a hissing fuse then a sharp bang, rubble and dust falling, short, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 3.5
+  },
+  {
+   "id": "hit-flesh",
+   "kind": "sfx",
+   "group": "impacts",
+   "copyFrom": "hit-impact.mp3"
+  },
+  {
+   "id": "hit-armour",
+   "kind": "sfx",
+   "group": "impacts",
+   "copyFrom": "armour-save-clank.mp3"
+  },
+  {
+   "id": "block-clang",
+   "kind": "sfx",
+   "group": "impacts",
+   "prompt": "two steel blades meeting in a hard parry, a ringing metallic clang with a bright shimmer and a short decay, sword block, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 1.5
+  },
+  {
+   "id": "death-generic",
+   "kind": "sfx",
+   "group": "deaths",
+   "copyFrom": "model-death.mp3"
+  },
+  {
+   "id": "move-steps-heavy",
+   "kind": "sfx",
+   "group": "movement",
+   "prompt": "heavy armoured boots walking on a metal grate, four slow weighty footsteps, servo whine and plate rattle between steps, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 3.5
+  },
+  {
+   "id": "move-steps-rubble",
+   "kind": "sfx",
+   "group": "movement",
+   "prompt": "heavy hobnailed boots stomping on rubble, four uneven stomps with a clatter of loose gear and chains, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 3
+  },
+  {
+   "id": "move-climb",
+   "kind": "sfx",
+   "group": "movement",
+   "prompt": "a heavy figure climbing a metal ladder, hands and boots clanking rung after rung, creaking steel, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 3
+  },
+  {
+   "id": "move-drop",
+   "kind": "sfx",
+   "group": "movement",
+   "prompt": "a heavy armoured figure dropping from a ledge, a short rush of air then a hard landing thud with a metallic rattle, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 1.8
+  },
+  {
+   "id": "ui-dice-rattle",
+   "kind": "sfx",
+   "group": "ui",
+   "copyFrom": "dice-rattle.mp3"
+  },
+  {
+   "id": "ui-dice-land",
+   "kind": "sfx",
+   "group": "ui",
+   "copyFrom": "dice-land.mp3"
+  },
+  {
+   "id": "ui-ap-spend",
+   "kind": "sfx",
+   "group": "ui",
+   "prompt": "a single crisp mechanical switch click, short and dry, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 0.5
+  },
+  {
+   "id": "ui-cp-gained",
+   "kind": "sfx",
+   "group": "ui",
+   "copyFrom": "cp-gained-click.mp3"
+  },
+  {
+   "id": "ui-vp-scored",
+   "kind": "sfx",
+   "group": "ui",
+   "copyFrom": "objective-captured-chime.mp3"
+  },
+  {
+   "id": "ui-marker-pickup",
+   "kind": "sfx",
+   "group": "ui",
+   "prompt": "a small metal object picked up, a quick scrape and a bright little chime, light, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 0.9
+  },
+  {
+   "id": "ui-turning-point-sting",
+   "kind": "sfx",
+   "group": "ui",
+   "prompt": "a deep ominous bell toll with a low brass swell and a short metallic ring, grim announcement sting, no music, no voices",
+   "negative": "voices, speech, singing, hiss",
+   "seconds": 3.5
+  },
+  {
+   "id": "ui-initiative-won",
+   "kind": "sfx",
+   "group": "ui",
+   "prompt": "a short confident rising brass fanfare with a snare roll and a final hit, brief triumphant sting, no music, no voices",
+   "negative": "voices, speech, singing, hiss",
+   "seconds": 3
+  },
+  {
+   "id": "ui-victory-sting",
+   "kind": "sfx",
+   "group": "ui",
+   "prompt": "a triumphant heroic brass and drum finale, a rising fanfare with timpani and a long resolved final chord, no music, no voices",
+   "negative": "voices, speech, singing, hiss",
+   "seconds": 5
+  },
+  {
+   "id": "ui-defeat-sting",
+   "kind": "sfx",
+   "group": "ui",
+   "copyFrom": "defeat-sting.mp3"
+  },
+  {
+   "id": "amb-industrial-wind",
+   "kind": "sfx",
+   "group": "ambience",
+   "prompt": "wind howling through a ruined industrial structure, steady low moan, loose sheet metal creaking and rattling in the distance, hollow empty atmosphere, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, hiss",
+   "seconds": 20,
+   "loop": true
+  },
+  {
+   "id": "amb-distant-battle",
+   "kind": "sfx",
+   "group": "ambience",
+   "copyFrom": "ambient-battlefield-loop.mp3",
+   "loop": true
+  },
+  {
+   "id": "amb-underhive-drips",
+   "kind": "sfx",
+   "group": "ambience",
+   "prompt": "water dripping from rusted pipes into shallow puddles in a vast echoing metal tunnel, slow irregular drips, distant muffled machinery thudding and clanking, low rumble, steady even atmospheric bed, no music, no voices",
+   "negative": "music, voices, speech, singing, melody, drums, rhythm, gunshots, sudden loud events",
+   "seconds": 31.5,
+   "loop": true
+  },
+  {
+   "id": "amb-hive-hum",
+   "kind": "sfx",
+   "group": "ambience",
+   "prompt": "deep low reactor hum, steady sub bass drone with a faint electrical buzz and slow pulsing, large industrial machinery room tone, constant and even, no music, no voices",
+   "negative": "music, voices, speech, singing, melody, drums, rhythm, gunshots, sudden loud events",
+   "seconds": 31.5,
+   "loop": true
+  },
+  {
+   "id": "zm-door-open",
+   "kind": "sfx",
+   "group": "zone-mortalis",
+   "prompt": "heavy hydraulic bulkhead door sliding open, a pneumatic hiss of pressure release, deep mechanical grinding of thick steel on rails, a final heavy metallic clunk, inside a metal corridor, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise",
+   "seconds": 3.5
+  },
+  {
+   "id": "zm-door-close",
+   "kind": "sfx",
+   "group": "zone-mortalis",
+   "prompt": "heavy hydraulic bulkhead door sliding shut, deep mechanical grinding of thick steel on rails, a heavy metallic slam and a pneumatic hiss of sealing, inside a metal corridor, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise",
+   "seconds": 3.5
+  },
+  {
+   "id": "zm-door-locked",
+   "kind": "sfx",
+   "group": "zone-mortalis",
+   "prompt": "a heavy metallic bolt clunk followed by a short harsh electrical buzz of a denied access panel, flat and dull, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise",
+   "seconds": 1.5
+  },
+  {
+   "id": "status-pinned",
+   "kind": "sfx",
+   "group": "status",
+   "prompt": "a heavy body slamming and scraping against a metal grating floor, a dull thud with a clatter of rattling metal grille, no music, no voices",
+   "negative": "music, voices, speech, singing, grunting, breathing, long reverb tail, background noise",
+   "seconds": 1.5
+  },
+  {
+   "id": "status-injured",
+   "kind": "sfx",
+   "group": "status",
+   "prompt": "a heavy dull body thud onto a hard floor with a rattle of loose gear and buckles, no grunt, no breathing, no music, no voices",
+   "negative": "music, voices, speech, singing, grunting, breathing, long reverb tail, background noise",
+   "seconds": 1.2
+  },
+  {
+   "id": "status-out-of-action",
+   "kind": "sfx",
+   "group": "status",
+   "prompt": "a heavy body collapsing onto a metal floor, a slow weighty fall with a drawn out clatter of dropped gear and a final rattling settle, no music, no voices",
+   "negative": "music, voices, speech, singing, grunting, breathing, long reverb tail, background noise",
+   "seconds": 3
+  },
+  {
+   "id": "bottle-test",
+   "kind": "sfx",
+   "group": "status",
+   "prompt": "a single tense low drum hit, a deep resonant tom with a long sub bass tail, dramatic and ominous, one hit only, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise, melody",
+   "seconds": 2.5
+  },
+  {
+   "id": "ready-markers",
+   "kind": "sfx",
+   "group": "status",
+   "prompt": "several small metal tokens tapped and clicking onto a table, bright crisp clinks, short, tabletop game, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise",
+   "seconds": 1.2
+  },
+  {
+   "id": "gol-stimm",
+   "kind": "sfx",
+   "group": "goliath",
+   "prompt": "a chemical injector gun pressed against skin with a sharp pneumatic hiss and a mechanical click, short burst of gas, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise",
+   "seconds": 1.3
+  },
+  {
+   "id": "gol-roar-perc",
+   "kind": "sfx",
+   "group": "goliath",
+   "prompt": "a heavy fist pounding a broad armoured chest, two slow deep resonant thumps, dull chesty boom, no shouting, no music, no voices",
+   "negative": "music, voices, speech, singing, grunting, breathing, long reverb tail, background noise",
+   "seconds": 1.6
+  },
+  {
+   "id": "esc-chem-hiss",
+   "kind": "sfx",
+   "group": "escher",
+   "prompt": "aerosol canister spraying a long chemical mist, steady pressurised hiss with a soft sputter at the end, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise",
+   "seconds": 2
+  },
+  {
+   "id": "esc-whip-crack",
+   "kind": "sfx",
+   "group": "escher",
+   "prompt": "a single sharp whip crack with a crackling electric arc, a snappy transient, a bright electrical snap and fizzle, dry, percussive, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise",
+   "seconds": 1.3,
+   "candidates": 4
+  },
+  {
+   "id": "ui-priority",
+   "kind": "sfx",
+   "group": "ui",
+   "prompt": "a tabletop die rattling and rolling, then a clear metallic chime ringing out, short, tabletop game, no music, no voices",
+   "negative": "music, voices, speech, singing, long reverb tail, background noise",
+   "seconds": 1.8
+  },
+  {
+   "id": "music-title",
+   "kind": "music",
+   "group": "music",
+   "prompt": "dark brooding industrial ambient theme, slow heavy synth drones, deep metallic resonant pulses, distant clanging pipes, ominous low pads, sparse anvil hits, building dread, underhive, cinematic, original composition, instrumental, no vocals",
+   "duration": 90,
+   "bpm": 70,
+   "key": "D minor",
+   "timesig": "4"
+  },
+  {
+   "id": "music-battle-a",
+   "kind": "music",
+   "group": "music",
+   "prompt": "driving dark industrial synth percussion, relentless pounding kick drum, grinding metal clangs, distorted growling bass, aggressive pulsing sequenced synth, rhythmic anvil hits, tense stabs, cinematic combat, original composition, instrumental, no vocals",
+   "duration": 120,
+   "bpm": 124,
+   "key": "E minor",
+   "timesig": "4",
+   "loop": true
+  },
+  {
+   "id": "music-battle-b",
+   "kind": "music",
+   "group": "music",
+   "prompt": "dark synth industrial groove, heavy mechanical rhythm, grinding saw bass, clanking chain and pipe percussion, staccato low synth ostinato, urgent and relentless, lots of metallic hits, original composition, instrumental, no vocals",
+   "duration": 120,
+   "bpm": 108,
+   "key": "C minor",
+   "timesig": "4",
+   "loop": true
+  },
+  {
+   "id": "music-tense",
+   "kind": "music",
+   "group": "music",
+   "prompt": "sparse tense dark ambient, slow water drips, deep sub drone, occasional low metallic scrape, distant echoes, faint heartbeat pulse, unsettling, empty, minimal, original composition, instrumental, no vocals",
+   "duration": 60,
+   "bpm": 60,
+   "key": "A minor",
+   "timesig": "4",
+   "loop": true
+  },
+  {
+   "id": "music-victory",
+   "kind": "music",
+   "group": "music",
+   "prompt": "gritty triumphant industrial stinger, heavy distorted brass-like synth fanfare, pounding drums, metallic hit finale, defiant and short, original composition, instrumental, no vocals",
+   "duration": 15,
+   "bpm": 100,
+   "key": "D major",
+   "timesig": "4"
+  },
+  {
+   "id": "music-defeat",
+   "kind": "music",
+   "group": "music",
+   "prompt": "low mournful dark stinger, slow descending synth drone and low cello-like strings, sombre, one deep tolling hit, fading away, original composition, instrumental, no vocals",
+   "duration": 12,
+   "bpm": 60,
+   "key": "C minor",
+   "timesig": "4"
+  },
+  {
+   "id": "vo-take-positions",
+   "kind": "voice",
+   "group": "narrator",
+   "text": "Gangs, take your positions.",
+   "instruct": "a rasping, gravelly middle-aged male underhive bookmaker and fight announcer, hoarse smoky voice, sly showman delivery, slightly menacing and theatrical, clear diction, studio quality",
+   "language": "English",
+   "seed": 40421
+  },
+  {
+   "id": "vo-priority-goliath",
+   "kind": "voice",
+   "group": "narrator",
+   "text": "Priority goes to the Goliaths.",
+   "instruct": "a rasping, gravelly middle-aged male underhive bookmaker and fight announcer, hoarse smoky voice, sly showman delivery, slightly menacing and theatrical, clear diction, studio quality",
+   "language": "English",
+   "seed": 40421
+  },
+  {
+   "id": "vo-priority-escher",
+   "kind": "voice",
+   "group": "narrator",
+   "text": "Priority goes to the Escher.",
+   "instruct": "a rasping, gravelly middle-aged male underhive bookmaker and fight announcer, hoarse smoky voice, sly showman delivery, slightly menacing and theatrical, clear diction, studio quality",
+   "language": "English",
+   "seed": 40421
+  },
+  {
+   "id": "vo-fighter-down",
+   "kind": "voice",
+   "group": "narrator",
+   "text": "Fighter down!",
+   "instruct": "a rasping, gravelly middle-aged male underhive bookmaker and fight announcer, hoarse smoky voice, sly showman delivery, slightly menacing and theatrical, clear diction, studio quality",
+   "language": "English",
+   "seed": 40421
+  },
+  {
+   "id": "vo-out-of-action",
+   "kind": "voice",
+   "group": "narrator",
+   "text": "Out of action!",
+   "instruct": "a rasping, gravelly middle-aged male underhive bookmaker and fight announcer, hoarse smoky voice, sly showman delivery, slightly menacing and theatrical, clear diction, studio quality",
+   "language": "English",
+   "seed": 40421
+  },
+  {
+   "id": "vo-breaking",
+   "kind": "voice",
+   "group": "narrator",
+   "text": "They're breaking!",
+   "instruct": "a rasping, gravelly middle-aged male underhive bookmaker and fight announcer, hoarse smoky voice, sly showman delivery, slightly menacing and theatrical, clear diction, studio quality",
+   "language": "English",
+   "seed": 40421
+  },
+  {
+   "id": "vo-bottle-test",
+   "kind": "voice",
+   "group": "narrator",
+   "text": "Bottle test!",
+   "instruct": "a rasping, gravelly middle-aged male underhive bookmaker and fight announcer, hoarse smoky voice, sly showman delivery, slightly menacing and theatrical, clear diction, studio quality",
+   "language": "English",
+   "seed": 40421
+  },
+  {
+   "id": "vo-round-over",
+   "kind": "voice",
+   "group": "narrator",
+   "text": "Round over.",
+   "instruct": "a rasping, gravelly middle-aged male underhive bookmaker and fight announcer, hoarse smoky voice, sly showman delivery, slightly menacing and theatrical, clear diction, studio quality",
+   "language": "English",
+   "seed": 40421
+  },
+  {
+   "id": "vo-goliath-hold",
+   "kind": "voice",
+   "group": "narrator",
+   "text": "The Goliaths hold the tunnels.",
+   "instruct": "a rasping, gravelly middle-aged male underhive bookmaker and fight announcer, hoarse smoky voice, sly showman delivery, slightly menacing and theatrical, clear diction, studio quality",
+   "language": "English",
+   "seed": 40421
+  },
+  {
+   "id": "vo-escher-hold",
+   "kind": "voice",
+   "group": "narrator",
+   "text": "The Escher hold the tunnels.",
+   "instruct": "a rasping, gravelly middle-aged male underhive bookmaker and fight announcer, hoarse smoky voice, sly showman delivery, slightly menacing and theatrical, clear diction, studio quality",
+   "language": "English",
+   "seed": 40421
+  },
+  {
+   "id": "vo-standoff",
+   "kind": "voice",
+   "group": "narrator",
+   "text": "Stand-off. Nobody wins in the underhive.",
+   "instruct": "a rasping, gravelly middle-aged male underhive bookmaker and fight announcer, hoarse smoky voice, sly showman delivery, slightly menacing and theatrical, clear diction, studio quality",
+   "language": "English",
+   "seed": 40421
+  }
+ ]
 }

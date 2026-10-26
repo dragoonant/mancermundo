@@ -80,3 +80,57 @@ RULING: KRUMP 'EM! (13-teams ploys) | it is offered in the turning-point-end win
 RULING: Shake It Off (13-teams ploys) | it is offered when a Kommando activates; the "APL changes" trigger is not offered separately | an APL change by an enemy has no ploy window | Unsourced
 RULING: Mines timing (M-5.2) | triggered after every accepted action, checking the end of every move increment and every operative that stands in range, for the owner's own operatives as well; the mine is hidden from the opponent's view until it triggers | extends the earlier timing ruling to set-up deployments | Unsourced
 RULING: Concealed Position (13-teams 2.3) | the profile is removed from the Snipa Boy after its first Shoot action of the battle, whichever profile it used | "the first time it ever performs the Shoot action" | Unsourced
+
+## Mancermundo - Necromunda 2023 rulebook rulings (refs R-x.y = docs/spec/10-rules-core.md, M-x.y = docs/spec/11-scenarios.md)
+
+RULING: Edition target (all) | implement the 2023 Necromunda Rulebook; ignore the August 2026 Necromunda Skirmish edition and its September 2026 FAQ | owner-settled scope; the only FAQ now on Warhammer Community is for the new edition, and 2023-era FAQs are no longer hosted there | Confirmed
+RULING: Primary text source (all) | Necrodamus N23 compilation used as the rules text, ignoring its HOUSE RULE and N17-only notes; cross-checked with the Order of Gamers N17 summary, Warhammer Community July 2023 article and the yaktribe N23 errata thread | no free official 2023 core text exists | Fan-source
+RULING: Latest 2023 FAQ (all) | not obtained; the yaktribe thread mentions a "FAQ 2025" fixing items outside core skirmish rules (Cult Icon cost, vehicle pistols) | official 2023-era FAQ PDFs are no longer on Warhammer Community; owner should supply a copy if one is kept | Unsourced
+RULING: Proximity measured around walls (R-1.9) | "within X inches" checks use the shortest path that avoids walls and closed doors; weapon range is a straight line | rules forbid measuring through walls; leading-by-example note says walls matter | Fan-source
+RULING: Pre-measuring (R-1.10) | the port shows distances to both sides before committing | tabletop bans it; digital UI convenience; changes charge risk only through the D3 | Unsourced
+RULING: Vision arc membership (R-4.1) | a target is in arc if any part of its base is inside the 90 degree wedge | source gives the arc but not the base-overlap test | Unsourced
+RULING: Vision arc exists in 2023 (R-4.1) | 90 degree front arc used for shooting, melee targets and Coup de Grace | compilation keeps it and the N23 errata thread notes line of sight is drawn from within the vision arc | Fan-source
+RULING: Half-of-base cover test (R-4.3) | fraction of sampled points across the target base diameter perpendicular to the line of fire; prone bases do not block | 2D rule says "at least half the target's base" without a method | Unsourced
+RULING: Gang with only Seriously Injured fighters (R-5.8, M-1.9) | counts as having no fighters left for battle end | voluntary-flee text says the battle ends once a gang only has Seriously Injured fighters | Fan-source
+RULING: Reload while Engaged (R-6.5) | not allowed | Reload is absent from the Engaged action list | Fan-source
+RULING: Charge path (R-7.6) | engine computes the shortest legal path to the declared target | rules say a charge should take the shortest route | Fan-source
+RULING: Retreat end point (R-7.9) | may leave the engaged enemies' 1" zone but must end more than 1" from all enemies; if impossible within the roll, move as far as possible directly away from the nearest engaged enemy | source does not say how the 1" rule interacts with retreating | Unsourced
+RULING: Retreat ordering (R-7.9) | retreater tests I first; enemies test for reaction attacks whether or not it passed; it moves only if it passed and is still standing | N23 errata thread reading; compilation lists the steps in a different order | Fan-source
+RULING: Obstacle height on 2D board (R-7.11) | every obstacle counts as 1" tall, so crossing costs 1" extra | flat tiles have no physical height | Unsourced
+RULING: No falling on v1 board (R-7.12, R-15.2) | tunnel-warfare option: walls cannot be climbed, no levels, edge tests never happen | the N23 setup text offers this option by agreement; owner chose flat ZM | Fan-source
+RULING: "Easier to hit" target priority (R-8.3) | the farther target's final hit number must be strictly better | rule gives no definition | Unsourced
+RULING: Failed target-priority Cool test (R-8.3) | the shot goes at the closest eligible enemy with the same weapon; the action is not lost | source silent on the failure result | Unsourced
+RULING: Stray shots on a Rapid Fire miss (R-8.8) | number of stray hits checked equals the bullet holes rolled on the Firepower dice | "if the attack would have caused more than one hit" | Unsourced
+RULING: Blind Fire target priority (R-8.12) | closest eligible enemy in any direction is the default | 360 degree arc does not remove priority | Unsourced
+RULING: Template dimensions (R-9.6) | 8" long, 0.5" narrow end widening to 2.4" rounded end | GW template size not found in free sources; blast markers are 75 mm and 125 mm | Unsourced
+RULING: Turn to face in melee (R-10.2) | engine turns only when no engaged enemy is in the arc, then applies -1 | rules make turning optional | Unsourced
+RULING: Pinned fighter charged (R-10.2) | stands for free and takes the -1 turn-to-face penalty on its attacks | N23 errata thread notes this new wording | Fan-source
+RULING: Reaction attack targets (R-10.8) | reaction attacks always target the attacker or retreating fighter | only the N17 text says so explicitly; 2023 wording unclear | Fan-source
+RULING: Parry against reaction attacks (R-10.9) | allowed | Parry triggers when the fighter is attacked in close combat, which includes reaction attacks | Unsourced
+RULING: Wound table row order (R-11.2) | first matching row from the top wins | no overlap with positive values; defensive rule | Unsourced
+RULING: Wounds at 0 after Flesh Wound (R-11.7) | stay at 0; each further point of Damage rolls one Injury dice; no Wound regained on recovery | core rules contain no Wound recovery; community reading | Fan-source
+RULING: Injury dice resolution order (R-11.8) | Out of Action first, then the first Seriously Injured, then Flesh Wounds | stacking rule gives no order | Unsourced
+RULING: Flesh Wound effect (R-11.8) | -1 Toughness, Out of Action at T0 | compilation and N17 summary agree; 1995 edition and 2026 edition differ | Fan-source
+RULING: Serious Injury stacking (R-11.8, R-13.5) | each Seriously Injured result after the first is a Flesh Wound, including on recovery unless assisted | Warhammer Community July 2023 and Sprues & Brews confirm the change | Confirmed
+RULING: Already-Broken fighters and nerve tests (R-12.2) | no test | Broken has no further effect | Unsourced
+RULING: Immediate Running for Cover on breaking (R-12.3) | a fighter that breaks loses Ready and runs at once, even if already activated | compilation wording (shared with N17); not independently confirmed for 2023 | Fan-source
+RULING: Running for Cover end-point choice (R-12.4) | engine scores candidates by the four priorities in order, ties broken by shortest path | rule gives priorities, not a method | Unsourced
+RULING: Fleeing repeats (R-13.2) | every End phase while bottled, each fighter tests again | compilation: "fighters may begin to flee" once bottled | Fan-source
+RULING: Flee test order (R-13.3) | Leader, then Champions, then others so leading-by-example auto-passes apply | rule does not order the tests | Unsourced
+RULING: Assisted recovery Flesh Wound result (R-13.6) | an assisted fighter takes no Flesh Wound from its recovery roll on any result (a Flesh Wound result still makes it Pinned) | the assistance text says "regardless of the Injury dice result"; the recovery list mentions the protection only under Seriously Injured | Fan-source
+RULING: Grenade range multiplier (R-14.3) | read from weapon data (Sx3 for most, Sx2 for charges) | trait says range is a multiple of S | Fan-source
+RULING: Attacking doors (R-15.8) | normal wound roll and Damage vs T5 4W, no save, no Injury dice, no target priority | rules give the door profile and auto-hit only | Unsourced
+RULING: Loot casket frag trap (R-15.11) | immediate frag grenade blast centred on the casket, no hit roll | booby traps are out of v1 scope | Unsourced
+RULING: Pre-authored boards (R-15.12) | v1 ships fixed boards meeting the N23 minimums instead of alternate placement | owner v1 scope; placement mini-game deferred | Unsourced
+RULING: Tactics cards (M-1.7) | not used | scenarios grant cards; out of v1 scope | Unsourced
+RULING: Standard deployment (M-1.6) | each gang at least 12" from the dividing line across the long axis (within 6" of its short edge on 24" x 36") | 2023 book removed generic deployment; compilation default used | Fan-source
+RULING: Tunnel Skirmish 4-tile option (M-2.1) | deferred; 6 tiles only | standard deployment cannot fit on 24" x 24" | Unsourced
+RULING: Tunnel Skirmish Seriously Injured at end (M-2.6) | not scored | only Out of Action and fled fighters score | Fan-source
+RULING: Smash & Grab casket placement (M-3.4) | defender's half, 4"+ from edges, 6" apart | "deployment zone" cannot fit five caskets 4" from the edge | Unsourced
+RULING: Smash & Grab defender carrying (M-3.6) | defender may carry but not open caskets | only opening is banned | Unsourced
+RULING: Smash & Grab booby trap profile (M-3.7) | 5" blast, S4, AP -, Damage 1 | source gives only "S4 hit" | Unsourced
+RULING: Smash & Grab early win (M-3.9) | third opened casket locks the result; AI concedes, human may continue | battle-end rule unchanged by scenario | Unsourced
+RULING: Forgotten Riches crew roll (M-4.2) | one 2D6 roll sets the cap for both gangs | source does not say per gang | Unsourced
+RULING: Forgotten Riches tile layout (M-4.1) | fixed "brick" 7-tile layouts with six tiles each sharing at least half an edge with the centre | square tiles need half-edge offsets to give six neighbours | Unsourced
+RULING: Horrors in the Dark counting (M-4.5) | all fighters count as "other fighters", including Seriously Injured and Broken | the exclusion is a compilation house rule | Fan-source
+RULING: Forgotten Riches victory (M-4.9) | decided by secured caskets; points only reported | source: points decide a campaign XP bonus, caskets decide the win | Fan-source
