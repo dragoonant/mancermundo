@@ -102,9 +102,10 @@ const OBSTACLE_IGNORE = 1
  * Cover verdict from a point (the attacker's centre, a blast centre or a template origin) to a target: 9 sample points along
  * the target's diameter perpendicular to the line of fire. A line is blocked by a wall, a closed door, smoke, an obstacle
  * not within 1" of the attacker, or another Standing fighter's base (the target, and friends of the attacker in base
- * contact with it, are ignored; Prone bases never block).
+ * contact with it, are ignored; Prone bases never block). `ignoreIds` are fighters that never block either (S3a: a fighter
+ * whose base holds a Blast centre does not shield the others from it).
  */
-export function coverFrom(state: GameState, from: Vec2, target: Fighter, attacker?: Fighter): CoverResult {
+export function coverFrom(state: GameState, from: Vec2, target: Fighter, attacker?: Fighter, ignoreIds: readonly string[] = []): CoverResult {
   const t = centre(target)
   const dx = t.x - from.x
   const dz = t.z - from.z
@@ -113,7 +114,7 @@ export function coverFrom(state: GameState, from: Vec2, target: Fighter, attacke
   const px = -dz / d
   const pz = dx / d
   const r = target.baseRadius
-  const others = onBoard(state).filter((f) => f.id !== target.id && f.id !== attacker?.id && f.posture === 'standing')
+  const others = onBoard(state).filter((f) => f.id !== target.id && f.id !== attacker?.id && f.posture === 'standing' && !ignoreIds.includes(f.id))
   const ignoredFriends = new Set<string>()
   if (attacker) {
     for (const f of others) {

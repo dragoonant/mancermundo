@@ -1,5 +1,6 @@
 // step(): envelope checks -> dispatch to the owner of pending.kind -> afterAction -> log + hash.
 // Rejections never throw and return the SAME state reference.
+import { drainNerve } from './casualties'
 import { refreshEngagement } from './measure'
 import { moduleFor } from './modules'
 import { SeededRng, type Rng } from './rng'
@@ -67,13 +68,13 @@ export function validate(state: GameState, action: Action): Rejection | null {
 }
 
 /**
- * Hook point for rules that react after every accepted action: engagement refresh (EngagementChanged), the nerve queue
- * drain, casualty settling. Stubs until S2 (engagement) and S3b (nerve) fill them in; `apply.ts` stays the one place that
- * orders them.
+ * Hook point for rules that react after every accepted action: engagement refresh (EngagementChanged) and the nerve queue
+ * drain (casualties are recorded where they happen, casualties.ts). `apply.ts` stays the one place that orders them.
  */
 function afterAction(ctx: Ctx): void {
   refreshEngagement(ctx)
-  // TODO(S3b): drainNerve(ctx); TODO(S3a): settleCasualties(ctx)
+  // TODO(S3b): drainNerve resolves the queued nerve tests; until then it drops them
+  drainNerve(ctx)
 }
 
 export function step(state: GameState, action: Action, rng?: Rng): StepResult {

@@ -52,6 +52,8 @@ export interface SimReport {
   violations: number
   failing: GameReport[]
   stats: Record<string, number>
+  /** casualty-log entries (Seriously Injured and Out of Action) of each game, in game order */
+  casualtiesPerGame: number[]
   ms: number
 }
 
@@ -192,7 +194,10 @@ export function checkInvariants(prev: GameState, next: GameState, _action: Actio
     }
     if (f.wounds < 0 || f.wounds > f.maxWounds) add('wounds', `${f.id} has ${f.wounds}/${f.maxWounds} wounds`)
     if (f.fleshWounds < 0 || f.fleshWounds > f.stats.T) add('flesh', `${f.id} has ${f.fleshWounds} Flesh Wounds with T ${f.stats.T}`)
-    if (f.location !== 'board') continue
+    if (f.location !== 'board') {
+      if (f.engagedWith.length > 0) add('STATUS', `${f.id} is ${f.location} and still Engaged`)
+      continue
+    }
     const c = { x: f.pos.x, z: f.pos.z }
     if (!insideOutline(next.board.def, c)) add('SIM-007', `${f.id} is off the board at ${c.x},${c.z}`)
     for (const w of next.board.def.walls) if (circleOverlapsPolygon(c, f.baseRadius, w.poly)) add('SIM-007', `${f.id} overlaps wall ${w.id}`)
@@ -341,6 +346,16 @@ export function playGame(setup: GameSetup, bundle: EngineBundle, seed: string, g
       else if (ev.type === 'ActivationEnded') bump(stats, 'activations')
       else if (ev.type === 'DuctUsed') bump(stats, 'ducts')
       else if (ev.type === 'EngagementChanged' && ev.engagedWith.length > 0) bump(stats, 'engaged')
+      else if (ev.type === 'ShootStarted') bump(stats, 'shots')
+      else if (ev.type === 'HitRolled' && ev.hit) bump(stats, 'hits')
+      else if (ev.type === 'FighterPinned') bump(stats, 'pinned')
+      else if (ev.type === 'BlastPlaced') bump(stats, 'blasts')
+      else if (ev.type === 'TemplatePlaced') bump(stats, 'templates')
+      else if (ev.type === 'StrayShot' && ev.hit) bump(stats, 'strayHits')
+      else if (ev.type === 'FleshWound') bump(stats, 'fleshWounds')
+      else if (ev.type === 'StatusChanged' && ev.to === 'seriouslyInjured') bump(stats, 'seriouslyInjured')
+      else if (ev.type === 'FighterOutOfAction') bump(stats, 'outOfAction')
+      else if (ev.type === 'WeaponStateChanged' && ev.ammo !== 'ok') bump(stats, `ammo:${ev.ammo}`)
     }
     for (const m of checkInvariants(prev, state, action, r.events)) violate('invariant', m)
     const key = progressKey(state)
@@ -363,6 +378,7 @@ export function playGame(setup: GameSetup, bundle: EngineBundle, seed: string, g
       violate('SIM-006', 'replay did not reproduce the recorded hashes')
     }
   }
+  stats.casualties = state.casualties.length
   return { game, seed, ended, decisions, rounds: state.round, rejections, violations, hashMismatch, actions: state.log, stats }
 }
 
@@ -397,8 +413,10 @@ export function runSim(opts: SimOptions): SimReport {
   let decisions = 0
   let rejections = 0
   let violations = 0
+  const casualtiesPerGame: number[] = []
   for (let g = 0; g < opts.games; g++) {
     const r = playGame(opts.setupFor(g), opts.bundle, `${opts.seed}-${g}`, g)
+    casualtiesPerGame.push(r.stats.casualties ?? 0)
     if (r.ended && r.violations.length === 0) completed++
     decisions += r.decisions
     rejections += r.rejections
@@ -407,5 +425,5 @@ export function runSim(opts: SimOptions): SimReport {
     if (r.violations.length > 0 || !r.ended) failing.push(r)
     opts.onGame?.(r)
   }
-  return { games: opts.games, completed, decisions, rejections, violations, failing, stats, ms: Date.now() - t0 }
+  return { games: opts.games, completed, decisions, rejections, violations, failing, stats, casualtiesPerGame, ms: Date.now() - t0 }
 }

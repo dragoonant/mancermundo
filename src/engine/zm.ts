@@ -324,3 +324,95 @@ export function ammoCacheNear(state: GameState, f: Fighter): string | null {
   return null
 }
 
+
+// ---------------------------------------------------------------------------
+// Doors as targets (R-15.8) and Fire Through Ductway (R-15.9), S3a
+// ---------------------------------------------------------------------------
+
+export interface DoorTarget {
+  doorId: string
+  /** shooter base edge to the nearest visible point of the door face */
+  distance: number
+}
+
+function clearOfOthers(state: GameState, a: Vec2, b: Vec2, exceptDoor: string): boolean {
+  const def = state.board.def
+  for (const w of def.walls) if (segmentPolygonIntervals(a, b, w.poly).length > 0) return false
+  for (const d of def.doors) {
+    if (d.id === exceptDoor) continue
+    const rec = state.board.doors[d.id]
+    if ((!rec || rec.state === 'closed') && segmentPolygonIntervals(a, b, d.poly).length > 0) return false
+  }
+  for (const sm of state.board.smoke) {
+    const dx = b.x - a.x
+    const dz = b.z - a.z
+    const len2 = dx * dx + dz * dz || 1
+    const t = Math.max(0, Math.min(1, ((sm.pos.x - a.x) * dx + (sm.pos.z - a.z) * dz) / len2))
+    if (Math.hypot(a.x + dx * t - sm.pos.x, a.z + dz * t - sm.pos.z) < sm.radius) return false
+  }
+  return true
+}
+
+/**
+ * Closed doors a fighter can shoot (R-15.8): some point of the door face on the shooter's side is inside its vision arc
+ * (any direction with `allArc`, Blind Fire) and in line of sight (no wall, other closed door or smoke on the way).
+ */
+export function shootableDoors(state: GameState, f: Fighter, allArc: boolean): DoorTarget[] {
+  const out: DoorTarget[] = []
+  const c = centreOf(f)
+  for (const d of state.board.def.doors) {
+    const rec = state.board.doors[d.id]
+    if (!rec || rec.state !== 'closed') continue
+    const { mid, n, half } = doorFrame(d.poly, d.seg)
+    const side = (c.x - mid.x) * n.x + (c.z - mid.z) * n.z >= 0 ? 1 : -1
+    let best = Infinity
+    for (let k = 0; k <= 4; k++) {
+      const t = k / 4
+      const p = { x: d.seg.a.x + (d.seg.b.x - d.seg.a.x) * t + n.x * side * (half + 0.02), z: d.seg.a.z + (d.seg.b.z - d.seg.a.z) * t + n.z * side * (half + 0.02) }
+      if (!allArc) {
+        if (f.posture !== 'standing') continue
+        const bearing = Math.atan2(p.x - c.x, p.z - c.z)
+        const off = Math.abs(Math.atan2(Math.sin(bearing - f.facing), Math.cos(bearing - f.facing)))
+        if (off > Math.PI / 4 + 1e-9) continue
+      }
+      if (!clearOfOthers(state, c, p, d.id)) continue
+      best = Math.min(best, Math.max(0, Math.hypot(p.x - c.x, p.z - c.z) - f.baseRadius))
+    }
+    if (Number.isFinite(best)) out.push({ doorId: d.id, distance: round3(best) })
+  }
+  return out
+}
+
+export interface DuctFire {
+  ductId: string
+  /** the end the shooter stands at */
+  from: Vec2
+  /** the far end */
+  far: Vec2
+  /** enemies within 1" of the far end */
+  targets: string[]
+}
+
+/** Fighters (any side) whose base is within `within` inches of a point. */
+export function fightersNear(state: GameState, p: Vec2, within: number): Fighter[] {
+  return onBoard(state)
+    .filter((g) => Math.hypot(g.pos.x - p.x, g.pos.z - p.z) - g.baseRadius <= within + 1e-9)
+    .sort((a, b) => Math.hypot(a.pos.x - p.x, a.pos.z - p.z) - Math.hypot(b.pos.x - p.x, b.pos.z - p.z) || (a.id < b.id ? -1 : 1))
+}
+
+/** Ductways a fighter can fire through: it stands within 1" of one end and an enemy is within 1" of the other (R-15.9). */
+export function ductFireChoices(state: GameState, f: Fighter): DuctFire[] {
+  const reach = constants(state).radii.interact
+  const out: DuctFire[] = []
+  for (const duct of state.board.def.ducts) {
+    const da = Math.hypot(duct.a.x - f.pos.x, duct.a.z - f.pos.z)
+    const db = Math.hypot(duct.b.x - f.pos.x, duct.b.z - f.pos.z)
+    const [from, far] = da <= db ? [duct.a, duct.b] : [duct.b, duct.a]
+    if (Math.hypot(from.x - f.pos.x, from.z - f.pos.z) - f.baseRadius > reach + 1e-9) continue
+    const targets = fightersNear(state, far, reach)
+      .filter((g) => g.seat !== f.seat)
+      .map((g) => g.id)
+    if (targets.length > 0) out.push({ ductId: duct.id, from: { ...from }, far: { ...far }, targets })
+  }
+  return out
+}

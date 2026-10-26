@@ -7,6 +7,11 @@ import { stat } from '@/engine/query'
 import { bundleWith, makeBoard } from '../fixtures/boards'
 import { edit, place, startGame } from '../fixtures/helpers'
 import { testBundle } from '../fixtures/gang'
+import { firepowerFace, hitChanceFor, injuryFace, injuryOdds, scatterFace, woundChanceFor } from '@/engine/dice'
+import { realBundle } from '../fixtures/real'
+import { registerHook, unregisterHook } from '@/engine/hooks'
+import { resolveHit } from '@/engine/hits'
+import { hitCtx, shootingGame } from '../fixtures/attack'
 
 describe('DICE and TEST: dice and characteristic tests', () => {
   it('DICE-001 D3 maps D6 faces 1-2, 3-4 and 5-6 to 1, 2 and 3; D66 reads tens then units', () => {
@@ -84,5 +89,39 @@ describe('DICE and TEST: dice and characteristic tests', () => {
     expect(uniformInt(ctx, 't', 4)).toBe(0)
     expect(uniformInt(ctx, 't', 1)).toBe(0)
     void testBundle
+  })
+
+  it('DICE-002 Firepower die faces map to hits 1,1,1,2,2,3 and only face 1 shows the Ammo symbol', () => {
+    // read from the shipped core/dice.json through the data adapter
+    const state = { data: { dice: realBundle().dice } } as unknown as Parameters<typeof firepowerFace>[0]
+    const faces = [1, 2, 3, 4, 5, 6].map((d) => firepowerFace(state, d))
+    expect(faces.map((f) => f.hits)).toEqual([1, 1, 1, 2, 2, 3])
+    expect(faces.map((f) => f.ammo)).toEqual([true, false, false, false, false, false])
+    expect([1, 2, 3, 4, 5, 6].map((d) => scatterFace(state, d))).toEqual(['arrow', 'arrow', 'arrow', 'arrow', 'hit', 'hit'])
+  })
+
+  it('DICE-003 Injury die faces 1-2 Flesh Wound, 3-5 Seriously Injured, 6 Out of Action', () => {
+    const state = { data: { dice: realBundle().dice } } as unknown as Parameters<typeof injuryFace>[0]
+    expect([1, 2, 3, 4, 5, 6].map((d) => injuryFace(state, d))).toEqual(['fleshWound', 'fleshWound', 'seriouslyInjured', 'seriouslyInjured', 'seriouslyInjured', 'outOfAction'])
+    const one = injuryOdds(state, 1)
+    expect(one.pOutOfAction).toBeCloseTo(1 / 6, 9)
+    expect(one.pSeriouslyInjured).toBeCloseTo(1 / 2, 9)
+    expect(one.pFleshWoundsOnly).toBeCloseTo(1 / 3, 9)
+  })
+
+  it('DICE-004 a natural 1 fails a hit roll needing 2+ even with +2 modifiers; a natural 6 wounds even when the table needs 7+ after modifiers', () => {
+    expect(d6TestPasses(1, 2, 2)).toBe(false)
+    expect(hitChanceFor(0, 4)).toBeCloseTo(5 / 6, 9)
+    expect(woundChanceFor(8)).toBeCloseTo(1 / 6, 9)
+    // through the hit code: a rule pushes the wound need to 8+, the natural 6 still wounds
+    registerHook('wound.mods', () => ({ delta: -4 }), 'test.dice004')
+    try {
+      const { ctx } = hitCtx(shootingGame({ spots: { A3: { x: 0, z: -6 }, B3: { x: 0, z: 0 } } }), [6, 1])
+      resolveHit(ctx, { attackerId: 'A3', targetId: 'B3', weaponId: null, strength: 3, ap: 0, damage: { kind: 'fixed', value: 1 }, traits: [], hitRoll: null, knockFrom: null, melta: false, saveVs: null, coverBonus: 0, from: null, saves: false, cause: 'test' })
+      const w = ctx.events.find((e) => e.type === 'WoundRolled')
+      expect(w).toMatchObject({ need: 8, roll: 6, wounded: true })
+    } finally {
+      unregisterHook('wound.mods', 'test.dice004')
+    }
   })
 })

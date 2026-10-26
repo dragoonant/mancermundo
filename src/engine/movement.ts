@@ -378,3 +378,55 @@ export function suggestMovePath(state: GameState, pending: PendingDecision): Act
   if (!wps) return pending.canPass ? { type: 'pass', seat: pending.seat, decisionId: pending.id, payload: {} } : null
   return { type: 'move.path', seat: pending.seat, decisionId: pending.id, payload: { waypoints: wps } }
 }
+
+// ---------------------------------------------------------------------------
+// Knockback (R-14.3, R-7.4): an involuntary push, engine-made
+// ---------------------------------------------------------------------------
+
+export interface PushResult {
+  /** inches actually moved */
+  moved: number
+  /** stopped short of the full distance (wall, closed door, obstacle, another base or the board edge) */
+  blocked: boolean
+}
+
+/**
+ * Push a fighter `distance` inches directly away from `from` (R-7.5 "directly away": along the line through both centres;
+ * when `from` sits on the base centre the direction is a scatter roll). It stops at the last spot where its base overlaps
+ * no wall, closed door, obstacle or other base and stays on the board. Involuntary: the 1" rule is ignored.
+ * TODO(S3b): the pushed-apart step of R-7.4 once the involuntary move is resolved.
+ */
+export function knockbackPush(ctx: Ctx, f: Fighter, from: Vec2, distance: number): PushResult {
+  const s = ctx.state
+  const start = { x: f.pos.x, z: f.pos.z }
+  let dx = start.x - from.x
+  let dz = start.z - from.z
+  let d = Math.hypot(dx, dz)
+  if (d < 0.05) {
+    const deg = ctx.rollScatter('knockbackDirection')
+    const a = (deg * Math.PI) / 180
+    dx = Math.sin(a)
+    dz = Math.cos(a)
+    d = 1
+  }
+  const ux = dx / d
+  const uz = dz / d
+  const step = 0.05
+  let last = start
+  for (let t = step; t <= distance + 1e-9; t = Math.min(distance, t + step)) {
+    const c = { x: round3(start.x + ux * t), z: round3(start.z + uz * t) }
+    if (spotProblem(s, f, c)) break
+    last = c
+    if (t >= distance - 1e-9) break
+  }
+  const moved = Math.hypot(last.x - start.x, last.z - start.z)
+  const blocked = moved < distance - 0.01
+  if (moved > 0) {
+    const fromPos = { ...f.pos }
+    f.pos = { x: last.x, y: 0, z: last.z }
+    ctx.emit({ type: 'FighterMoved', fighterId: f.id, kind: 'knockback', from: fromPos, to: { ...f.pos }, path: [start, { ...last }], length: round3(moved), maxInches: distance }, f.seat)
+    standUpContacted(ctx, f)
+  }
+  ctx.emit({ type: 'KnockedBack', targetId: f.id }, f.seat)
+  return { moved, blocked }
+}

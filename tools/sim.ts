@@ -95,6 +95,9 @@ if (replayPath) {
         .map(([k, v]) => `${k}=${v}`)
         .join(' '),
   )
+  // casualties per game (Seriously Injured + Out of Action records of the casualty log)
+  const perGame = report.casualtiesPerGame
+  console.log(`     casualties per game: ${perGame.join(' ')} (mean ${(perGame.reduce((a, b) => a + b, 0) / Math.max(1, perGame.length)).toFixed(2)})`)
   for (const g of report.failing.slice(0, 5)) {
     console.log(` game ${g.game} (${g.seed}) ended=${g.ended}`)
     for (const v of g.violations.slice(0, 5)) console.log(`   [${v.decision}] ${v.rule}: ${v.message}`)

@@ -1,0 +1,370 @@
+// Resolving hits (R-11; R-14.3 for the traits that change it): one hit on one fighter is a wound roll (S vs T), a save
+// (armour with AP, Blast/Template cover bonus), then Damage: each point removes a Wound, the point that reaches 0 and every
+// further point roll an Injury dice, all dice of one hit rolled together and applied with the N23 stacking (any Out of
+// Action wins; the first Seriously Injured lays the fighter down, every further one is a Flesh Wound; Flesh Wounds lower T
+// and T 0 is Out of Action). Gas, Toxin and Flash replace the wound roll; Melta turns the Injury dice into Out of Action;
+// Scattershot, Shred, Rending, Knockback, Blaze and Concussion act on the hit. Also here: pinning (R-8.7), Blast markers
+// (R-9.5), door targets (R-15.8), and the S2 ports (door closing on a fighter, frag-trap casket) get their resolver.
+import { blockers, coverFrom, targetSamples } from './los'
+import { damageDoor } from './board'
+import { injuryFace, rollExpr, toxinPasses, woundNeed, d6TestPasses } from './dice'
+import { runHook } from './hooks'
+import { refreshEngagement } from './measure'
+import { knockbackPush } from './movement'
+import { registerBlastPort, registerHitPort } from './ports'
+import { stat } from './query'
+import type { Ctx } from './registry'
+import { constants, onBoard } from './state'
+import { seriouslyInjure, takeOutOfAction } from './casualties'
+import { setCondition, T } from './traits'
+import { armourSave } from './wargear'
+import { segmentCircleInterval, segmentPolygonIntervals } from './geometry'
+import type { Fighter, GameState, RuntimeProfile, TraitRef, Vec2 } from './types'
+
+export type DamageSpec = RuntimeProfile['dmg']
+
+/** Everything one hit needs; built by shoot.ts (and fight.ts in S3b) or by a port. */
+export interface HitInput {
+  attackerId: string | null
+  targetId: string
+  weaponId: string | null
+  strength: number
+  ap: number
+  damage: DamageSpec
+  traits: readonly TraitRef[]
+  /** the natural hit roll (Knockback compares it with the target's S); null when no hit roll was made */
+  hitRoll: number | null
+  /** the point Knockback pushes away from (the attacker, or the Blast centre) */
+  knockFrom: Vec2 | null
+  /** Melta applies (Short range or no Short range, R-11.11) */
+  melta: boolean
+  /** Blast or Template attack (flak armour, cover bonus) */
+  saveVs: 'blast' | 'template' | null
+  /** R-9.7 cover bonus to the save */
+  coverBonus: number
+  /** where the attack comes from for front-arc armour */
+  from: Vec2 | null
+  /** saves allowed */
+  saves: boolean
+  /** cause for the casualty log ('weapon id', 'door', 'casket', 'blaze', ...) */
+  cause: string
+}
+
+const has = (h: HitInput, id: string) => h.traits.some((t) => t.trait === id)
+
+function rollDamage(ctx: Ctx, dmg: DamageSpec): number {
+  if (dmg.kind === 'none') return 0
+  if (dmg.kind === 'fixed') return dmg.value
+  return rollExpr(ctx, 'damage', dmg.expr)
+}
+
+// ---------------------------------------------------------------------------
+// Pinning (R-8.7)
+// ---------------------------------------------------------------------------
+
+/** A Standing Active fighter hit by a ranged attack becomes Pinned at once; Engaged fighters never are. Returns true if pinned. */
+export function pinTarget(ctx: Ctx, t: Fighter, by: string | null): boolean {
+  if (t.location !== 'board' || t.posture !== 'standing' || t.engagedWith.length > 0) return false
+  const veto = runHook('pin.allowed', { seat: t.seat, state: ctx.state, engine: ctx, fighterId: t.id, ...(by ? { targetId: by } : {}) })
+  if (veto.some((r) => r.allow === false)) return false
+  t.posture = 'pinned'
+  ctx.emit({ type: 'StatusChanged', fighterId: t.id, from: 'standing', to: 'pinned', reason: 'pinned' }, t.seat)
+  ctx.emit({ type: 'FighterPinned', fighterId: t.id }, t.seat)
+  return true
+}
+
+// ---------------------------------------------------------------------------
+// Injury dice (R-11.7, R-11.8)
+// ---------------------------------------------------------------------------
+
+/** One Flesh Wound: -1 T for the battle; T 0 is Out of Action. */
+export function fleshWound(ctx: Ctx, t: Fighter, by: string | null, cause: string): void {
+  if (t.location !== 'board') return
+  t.fleshWounds += 1
+  const toughness = stat(ctx.state, t.id, 'T')
+  ctx.emit({ type: 'FleshWound', fighterId: t.id, total: t.fleshWounds, toughness }, t.seat)
+  if (toughness <= 0) takeOutOfAction(ctx, t, by, 'fleshWounds')
+}
+
+/** Apply the results of one roll of Injury dice (Out of Action first, then Seriously Injured, then Flesh Wounds). */
+export function applyInjuries(ctx: Ctx, t: Fighter, results: readonly string[], by: string | null, cause: string): string {
+  if (results.includes('outOfAction')) {
+    takeOutOfAction(ctx, t, by, cause)
+    return 'outOfAction'
+  }
+  let wounds = results.filter((r) => r === 'fleshWound').length
+  const si = results.filter((r) => r === 'seriouslyInjured').length
+  let applied = wounds > 0 ? 'fleshWound' : 'none'
+  if (si > 0) {
+    if (t.posture !== 'seriouslyInjured') {
+      seriouslyInjure(ctx, t, by, cause)
+      wounds += si - 1
+      applied = 'seriouslyInjured'
+    } else wounds += si
+  }
+  for (let i = 0; i < wounds && t.location === 'board'; i++) fleshWound(ctx, t, by, cause)
+  if (t.location !== 'board') applied = 'outOfAction'
+  return applied
+}
+
+/** Roll `n` Injury dice together for one hit and apply them (Melta: every die is Out of Action, no roll). */
+export function rollInjuries(ctx: Ctx, t: Fighter, n: number, h: Pick<HitInput, 'attackerId' | 'cause' | 'melta' | 'weaponId'>): void {
+  let dice = n
+  for (const r of runHook('injury.dice', { seat: t.seat, state: ctx.state, engine: ctx, fighterId: t.id, ...(h.attackerId ? { targetId: h.attackerId } : {}), data: { dice } })) {
+    if (r.delta) dice += r.delta
+  }
+  if (dice <= 0) return
+  if (h.melta) {
+    ctx.emit({ type: 'InjuryRolled', targetId: t.id, faces: Array.from({ length: dice }, () => 'outOfAction'), applied: 'outOfAction' }, t.seat)
+    takeOutOfAction(ctx, t, h.attackerId, h.cause)
+    return
+  }
+  const raw = ctx.roll('injury', dice, 'injury')
+  const faces = raw.map((d) => injuryFace(ctx.state, d))
+  const results = faces.slice()
+  runHook('injury.applied', { seat: t.seat, state: ctx.state, engine: ctx, fighterId: t.id, data: { results } })
+  // emitted before the results apply so the client shows the dice first; `applied` is filled in once they have
+  ctx.emit({ type: 'InjuryRolled', targetId: t.id, faces: faces.slice(), applied: '' }, t.seat)
+  const ev = ctx.events[ctx.events.length - 1]!
+  const applied = applyInjuries(ctx, t, results, h.attackerId, h.cause)
+  if (ev.type === 'InjuryRolled') ev.applied = applied
+}
+
+/** Damage (R-11.7): each point removes a Wound; the point that reaches 0 and every further point is one Injury dice. */
+export function applyDamage(ctx: Ctx, t: Fighter, amount: number, h: Pick<HitInput, 'attackerId' | 'cause' | 'melta' | 'weaponId'>): void {
+  let dice = 0
+  for (let i = 0; i < amount; i++) {
+    if (t.wounds > 0) {
+      t.wounds -= 1
+      if (t.wounds === 0) dice += 1
+    } else dice += 1
+  }
+  ctx.emit({ type: 'DamageInflicted', targetId: t.id, amount, wounds: t.wounds }, t.seat)
+  if (dice > 0) rollInjuries(ctx, t, dice, h)
+}
+
+// ---------------------------------------------------------------------------
+// Saves (R-11.3 to R-11.6)
+// ---------------------------------------------------------------------------
+
+function saveRoll(ctx: Ctx, t: Fighter, h: HitInput, ap: number): boolean {
+  if (!h.saves) return false
+  const info = armourSave(ctx.state, t, { ap, from: h.from, vs: h.saveVs, coverBonus: h.coverBonus })
+  if (info.need === null || info.need > 6) return false
+  const roll = ctx.roll('save', 1)[0]!
+  const saved = d6TestPasses(roll, info.need)
+  ctx.emit({ type: 'SaveRolled', targetId: t.id, roll, need: info.need, saved, item: info.item }, t.seat)
+  return saved
+}
+
+// ---------------------------------------------------------------------------
+// One hit
+// ---------------------------------------------------------------------------
+
+/** Resolve one hit on one fighter (R-11.1). Pinning is the caller's business (it happens before any wound roll). */
+export function resolveHit(ctx: Ctx, h: HitInput): void {
+  const s = ctx.state
+  const t = s.fighters[h.targetId]
+  if (!t || t.location !== 'board') return
+  let bonusDamage = 0
+
+  // Flash: no wound roll; an Initiative test or Blind (R-3.11)
+  if (has(h, T.flash)) {
+    const roll = ctx.roll('flash', 1)[0]!
+    const passed = d6TestPasses(roll, stat(s, t.id, 'I'))
+    if (!passed) {
+      const already = t.activatedThisRound || !t.ready
+      setCondition(ctx, t, 'blind', 'flash', already ? { skipNextReady: true } : undefined)
+      t.ready = false
+    }
+    afterHit(ctx, t, h)
+    return
+  }
+
+  // Knockback (R-14.3): hit roll >= target S pushes 1" away; a blocked push adds 1 Damage
+  if (has(h, T.knockback) && h.hitRoll !== null && h.knockFrom) {
+    if (h.hitRoll >= stat(s, t.id, 'S')) {
+      const k = constants(s).knockback
+      const push = knockbackPush(ctx, t, h.knockFrom, k.distance)
+      if (push.blocked) bonusDamage += k.blockedDamageBonus
+      refreshEngagement(ctx)
+    }
+  }
+
+  if (has(h, T.gas) || has(h, T.toxin)) {
+    // Gas / Toxin: D6 >= T (natural 6 always) causes one Injury dice without touching Wounds; Gas allows no save
+    const toughness = stat(s, t.id, 'T')
+    const roll = ctx.roll(has(h, T.gas) ? 'gas' : 'toxin', 1)[0]!
+    const passed = toxinPasses(roll, toughness)
+    ctx.emit({ type: 'WoundRolled', targetId: t.id, roll, need: Math.max(2, Math.min(6, toughness)), wounded: passed }, t.seat)
+    if (passed) {
+      const saved = has(h, T.gas) ? false : saveRoll(ctx, t, h, h.ap)
+      if (!saved) {
+        ctx.emit({ type: 'DamageInflicted', targetId: t.id, amount: 0, wounds: t.wounds }, t.seat)
+        rollInjuries(ctx, t, 1, h)
+      }
+    }
+    afterHit(ctx, t, h)
+    return
+  }
+
+  // Scattershot: D6 wound rolls instead of one
+  const woundRolls = has(h, T.scattershot) ? ctx.roll('scattershot', 1)[0]! : 1
+  for (let i = 0; i < woundRolls && t.location === 'board'; i++) {
+    const toughness = stat(s, t.id, 'T')
+    let need = woundNeed(h.strength, toughness)
+    for (const r of runHook('wound.mods', { seat: t.seat, state: s, engine: ctx, fighterId: t.id, ...(h.attackerId ? { targetId: h.attackerId } : {}), data: { need } })) {
+      if (r.delta) need -= r.delta
+    }
+    const roll = ctx.roll('wound', 1)[0]!
+    const wounded = roll === 6 || (roll !== 1 && roll >= need)
+    ctx.emit({ type: 'WoundRolled', targetId: t.id, roll, need, wounded }, t.seat)
+    if (!wounded) continue
+    const ap = has(h, T.shred) && roll === 6 ? h.ap * 2 : h.ap
+    if (saveRoll(ctx, t, h, ap)) continue
+    let amount = rollDamage(ctx, h.damage)
+    if (h.damage.kind !== 'none') {
+      if (has(h, T.rending) && roll === 6) amount += 1
+      amount += bonusDamage
+      bonusDamage = 0
+      for (const r of runHook('damage.mods', { seat: t.seat, state: s, engine: ctx, fighterId: t.id, data: { amount } })) if (r.delta) amount += r.delta
+      applyDamage(ctx, t, Math.max(0, amount), h)
+    }
+  }
+  afterHit(ctx, t, h)
+}
+
+/** Effects of being hit at all: Blaze (4+ unless Out of Action), Concussion. */
+function afterHit(ctx: Ctx, t: Fighter, h: HitInput): void {
+  if (t.location !== 'board') return
+  if (has(h, T.blaze) && !t.conditions.blaze) {
+    const roll = ctx.roll('blaze', 1)[0]!
+    const k = Number.parseInt(String(constants(ctx.state).blaze.igniteOn), 10)
+    if (roll >= k) {
+      setCondition(ctx, t, 'blaze', h.cause)
+      ctx.emit({ type: 'CaughtFire', targetId: t.id }, t.seat)
+    }
+  }
+  if (has(h, T.concussion)) setCondition(ctx, t, 'concussion', h.cause)
+}
+
+// ---------------------------------------------------------------------------
+// Blast markers (R-9.5)
+// ---------------------------------------------------------------------------
+
+function crossesSolid(state: GameState, a: Vec2, b: Vec2, smoke: boolean): boolean {
+  for (const poly of blockers(state)) if (segmentPolygonIntervals(a, b, poly).length > 0) return true
+  if (smoke) for (const sm of state.board.smoke) if (segmentCircleInterval(a, b, sm.pos, sm.radius)) return true
+  return false
+}
+
+/** True when some line from `from` to the fighter's base crosses no wall or closed door (and no smoke when asked). */
+export function reachableFrom(state: GameState, from: Vec2, f: Fighter, smoke = false): boolean {
+  return targetSamples(f).some((p) => !crossesSolid(state, from, p, smoke))
+}
+
+/** Segment clear of walls and closed doors (and smoke when asked). */
+export function segmentClear(state: GameState, a: Vec2, b: Vec2, smoke = false): boolean {
+  return !crossesSolid(state, a, b, smoke)
+}
+
+/** Fighters any part of whose base is under a marker, without a wall or closed door between them and its centre; nearest first. */
+export function fightersUnderBlast(state: GameState, centre: Vec2, radius: number): Fighter[] {
+  return onBoard(state)
+    .map((f) => ({ f, d: Math.hypot(f.pos.x - centre.x, f.pos.z - centre.z) }))
+    .filter(({ f, d }) => d < radius + f.baseRadius - 1e-9 && reachableFrom(state, centre, f))
+    .sort((a, b) => a.d - b.d || (a.f.id < b.f.id ? -1 : 1))
+    .map(({ f }) => f)
+}
+
+export interface BlastHit {
+  centre: Vec2
+  radius: number
+  /** builds the hit for one fighter (the caller knows the weapon) */
+  make: (t: Fighter) => HitInput
+  /** ranged attacks pin (Gas never does) */
+  pins: boolean
+  by: string | null
+}
+
+/**
+ * Resolve a Blast marker: every fighter under it is hit (friends too), Pinned first, then each hit resolved nearest to the
+ * centre first (ruling). Knockback rolls a D6 per fighter and pushes away from the centre; cover is judged from the centre.
+ */
+export function resolveBlastMarker(ctx: Ctx, b: BlastHit): string[] {
+  const s = ctx.state
+  const under = fightersUnderBlast(s, b.centre, b.radius)
+  const inputs = under.map((t) => ({ t, h: b.make(t) }))
+  for (const { t, h } of inputs) if (b.pins && !has(h, T.gas)) pinTarget(ctx, t, b.by)
+  for (const { t, h } of inputs) {
+    if (t.location !== 'board') continue
+    // the fighters whose bases hold the centre do not shield anyone from it
+    const atCentre = under.filter((g) => Math.hypot(g.pos.x - b.centre.x, g.pos.z - b.centre.z) < g.baseRadius).map((g) => g.id)
+    const cover = coverFrom(s, b.centre, t, undefined, atCentre).cover
+    const k = constants(s).coverSave
+    const coverBonus = cover === 'full' ? k.full : cover === 'partial' ? k.partial : 0
+    let hitRoll = h.hitRoll
+    if (has(h, T.knockback)) hitRoll = ctx.roll('knockback', 1)[0]!
+    resolveHit(ctx, { ...h, hitRoll, knockFrom: b.centre, coverBonus, saveVs: 'blast', from: b.centre })
+  }
+  return under.map((f) => f.id)
+}
+
+// ---------------------------------------------------------------------------
+// Doors (R-15.8)
+// ---------------------------------------------------------------------------
+
+/** A hit on a closed door: automatic hit, normal wound table against T5, no save, Damage off its 4 Wounds; at 0 it is gone. */
+export function hitDoor(ctx: Ctx, doorId: string, strength: number, damage: DamageSpec, traits: readonly TraitRef[] = []): void {
+  const s = ctx.state
+  const rec = s.board.doors[doorId]
+  if (!rec || rec.state !== 'closed') return
+  const k = constants(s).door
+  const need = woundNeed(strength, k.toughness)
+  const roll = ctx.roll('woundDoor', 1)[0]!
+  const wounded = roll === 6 || (roll !== 1 && roll >= need)
+  ctx.emit({ type: 'WoundRolled', targetId: doorId, roll, need, wounded }, null)
+  if (!wounded) return
+  let amount = rollDamage(ctx, damage)
+  if (traits.some((t) => t.trait === T.rending) && roll === 6) amount += 1
+  if (amount <= 0) return
+  const { doors, destroyed } = damageDoor(s.board.doors, doorId, amount, k.wounds)
+  s.board.doors = doors
+  const now = s.board.doors[doorId]!
+  ctx.emit({ type: 'DoorDamaged', doorId, wounds: Math.max(0, k.wounds - now.wounds) }, null)
+  if (destroyed) ctx.emit({ type: 'DoorChanged', doorId, state: 'destroyed', locked: now.locked }, null)
+}
+
+// ---------------------------------------------------------------------------
+// Ports from S2 (door closing on a fighter, frag-trap casket)
+// ---------------------------------------------------------------------------
+
+function portInput(targetId: string, spec: { strength: number; ap: number; damage: number; source: string; saves?: boolean; knockback?: boolean }): HitInput {
+  return {
+    attackerId: null,
+    targetId,
+    weaponId: null,
+    strength: spec.strength,
+    ap: spec.ap,
+    damage: { kind: 'fixed', value: spec.damage },
+    traits: spec.knockback ? [{ trait: T.knockback }] : [],
+    hitRoll: null,
+    knockFrom: null,
+    melta: false,
+    saveVs: null,
+    coverBonus: 0,
+    from: null,
+    saves: spec.saves !== false,
+    cause: spec.source,
+  }
+}
+
+/** Register the real resolvers on the S2 ports (done at load; tests that swap in a spy call this to restore them). */
+export function installAttackPorts(): void {
+  registerHitPort((ctx, spec) => resolveHit(ctx, portInput(spec.targetId, spec)))
+  registerBlastPort((ctx, spec) => {
+    resolveBlastMarker(ctx, { centre: spec.centre, radius: spec.radius, pins: true, by: null, make: (t) => portInput(t.id, spec) })
+  })
+}
+
+installAttackPorts()

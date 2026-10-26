@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { act, ScriptedRng, step } from '@/engine'
+import { act, query, ScriptedRng, step } from '@/engine'
 import { registerBlastPort, registerHitPort, type BlastSpec, type HitSpec } from '@/engine/ports'
+import { installAttackPorts } from '@/engine/hits'
+import { dice, shootingGame } from '../fixtures/attack'
 import { pathGap, withinPath, computeEngagedWith } from '@/engine/measure'
 import { pathDistance } from '@/engine/query'
 import { barricadePair, bundleWith, corridorWithDoor, ductwayWall, openBox, makeBoard } from '../fixtures/boards'
@@ -9,10 +11,8 @@ import type { BoardDef } from '@/engine/types'
 
 const game = (board: BoardDef) => startGame({ bundle: bundleWith(board), setup: { boardId: board.id } }).state
 
-afterEach(() => {
-  registerHitPort(null)
-  registerBlastPort(null)
-})
+// tests that spy on the ports put the real resolvers (S3a) back afterwards
+afterEach(() => installAttackPorts())
 
 describe('ZM: Zone Mortalis walls, doors, terminals, ductways, barricades and caskets', () => {
   it('ZM-002 movement paths and range measurements never pass through walls or board edges', () => {
@@ -89,9 +89,9 @@ describe('ZM: Zone Mortalis walls, doors, terminals, ductways, barricades and ca
     const open = edit(place(game(board), { A3: { x: 0, z: -1.5 }, B3: { x: 0, z: 0 } }), (d) => {
       d.board.doors.door1!.state = 'open'
     })
-    // I test passes (5), then the side die (1-3 = north first; 4-6 = south first, which A3 occupies)
+    // the side die (1-3 = north first; 4-6 = south first, which A3 occupies), then the I test passes (5)
     for (const side of [2, 5]) {
-      const r = must(take(activate(open, 'A3').state, { action: 'operateDoor' }, new ScriptedRng([5, side])))
+      const r = must(take(activate(open, 'A3').state, { action: 'operateDoor' }, new ScriptedRng([side, 5])))
       expect(r.state.fighters.B3!.pos.z).toBeGreaterThan(0.74)
     }
   })
@@ -293,5 +293,51 @@ describe('ZM: Zone Mortalis walls, doors, terminals, ductways, barricades and ca
     const six = must(step(r.state, opt.action, new ScriptedRng([6])))
     expect(six.state.board.caskets.k1!.state).toBe('exhausted')
     expect(offered(r.state)).toContain('end')
+  })
+
+  it('ZM-007 shooting a closed door auto-hits; at 0 of 4 W (T5) it is removed and its gap is open', () => {
+    const s = edit(shootingGame({ board: 'test.door', spots: { A3: { x: 0, z: -4, facing: 0 }, B3: { x: 6, z: 6 } }, active: 'A3' }), (d) => {
+      d.board.doors.door1!.wounds = 3 // three of its four Wounds already gone
+    })
+    let r = must(take(s, { action: 'shoot' }))
+    const opt = r.pending!.options!.find((o) => o.id === 'door:door1')!
+    expect(opt.data).toMatchObject({ auto: true })
+    // no hit roll; the rifle's Firepower dice (2: one hole), then the wound roll against T5 (S4: 5+)
+    r = must(take(r.state, { doorId: 'door1' }, dice(2, 5)))
+    expect(eventsOf(r.events, 'HitRolled')[0]).toMatchObject({ dice: [], hit: true })
+    expect(eventsOf(r.events, 'WoundRolled')[0]).toMatchObject({ targetId: 'door1', need: 5, wounded: true })
+    expect(eventsOf(r.events, 'DoorDamaged')[0]).toMatchObject({ doorId: 'door1', wounds: 0 })
+    expect(eventsOf(r.events, 'DoorChanged')[0]).toMatchObject({ doorId: 'door1', state: 'destroyed' })
+    expect(r.state.board.doors.door1!.state).toBe('destroyed')
+    // the gap is open: a door that is gone is no longer offered as a target and lets sight through
+    const after = edit(r.state, (d) => (d.fighters.B3!.pos = { x: 0, y: 0, z: 4 }))
+    expect(query.losLine(after, 'A3', 'B3').los).toBe(true)
+    // a miss on a damaged-but-standing door leaves it closed
+    const fresh = must(take(edit(s, (d) => (d.board.doors.door1!.wounds = 0)), { action: 'shoot' }))
+    const r2 = must(take(fresh.state, { doorId: 'door1' }, dice(2, 5)))
+    expect(r2.state.board.doors.door1).toMatchObject({ state: 'closed', wounds: 1 })
+  })
+
+  it('ZM-009 Fire Through Ductway hits on 5+ regardless of BS; a template version hits all within 2 inches of the far end', () => {
+    const spots = { A3: { x: 0, z: -1.2, facing: Math.PI }, B3: { x: 0, z: 1.5 }, B4: { x: 1.5, z: 1.5 }, B5: { x: 0, z: 4.5 } }
+    const s = shootingGame({ board: 'test.duct', spots, loadouts: { A3: { weapons: ['atk.w.plain'] } }, active: 'A3' })
+    expect(menuActions(s)).toContain('fireDuct')
+    expect(menuActions(s)).not.toContain('shoot') // no line of sight through the wall
+    let r = must(take(s, { action: 'fireDuct', ductId: 'duct1' }))
+    expect(r.pending!.kind).toBe('shoot.target')
+    expect(offered(r.state).sort()).toEqual(['t:B3'])
+    // a 4 misses (BS 4+ would have hit), a 5 hits
+    const miss = must(take(r.state, { targetId: 'B3' }, dice(4)))
+    expect(eventsOf(miss.events, 'HitRolled')[0]).toMatchObject({ need: 5, hit: false })
+    expect(eventsOf(miss.events, 'StrayShot')).toHaveLength(0)
+    const hit = must(take(r.state, { targetId: 'B3' }, dice(5, 1)))
+    expect(eventsOf(hit.events, 'HitRolled')[0]).toMatchObject({ need: 5, hit: true })
+    expect(hit.state.fighters.B3!.posture).toBe('pinned')
+    // a template through the duct: no target, no hit roll, everyone within 2" of the far end (Firepower 2, wounds 1, 1)
+    const t = shootingGame({ board: 'test.duct', spots: { ...spots, A3: { x: 0, z: -1.2, facing: Math.PI } }, loadouts: { A3: { weapons: ['test.w.flamer'] } }, active: 'A3' })
+    r = must(take(t, { action: 'fireDuct', ductId: 'duct1' }, dice(2, 1, 1)))
+    expect(eventsOf(r.events, 'HitRolled')).toHaveLength(0)
+    expect(eventsOf(r.events, 'WoundRolled').map((e) => e.targetId).sort()).toEqual(['B3', 'B4'])
+    expect(r.state.fighters.B5!.posture).toBe('standing')
   })
 })

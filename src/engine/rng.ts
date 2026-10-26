@@ -164,14 +164,27 @@ export class SeededRng implements Rng {
 /** Forced dice for golden tests. Throws when the script runs out so a short script is never silent. */
 export class ScriptedRng implements Rng {
   private i = 0
+  /**
+   * One value per draw, in order: a D6 result (1..6) for each die and, from S3a, a whole number of degrees (0..359) for
+   * each scatter direction (`int(360)`).
+   */
   constructor(private readonly values: number[]) {
     for (const v of values) {
-      if (!Number.isInteger(v) || v < 1 || v > 6) throw new Error(`ScriptedRng: ${v} is not a D6 result`)
+      if (!Number.isInteger(v) || v < 0 || v > 359) throw new Error(`ScriptedRng: ${v} is neither a D6 result nor a direction`)
     }
   }
   d6(): number {
     if (this.i >= this.values.length) throw new Error('ScriptedRng: script exhausted')
-    return this.values[this.i++]!
+    const v = this.values[this.i++]!
+    if (v < 1 || v > 6) throw new Error(`ScriptedRng: ${v} is not a D6 result (draw ${this.i - 1})`)
+    return v
+  }
+  /** A scripted integer in [0, n): the next value, which must be below n (scatter directions). */
+  int(n: number): number {
+    if (this.i >= this.values.length) throw new Error('ScriptedRng: script exhausted')
+    const v = this.values[this.i++]!
+    if (v >= n) throw new Error(`ScriptedRng: ${v} is not below ${n} (draw ${this.i - 1})`)
+    return v
   }
   get remaining(): number {
     return this.values.length - this.i

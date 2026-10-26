@@ -5,6 +5,7 @@ import { bundleFromData, rosterFromStarter, type EngineBundle } from './bundle'
 import { actionMenu } from './activation'
 import * as queryCore from './query'
 import { suggestMovePath } from './movement'
+import { suggestAim } from './shoot'
 import { createGame, ENGINE_VERSION, suggestDeploy } from './setup'
 import { EngineInvariantError } from './state'
 import type { Action, GameSetup, GameState, PendingDecision, SaveFile, StepResult } from './types'
@@ -97,8 +98,8 @@ export function undo(state: GameState, bundle: EngineBundle): StepResult | null 
 
 /**
  * Engine default for a decision: the first offered option of a finite decision; for the continuous kinds, the engine's best
- * deploy spot and a short legal path toward the nearest enemy (or a cancel when none exists). Casket and aim spots arrive
- * with S3a / S4 and return null until then. Used by auto options, the random bot and the AI fallback.
+ * deploy spot, a short legal path toward the nearest enemy (or a cancel when none exists) and the best Blast or Template
+ * aim (S3a). Casket spots arrive with S4 and return null until then. Used by auto options, the random bot and the AI fallback.
  */
 export function suggest(state: GameState, pending: PendingDecision | null = state.pending): Action | null {
   if (!pending) return null
@@ -109,6 +110,8 @@ export function suggest(state: GameState, pending: PendingDecision | null = stat
       return suggestDeploy(state, pending)
     case 'move.path':
       return suggestMovePath(state, pending)
+    case 'shoot.aim':
+      return suggestAim(state, pending)
     default:
       return null
   }

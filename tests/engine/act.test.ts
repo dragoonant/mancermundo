@@ -105,7 +105,8 @@ describe('ACT: actions, costs and the menu by status', () => {
 
   it('a Pinned fighter stands up (Basic) and then uses the Standing action list for its last action (R-6.4)', () => {
     let r = a3('pinned')
-    expect(menuActions(r.state).sort()).toEqual(['crawl', 'end', 'standUp'])
+    // Blind Fire (S3a) is offered too when a target is in sight
+    expect(menuActions(r.state).filter((x) => x !== 'blindFire').sort()).toEqual(['crawl', 'end', 'standUp'])
     r = take(r.state, { action: 'standUp' })
     expect(r.state.fighters.A3!.posture).toBe('standing')
     expect(menuActions(r.state)).toEqual(expect.arrayContaining(['move', 'takeCover', 'turn']))

@@ -1,8 +1,9 @@
 // ACT module: owns `action.*`. The Action phase (R-5.4 to R-5.6): turn alternation starting with the Priority player, the
 // run-out when one side has no Ready fighters left, activation, group activation as a chain (`action.group` nominates, then
 // `action.activate` offers only the group), the action menu keyed by the derived status (R-6.3) with Simple / Basic / Double /
-// Free accounting (R-6.1), the free turn (R-4.1), and the end of an activation. Actions whose rules arrive later (Charge,
-// Shoot, Aim, Fight, Retreat, Coup de Grace, Blind Fire, Fire Through Ductway, Running for Cover) are withheld, not offered.
+// Free accounting (R-6.1), the free turn (R-4.1), and the end of an activation. Shoot, Aim, Blind Fire and Fire Through
+// Ductway (S3a) hand over to shoot.ts, which pays for the action when the attack is resolved. Actions whose rules arrive
+// later (Charge, Fight, Retreat, Coup de Grace, Running for Cover) are withheld, not offered.
 import { d6SumChance, twoD6TestChance } from './dice'
 import { expireEffects } from './effects'
 import { runHook } from './hooks'
@@ -37,8 +38,11 @@ import {
   terminalsNear,
 } from './zm'
 import { runEndPhase } from './endphase'
+import { attackOptions, linkedWeaponIds, startRangedAttack, type AttackOption } from './shoot'
+import { ductFireChoices } from './zm'
 import type {
   Action,
+  ActionCostType,
   ActionPayloadMap,
   Activation,
   Fighter,
@@ -67,6 +71,10 @@ export const IMPLEMENTED_ACTIONS: ReadonlySet<string> = new Set([
   'crawl',
   'turn',
   'end',
+  'shoot',
+  'aim',
+  'blindFire',
+  'fireDuct',
 ])
 
 const GROUP_RULE = 'core.r.group-activation'
@@ -137,7 +145,9 @@ function statusAllows(a: RuntimeAction, st: DerivedStatus | 'broken'): boolean {
   return a.statuses.includes(st)
 }
 
-const COMPASS = [0, 1, 2, 3, 4, 5, 6, 7].map((k) => normaliseAngle((k * Math.PI) / 4))
+// computed on first use: module cycles (movement <-> activation) must not run imported code at load time
+let compassCache: number[] | null = null
+const compass = (): number[] => (compassCache ??= [0, 1, 2, 3, 4, 5, 6, 7].map((k) => normaliseAngle((k * Math.PI) / 4)))
 
 function ammoNeed(state: GameState, weaponId: string): number | null {
   const w = state.data.weapons[weaponId]
@@ -180,6 +190,10 @@ export function actionMenu(state: GameState, fighterId: string): ActionMenu {
   if (!act || act.fighterId !== fighterId) return { ...base, options, withheld }
   const add = (key: string, payload: Choose, data?: Record<string, unknown>, suffix = '') =>
     options.push({ id: suffix ? `${key}:${suffix}` : key, payload, ...(data ? { data } : {}) })
+  // a Blind fighter makes no attacks until its next activation (R-3.11)
+  const blind = f.conditions.blind !== undefined
+  let shootOpts: AttackOption[] | null = null
+  const shootable = () => (shootOpts ??= blind ? [] : attackOptions(state, f, 'shoot', act.actionsLeft))
 
   for (const a of Object.values(state.data.actions)) {
     // ending the activation is always possible (a Broken fighter's only other action, Running for Cover, arrives in S3b)
@@ -212,7 +226,7 @@ export function actionMenu(state: GameState, fighterId: string): ActionMenu {
         add('standUp', { action: 'standUp' })
         break
       case 'turn': {
-        for (const facing of COMPASS) {
+        for (const facing of compass()) {
           if (Math.abs(normaliseAngle(facing - f.facing)) < 0.01) continue
           add('turn', { action: 'turn', facing }, undefined, String(facing))
         }
@@ -264,6 +278,33 @@ export function actionMenu(state: GameState, fighterId: string): ActionMenu {
         break
       case 'carryCasket':
         for (const id of casketsNear(state, f, ['closed', 'opened', 'ammoCache'])) add('carryCasket', { action: 'carryCasket', casketId: id }, { maxInches: moveAllowance(state, f) }, id)
+        break
+      case 'shoot': {
+        const opts = shootable()
+        if (opts.length > 0) add('shoot', { action: 'shoot' }, { weapons: opts.length, targets: Math.max(...opts.map((o) => o.targets)) })
+        break
+      }
+      case 'aim': {
+        // Aim helps a later Shoot this activation: it needs a second action and a weapon a Basic Shoot can use
+        if (act.actionsLeft < 2) {
+          withheld.push({ action: a.id, reason: 'needsTwo' })
+          continue
+        }
+        if (act.aimed || act.performed.some((p) => p.action === 'shoot')) break
+        if (shootable().some((o) => o.cost === 'basic' && !o.template)) add('aim', { action: 'aim' }, { modifier: constants(state).hitModifiers.aim })
+        break
+      }
+      case 'blindFire': {
+        const opts = blind ? [] : attackOptions(state, f, 'blindFire', act.actionsLeft)
+        if (opts.length > 0) add('blindFire', { action: 'blindFire' }, { weapons: opts.length, modifier: constants(state).hitModifiers.blindFire })
+        break
+      }
+      case 'fireDuct':
+        if (blind) break
+        for (const d of ductFireChoices(state, f)) {
+          const opts = attackOptions(state, f, 'fireDuct', act.actionsLeft, d.ductId)
+          if (opts.length > 0) add('fireDuct', { action: 'fireDuct', ductId: d.ductId }, { targets: d.targets, need: constants(state).hitModifiers.ductway }, d.ductId)
+        }
         break
     }
     if (options.length === before) withheld.push({ action: a.id, reason: 'noTarget' })
@@ -438,11 +479,14 @@ export function endActivation(ctx: Ctx): void {
   afterActivation(ctx, f)
 }
 
-/** Pay for a resolved action, record it, and carry on: the next menu, or the end of the activation when nothing is left. */
-function payAndContinue(ctx: Ctx, f: Fighter, key: string, turnAfter = false): void {
+/**
+ * Pay for a resolved action, record it, and carry on: the next menu, or the end of the activation when nothing is left.
+ * `type` overrides the catalogue cost (an Unwieldy weapon makes Shoot a Double action, R-14.3).
+ */
+export function payAndContinue(ctx: Ctx, f: Fighter, key: string, turnAfter = false, type?: ActionCostType): void {
   const s = ctx.state
   const act = s.action.activation!
-  const a = s.data.actions[key]!
+  const a = type ? { ...s.data.actions[key]!, type } : s.data.actions[key]!
   // R-4.1: a free turn comes before the first action and right after a move; any other action closes it
   act.canTurn = turnAfter
   act.performed.push({ action: key, type: a.type })
@@ -520,8 +564,13 @@ function resolveReload(ctx: Ctx, f: Fighter, weaponId: string): void {
   }
   ctx.emit({ type: 'AmmoTest', fighterId: f.id, weaponId, roll, need: info.need, passed, result }, f.seat)
   if (passed) {
-    fw.ammo = 'ok'
-    ctx.emit({ type: 'WeaponStateChanged', fighterId: f.id, weaponId, ammo: 'ok' }, f.seat)
+    // the weapon and its ammunition upgrades share one ammo state (ruling); jammed and spent ones stay as they are
+    for (const id of linkedWeaponIds(f, weaponId)) {
+      const w = f.weapons.find((x) => x.weaponId === id)!
+      if (w !== fw && w.ammo !== 'out') continue
+      w.ammo = 'ok'
+      ctx.emit({ type: 'WeaponStateChanged', fighterId: f.id, weaponId: id, ammo: 'ok' }, f.seat)
+    }
   }
 }
 
@@ -624,6 +673,25 @@ function handleChoose(state: GameState, action: Action): Handled {
           if (p.action === 'smashCasket') smashCasket(ctx, f, p.casketId!)
           else bypassCasket(ctx, f, p.casketId!)
           payAndContinue(ctx, f, p.action)
+        },
+      }
+    case 'shoot':
+    case 'blindFire':
+    case 'fireDuct':
+      return {
+        run(ctx) {
+          const f = getFighter(ctx.state, fid)
+          declare(ctx, f, p.action, p.ductId ? { ductId: p.ductId } : undefined)
+          startRangedAttack(ctx, f, p.action as 'shoot' | 'blindFire' | 'fireDuct', p.ductId)
+        },
+      }
+    case 'aim':
+      return {
+        run(ctx) {
+          const f = getFighter(ctx.state, fid)
+          declare(ctx, f, 'aim')
+          ctx.state.action.activation!.aimed = true
+          payAndContinue(ctx, f, 'aim')
         },
       }
     default:
