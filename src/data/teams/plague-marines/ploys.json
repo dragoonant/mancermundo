@@ -1,0 +1,122 @@
+[
+  {
+    "id": "pm.p.contagion",
+    "name": "CONTAGION",
+    "team": "plague-marines",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "contagion",
+      "params": { "moveDelta": -2, "hitWorse": 1, "tokenRange": 3, "iconRange": 3, "notCumulativeWithInjury": true },
+      "scope": { "side": "friendly", "keyword": "PLAGUE MARINE" }
+    },
+    "text": "This turning point, enemies near the warband sicken: Move -2 inches and Hit one worse (never on top of being injured) for an enemy carrying your Poison token within 3 inches of a Plague Marine it can see or be seen by, or for any enemy within 3 inches of your Icon Bearer on the same terms.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md T-PM.20"
+  },
+  {
+    "id": "pm.p.lumbering-death",
+    "name": "LUMBERING DEATH",
+    "team": "plague-marines",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "lumberingDeath",
+      "params": { "maxMove": 3, "rule": "core.wr.ceaseless" },
+      "scope": { "side": "friendly", "keyword": "PLAGUE MARINE" }
+    },
+    "text": "This turning point, slow-moving Plague Marines strike true: Ceaseless on their weapons when retaliating, or when shooting or fighting in an activation in which they have covered no more than 3 inches (climbing and Accessible terrain count).",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md T-PM.21"
+  },
+  {
+    "id": "pm.p.cloud-of-flies",
+    "name": "CLOUD OF FLIES",
+    "team": "plague-marines",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "cloudOfFlies",
+      "params": { "radius": 1, "shooterMoreThan": 3 },
+      "scope": { "side": "friendly", "keyword": "PLAGUE MARINE" }
+    },
+    "text": "Drop a swarm marker in the killzone. Shooters more than 3 inches from a Plague Marine sitting wholly within 1 inch of the swarm treat it as obscured. The swarm disperses at the Ready step of the next Strategy phase.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md T-PM.22"
+  },
+  {
+    "id": "pm.p.nurglings",
+    "name": "NURGLINGS",
+    "team": "plague-marines",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "nurglings",
+      "params": { "near": 3, "poisonedNear": 7, "aplDelta": -1 },
+      "scope": { "side": "friendly", "keyword": "PLAGUE MARINE" }
+    },
+    "text": "Daemon mites harry one enemy within 3 inches of a Plague Marine, or within 7 if it carries your Poison token (sight not needed): its APL drops by 1 until its next activation ends.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md T-PM.23"
+  },
+  {
+    "id": "pm.p.virulent-poison",
+    "name": "VIRULENT POISON",
+    "team": "plague-marines",
+    "type": "firefight",
+    "cost": 1,
+    "window": ["firefight.activationStart", "firefight.actionEnded"],
+    "effect": {
+      "code": "virulentPoison",
+      "params": { "near": 3, "visibleNear": 7 },
+      "scope": { "side": "friendly", "keyword": "PLAGUE MARINE" }
+    },
+    "text": "Before or after any action of a Plague Marine activation or counteraction, poison one enemy within 3 inches of it, or one it can see within 7 inches. An enemy already poisoned is not affected.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md T-PM.24"
+  },
+  {
+    "id": "pm.p.sickening-resilience",
+    "name": "SICKENING RESILIENCE",
+    "team": "plague-marines",
+    "type": "firefight",
+    "cost": 1,
+    "window": ["shoot.defenceRolled", "fight.rolled"],
+    "effect": {
+      "code": "sickeningResilience",
+      "params": { "floor": 2, "reduceBy": 1 },
+      "scope": { "side": "friendly", "keyword": "PLAGUE MARINE" }
+    },
+    "text": "Play it as attack dice are about to hurt a friendly Plague Marine: for the rest of this activation or counteraction its Disgustingly Resilient skips the roll and always removes 1 from a die of 3 or more damage, never below 2.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md T-PM.25"
+  },
+  {
+    "id": "pm.p.poisonous-demise",
+    "name": "POISONOUS DEMISE",
+    "team": "plague-marines",
+    "type": "firefight",
+    "cost": 1,
+    "window": "operative.incapacitated",
+    "effect": {
+      "code": "poisonousDemise",
+      "params": { "inches": 3, "damage": 1 },
+      "scope": { "side": "friendly", "keyword": "PLAGUE MARINE" }
+    },
+    "text": "As a Plague Marine falls, before removal, every enemy it can see within 3 inches is poisoned, or loses 1 wound if it already was (even from earlier in this action). You are offered it when an attack kills it; when other damage kills it the engine plays it for you if you can pay.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md T-PM.26"
+  },
+  {
+    "id": "pm.p.curse-of-rot",
+    "name": "CURSE OF ROT",
+    "team": "plague-marines",
+    "type": "firefight",
+    "cost": 1,
+    "window": ["shoot.beforeDefenceRerolls", "fight.beforeRerolls"],
+    "effect": {
+      "code": "curseOfRot",
+      "params": { "near": 3, "poisonedNear": 7, "result": 3, "damage": 1 },
+      "scope": { "side": "friendly", "keyword": "PLAGUE MARINE" }
+    },
+    "text": "When a Plague Marine shoots or fights (not retaliates) an enemy within 3 inches, or within 7 if that enemy carries your Poison token: every 3 on that enemy's dice is a failure that cannot be re-rolled and costs it 1 wound. It is called once the enemy has rolled, before anyone re-rolls.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md T-PM.27"
+  }
+]

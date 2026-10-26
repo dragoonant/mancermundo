@@ -1,0 +1,430 @@
+[
+  {
+    "id": "lg.aspiring-champion",
+    "name": "Legionary Aspiring Champion",
+    "team": "legionaries",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 15
+    },
+    "base": 32,
+    "keywords": [
+      "LEGIONARY",
+      "CHAOS",
+      "HERETIC ASTARTES",
+      "LEADER",
+      "ASPIRING CHAMPION"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "pistol",
+          "label": "Pistol",
+          "from": [
+            "lg.wg.plasma-pistol",
+            "lg.w.tainted-bolt-pistol"
+          ]
+        },
+        {
+          "id": "melee",
+          "label": "Melee weapon",
+          "from": [
+            "lg.w.power-fist",
+            "lg.w.power-maul",
+            "lg.w.power-weapon",
+            "lg.w.tainted-chainsword"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "lg.a.in-the-eyes-of-the-gods"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "lg-aspiring-champion"
+    },
+    "text": "The warband's would-be champion: a pistol and a close-combat weapon of its choosing, and each kill it makes in its own activation spurs it to act once more.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.2"
+  },
+  {
+    "id": "lg.chosen",
+    "name": "Legionary Chosen",
+    "team": "legionaries",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 15
+    },
+    "base": 32,
+    "keywords": [
+      "LEGIONARY",
+      "CHAOS",
+      "HERETIC ASTARTES",
+      "LEADER",
+      "CHOSEN"
+    ],
+    "weapons": {
+      "fixed": [
+        "lg.w.daemon-blade"
+      ],
+      "options": [
+        {
+          "id": "pistol",
+          "label": "Pistol",
+          "from": [
+            "lg.wg.plasma-pistol",
+            "lg.w.tainted-bolt-pistol"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "lg.a.daemonic-aura",
+      "lg.a.soul-gorge"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "lg-chosen"
+    },
+    "text": "A hard-bitten veteran with a daemon blade: enemies struggle to break away from it, and its kills feed it.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.2"
+  },
+  {
+    "id": "lg.anointed",
+    "name": "Legionary Anointed",
+    "team": "legionaries",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 14
+    },
+    "base": 32,
+    "keywords": [
+      "LEGIONARY",
+      "CHAOS",
+      "HERETIC ASTARTES",
+      "ANOINTED"
+    ],
+    "weapons": {
+      "fixed": [
+        "lg.w.bolt-pistol",
+        "lg.w.daemonic-claw"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "lg.a.unleash-daemon"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "lg-anointed"
+    },
+    "text": "A host-in-the-making for a warp creature: once per battle it can let the daemon loose.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.2"
+  },
+  {
+    "id": "lg.balefire-acolyte",
+    "name": "Legionary Balefire Acolyte",
+    "team": "legionaries",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 14
+    },
+    "base": 32,
+    "keywords": [
+      "LEGIONARY",
+      "CHAOS",
+      "HERETIC ASTARTES",
+      "PSYKER",
+      "BALEFIRE ACOLYTE"
+    ],
+    "weapons": {
+      "fixed": [
+        "lg.w.bolt-pistol",
+        "lg.w.fireblast",
+        "lg.w.life-siphon",
+        "lg.w.fell-dagger"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "lg-balefire-acolyte"
+    },
+    "text": "A psyker who turns fire on everything near its target and siphons life back to its brothers. Never marked for Khorne.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.2"
+  },
+  {
+    "id": "lg.butcher",
+    "name": "Legionary Butcher",
+    "team": "legionaries",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 14
+    },
+    "base": 32,
+    "keywords": [
+      "LEGIONARY",
+      "CHAOS",
+      "HERETIC ASTARTES",
+      "BUTCHER"
+    ],
+    "weapons": {
+      "fixed": [
+        "lg.w.bolt-pistol",
+        "lg.w.double-handed-chainaxe"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "lg.a.devastating-onslaught"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "lg-butcher"
+    },
+    "text": "A frenzied axeman: foes fighting it get no help from their friends, and when an enemy's activation ends close by, it lunges into combat.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.2"
+  },
+  {
+    "id": "lg.gunner",
+    "name": "Legionary Gunner",
+    "team": "legionaries",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 14
+    },
+    "base": 32,
+    "keywords": [
+      "LEGIONARY",
+      "CHAOS",
+      "HERETIC ASTARTES",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "lg.w.bolt-pistol",
+        "lg.w.fists"
+      ],
+      "options": [
+        {
+          "id": "special",
+          "label": "Special weapon",
+          "from": [
+            "lg.w.flamer",
+            "lg.w.meltagun",
+            "lg.wg.plasma-gun"
+          ]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "lg-gunner"
+    },
+    "text": "Carries a flamer, meltagun or plasma gun.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.2"
+  },
+  {
+    "id": "lg.heavy-gunner",
+    "name": "Legionary Heavy Gunner",
+    "team": "legionaries",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 14
+    },
+    "base": 32,
+    "keywords": [
+      "LEGIONARY",
+      "CHAOS",
+      "HERETIC ASTARTES",
+      "HEAVY GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "lg.w.bolt-pistol",
+        "lg.w.fists"
+      ],
+      "options": [
+        {
+          "id": "heavy",
+          "label": "Heavy weapon",
+          "from": [
+            "lg.wg.heavy-bolter",
+            "lg.wg.missile-launcher",
+            "lg.wg.reaper-chaincannon"
+          ]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "lg-heavy-gunner"
+    },
+    "text": "Carries a heavy bolter, missile launcher or reaper chaincannon.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.2"
+  },
+  {
+    "id": "lg.icon-bearer",
+    "name": "Legionary Icon Bearer",
+    "team": "legionaries",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 14
+    },
+    "base": 32,
+    "keywords": [
+      "LEGIONARY",
+      "CHAOS",
+      "HERETIC ASTARTES",
+      "ICON BEARER"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "boltgun",
+              "name": "Boltgun and fists",
+              "fixed": [
+                "lg.w.boltgun",
+                "lg.w.fists"
+              ]
+            },
+            {
+              "id": "bolt-pistol",
+              "name": "Bolt pistol and chainsword",
+              "fixed": [
+                "lg.w.bolt-pistol",
+                "lg.w.chainsword"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "lg.a.icon-bearer",
+      "lg.a.favoured-of-the-dark-gods"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "lg-icon-bearer"
+    },
+    "text": "Bears a cursed standard: stronger in marker fights, and it taints the objectives it holds for extra command points.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.2"
+  },
+  {
+    "id": "lg.shrivetalon",
+    "name": "Legionary Shrivetalon",
+    "team": "legionaries",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 14
+    },
+    "base": 32,
+    "keywords": [
+      "LEGIONARY",
+      "CHAOS",
+      "HERETIC ASTARTES",
+      "SHRIVETALON"
+    ],
+    "weapons": {
+      "fixed": [
+        "lg.w.bolt-pistol",
+        "lg.w.flensing-blades"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "lg.a.vicious-reflexes",
+      "lg.a.horrifying-dismemberment"
+    ],
+    "uniqueActions": [
+      "lg.a.grisly-mark"
+    ],
+    "figure": {
+      "archetype": "lg-shrivetalon"
+    },
+    "text": "A torturer who strikes first when attacked, terrifies bystanders when it kills, and can mark ground against enemy objectives.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.2"
+  },
+  {
+    "id": "lg.warrior",
+    "name": "Legionary Warrior",
+    "team": "legionaries",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 14
+    },
+    "base": 32,
+    "keywords": [
+      "LEGIONARY",
+      "CHAOS",
+      "HERETIC ASTARTES",
+      "WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "boltgun",
+              "name": "Boltgun and fists",
+              "fixed": [
+                "lg.w.boltgun",
+                "lg.w.fists"
+              ]
+            },
+            {
+              "id": "bolt-pistol",
+              "name": "Bolt pistol and chainsword",
+              "fixed": [
+                "lg.w.bolt-pistol",
+                "lg.w.chainsword"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "lg.a.infernal-pact"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "lg-warrior"
+    },
+    "text": "The rank and file: once per battle the team can change one Warrior's Mark of Chaos.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.2"
+  }
+]

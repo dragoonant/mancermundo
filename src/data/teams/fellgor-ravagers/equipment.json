@@ -1,0 +1,50 @@
+[
+  {
+    "id": "fg.e.brass-adornments",
+    "name": "BRASS ADORNMENTS",
+    "scope": "faction",
+    "team": "fellgor-ravagers",
+    "count": 1,
+    "effect": {
+      "code": "fgBrassAdornments"
+    },
+    "text": "Once per battle each, ANIMALISTIC FURY and WILD RAGE cost 0 CP.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md T-FG.41"
+  },
+  {
+    "id": "fg.e.gore-marks",
+    "name": "GORE MARKS",
+    "scope": "faction",
+    "team": "fellgor-ravagers",
+    "count": 1,
+    "effect": {
+      "code": "fgGoreMarks"
+    },
+    "text": "Once per turning point, when a friendly Fellgor Ravager fights or retaliates, you may deal it 1 damage and re-roll one of its attack dice; if the re-rolled die is a fail, it takes 1 more damage.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md T-FG.42"
+  },
+  {
+    "id": "fg.e.chaos-sigil",
+    "name": "CHAOS SIGIL",
+    "scope": "faction",
+    "team": "fellgor-ravagers",
+    "count": 1,
+    "effect": {
+      "code": "fgChaosSigil"
+    },
+    "text": "Once per turning point, when an operative shoots a friendly Fellgor Ravager, at the start of the Roll Defence Dice step you may lower that weapon's Piercing x by 1 until the end of the sequence (Piercing 1 is ignored).",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md T-FG.43"
+  },
+  {
+    "id": "fg.e.war-paint",
+    "name": "WAR PAINT",
+    "scope": "faction",
+    "team": "fellgor-ravagers",
+    "count": 1,
+    "effect": {
+      "code": "fgWarPaint"
+    },
+    "text": "Friendly Fellgor Ravagers ignore the Move loss from being injured (the Hit penalty still applies), whether the injury is real or the Frenzy one.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md T-FG.44"
+  }
+]

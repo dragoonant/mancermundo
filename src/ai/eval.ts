@@ -7,6 +7,7 @@ import { dieOdds } from '@/engine/dice'
 import { bodyOf, visible } from '@/engine/los'
 import { distanceBetween, enemiesInControlRange } from '@/engine/measure'
 import { gradeThresholds } from '@/engine/missions'
+import { providerFixedTargets } from '@/engine/team-rules'
 import { activeOps, enemiesOf, otherSeat } from '@/engine/state'
 import { parseRules, ruleSetFor, targetInfo, weaponUnusable, type RuleSet, type TargetInfo } from '@/engine/attack-common'
 import type { GameState, MapDef, Operative, RuntimeWeapon, Vec3 } from '@/engine'
@@ -113,6 +114,8 @@ export interface ShotEst {
   mean: number
   kill: number
   score: number
+  /** the weapon names its own targets (Detonate): the figure is already the whole value, never re-rated shot by shot */
+  fixed?: true
 }
 
 function erf(x: number): number {
@@ -190,6 +193,49 @@ export function rulesOf(ctx: AiCtx, v: GameState, op: Operative, weaponId: strin
   return memo(ctx, `R|${op.id}|${weaponId}`, () => ruleSetFor(v, op, weaponId, 'shoot'))
 }
 
+/** A drone built to be blown up: the datacard says so, or it has an Expendable ability (a Machine's kill-op exemption). */
+function isExpendable(view: GameState, o: Operative): boolean {
+  const card = view.data.datacards[o.datacardId]
+  return !!card && (card.expendable === true || card.abilities.some((a) => /\.expendable$/.test(a)))
+}
+
+/**
+ * A weapon that picks its own targets (Detonate: a marker's surroundings, the friendly Gheistskull) is not a shot at a
+ * valid enemy: its value is every fixed target (and the Blast around the primary) scored together, friends against it.
+ * Null when the weapon targets as usual; a score of -Infinity when a team rule fixes no target (it cannot be selected).
+ */
+export function fixedShot(ctx: AiCtx, view: GameState, shooter: Operative, weaponId: string): ShotEst | null {
+  let fixed
+  try {
+    fixed = providerFixedTargets(view, shooter, weaponId)
+  } catch {
+    return null
+  }
+  if (!fixed) return null
+  const primary = fixed.targets[0]
+  if (!primary || !view.operatives[primary]) return { weaponId, targetId: shooter.id, mean: 0, kill: 0, score: -Infinity }
+  const ids = new Set(fixed.targets)
+  const blast = fixed.blast === false ? null : rulesOf(ctx, view, shooter, weaponId).blast
+  if (blast) {
+    const p = view.operatives[primary]!
+    for (const o of activeOps(view)) {
+      if (o.id === shooter.id || ids.has(o.id) || distanceBetween(bodyOf(p), bodyOf(o)) > blast + 0.05) continue
+      if (sees(ctx, view, p, o)) ids.add(o.id)
+    }
+  }
+  let total = 0
+  for (const id of ids) {
+    const t = view.operatives[id]
+    if (!t || t.status !== 'active' || t.wounds <= 0) continue
+    const mean = openMean(view, shooter, weaponId, t) * 0.9
+    const sc = shotScore(ctx, view, t, mean, killEstimate(mean, t.wounds, avgDamageOf(view.data.weapons[weaponId]!)))
+    if (t.seat !== shooter.seat) total += sc
+    // an expendable friend (a drone built to be blown up) costs a third as much
+    else total -= sc * (isExpendable(view, t) ? 0.35 : 1) * (t.id === shooter.id ? 1.2 : 1)
+  }
+  return { weaponId, targetId: primary, mean: total, kill: 0, score: total, fixed: true }
+}
+
 /** Every (ranged weapon, valid target) the shooter has from where it stands in `view`, cheaply rated. */
 export function shotsFrom(ctx: AiCtx, view: GameState, shooter: Operative, performed: string[]): ShotEst[] {
   const out: ShotEst[] = []
@@ -201,6 +247,11 @@ export function shotsFrom(ctx: AiCtx, view: GameState, shooter: Operative, perfo
     if (isExplosive(w)) {
       const score = explosionValue(ctx, view, shooter, wid)
       if (score > 0) out.push({ weaponId: wid, targetId: shooter.id, mean: score, kill: 0, score })
+      continue
+    }
+    const fixed = fixedShot(ctx, view, shooter, wid)
+    if (fixed) {
+      if (fixed.score > 0) out.push(fixed)
       continue
     }
     weapons.push({ id: wid, w, rules: rulesOf(ctx, view, shooter, wid) })

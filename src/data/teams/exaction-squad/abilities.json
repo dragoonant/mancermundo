@@ -1,0 +1,324 @@
+[
+  {
+    "id": "ex.a.wr-repress",
+    "kind": "weaponRule",
+    "name": "Repress",
+    "team": "exaction-squad",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "exRepress"
+    },
+    "text": "In a fight, each block this weapon makes cancels two unresolved enemy successes, and when the bearer retaliates it resolves its dice before the attacker does.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.5"
+  },
+  {
+    "id": "ex.a.wr-concealed-position",
+    "kind": "weaponRule",
+    "name": "Concealed Position",
+    "team": "exaction-squad",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "exConcealedPosition"
+    },
+    "text": "The concealed profile can be used only in the Marksman's first Shoot action of the battle.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.assault-shield",
+    "kind": "ability",
+    "name": "Assault Shield",
+    "team": "exaction-squad",
+    "effect": {
+      "code": "exAssaultShield"
+    },
+    "text": "An operative carrying a dominator maul and assault shield has a 3+ Save instead of 4+.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.nuncio-aquila",
+    "kind": "ability",
+    "name": "Nuncio-aquila",
+    "team": "exaction-squad",
+    "effect": {
+      "code": "exNuncioAquila",
+      "params": {
+        "range": 3
+      }
+    },
+    "text": "Around the Nuncio-aquila marker (or the Proctor while the marker is off the board), enemies within 3 inches pay 1 extra AP to pick up markers and perform mission actions, and the APL they contribute when control of a marker is worked out counts 1 lower.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.deploy-nuncio-aquila",
+    "kind": "uniqueAction",
+    "name": "DEPLOY NUNCIO-AQUILA",
+    "team": "exaction-squad",
+    "ap": 0,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "exDeployNuncio",
+      "params": {
+        "range": 6
+      }
+    },
+    "text": "Not in an enemy control range. Place the Nuncio-aquila marker within 6 inches (horizontally) of the Proctor, or move it up to 6 inches from where it is. If the Proctor leaves the killzone, so does the marker.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.medic",
+    "kind": "ability",
+    "name": "Medic!",
+    "team": "exaction-squad",
+    "window": "operative.incapacitated",
+    "effect": {
+      "code": "exMedic",
+      "params": {
+        "range": 3,
+        "wounds": 1,
+        "aplDelta": -1
+      }
+    },
+    "text": "Once per turning point, when a friendly Exaction Squad operative within 3 inches that the Chirurgant can see would be taken down (neither in an enemy control range), it is left on 1 wound and cannot be taken down for the rest of the action. After the action it may Dash into the Chirurgant's control range, both then have -1 APL until their next activations end, and if it happened in its own activation that activation ends.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.medikit",
+    "kind": "uniqueAction",
+    "name": "MEDIKIT",
+    "team": "exaction-squad",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "exMedikit",
+      "params": {
+        "dice": "2D3"
+      }
+    },
+    "text": "Not in an enemy control range. A friendly Exaction Squad operative in this operative's control range, itself included, regains up to 2D3 lost wounds. Whoever Medic! saved this turning point cannot be treated.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.handler",
+    "kind": "ability",
+    "name": "Handler",
+    "team": "exaction-squad",
+    "effect": {
+      "code": "exHandler"
+    },
+    "text": "When the Leashmaster is activated, a ready friendly R-VR Cyber-mastiff may be activated together with it; the two take their actions one at a time in any order.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.attack-pattern",
+    "kind": "ability",
+    "name": "Attack Pattern",
+    "team": "exaction-squad",
+    "effect": {
+      "code": "exAttackPattern"
+    },
+    "text": "In turning point 1 the Leashmaster's gambit picks two different patterns for one friendly Cyber-mastiff for the whole battle: Aggressive (its melee weapons have Relentless), Swift (+2 inches Move) or Defensive (Save improved by 1).",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.r-vr-command",
+    "kind": "uniqueAction",
+    "name": "R-VR COMMAND",
+    "team": "exaction-squad",
+    "ap": 0,
+    "effect": {
+      "code": "exCommand"
+    },
+    "text": "Pick a friendly Cyber-mastiff anywhere and swap one of its attack patterns for the one it does not have.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.beast",
+    "kind": "ability",
+    "name": "Beast",
+    "team": "exaction-squad",
+    "effect": {
+      "code": "exBeast"
+    },
+    "text": "The Cyber-mastiff can take only Apprehend, Charge, Dash, Fall Back, Fight, Guard, Reposition, Pick Up Marker and Place Marker, and uses only the weapon on its datacard.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.apprehend",
+    "kind": "uniqueAction",
+    "name": "APPREHEND",
+    "team": "exaction-squad",
+    "ap": 0,
+    "effect": {
+      "code": "exApprehend"
+    },
+    "text": "Pick an enemy in this operative's control range. Until it leaves that control range (or this action is used again), its weapons have their Hit worsened by 1 (not stacking with injury) and it cannot Fall Back.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.engendered-focus",
+    "kind": "ability",
+    "name": "Engendered Focus",
+    "team": "exaction-squad",
+    "effect": {
+      "code": "exEngenderedFocus"
+    },
+    "text": "The Castigator ignores changes that would hurt its stats and its weapons' stats (injury included), but not its Save.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.zealous-dedication",
+    "kind": "ability",
+    "name": "Zealous Dedication",
+    "team": "exaction-squad",
+    "effect": {
+      "code": "exZealousDedication",
+      "params": {
+        "die": 6,
+        "on": 5
+      }
+    },
+    "text": "Each time an attack die would inflict 3 or more damage on the Castigator, roll a D6: on a 5+ that die inflicts 1 less.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.castigators-arrest",
+    "kind": "ability",
+    "name": "Castigator's Arrest",
+    "team": "exaction-squad",
+    "effect": {
+      "code": "exCastigatorsArrest"
+    },
+    "text": "While exactly one enemy is in the Castigator's control range, that enemy cannot Fall Back.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.acute-focus",
+    "kind": "ability",
+    "name": "Acute Focus",
+    "team": "exaction-squad",
+    "effect": {
+      "code": "exAcuteFocus"
+    },
+    "text": "Once in each of the Malocator's activations, one Pick Up Marker, Place Marker, VERISCANT or mission action it performs costs 1 AP less.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.veriscant",
+    "kind": "uniqueAction",
+    "name": "VERISCANT",
+    "team": "exaction-squad",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "exVeriscant"
+    },
+    "text": "Not in an enemy control range. Pick an enemy the Malocator can see. While a friendly Exaction Squad operative shoots, fights or retaliates against it, its weapons have Lethal 5+ and Severe, until the Malocator's next activation, until it is taken down, or until it uses this again.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.optics",
+    "kind": "uniqueAction",
+    "name": "OPTICS",
+    "team": "exaction-squad",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "exOptics"
+    },
+    "text": "Not in an enemy control range. Until the Marksman's next activation, the executioner shotgun's concealed and stationary profiles have Lethal 5+, and enemies cannot be obscured when it shoots with any executioner shotgun profile.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.first-in-the-field",
+    "kind": "ability",
+    "name": "First in the Field",
+    "team": "exaction-squad",
+    "effect": {
+      "code": "exFirstInTheField"
+    },
+    "text": "In turning point 1 the Revelatum's gambit gives it a free Reposition if it is wholly within your drop zone.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.spot",
+    "kind": "uniqueAction",
+    "name": "SPOT",
+    "team": "exaction-squad",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "exSpot"
+    },
+    "text": "Not in an enemy control range. Pick an enemy the Revelatum can see within 8 inches. Until the end of the turning point, friendly Exaction Squad operatives shooting it have Seek Light with their ranged weapons, and it cannot be obscured against them.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.stubborn-subjugator",
+    "kind": "ability",
+    "name": "Stubborn Subjugator",
+    "team": "exaction-squad",
+    "effect": {
+      "code": "exStubbornSubjugator"
+    },
+    "text": "The Subductor ignores changes that would worsen the Hit of its melee weapons.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.close-quarters-vigilance",
+    "kind": "ability",
+    "name": "Close Quarters Vigilance",
+    "team": "exaction-squad",
+    "effect": {
+      "code": "exCloseQuartersVigilance"
+    },
+    "text": "The Vigilant may Shoot while in an enemy control range unless it has Charged in the same activation, and always in a counteraction. Guard is unchanged.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.signal",
+    "kind": "uniqueAction",
+    "name": "SIGNAL",
+    "team": "exaction-squad",
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "exSignal"
+    },
+    "text": "Not in an enemy control range. Another friendly Exaction Squad operative the Vox-signifier can see gets +1 APL until the end of its next activation.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.4"
+  },
+  {
+    "id": "ex.a.ruthless-efficiency",
+    "kind": "factionRule",
+    "name": "RUTHLESS EFFICIENCY",
+    "team": "exaction-squad",
+    "scope": {
+      "side": "friendly",
+      "keyword": "EXACTION SQUAD"
+    },
+    "effect": {
+      "code": "exRuthlessEfficiency"
+    },
+    "text": "When a friendly Exaction Squad operative shoots (frag and krak grenades aside), friendly Exaction Squad operatives in an enemy's control range do not stop that enemy being chosen as a target.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.5"
+  }
+]

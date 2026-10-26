@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import Ajv2020 from 'ajv/dist/2020'
-import { CODE_HOOKS, loadBundle } from '../../src/data'
+import { CODE_HOOKS, MANIFEST, loadBundle, playableTeamIds } from '../../src/data'
 import { SCHEMAS } from '../../src/data/schema'
 import { buildIndex, checkRefs } from '../../src/data/refs'
 import { validateAll } from '../../src/data/validate'
@@ -27,7 +27,8 @@ describe('data schemas', () => {
   it('every data file validates; ids are unique, refs resolve, weapon rules are known, hooks file is current', () => {
     const result = validateAll({ hooksFile: 'check' })
     expect(result.errors).toEqual([])
-    expect(result.files).toBe(23)
+    expect(result.files).toBe(MANIFEST.length)
+    expect(result.files).toBe(26 + 6 * 22)
     expect(result.records).toBeGreaterThan(150)
   })
 
@@ -67,9 +68,12 @@ describe('data schemas', () => {
   it('loadBundle indexes every record and exposes profile groups', () => {
     const bundle = loadBundle()
     expect(bundle.dataVersion).toMatch(/^\d+\.\d+\.\d+$/)
-    expect(Object.keys(bundle.teams).sort()).toEqual(['angels-of-death', 'kommandos'])
+    const teamDirs = MANIFEST.filter((f) => /^teams\/[^/]+\/team\.json$/.test(f.path)).map((f) => f.path.split('/')[1]!).sort()
+    expect(Object.keys(bundle.teams).sort()).toEqual(teamDirs)
+    expect(playableTeamIds(bundle)).toEqual(Object.values(bundle.teams).filter((t) => t.playable !== false).map((t) => t.id).sort())
+    expect(playableTeamIds(bundle)).toEqual(expect.arrayContaining(['angels-of-death', 'kommandos']))
     expect(Object.keys(bundle.missions)).toHaveLength(3)
-    expect(Object.keys(bundle.layouts)).toHaveLength(3)
+    expect(Object.keys(bundle.layouts)).toHaveLength(6)
     expect(bundle.byId['core.wr.piercing']).toBeDefined()
     expect(bundle.weaponGroups['aod.wg.stalker-bolt-rifle']).toEqual(['aod.w.stalker-bolt-rifle-heavy', 'aod.w.stalker-bolt-rifle-mobile'])
   })

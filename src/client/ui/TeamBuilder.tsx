@@ -7,9 +7,14 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import type { Group } from 'three'
 import {
+  allowedOperativePicks,
   defaultLoadout,
+  defaultOperativePicks,
   enumerateLoadouts,
+  operativeChoicesFor,
   expandWeaponRef,
+  capProblems,
+  teamCapProblems,
   slotCost,
   type DatacardData,
   type LoadoutChoice,
@@ -20,9 +25,12 @@ import {
 } from '@/data'
 import type { Seat } from '@/engine'
 import { dataBundle, flattenRoster, type SeatBuild } from '../game/adapter'
-import { buildProblems, choiceOptions, defaultBuild, defaultEquipmentPicks, equipmentFor, teamList } from '../game/defaults'
+import { archetypeFor } from '../teams'
+import { buildProblems, choiceOptions, randomBuildLoadouts, defaultBuild, defaultEquipmentPicks, equipmentFor, equipmentLimitOf, teamList } from '../game/defaults'
 import { humanize } from '../game/labels'
+import { isRangeRule, weaponReach } from '../game/glossary'
 import { Figure, seatColor as figureSeatColor } from '../figures/Operative'
+import { baseOfCard } from '../figures/OvalBase'
 import { chosenWeaponIds } from '../game/adapter'
 import { useSession } from '../store/session'
 import { colors, fontStack, panel } from './theme'
@@ -46,10 +54,29 @@ const ENGINE_HEIGHT = (baseMm: number) => Math.round(((baseMm / 25.4) * 1.15 + 0
 
 // ---------------------------------------------------------------- helpers
 
-export function addProblem(slot: SelectionSlot, current: string[], id: string): string | null {
+/**
+ * Why `id` cannot be added to `slot` (null when it can). With `team`, the team-wide maximum caps count too (Kasrkin's
+ * Gunners and Sharpshooter, the Farstalker Hounds), over `others`: the operatives already taken in the other slots.
+ * Minimums and requirements (a Sorcerer, a Void-Jammer) cannot block an add; the roster check reports them.
+ */
+export function addProblem(
+  slot: SelectionSlot,
+  current: string[],
+  id: string,
+  team?: Pick<TeamData, 'selection'>,
+  others: string[] = [],
+  datacards: Record<string, Partial<Pick<DatacardData, 'name' | 'keywords'>>> = {},
+): string | null {
   const repeatable = new Set(slot.repeatable ?? [])
   if (current.includes(id) && !repeatable.has(id)) return 'Only one of this operative is allowed.'
   if (slotCost(slot, [...current, id]) > slot.count) return `${slot.label ?? slot.id} is full (${slotCost(slot, current)}/${slot.count}).`
+  const cap = capProblems(slot, [...current, id])[0]
+  if (cap) return `${cap}.`
+  if (team) {
+    const maxOnly = { selection: { ...team.selection, caps: (team.selection.caps ?? []).filter((c) => c.max !== undefined).map((c) => ({ ...c, min: undefined })), requires: [] } }
+    const teamCap = teamCapProblems(maxOnly, [...others, ...current, id], datacards)[0]
+    if (teamCap) return `Roster: ${teamCap}.`
+  }
   return null
 }
 
@@ -61,26 +88,31 @@ export function weaponsOf(ref: string): WeaponData[] {
 }
 
 function weaponLine(w: WeaponData): string {
-  const rules = w.rules.map((r) => `${humanize(r.rule.replace('core.wr.', ''))}${r.inches !== undefined ? ` ${r.inches}″` : r.x !== undefined ? ` ${r.x}` : ''}`).join(', ')
-  return `A${w.atk} ${w.hit} ${w.dmg.normal}/${w.dmg.crit}${rules ? ` · ${rules}` : ''}`
+  const rules = w.rules.filter((r) => !isRangeRule(r)).map((r) => `${humanize(r.rule.replace('core.wr.', ''))}${r.inches !== undefined ? ` ${r.inches}″` : r.x !== undefined ? ` ${r.x}` : ''}`).join(', ')
+  return `Rng ${weaponReach(w).label} A${w.atk} ${w.hit} ${w.dmg.normal}/${w.dmg.crit}${rules ? ` · ${rules}` : ''}`
 }
 
 /** The stat line of each profile of a weapon, with every weapon rule as its own keyword. */
 function WeaponLines({ ws }: { ws: WeaponData[] }) {
   return (
     <>
-      {ws.map((w, i) => (
-        <span key={w.id}>
-          {i > 0 && ' | '}
-          {w.profile ? `${w.profile}: ` : ''}A{w.atk} {w.hit} {w.dmg.normal}/{w.dmg.crit}
-          {w.rules.length > 0 && (
-            <>
-              {' · '}
-              <WeaponRules rules={w.rules} />
-            </>
-          )}
-        </span>
-      ))}
+      {ws.map((w, i) => {
+        const reach = weaponReach(w)
+        const rules = w.rules.filter((r) => !isRangeRule(r))
+        return (
+          <span key={w.id}>
+            {i > 0 && ' | '}
+            {w.profile ? `${w.profile}: ` : ''}
+            <Keyword term="Rng" /> <Keyword term={reach.term} kind="weaponRule">{reach.label}</Keyword> A{w.atk} {w.hit} {w.dmg.normal}/{w.dmg.crit}
+            {rules.length > 0 && (
+              <>
+                {' · '}
+                <WeaponRules rules={rules} />
+              </>
+            )}
+          </span>
+        )
+      })}
     </>
   )
 }
@@ -230,9 +262,9 @@ function Preview({ card, seat, weaponIds, teamId }: { card: DatacardData; seat: 
   const paint = dataBundle().teams[teamId]!.paint
   const h = ENGINE_HEIGHT(card.base)
   const spec = {
-    archetype: card.figure.archetype,
+    archetype: archetypeFor(card.id, card.figure.archetype, weaponIds, dataBundle().weaponGroups),
     height: h,
-    baseRadius: card.base / 25.4 / 2,
+    ...baseOfCard(card, weaponIds),
     major: paint.major,
     minor: paint.minor,
     weaponIds,
@@ -269,6 +301,8 @@ export function TeamBuilder() {
   const problemsB = useMemo(() => buildProblems(b, s.builds.B, mission.equipmentLimit), [b, s.builds.B, mission.equipmentLimit])
   const problems = seat === 'A' ? problemsA : problemsB
   const set = (next: SeatBuild) => s.setBuild(seat, next)
+  // M9 batch B: a roster bonus (Hearthkyn Lugger) can raise the equipment limit
+  const equipLimit = equipmentLimitOf(b, build, mission.equipmentLimit)
 
   const slotOffset = (slotId: string) => {
     let n = 0
@@ -278,13 +312,20 @@ export function TeamBuilder() {
     }
     return n
   }
+  const othersOf = (slot: SelectionSlot): string[] => team.selection.slots.filter((sl) => sl.id !== slot.id).flatMap((sl) => build.roster[sl.id] ?? [])
   const add = (slot: SelectionSlot, id: string) => {
     const cur = build.roster[slot.id] ?? []
-    if (addProblem(slot, cur, id)) return
+    if (addProblem(slot, cur, id, team, othersOf(slot), b.byId as Record<string, DatacardData>)) return
     const at = slotOffset(slot.id) + cur.length
     const loadouts = [...build.loadouts]
     loadouts.splice(at, 0, defaultLoadout(b.byId[id] as DatacardData))
-    set({ ...build, roster: { ...build.roster, [slot.id]: [...cur, id] }, loadouts })
+    // M9 batch B: per-operative keyword picks stay aligned with the flattened roster
+    const picks = build.picks ? [...build.picks] : undefined
+    // M9 batch C: a `unique` choice defaults to a pick no other operative holds yet
+    const taken: Record<string, string[]> = {}
+    for (const p of picks ?? []) for (const [k, v] of Object.entries(p ?? {})) (taken[k] ??= []).push(v)
+    if (picks) picks.splice(at, 0, defaultOperativePicks(team, b.byId[id] as DatacardData, taken))
+    set({ ...build, roster: { ...build.roster, [slot.id]: [...cur, id] }, loadouts, ...(picks ? { picks } : {}) })
     setSelectedIdx(at)
   }
   const remove = (slot: SelectionSlot, i: number) => {
@@ -292,7 +333,9 @@ export function TeamBuilder() {
     const at = slotOffset(slot.id) + i
     const loadouts = [...build.loadouts]
     loadouts.splice(at, 1)
-    set({ ...build, roster: { ...build.roster, [slot.id]: cur.filter((_, k) => k !== i) }, loadouts })
+    const picks = build.picks ? [...build.picks] : undefined
+    if (picks) picks.splice(at, 1)
+    set({ ...build, roster: { ...build.roster, [slot.id]: cur.filter((_, k) => k !== i) }, loadouts, ...(picks ? { picks } : {}) })
     setSelectedIdx(Math.max(0, at - 1))
   }
 
@@ -329,8 +372,8 @@ export function TeamBuilder() {
         <Btn onClick={() => set(defaultBuild(b, team))} data-testid="builder-reset">
           Reset to default
         </Btn>
-        <Tooltip title="Randomise loadouts" body="Rolls a legal weapon loadout for every operative on this roster. The roster itself does not change.">
-          <Btn data-testid="builder-randomise" onClick={() => set({ ...build, loadouts: ids.map((id) => randomLoadout(b.byId[id] as DatacardData)) })}>
+        <Tooltip title="Randomise loadouts" body="Rolls a legal weapon loadout for every operative on this roster, keeping the team's weapon limits. The roster itself does not change.">
+          <Btn data-testid="builder-randomise" onClick={() => set({ ...build, loadouts: randomBuildLoadouts(b, team, build) })}>
             Randomise loadouts
           </Btn>
         </Tooltip>
@@ -378,7 +421,7 @@ export function TeamBuilder() {
                 <div style={{ marginTop: 6, display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                   {slot.from.map((id) => {
                     const c = b.byId[id] as DatacardData
-                    const why = addProblem(slot, cur, id)
+                    const why = addProblem(slot, cur, id, team, othersOf(slot), b.byId as Record<string, DatacardData>)
                     const btn = (
                       <Btn key={id} data-testid={`add-${id}`} disabled={!!why} style={{ padding: '3px 8px', fontSize: 12 }} onClick={() => add(slot, id)}>
                         + {c.name}
@@ -440,6 +483,32 @@ export function TeamBuilder() {
                   ))}
                 </div>
               )}
+              {operativeChoicesFor(team, selectedCard).map((oc) => {
+                const current = build.picks?.[idx]?.[oc.id] ?? defaultOperativePicks(team, selectedCard)[oc.id] ?? ''
+                const allowed = allowedOperativePicks(oc, selectedCard)
+                return (
+                  <label key={oc.id} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, fontSize: 12, marginBottom: 6, alignItems: 'center' }}>
+                    <span>{oc.label}</span>
+                    <select
+                      data-testid={`pick-${oc.id}`}
+                      value={current}
+                      onChange={(e) => {
+                        const picks = ids.map((id, k) => build.picks?.[k] ?? defaultOperativePicks(team, b.byId[id] as DatacardData))
+                        picks[idx] = { ...(picks[idx] ?? {}), [oc.id]: e.target.value }
+                        set({ ...build, picks })
+                      }}
+                      style={{ background: '#171a26', color: colors.text, border: `1px solid ${colors.border}`, borderRadius: 6, padding: 4 }}
+                    >
+                      {oc.keywords.map((k) => (
+                        <option key={k} value={k} disabled={!allowed.includes(k)}>
+                          {humanize(k.toLowerCase())}
+                          {allowed.includes(k) ? '' : ' (not for this operative)'}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )
+              })}
               {(selectedCard.weapons.options ?? []).length === 0 && <Muted>No loadout choices: this operative has a fixed kit.</Muted>}
               {(selectedCard.weapons.options ?? []).map((slot) => (
                 <SlotEditor
@@ -501,14 +570,14 @@ export function TeamBuilder() {
           <div style={{ fontWeight: 800, fontSize: 14, marginBottom: 4 }}>
             Equipment{' '}
             <span data-testid="equipment-count" style={{ color: colors.muted }}>
-              {build.equipment.length}/{mission.equipmentLimit}
+              {build.equipment.length}/{equipLimit}
             </span>
           </div>
           {equipment.map((e) => {
             const on = build.equipment.includes(e.id)
-            const full = !on && build.equipment.length >= mission.equipmentLimit
+            const full = !on && build.equipment.length >= equipLimit
             const off = e.enabled === false
-            const why = off ? 'Disabled in the current data.' : full ? `You already picked ${mission.equipmentLimit}.` : null
+            const why = off ? 'Disabled in the current data.' : full ? `You already picked ${equipLimit}.` : null
             const picks = build.equipmentChoices?.[e.id] ?? []
             const toggle = () => {
               const choices = { ...(build.equipmentChoices ?? {}) }

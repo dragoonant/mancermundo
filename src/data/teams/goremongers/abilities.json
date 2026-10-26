@@ -1,0 +1,305 @@
+[
+  {
+    "id": "gm.a.wr-ritual",
+    "kind": "weaponRule",
+    "name": "Ritual",
+    "team": "goremongers",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "gmRitual"
+    },
+    "text": "Whenever the Bloodtaker uses the ritual blade, the first time in that sequence it wounds an operative in its control range you may raise its gore tank one level. This stacks with the rise for finishing that operative off.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.10"
+  },
+  {
+    "id": "gm.a.wr-drag",
+    "kind": "weaponRule",
+    "name": "Drag",
+    "team": "goremongers",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "gmDrag"
+    },
+    "text": "When the Impaler shoots with the ranged fleshskewer, just before damage is dealt you may haul the target up to twice the number of your unblocked successes in inches towards the Impaler (drops are free), then throw away any of those unblocked successes.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.12"
+  },
+  {
+    "id": "gm.a.khornes-favour",
+    "kind": "ability",
+    "name": "Khorne's Favour",
+    "team": "goremongers",
+    "effect": {
+      "code": "gmKhornesFavour"
+    },
+    "text": "Once in each of the Blood Herald's activations, before or after any of its actions, if its gore tank is empty you may raise it one level.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.7"
+  },
+  {
+    "id": "gm.a.impending-apotheosis",
+    "kind": "ability",
+    "name": "Impending Apotheosis",
+    "team": "goremongers",
+    "effect": {
+      "code": "gmImpendingApotheosis"
+    },
+    "text": "One time in the battle the Blood Herald may shrug off the damage of a single attack die that hits it for Normal Dmg.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.8"
+  },
+  {
+    "id": "gm.a.obsessive-bloodlust",
+    "kind": "ability",
+    "name": "Obsessive Bloodlust",
+    "team": "goremongers",
+    "effect": {
+      "code": "gmObsessiveBloodlust"
+    },
+    "text": "Once per turning point for the whole kill team: when an Aspirant ends a Fight action no longer in an enemy control range, it may take a free Charge of at most 2 inches, even if it already charged this activation. That does not stop it Charging, Dashing or Repositioning afterwards.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.9"
+  },
+  {
+    "id": "gm.a.transfusion-ritual",
+    "kind": "uniqueAction",
+    "name": "TRANSFUSION RITUAL",
+    "team": "goremongers",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "gmTransfusionRitual"
+    },
+    "text": "Not in an enemy control range and not with an empty tank. Lower the Bloodtaker's gore tank one level and raise the tank of one other friendly Goremonger within 8 inches one level. This lowering is not a Sanguavitae use.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.11"
+  },
+  {
+    "id": "gm.a.gore-fuel",
+    "kind": "uniqueAction",
+    "name": "GORE-FUEL",
+    "team": "goremongers",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "gmGoreFuel"
+    },
+    "text": "Not in an enemy control range and not with an empty tank. Lower the Impaler's gore tank one level. Until it next uses either fleshskewer profile, both profiles have Severe. This lowering is not a Sanguavitae use.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.13"
+  },
+  {
+    "id": "gm.a.dash-and-spray",
+    "kind": "uniqueAction",
+    "name": "DASH AND SPRAY",
+    "team": "goremongers",
+    "ap": 1,
+    "conditions": {
+      "order": "engage",
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "gmDashAndSpray"
+    },
+    "text": "Not while it has a Conceal order or is in an enemy control range. The Inciter takes a free Dash and a free Shoot in either order; the Shoot may only use the dual autopistols (focused).",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.14"
+  },
+  {
+    "id": "gm.a.incite-the-hunt",
+    "kind": "ability",
+    "name": "Incite the Hunt",
+    "team": "goremongers",
+    "effect": {
+      "code": "gmInciteTheHunt"
+    },
+    "text": "When the Inciter takes down an enemy from more than 2 inches away, before it is removed you may raise the gore tank of a friendly Goremonger within 8 inches of that enemy. An enemy wounded but not taken down by the dual autopistols gains one of your Bleeding tokens; a friendly Goremonger within 8 inches of it may remove the token to raise its own gore tank, before or after an action.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.15 T-GM.16"
+  },
+  {
+    "id": "gm.a.brutish",
+    "kind": "ability",
+    "name": "Brutish",
+    "team": "goremongers",
+    "effect": {
+      "code": "gmBrutish"
+    },
+    "text": "The Skullclaimer takes a Critical Dmg hit as the attacking weapon's Normal Dmg.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.17"
+  },
+  {
+    "id": "gm.a.claim-skull",
+    "kind": "ability",
+    "name": "Claim Skull",
+    "team": "goremongers",
+    "effect": {
+      "code": "gmClaimSkull"
+    },
+    "text": "Once per turning point, when the Skullclaimer takes down an enemy operative with its great chainaxe, you gain 1 CP.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.18"
+  },
+  {
+    "id": "gm.a.climbing-picks",
+    "kind": "ability",
+    "name": "Climbing Picks",
+    "team": "goremongers",
+    "effect": {
+      "code": "gmStalker",
+      "params": {
+        "rule": "climbing-picks"
+      }
+    },
+    "text": "Climbing up counts as only 2 inches of vertical distance for the Stalker, however tall the climb.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.19"
+  },
+  {
+    "id": "gm.a.rooftop-stalker",
+    "kind": "ability",
+    "name": "Rooftop Stalker",
+    "team": "goremongers",
+    "effect": {
+      "code": "gmStalker",
+      "params": {
+        "rule": "rooftop-stalker"
+      }
+    },
+    "text": "The Stalker's melee weapons have Relentless when it fights in an activation in which it dropped from Vantage terrain at least 2 inches up, or when it fights an enemy standing on Vantage terrain at least 2 inches up.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.20"
+  },
+  {
+    "id": "gm.a.runes-of-khorne",
+    "kind": "factionRule",
+    "name": "RUNES OF KHORNE",
+    "team": "goremongers",
+    "scope": {
+      "side": "friendly",
+      "keyword": "GOREMONGER"
+    },
+    "effect": {
+      "code": "gmRunesOfKhorne"
+    },
+    "text": "A friendly Goremonger cannot lose more than 8 wounds in a single Shoot action.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.21"
+  },
+  {
+    "id": "gm.a.gore-tanks",
+    "kind": "factionRule",
+    "name": "GORE TANKS",
+    "team": "goremongers",
+    "scope": {
+      "side": "friendly",
+      "keyword": "GOREMONGER"
+    },
+    "effect": {
+      "code": "gmGoreTanks"
+    },
+    "text": "Every Goremonger has a gore tank with three levels: empty, half and full, starting the battle at half. Raising it moves it up one level and lowering it one level down. Taking down an operative in its control range, or visible within 2 inches, lets a Goremonger raise its tank.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.22"
+  },
+  {
+    "id": "gm.a.sanguavitae",
+    "kind": "factionRule",
+    "name": "SANGUAVITAE",
+    "team": "goremongers",
+    "scope": {
+      "side": "friendly",
+      "keyword": "GOREMONGER"
+    },
+    "effect": {
+      "code": "gmSanguavitae"
+    },
+    "text": "Each Sanguavitae rule costs the user one gore tank level. An operative uses each Sanguavitae rule at most once, and at most two, per activation or counteraction, and never Mania and Fury in the same activation.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.23"
+  },
+  {
+    "id": "gm.a.rejuvenate",
+    "kind": "factionRule",
+    "name": "Rejuvenate",
+    "team": "goremongers",
+    "scope": {
+      "side": "friendly",
+      "keyword": "GOREMONGER"
+    },
+    "effect": {
+      "code": "gmRejuvenate"
+    },
+    "text": "Sanguavitae. In its activation or counteraction, before or after an action, a Goremonger regains D3+1 lost wounds.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.24"
+  },
+  {
+    "id": "gm.a.mania",
+    "kind": "factionRule",
+    "name": "Mania",
+    "team": "goremongers",
+    "scope": {
+      "side": "friendly",
+      "keyword": "GOREMONGER"
+    },
+    "effect": {
+      "code": "gmMania"
+    },
+    "text": "Sanguavitae. In its activation, before or after an action, a Goremonger adds 1 to its APL until the start of its next activation.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.25"
+  },
+  {
+    "id": "gm.a.fury",
+    "kind": "factionRule",
+    "name": "Fury",
+    "team": "goremongers",
+    "scope": {
+      "side": "friendly",
+      "keyword": "GOREMONGER"
+    },
+    "effect": {
+      "code": "gmFury"
+    },
+    "text": "Sanguavitae. In its activation, before or after an action, a Goremonger may Fight twice in that activation, the second Fight being free.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.26"
+  },
+  {
+    "id": "gm.a.rake",
+    "kind": "factionRule",
+    "name": "Rake",
+    "team": "goremongers",
+    "scope": {
+      "side": "friendly",
+      "keyword": "GOREMONGER"
+    },
+    "effect": {
+      "code": "gmRake"
+    },
+    "text": "Sanguavitae. When a Goremonger Charges in its activation, once it has finished moving you may deal D3 damage to one enemy in its control range.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.27"
+  },
+  {
+    "id": "gm.a.surge",
+    "kind": "factionRule",
+    "name": "Surge",
+    "team": "goremongers",
+    "scope": {
+      "side": "friendly",
+      "keyword": "GOREMONGER"
+    },
+    "effect": {
+      "code": "gmSurge"
+    },
+    "text": "Sanguavitae. When a Goremonger Charges or Repositions, add 1 inch to its Move until the end of that action.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.28"
+  },
+  {
+    "id": "gm.a.rage",
+    "kind": "factionRule",
+    "name": "Rage",
+    "team": "goremongers",
+    "scope": {
+      "side": "friendly",
+      "keyword": "GOREMONGER"
+    },
+    "effect": {
+      "code": "gmRage"
+    },
+    "text": "Sanguavitae. When a Goremonger fights, add 1 to the Atk of its melee weapons until the end of that action.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.29"
+  }
+]

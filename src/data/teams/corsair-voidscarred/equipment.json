@@ -1,0 +1,50 @@
+[
+  {
+    "id": "cv.e.diuturnal-mantles",
+    "name": "DIUTURNAL MANTLES",
+    "scope": "faction",
+    "team": "corsair-voidscarred",
+    "count": 1,
+    "effect": {
+      "code": "diuturnalMantles"
+    },
+    "text": "When an operative shoots a friendly Voidscarred with a Blast or Torrent weapon, the defender may re-roll one defence die. Friendly Voidscarreds also ignore the damage of x-inch Devastating unless they are the target of the sequence.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.7 T-CV.33"
+  },
+  {
+    "id": "cv.e.mistfield",
+    "name": "MISTFIELD",
+    "scope": "faction",
+    "team": "corsair-voidscarred",
+    "count": 1,
+    "effect": {
+      "code": "mistfield"
+    },
+    "text": "Once per turning point, as a defence roll begins against a friendly Voidscarred shot from more than 3 inches away: until the sequence ends the weapon's Piercing x is 1 lower (Piercing 1 is lost).",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.7 T-CV.34"
+  },
+  {
+    "id": "cv.e.runes-of-guidance",
+    "name": "RUNES OF GUIDANCE",
+    "scope": "faction",
+    "team": "corsair-voidscarred",
+    "count": 1,
+    "effect": {
+      "code": "runesOfGuidance"
+    },
+    "text": "Once per turning point, when a friendly Way Seeker or Soul Weaver uses a PSYCHIC unique action other than Warp Fold, its distance requirement is 3 inches longer until the action ends (6 becomes 9). PSYCHIC weapons are not affected.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.7 T-CV.35"
+  },
+  {
+    "id": "cv.e.star-charts",
+    "name": "STAR CHARTS",
+    "scope": "faction",
+    "team": "corsair-voidscarred",
+    "count": 1,
+    "effect": {
+      "code": "starCharts"
+    },
+    "text": "Strategic gambit: a D3 that beats the current turning point number earns 1 CP and retires the charts for the battle; a miss may be tried again in a later turning point.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.7 T-CV.36"
+  }
+]

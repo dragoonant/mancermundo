@@ -1,0 +1,420 @@
+[
+  {
+    "id": "fg.ironhorn",
+    "name": "Fellgor Ironhorn",
+    "team": "fellgor-ravagers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 11
+    },
+    "base": 32,
+    "keywords": [
+      "FELLGOR RAVAGER",
+      "CHAOS",
+      "LEADER",
+      "IRONHORN"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "corrupted-pistol-corrupted-chainsword",
+              "name": "Corrupted pistol and corrupted chainsword",
+              "fixed": [
+                "fg.w.corrupted-pistol",
+                "fg.w.corrupted-chainsword"
+              ]
+            },
+            {
+              "id": "plasma-pistol-bludgeon",
+              "name": "Plasma pistol and bludgeon",
+              "fixed": [
+                "fg.wg.plasma-pistol",
+                "fg.w.bludgeon"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "fg.a.call-the-attack"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "fg-ironhorn"
+    },
+    "text": "The pack's chieftain: a brutal veteran who can bark the herd forward, sending a cluster of warriors loping ahead before the fighting starts.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md section 19.2"
+  },
+  {
+    "id": "fg.deathknell",
+    "name": "Fellgor Deathknell",
+    "team": "fellgor-ravagers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 10
+    },
+    "base": 32,
+    "keywords": [
+      "FELLGOR RAVAGER",
+      "CHAOS",
+      "DEATHKNELL"
+    ],
+    "weapons": {
+      "fixed": [
+        "fg.w.autopistol",
+        "fg.w.bludgeon"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "fg.a.icon-bearer",
+      "fg.a.war-gong"
+    ],
+    "uniqueActions": [
+      "fg.a.gong-knell"
+    ],
+    "figure": {
+      "archetype": "fg-deathknell"
+    },
+    "text": "A gong-bearer whose clanging dirge hardens the herd against the worst blows.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md 19.2"
+  },
+  {
+    "id": "fg.fluxbray",
+    "name": "Fellgor Fluxbray",
+    "team": "fellgor-ravagers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 10
+    },
+    "base": 32,
+    "keywords": [
+      "FELLGOR RAVAGER",
+      "CHAOS",
+      "FLUXBRAY"
+    ],
+    "weapons": {
+      "fixed": [
+        "fg.w.triple-cleavers"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "fg.a.blade-whirl"
+    ],
+    "uniqueActions": [
+      "fg.a.cleaver-flurry"
+    ],
+    "figure": {
+      "archetype": "fg-fluxbray"
+    },
+    "text": "A blur of blades that carves through a line of foes in a single rush.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md 19.2"
+  },
+  {
+    "id": "fg.gnarlscar",
+    "name": "Fellgor Gnarlscar",
+    "team": "fellgor-ravagers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 10
+    },
+    "base": 32,
+    "keywords": [
+      "FELLGOR RAVAGER",
+      "CHAOS",
+      "GNARLSCAR"
+    ],
+    "weapons": {
+      "fixed": [
+        "fg.w.autopistol",
+        "fg.w.bionic-fist"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "fg.a.sagacious"
+    ],
+    "uniqueActions": [
+      "fg.a.uncompromising-attack"
+    ],
+    "figure": {
+      "archetype": "fg-gnarlscar"
+    },
+    "text": "A scarred veteran who brawls and shoots in the same breath.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md 19.2"
+  },
+  {
+    "id": "fg.gorehorn",
+    "name": "Fellgor Gorehorn",
+    "team": "fellgor-ravagers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 10
+    },
+    "base": 32,
+    "keywords": [
+      "FELLGOR RAVAGER",
+      "CHAOS",
+      "GOREHORN"
+    ],
+    "weapons": {
+      "fixed": [
+        "fg.w.autopistol",
+        "fg.w.skullcleaver"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "fg.a.champion"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "fg-gorehorn"
+    },
+    "text": "A trophy-taker who grows stronger with every skull.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md 19.2"
+  },
+  {
+    "id": "fg.herd-goad",
+    "name": "Fellgor Herd-Goad",
+    "team": "fellgor-ravagers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 10
+    },
+    "base": 32,
+    "keywords": [
+      "FELLGOR RAVAGER",
+      "CHAOS",
+      "HERD-GOAD"
+    ],
+    "weapons": {
+      "fixed": [
+        "fg.w.autopistol",
+        "fg.w.crackthorn-whip-ranged",
+        "fg.w.crackthorn-whip-melee"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "fg.a.whip-control"
+    ],
+    "uniqueActions": [
+      "fg.a.incite-fury"
+    ],
+    "figure": {
+      "archetype": "fg-herd-goad"
+    },
+    "text": "A whip-wielding driver who herds friends forward and pins foes in place.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md 19.2"
+  },
+  {
+    "id": "fg.mangler",
+    "name": "Fellgor Mangler",
+    "team": "fellgor-ravagers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 10
+    },
+    "base": 32,
+    "keywords": [
+      "FELLGOR RAVAGER",
+      "CHAOS",
+      "MANGLER"
+    ],
+    "weapons": {
+      "fixed": [
+        "fg.w.vicious-claws"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "fg.a.berserker",
+      "fg.a.savage"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "fg-mangler"
+    },
+    "text": "A hulking savage with no use for guns, only for flesh.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md 19.2"
+  },
+  {
+    "id": "fg.shaman",
+    "name": "Fellgor Shaman",
+    "team": "fellgor-ravagers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 10
+    },
+    "base": 32,
+    "keywords": [
+      "FELLGOR RAVAGER",
+      "CHAOS",
+      "PSYKER",
+      "SHAMAN"
+    ],
+    "weapons": {
+      "fixed": [
+        "fg.w.autopistol",
+        "fg.w.tech-curse",
+        "fg.w.braystave"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "fg.a.apoplectic-rejuvenation",
+      "fg.a.mantle-of-darkness"
+    ],
+    "figure": {
+      "archetype": "fg-shaman"
+    },
+    "text": "A mutant mystic who knits the herd back together and cloaks it in shadow.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md 19.2"
+  },
+  {
+    "id": "fg.toxhorn",
+    "name": "Fellgor Toxhorn",
+    "team": "fellgor-ravagers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 10
+    },
+    "base": 32,
+    "keywords": [
+      "FELLGOR RAVAGER",
+      "CHAOS",
+      "TOXHORN"
+    ],
+    "weapons": {
+      "fixed": [
+        "fg.w.autopistol",
+        "fg.w.cleaver"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "fg.a.toxic-blessings",
+      "fg.a.pox-bomb"
+    ],
+    "uniqueActions": [
+      "fg.a.pox-bomb-stun"
+    ],
+    "figure": {
+      "archetype": "fg-toxhorn"
+    },
+    "text": "A plague-touched brute who shrugs off poison and throws it back as bombs.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md 19.2"
+  },
+  {
+    "id": "fg.vandal",
+    "name": "Fellgor Vandal",
+    "team": "fellgor-ravagers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 10
+    },
+    "base": 32,
+    "keywords": [
+      "FELLGOR RAVAGER",
+      "CHAOS",
+      "VANDAL"
+    ],
+    "weapons": {
+      "fixed": [
+        "fg.w.mancrusher"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "fg.a.sweeping-blow"
+    ],
+    "figure": {
+      "archetype": "fg-vandal"
+    },
+    "text": "A wrecker swinging a huge two-handed hammer that clears the ground around it.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md 19.2"
+  },
+  {
+    "id": "fg.warrior",
+    "name": "Fellgor Warrior",
+    "team": "fellgor-ravagers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 10
+    },
+    "base": 32,
+    "keywords": [
+      "FELLGOR RAVAGER",
+      "CHAOS",
+      "WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "autopistol-bludgeon",
+              "name": "Autopistol and bludgeon",
+              "fixed": [
+                "fg.w.autopistol",
+                "fg.w.bludgeon"
+              ]
+            },
+            {
+              "id": "autopistol-cleaver",
+              "name": "Autopistol and cleaver",
+              "fixed": [
+                "fg.w.autopistol",
+                "fg.w.cleaver"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "fg.a.warrior-frenzy"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "fg-warrior-bludgeon"
+    },
+    "text": "The rank and file of the pack: tough, savage and hard to put down once the fury takes them.",
+    "source": "team-fellgor-ravagers.pdf (Aug '26); docs/spec/13-teams.md 19.2"
+  }
+]

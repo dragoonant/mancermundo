@@ -1,0 +1,180 @@
+[
+  {
+    "id": "ha.a.power-from-pain",
+    "kind": "factionRule",
+    "name": "POWER FROM PAIN",
+    "team": "hand-of-the-archon",
+    "scope": { "side": "friendly", "keyword": "HAND OF THE ARCHON" },
+    "text": "After a Hand of the Archon operative acts, it gains one Pain token if an enemy became injured (and not incapacitated) during that action, or an enemy was incapacitated; two tokens if that enemy had a Wounds stat of 12 or more. Pain tokens stay on the operative until spent, one at a time, on invigorations: Dark Animus, Accelerated Rejuvenation, Vitalised Surge and Stimulated Senses. At most one invigoration per activation or counteraction, with Stimulated Senses allowed on top.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.25, T-HA.26"
+  },
+  {
+    "id": "ha.a.rifles",
+    "kind": "factionRule",
+    "name": "RIFLES",
+    "team": "hand-of-the-archon",
+    "scope": { "side": "friendly", "keyword": "HAND OF THE ARCHON" },
+    "text": "Splinter rifles have Accurate 1 for a shooter that has not yet made a Charge, Fall Back or Reposition in the current activation; making one of those after the shot is allowed.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.31"
+  },
+  {
+    "id": "ha.a.wr-tangle",
+    "kind": "weaponRule",
+    "name": "Tangle",
+    "team": "hand-of-the-archon",
+    "weaponRule": { "param": "none" },
+    "text": "The razorflail tangles weapons: while its wielder fights or retaliates with it, each of its blocks may cancel up to two of the opponent's unresolved successes.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.12"
+  },
+  {
+    "id": "ha.a.wr-stinger",
+    "kind": "weaponRule",
+    "name": "Stinger",
+    "team": "hand-of-the-archon",
+    "weaponRule": { "param": "none" },
+    "text": "An enemy killed by this weapon bursts before it is removed: every other operative within 2 inches that it can see, friend or foe, takes its own D3 damage roll. Anyone the burst kills bursts the same way.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.13"
+  },
+  {
+    "id": "ha.a.wr-flay",
+    "kind": "weaponRule",
+    "name": "Flay",
+    "team": "hand-of-the-archon",
+    "weaponRule": { "param": "none" },
+    "text": "On the wielder's first critical strike in a fight with this weapon, a friendly Hand of the Archon operative of your choice within 6 inches of it (the wielder included) takes a Pain token.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.21"
+  },
+  {
+    "id": "ha.a.cunning",
+    "kind": "ability",
+    "name": "Cunning",
+    "team": "hand-of-the-archon",
+    "text": "Each Gambit step, while the Archsybarite is on the killzone, passing with your very first decision earns 1 CP. Mission-pack gambits used before that pass are ignored; a team strategy ploy is not.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.7"
+  },
+  {
+    "id": "ha.a.torturous-vision",
+    "kind": "ability",
+    "name": "Torturous Vision",
+    "team": "hand-of-the-archon",
+    "text": "In each of its own activations, the first time the Archsybarite goes to Shoot or Fight holding no Pain token, it may take one as it picks its target or opponent.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.8"
+  },
+  {
+    "id": "ha.a.sadistic-competition",
+    "kind": "ability",
+    "name": "Sadistic Competition",
+    "team": "hand-of-the-archon",
+    "text": "Once per turning point, as any friendly Hand of the Archon operative gains a Pain token, an Agent holding none gets one too (the engine picks the closest).",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.9"
+  },
+  {
+    "id": "ha.a.brutal-display",
+    "kind": "ability",
+    "name": "Brutal Display",
+    "team": "hand-of-the-archon",
+    "text": "Once per turning point, a kill the Duellist makes on an enemy inside its control range cows a second enemy that it or the victim can see within 6 inches. Until the next turning point begins, that enemy can contest but never control a marker, and cannot pick markers up or take mission actions.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.10"
+  },
+  {
+    "id": "ha.a.crimson-duellist",
+    "kind": "ability",
+    "name": "Crimson Duellist",
+    "team": "hand-of-the-archon",
+    "text": "The Duellist may perform two Fight actions in its activation.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.11"
+  },
+  {
+    "id": "ha.a.torment-grenade",
+    "kind": "uniqueAction",
+    "name": "TORMENT GRENADE",
+    "team": "hand-of-the-archon",
+    "ap": 1,
+    "conditions": { "notInEnemyControlRange": true },
+    "effect": { "code": "haTormentGrenade", "params": { "range": 6, "area": 1, "damage": "D3" } },
+    "text": "Throw at an enemy the Disciple can see within 6 inches. The enemy and everyone else within 1 inch of it, friends included, rolls a D6 (+1 for a Save of 4+ or worse): on 3 or more it takes D3 damage and, if it has none, one of your Poison tokens. Poison deals D3 each time its holder is activated. Not usable inside an enemy control range.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.14"
+  },
+  {
+    "id": "ha.a.combat-drugs",
+    "kind": "ability",
+    "name": "Combat Drugs",
+    "team": "hand-of-the-archon",
+    "effect": { "code": "haCombatDrugs", "params": { "choice": "combat-drug" } },
+    "text": "When the kill team is chosen with an Elixicant in it, pick one combat drug: Painbringer, Adrenalight or Hypex. Every friendly Hand of the Archon operative has it for the battle, until Administer Drug changes one operative's dose. The drugs outlast the Elixicant.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.15"
+  },
+  {
+    "id": "ha.a.painbringer",
+    "kind": "ability",
+    "name": "Painbringer",
+    "team": "hand-of-the-archon",
+    "choiceGroup": "ha-combat-drug",
+    "text": "COMBAT DRUG. A single attack die that would deal this operative 3 or more damage is rolled against: on a D6 of 6 it deals 1 less.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.16"
+  },
+  {
+    "id": "ha.a.adrenalight",
+    "kind": "ability",
+    "name": "Adrenalight",
+    "team": "hand-of-the-archon",
+    "choiceGroup": "ha-combat-drug",
+    "text": "COMBAT DRUG. In the Ready step of each Strategy phase, one friendly operative with this drug gains a Pain token (the engine picks the one with the fewest).",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.17"
+  },
+  {
+    "id": "ha.a.hypex",
+    "kind": "ability",
+    "name": "Hypex",
+    "team": "hand-of-the-archon",
+    "choiceGroup": "ha-combat-drug",
+    "text": "COMBAT DRUG. The operative ignores the Move loss from being injured. Its Hit still worsens while injured.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.18"
+  },
+  {
+    "id": "ha.a.administer-drug",
+    "kind": "uniqueAction",
+    "name": "ADMINISTER DRUG",
+    "team": "hand-of-the-archon",
+    "ap": 1,
+    "conditions": { "notInEnemyControlRange": true },
+    "effect": { "code": "haAdministerDrug", "params": { "range": 3, "heal": "2D3" } },
+    "text": "Treat a friendly Hand of the Archon operative the Elixicant can see within 3 inches (or itself): heal it by up to 2D3, or switch its combat drug to another one for the rest of the battle. Not usable inside an enemy control range.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.19"
+  },
+  {
+    "id": "ha.a.insensible-to-pain",
+    "kind": "ability",
+    "name": "Insensible to Pain",
+    "team": "hand-of-the-archon",
+    "text": "A weapon's Normal or Critical Dmg of 3 or more deals 1 less to the Flayer. Devastating, Stinger, poison and other non-weapon damage is not reduced.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.20"
+  },
+  {
+    "id": "ha.a.merciless-hunter",
+    "kind": "ability",
+    "name": "Merciless Hunter",
+    "team": "hand-of-the-archon",
+    "text": "If the Assassin does not perform MARK in an activation, it may Shoot twice, once with the razorwing and once with another weapon.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.22"
+  },
+  {
+    "id": "ha.a.omen",
+    "kind": "ability",
+    "name": "Omen",
+    "team": "hand-of-the-archon",
+    "text": "Once, as the first Firefight phase begins, name an enemy operative or another friendly Hand of the Archon operative. Dice rolled for an enemy pick have every 6 re-rolled at once; for a friendly pick you may re-roll any 1s. It lasts the whole battle.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.23"
+  },
+  {
+    "id": "ha.a.mark",
+    "kind": "uniqueAction",
+    "name": "MARK",
+    "team": "hand-of-the-archon",
+    "ap": 1,
+    "conditions": { "notInEnemyControlRange": true },
+    "effect": { "code": "haMarkAction", "params": { "ruleGranted": "core.wr.seek-light" } },
+    "text": "Mark an enemy the Assassin can see. For the rest of the turning point, the Assassin's ranged weapons have Seek Light against it and it is never obscured to the Assassin. Not usable inside an enemy control range.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.24"
+  }
+]

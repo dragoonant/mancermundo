@@ -1,0 +1,217 @@
+[
+  {
+    "id": "hk.a.grudge",
+    "kind": "factionRule",
+    "name": "GRUDGE",
+    "team": "hearthkyn-salvagers",
+    "scope": { "side": "friendly", "keyword": "HEARTHKYN SALVAGER" },
+    "effect": { "code": "hkGrudge", "params": { "token": "hk.grudge" } },
+    "text": "An enemy that incapacitates one of your Hearthkyn Salvagers gets one of your Grudge tokens for the rest of the battle; tokens stack. Whenever one of your Hearthkyn Salvagers shoots, fights or retaliates against an enemy, you may turn one of your normal successes into a crit for each Grudge token that enemy holds (successes kept through Accurate included). The tokens are not spent, and an obscured target shuts the conversion off.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.27, T-HK.28"
+  },
+  {
+    "id": "hk.wr.beam",
+    "kind": "weaponRule",
+    "name": "Beam",
+    "team": "hearthkyn-salvagers",
+    "weaponRule": { "param": "none" },
+    "effect": { "code": "hkBeam" },
+    "text": "Each crit the shooter keeps deals D3 damage (rolled separately) to every other operative lying along one chosen beam line through the target's base, friend or foe, never the target itself. Heavy terrain stops a beam line.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.15"
+  },
+  {
+    "id": "hk.wr.force-impact",
+    "kind": "weaponRule",
+    "name": "Force Impact",
+    "team": "hearthkyn-salvagers",
+    "weaponRule": { "param": "none" },
+    "effect": { "code": "hkForceImpact" },
+    "text": "While the bearer fights with this weapon in an activation in which it has Charged, the weapon has Brutal.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.17"
+  },
+  {
+    "id": "hk.a.eye-of-the-ancestors",
+    "kind": "ability",
+    "name": "Eye of the Ancestors",
+    "team": "hearthkyn-salvagers",
+    "text": "The Theyn's own strategic gambit while it is in the killzone, free of CP: pick one enemy operative anywhere in the killzone, or two different ones once three or more of your Hearthkyn Salvagers have been incapacitated; each gets one of your Grudge tokens.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.7"
+  },
+  {
+    "id": "hk.a.weavefield-crest",
+    "kind": "ability",
+    "name": "Weavefield Crest",
+    "team": "hearthkyn-salvagers",
+    "effect": { "code": "weavefieldCrest", "params": { "perBattle": 1 } },
+    "text": "Once per battle, when an attack die would inflict its Normal Dmg on the Theyn, that damage is ignored. Crit damage and Devastating damage are never ignored. It is used automatically the first time a normal success would incapacitate the Theyn or injure it.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.8"
+  },
+  {
+    "id": "hk.a.brawler",
+    "kind": "ability",
+    "name": "Brawler",
+    "team": "hearthkyn-salvagers",
+    "effect": { "code": "hkBrawler", "params": { "reduceNormalDmgFrom": 4 } },
+    "text": "Whenever the Dôzr fights or retaliates, enemies cannot assist; a Normal Dmg of 4 or more does 1 less damage to it; and if it is incapacitated in the fight it first strikes the enemy fighter once with one of its unresolved successes before it is removed.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.9"
+  },
+  {
+    "id": "hk.a.knux-smash",
+    "kind": "uniqueAction",
+    "name": "KNUX SMASH",
+    "team": "hearthkyn-salvagers",
+    "ap": 1,
+    "effect": { "code": "knuxSmash", "params": { "pushInches": 3, "damage": "D3+1", "chargeInches": 3 } },
+    "text": "Needs an enemy in the Dôzr's control range. Pick one: you may shove it up to 3 inches to a spot it can stand on, then it takes D3+1 damage whether or not it moved (a 3 on the D3 also takes 1 off its APL until the end of its next activation). The Dôzr may then make a free Charge of no more than 3 inches, even if it already Charged this activation.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.10"
+  },
+  {
+    "id": "hk.a.medic",
+    "kind": "ability",
+    "name": "Medic!",
+    "team": "hearthkyn-salvagers",
+    "window": "operative.incapacitated",
+    "effect": { "code": "hkMedic", "params": { "range": 3, "wounds": 1, "aplDelta": -1 } },
+    "text": "Once per turning point, the first time another friendly Hearthkyn Salvager this operative can see within 3 inches would be incapacitated (neither of them in an enemy control range), the Field Medic steps in: the casualty stays on 1 wound and cannot be incapacitated for the rest of that action. Afterwards it may make a free Dash that ends in the medic's control range. Both then have 1 less APL until their next activations end, and if it was the casualty's own activation, that activation ends. Not usable if the medic is down or is a target of that Shoot.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.11"
+  },
+  {
+    "id": "hk.a.medikit",
+    "kind": "uniqueAction",
+    "name": "MEDIKIT",
+    "team": "hearthkyn-salvagers",
+    "ap": 1,
+    "conditions": { "notInEnemyControlRange": true },
+    "effect": { "code": "hkMedikit", "params": { "dice": "2D3" } },
+    "text": "One friendly Hearthkyn Salvager in the Field Medic's control range (itself included) regains up to 2D3 lost wounds. Not an operative Medic! saved this turning point. Not in an enemy control range.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.12"
+  },
+  {
+    "id": "hk.a.grenadier",
+    "kind": "ability",
+    "name": "Grenadier",
+    "team": "hearthkyn-salvagers",
+    "effect": [
+      { "modifyStat": { "stat": "hit", "value": -1, "filter": { "weaponIds": ["core.w.frag-grenade", "core.w.krak-grenade"] } } },
+      { "code": "hkGrenadier", "params": { "weapons": ["core.w.frag-grenade", "core.w.krak-grenade"], "actions": ["core.a.smoke-grenade", "core.a.stun-grenade"], "separateLimits": true } }
+    ],
+    "text": "Carries one each of frag, krak, smoke and stun grenades of its own, apart from the team's equipment totals. Whenever it throws a frag or krak grenade its Hit improves by 1 (to 3+).",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.13"
+  },
+  {
+    "id": "hk.a.utility-grenade",
+    "kind": "uniqueAction",
+    "name": "VÂYR-3 UTILITY GRENADE",
+    "team": "hearthkyn-salvagers",
+    "ap": 1,
+    "conditions": { "notInEnemyControlRange": true },
+    "effect": { "code": "hkUtilityGrenade", "params": { "range": 6, "radius": 3, "extraAp": 1, "clearDice": "D3" } },
+    "text": "Drop one of your Utility Grenade markers within 6 inches, visible to the Grenadier. While any operative stands within 3 inches of it, its player pays 1 extra AP for it to Pick Up Marker or take a mission action. In the next Ready step roll a D3: the marker goes after that many activations are completed, or when the turning point ends. Not in an enemy control range.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.14"
+  },
+  {
+    "id": "hk.a.jump-pack",
+    "kind": "ability",
+    "name": "Jump Pack",
+    "team": "hearthkyn-salvagers",
+    "effect": { "code": "hkJumpPack", "params": { "flyInches": "move", "dashInches": 3 } },
+    "text": "Whenever the Jump Pack Warrior moves it may fly instead: it is lifted and set up again wholly within its Move horizontally (3 inches for a Dash, no extra for a Charge) of where it started, on a spot it can stand on and outside enemy control ranges unless it is Charging.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.16"
+  },
+  {
+    "id": "hk.a.signal",
+    "kind": "uniqueAction",
+    "name": "SIGNAL",
+    "team": "hearthkyn-salvagers",
+    "ap": 1,
+    "keywords": ["SUPPORT"],
+    "conditions": { "notInEnemyControlRange": true },
+    "target": { "side": "friendly", "keyword": "HEARTHKYN SALVAGER", "notSelf": true },
+    "effect": { "code": "hkSignal", "params": { "aplDelta": 1 } },
+    "text": "Pick another friendly Hearthkyn Salvager anywhere in the killzone: it has +1 APL until the end of its next activation. No range or sight needed. Not in an enemy control range.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.18"
+  },
+  {
+    "id": "hk.a.system-jam",
+    "kind": "uniqueAction",
+    "name": "SYSTEM JAM",
+    "team": "hearthkyn-salvagers",
+    "ap": 1,
+    "conditions": { "notInEnemyControlRange": true },
+    "target": { "side": "enemy", "visible": true },
+    "effect": { "code": "hkSystemJam", "params": { "token": "hk.system-jam", "cap": 1 } },
+    "text": "Pick an enemy operative that is a valid target for the Kinlynk and has none of your System Jam tokens; it gains one. For the rest of the battle a jammed enemy cannot be activated while its player still has a ready operative without a token; the token is removed when the jammed operative activates. Not in an enemy control range.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.19"
+  },
+  {
+    "id": "hk.a.tactician",
+    "kind": "ability",
+    "name": "Tactician",
+    "team": "hearthkyn-salvagers",
+    "text": "The Kognitâar's own strategic gambit while it is in the killzone, free of CP: put your Attack marker or your Defence marker anywhere in the killzone. Attack: your Hearthkyn Salvagers' weapons are Balanced against enemies within 3 inches of it. Defence: when an enemy shoots a Hearthkyn Salvager within 3 inches of it, you may re-roll one defence die. The marker leaves in the next Ready step.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.20"
+  },
+  {
+    "id": "hk.a.accelerated-appraisal",
+    "kind": "uniqueAction",
+    "name": "ACCELERATED APPRAISAL",
+    "team": "hearthkyn-salvagers",
+    "ap": 1,
+    "conditions": { "notInEnemyControlRange": true },
+    "effect": { "code": "acceleratedAppraisal", "params": { "markers": ["attack", "defence"] } },
+    "text": "Take your Attack or Defence marker off the killzone if one is there, then put down either marker anywhere. Not in an enemy control range.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.21"
+  },
+  {
+    "id": "hk.a.spot",
+    "kind": "uniqueAction",
+    "name": "SPOT",
+    "team": "hearthkyn-salvagers",
+    "ap": 1,
+    "keywords": ["SUPPORT"],
+    "conditions": { "notInEnemyControlRange": true },
+    "target": { "side": "enemy", "visible": true },
+    "effect": { "code": "hkSpot", "params": { "token": "hk.spot", "range": 3 } },
+    "text": "Pick an enemy operative the Lokâtr can see. Until the end of the turning point, a friendly Hearthkyn Salvager within 3 inches of the Lokâtr (itself included) shooting that enemy has Seek Light on its ranged weapons, and the enemy cannot be obscured. Not in an enemy control range.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.22"
+  },
+  {
+    "id": "hk.a.pan-spectral-scan",
+    "kind": "uniqueAction",
+    "name": "PAN SPECTRAL SCAN",
+    "team": "hearthkyn-salvagers",
+    "ap": 1,
+    "conditions": { "notInEnemyControlRange": true },
+    "effect": { "code": "panSpectralScan", "params": { "radius": 3, "accurate": 1 } },
+    "text": "Place your Pan Spectral Scan marker anywhere in the killzone. A friendly Hearthkyn Salvager shooting an enemy within 3 inches of it has Accurate 1 and Saturate on its ranged weapons. The marker goes when the Lokâtr next activates, is incapacitated or performs this action again. Not in an enemy control range.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.23"
+  },
+  {
+    "id": "hk.a.well-supplied",
+    "kind": "ability",
+    "name": "Well Supplied",
+    "team": "hearthkyn-salvagers",
+    "effect": { "code": "hkWellSupplied", "params": { "extraEquipment": 1, "extraCp": 1 } },
+    "text": "With a Lugger on the roster you may take one extra equipment option, and you gain 1 extra CP in the Ready step of the first turning point.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.24"
+  },
+  {
+    "id": "hk.a.ive-got-it",
+    "kind": "ability",
+    "name": "I've Got It",
+    "team": "hearthkyn-salvagers",
+    "limit": "oncePerActivation",
+    "effect": { "costDelta": { "actions": ["mission-action"], "delta": -1 } },
+    "text": "Once in each of its activations, the Lugger may take a mission action for 1 less AP (Pick Up Marker and Place Marker are not mission actions).",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.25"
+  },
+  {
+    "id": "hk.a.secure-salvage",
+    "kind": "ability",
+    "name": "Secure Salvage",
+    "team": "hearthkyn-salvagers",
+    "effect": { "code": "secureSalvage", "params": { "reduceBy": 1 } },
+    "text": "While the Warrior contests an objective marker or one of your mission markers and an enemy shoots, fights or retaliates against it, one success of that attack does 1 less damage to it.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.26"
+  }
+]

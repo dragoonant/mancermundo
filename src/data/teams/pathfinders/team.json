@@ -1,0 +1,71 @@
+{
+  "id": "pathfinders",
+  "name": "Pathfinders",
+  "factionKeyword": "PATHFINDER",
+  "archetypes": ["infiltration", "recon"],
+  "selection": {
+    "slots": [
+      { "id": "leader", "label": "Leader", "count": 1, "from": ["pf.shasui"] },
+      {
+        "id": "main",
+        "label": "Selections",
+        "count": 11,
+        "from": [
+          "pf.assault-grenadier",
+          "pf.blooded",
+          "pf.comms-specialist",
+          "pf.drone-controller",
+          "pf.marksman",
+          "pf.medical-technician",
+          "pf.shasla",
+          "pf.transpectral-interference",
+          "pf.weapons-expert",
+          "pf.mb3-recon-drone",
+          "pf.mv1-gun-drone",
+          "pf.mv4-shield-drone",
+          "pf.mv7-marker-drone",
+          "pf.mv31-pulse-accelerator-drone",
+          "pf.mv33-grav-inhibitor-drone"
+        ],
+        "repeatable": ["pf.shasla", "pf.weapons-expert"],
+        "weights": { "pf.mb3-recon-drone": 2 },
+        "caps": [{ "label": "Weapons Expert", "from": ["pf.weapons-expert"], "max": 2 }]
+      }
+    ]
+  },
+  "factionRules": ["pf.a.markerlights"],
+  "ploys": [
+    "pf.p.art-of-war",
+    "pf.p.recon-sweep",
+    "pf.p.suppressing-fire",
+    "pf.p.bonded",
+    "pf.p.take-cover",
+    "pf.p.a-worthy-cause",
+    "pf.p.veteran",
+    "pf.p.supporting-fire",
+    "pf.p.saviour-protocols",
+    "pf.p.point-blank-fusillade"
+  ],
+  "equipment": ["pf.e.target-analysis-optic", "pf.e.high-intensity-markerlight", "pf.e.photon-grenade", "pf.e.orbital-survey-uplink"],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "pf.shasui",
+      "pf.assault-grenadier",
+      "pf.blooded",
+      "pf.comms-specialist",
+      "pf.drone-controller",
+      "pf.marksman",
+      "pf.medical-technician",
+      "pf.shasla",
+      "pf.shasla",
+      "pf.transpectral-interference",
+      "pf.weapons-expert",
+      "pf.mv1-gun-drone"
+    ],
+    "equipment": ["pf.e.target-analysis-optic", "pf.e.photon-grenade", "core.e.comms-device", "core.e.ladders"]
+  },
+  "paint": { "major": { "h": 0.11, "s": 0.4, "l": 0.6 }, "minor": { "h": 0.6, "s": 0.15, "l": 0.25 } },
+  "text": "T'au forward scouts: a Shas'ui and eleven selections who mark targets for each other and lean on their drones.",
+  "source": "team-pathfinders.pdf; docs/spec/13-teams.md section 3"
+}

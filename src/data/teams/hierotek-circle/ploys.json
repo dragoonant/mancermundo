@@ -1,0 +1,141 @@
+[
+  {
+    "id": "hie.p.relentless-onslaught",
+    "name": "RELENTLESS ONSLAUGHT",
+    "team": "hierotek-circle",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "hieRelentless",
+      "scope": {
+        "side": "friendly",
+        "keyword": "HIEROTEK CIRCLE"
+      }
+    },
+    "text": "For this turning point, a Hierotek Circle operative firing at a target no more than 8 inches from itself gains Balanced on its ranged weapons. Through Magnify the 8 inches is still taken from the operative actually shooting.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.30"
+  },
+  {
+    "id": "hie.p.undying-androids",
+    "name": "UNDYING ANDROIDS",
+    "team": "hierotek-circle",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "hieUndying",
+      "scope": {
+        "side": "friendly",
+        "keyword": "HIEROTEK CIRCLE"
+      }
+    },
+    "text": "For this turning point, a Hierotek Circle operative that is shot with no cover save open to it sets one defence die aside as an automatic normal success and rolls the others.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.31"
+  },
+  {
+    "id": "hie.p.methodical-elimination",
+    "name": "METHODICAL ELIMINATION",
+    "team": "hierotek-circle",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "hieMethodical",
+      "scope": {
+        "side": "friendly",
+        "keyword": "HIEROTEK CIRCLE"
+      }
+    },
+    "text": "For this turning point, Hierotek Circle melee weapons gain Accurate 1. It rises to Accurate 2 when retaliating, or when fighting in an activation where the operative has so far covered no more ground than its Move stat.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.32"
+  },
+  {
+    "id": "hie.p.command-underlings",
+    "name": "COMMAND UNDERLINGS",
+    "team": "hierotek-circle",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "hieUnderlings",
+      "scope": {
+        "side": "friendly",
+        "keyword": "HIEROTEK CIRCLE"
+      }
+    },
+    "text": "Pick one (both Support): every other friendly Hierotek Circle operative visible to and within 6 inches of a friendly Cryptek, or every other friendly Hierotek Circle operative except Cryptek visible to and within 3 inches of a friendly Apprentek, takes a free Dash at once, in the order you choose.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.33"
+  },
+  {
+    "id": "hie.p.cortical-control",
+    "name": "CORTICAL CONTROL",
+    "team": "hierotek-circle",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.actionDeclared",
+    "effect": {
+      "code": "hieCortical",
+      "scope": {
+        "side": "friendly",
+        "keyword": "HIEROTEK CIRCLE"
+      }
+    },
+    "text": "When a friendly Apprentek or Cryptek performs a Support unique action, until it ends the operative it picks for that action only has to be visible, whatever the distance. It does not apply to Timesplinter or to a Despotek's Interstitial Command.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.34"
+  },
+  {
+    "id": "hie.p.reanimated-function",
+    "name": "REANIMATED FUNCTION",
+    "team": "hierotek-circle",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.activationStart",
+    "effect": {
+      "code": "hieReanimatedFunction",
+      "scope": {
+        "side": "friendly",
+        "keyword": "HIEROTEK CIRCLE"
+      }
+    },
+    "text": "As control of a marker is settled, choose one of your Reanimation markers: up to the start of the next turning point it contests markers as if it were a friendly Hierotek Circle operative of APL 1.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.35"
+  },
+  {
+    "id": "hie.p.living-lightning",
+    "name": "LIVING LIGHTNING",
+    "team": "hierotek-circle",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.actionDeclared",
+    "when": {
+      "action": "shoot"
+    },
+    "effect": {
+      "code": "hieLivingLightning",
+      "scope": {
+        "side": "friendly",
+        "keyword": "HIEROTEK CIRCLE"
+      }
+    },
+    "text": "An Immortal opening fire with a tesla carbine can let the lightning leap: for that Shoot the carbine trades the 2 inch reach of its Devastating for Blast 2 inches.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.36"
+  },
+  {
+    "id": "hie.p.dimensional-ambush",
+    "name": "DIMENSIONAL AMBUSH",
+    "team": "hierotek-circle",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.activationStart",
+    "effect": {
+      "code": "hieAmbush",
+      "scope": {
+        "side": "friendly",
+        "keyword": "HIEROTEK CIRCLE"
+      }
+    },
+    "text": "During a friendly Hierotek Circle Deathmark's activation while it has a Conceal order, it may perform Guard despite that order. When it uses the free action of the interrupt its order first changes to Engage.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.37"
+  }
+]

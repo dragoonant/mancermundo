@@ -1,0 +1,73 @@
+{
+  "id": "hand-of-the-archon",
+  "name": "Hand of the Archon",
+  "factionKeyword": "HAND OF THE ARCHON",
+  "archetypes": ["recon", "seek-and-destroy"],
+  "selection": {
+    "slots": [
+      { "id": "leader", "label": "Leader", "count": 1, "from": ["ha.archsybarite"] },
+      {
+        "id": "main",
+        "label": "Operatives",
+        "count": 8,
+        "from": [
+          "ha.agent",
+          "ha.crimson-duellist",
+          "ha.disciple-of-yaelindra",
+          "ha.elixicant",
+          "ha.flayer",
+          "ha.gunner",
+          "ha.heavy-gunner",
+          "ha.skysplinter-assassin"
+        ],
+        "repeatable": ["ha.agent"]
+      }
+    ],
+    "loadoutCaps": [
+      { "label": "darklight weapons", "weapons": ["ha.w.blast-pistol", "ha.w.blaster", "ha.w.dark-lance"], "max": 2 }
+    ]
+  },
+  "teamChoices": [{ "id": "combat-drug", "label": "Combat drug (used only with an Elixicant)", "group": "ha-combat-drug" }],
+  "factionRules": ["ha.a.power-from-pain", "ha.a.rifles"],
+  "ploys": [
+    "ha.p.blade-artists",
+    "ha.p.merciless-sadists",
+    "ha.p.from-darkness-death",
+    "ha.p.denizens-of-night",
+    "ha.p.cruel-deception",
+    "ha.p.devious-scheme",
+    "ha.p.heinous-arrogance",
+    "ha.p.prey-on-the-wounded"
+  ],
+  "equipment": ["ha.e.chain-snare", "ha.e.wicked-blades", "ha.e.toxin-coating", "ha.e.refined-poison"],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "ha.archsybarite",
+      "ha.agent",
+      "ha.crimson-duellist",
+      "ha.disciple-of-yaelindra",
+      "ha.elixicant",
+      "ha.flayer",
+      "ha.gunner",
+      "ha.heavy-gunner",
+      "ha.skysplinter-assassin"
+    ],
+    "equipment": ["ha.e.chain-snare", "ha.e.refined-poison", "core.e.ladders", "core.e.utility-grenades"],
+    "teamChoices": { "combat-drug": "ha.a.painbringer" },
+    "loadouts": [
+      { "loadout": ["blast-pistol-venom-blade"] },
+      {},
+      {},
+      {},
+      {},
+      {},
+      { "special": ["blaster"] },
+      { "heavy": ["splinter-cannon"] },
+      {}
+    ]
+  },
+  "paint": { "major": { "h": 0.78, "s": 0.3, "l": 0.14 }, "minor": { "h": 0.47, "s": 0.6, "l": 0.4 } },
+  "text": "Nine lithe raiders who grow stronger on the suffering they inflict, trading blows for Pain and poison.",
+  "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+}

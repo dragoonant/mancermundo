@@ -1,0 +1,114 @@
+[
+  {
+    "id": "hk.p.eye-of-the-ancestors",
+    "name": "EYE OF THE ANCESTORS",
+    "team": "hearthkyn-salvagers",
+    "type": "strategy",
+    "cost": 0,
+    "window": "strategy.gambit",
+    "effect": { "code": "eyeOfTheAncestors", "params": { "token": "hk.grudge", "pairAfterIncapacitated": 3 }, "scope": { "side": "friendly", "keyword": "THEYN" } },
+    "text": "The Theyn's strategic gambit, free of CP while it is in the killzone. Pick one enemy operative anywhere in the killzone (two different ones once three or more of your Hearthkyn Salvagers have been incapacitated); each gains one of your Grudge tokens.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.7"
+  },
+  {
+    "id": "hk.p.tactician",
+    "name": "TACTICIAN",
+    "team": "hearthkyn-salvagers",
+    "type": "strategy",
+    "cost": 0,
+    "window": "strategy.gambit",
+    "effect": { "code": "hkTactician", "params": { "markers": ["attack", "defence"], "radius": 3 }, "scope": { "side": "friendly", "keyword": "KOGNITAAR" } },
+    "text": "The Kognitâar's strategic gambit, free of CP while it is in the killzone. Put your Attack marker (your Hearthkyn Salvagers' weapons are Balanced against enemies within 3 inches of it) or your Defence marker (re-roll one defence die when a Hearthkyn Salvager within 3 inches is shot) anywhere in the killzone until the next Ready step.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.20"
+  },
+  {
+    "id": "hk.p.need-keeps",
+    "name": "NEED KEEPS",
+    "team": "hearthkyn-salvagers",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": { "code": "needKeeps", "params": { "controlBonus": 1, "radius": 3, "maxAtk": 4 }, "duration": "turningPoint", "scope": { "side": "friendly", "keyword": "HEARTHKYN SALVAGER" } },
+    "text": "Pick an objective marker. When its control is worked out, your contesting total counts as 1 higher if a Hearthkyn Salvager contests it. Your Hearthkyn Salvagers within 3 inches of it add 1 to the Atk of their melee weapons (to a maximum of 4); a melee weapon already at Atk 4 gains Balanced instead.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.29"
+  },
+  {
+    "id": "hk.p.toil-earns",
+    "name": "TOIL EARNS",
+    "team": "hearthkyn-salvagers",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": { "code": "toilEarns", "params": { "radius": 3, "extraTokens": 1 }, "duration": "turningPoint", "scope": { "side": "friendly", "keyword": "HEARTHKYN SALVAGER" } },
+    "text": "Pick an objective marker. Every enemy operative within 3 inches of it counts as holding one more of your Grudge tokens, even if it has none.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.30"
+  },
+  {
+    "id": "hk.p.wrought-defence",
+    "name": "WROUGHT DEFENCE",
+    "team": "hearthkyn-salvagers",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": { "code": "wroughtDefence", "params": { "successesAtMost": 1 }, "duration": "turningPoint", "scope": { "side": "friendly", "keyword": "HEARTHKYN SALVAGER" } },
+    "text": "When a Hearthkyn Salvager is shot and you rolled one success or none on your defence dice (after re-rolls), you keep one failed die as a normal success.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.31"
+  },
+  {
+    "id": "hk.p.proximate-firepower",
+    "name": "PROXIMATE FIREPOWER",
+    "team": "hearthkyn-salvagers",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": { "code": "proximateFirepower", "params": { "within": 6, "bestHit": 3 }, "duration": "turningPoint", "scope": { "side": "friendly", "keyword": "HEARTHKYN SALVAGER" } },
+    "text": "Your Hearthkyn Salvagers shooting an enemy no more than 6 inches away improve the Hit of their ranged weapons by 1 (never better than 3+), checked for each target on its own.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.32"
+  },
+  {
+    "id": "hk.p.the-ancestors-are-watching",
+    "name": "THE ANCESTORS ARE WATCHING",
+    "team": "hearthkyn-salvagers",
+    "type": "firefight",
+    "cost": 1,
+    "window": ["firefight.activationStart", "firefight.actionEnded"],
+    "when": { "notCounteracting": true },
+    "effect": { "code": "ancestorsAreWatching", "params": { "ignoreInjuredWeaponStats": true }, "duration": "activation", "scope": { "side": "friendly", "keyword": "HEARTHKYN SALVAGER" } },
+    "text": "During a Hearthkyn Salvager's activation it may take one free Shoot or one free Fight (not both), and until the activation ends the injured worsening of its weapons' Hit is ignored (its Move is still cut).",
+    "source": "Hearthkyn Salvagers team PDF (April '26 errata); docs/spec/13-teams.md T-HK.33"
+  },
+  {
+    "id": "hk.p.worth-it",
+    "name": "WORTH IT",
+    "team": "hearthkyn-salvagers",
+    "type": "firefight",
+    "cost": 1,
+    "window": "operative.incapacitated",
+    "effect": { "code": "hkWorthIt", "params": { "freeMissionAction": true }, "scope": { "side": "friendly", "keyword": "HEARTHKYN SALVAGER" } },
+    "text": "When a Hearthkyn Salvager is incapacitated, before it is removed it may take one free mission action.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.34"
+  },
+  {
+    "id": "hk.p.sturdy",
+    "name": "STURDY",
+    "team": "hearthkyn-salvagers",
+    "type": "firefight",
+    "cost": 1,
+    "window": "shoot.beforeDefenceRoll",
+    "when": { "critRetained": true },
+    "effect": { "code": "hkSturdy", "params": { "critToNormal": true }, "scope": { "side": "friendly", "keyword": "HEARTHKYN SALVAGER" } },
+    "text": "When a Hearthkyn Salvager is shot, as defence dice are collected, every crit the attacker kept becomes a normal success. Rules already resolved for those crits (Devastating, Piercing Crits) stay resolved.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.35"
+  },
+  {
+    "id": "hk.p.engage-to-acquire",
+    "name": "ENGAGE TO ACQUIRE",
+    "team": "hearthkyn-salvagers",
+    "type": "firefight",
+    "cost": 1,
+    "window": ["shoot.beforeAttackRerolls", "fight.beforeRerolls"],
+    "effect": { "code": "engageToAcquire", "params": { "reroll": "any" }, "scope": { "side": "friendly", "keyword": "HEARTHKYN SALVAGER" } },
+    "text": "After rolling attack dice for a Hearthkyn Salvager that is shooting or fighting (not retaliating) an enemy that controls an objective marker, you may re-roll any of your attack dice.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.36"
+  }
+]

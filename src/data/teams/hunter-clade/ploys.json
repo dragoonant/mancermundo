@@ -1,0 +1,221 @@
+[
+  {
+    "id": "hc.p.doctrina",
+    "name": "DOCTRINA IMPERATIVE",
+    "team": "hunter-clade",
+    "type": "strategy",
+    "cost": 0,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "hcDoctrina",
+      "duration": "turningPoint",
+      "scope": {
+        "side": "friendly",
+        "keyword": "HUNTER CLADE"
+      }
+    },
+    "text": "Free strategic gambit: pick one Imperative for every friendly Hunter Clade operative until the turning point ends. Its Optimisation and Deprecation both apply. Your Primary Mode can be picked once per battle with its Deprecation switched off.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.22"
+  },
+  {
+    "id": "hc.p.debilitating-irradiation",
+    "name": "DEBILITATING IRRADIATION",
+    "team": "hunter-clade",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "hcDebilitating",
+      "duration": "turningPoint",
+      "scope": {
+        "side": "friendly",
+        "keyword": "VANGUARD"
+      }
+    },
+    "text": "This turning point, an enemy under Rad-Saturation that shoots, fights or retaliates against a friendly Vanguard has the Normal Dmg of its weapons lowered by 1, but never below 3.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.28"
+  },
+  {
+    "id": "hc.p.neurostatic-interference",
+    "name": "NEUROSTATIC INTERFERENCE",
+    "team": "hunter-clade",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "hcNeurostatic",
+      "params": {
+        "inches": 6
+      },
+      "duration": "turningPoint",
+      "scope": {
+        "side": "friendly",
+        "keyword": "INFILTRATOR"
+      }
+    },
+    "text": "This turning point, an enemy within 6 inches of a friendly Infiltrator (no sight needed) that shoots, fights or retaliates cannot re-roll its attack dice by any means.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.29"
+  },
+  {
+    "id": "hc.p.scouting-protocol",
+    "name": "SCOUTING PROTOCOL",
+    "team": "hunter-clade",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "when": {
+      "turningPoint": {
+        "min": 2
+      }
+    },
+    "effect": {
+      "code": "hcScouting",
+      "params": {
+        "distance": 6,
+        "dash": true
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "RANGER"
+      }
+    },
+    "text": "Not in the first turning point. Each friendly Ranger with a Conceal order and more than 6 inches from every enemy may make a free Dash, one at a time in an order you choose.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.30"
+  },
+  {
+    "id": "hc.p.accelerant-agents",
+    "name": "ACCELERANT AGENTS",
+    "team": "hunter-clade",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "hcAccelerant",
+      "params": {
+        "fights": 2
+      },
+      "duration": "turningPoint",
+      "scope": {
+        "side": "friendly",
+        "keyword": "RUSTSTALKER"
+      }
+    },
+    "text": "This turning point, each friendly Ruststalker may make two Fight actions in its activation, and one of them costs no AP.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.31"
+  },
+  {
+    "id": "hc.p.rad-bombardment",
+    "name": "RAD BOMBARDMENT",
+    "team": "hunter-clade",
+    "type": "strategy",
+    "cost": 0,
+    "window": "strategy.gambit",
+    "when": {
+      "turningPoint": {
+        "min": 2
+      }
+    },
+    "effect": {
+      "code": "hcRadBombardment",
+      "params": {
+        "equipment": "hc.e.rad-bombardment"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "HUNTER CLADE"
+      }
+    },
+    "text": "The strategic gambit that the RAD BOMBARDMENT equipment unlocks (once per battle, from the second turning point). It is only offered to a team that took the equipment.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.36"
+  },
+  {
+    "id": "hc.p.control-edict",
+    "name": "CONTROL EDICT",
+    "team": "hunter-clade",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.activationStart",
+    "effect": {
+      "code": "hcControlEdict",
+      "params": {
+        "inches": 3
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "HUNTER CLADE"
+      }
+    },
+    "text": "As you activate a friendly operative: pair the Leader with another ready Hunter Clade operative that is visible to it and within 3 inches (never two Sicarians). Activate one; when it is expended, activate the other before your opponent does.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.32"
+  },
+  {
+    "id": "hc.p.scrapcode-overload",
+    "name": "SCRAPCODE OVERLOAD",
+    "team": "hunter-clade",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "firefight.activationStart",
+      "firefight.actionDeclared",
+      "firefight.opponentActionDeclared"
+    ],
+    "effect": {
+      "code": "hcScrapcode",
+      "params": {
+        "inches": 3,
+        "controlDelta": -1
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "INFILTRATOR"
+      }
+    },
+    "text": "When a friendly Infiltrator is activated, or when an enemy within 3 inches of it declares Pick Up Marker or a mission action (not Operate Hatch): until that Infiltrator next activates, when marker control is worked out, enemies that contest count 1 APL lower in total if at least one of them is within 3 inches of the Infiltrator.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.33"
+  },
+  {
+    "id": "hc.p.command-override",
+    "name": "COMMAND OVERRIDE",
+    "team": "hunter-clade",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.activationStart",
+    "effect": {
+      "code": "hcCommandOverride",
+      "scope": {
+        "side": "friendly",
+        "keyword": "HUNTER CLADE"
+      }
+    },
+    "text": "As you activate a friendly Hunter Clade operative: it takes a different Imperative of your choice instead of its current one, until the turning point ends. Costs 0 CP when a Leader can see the operative (Control Protocol).",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.34"
+  },
+  {
+    "id": "hc.p.omnissiahs-imperative",
+    "name": "OMNISSIAH'S IMPERATIVE",
+    "team": "hunter-clade",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "firefight.activationStart",
+      "firefight.actionDeclared",
+      "firefight.actionEnded",
+      "shoot.targetSelected",
+      "shoot.attackRolled",
+      "shoot.beforeDefenceRoll",
+      "shoot.defenderBeforeRerolls",
+      "shoot.defenceRolled",
+      "fight.weaponsSelected",
+      "fight.rolled"
+    ],
+    "effect": {
+      "code": "hcOmnissiah",
+      "scope": {
+        "side": "friendly",
+        "keyword": "HUNTER CLADE"
+      }
+    },
+    "text": "During a friendly Hunter Clade operative's activation, or when an enemy shoots it once the attack dice are final: until the turning point ends it gains an extra rule from its current Imperative. Protector: Severe on ranged weapons. Conqueror: when it fights, after its first resolved die it resolves another at once. Bulwark: Save improved by 1 and one more defence die when shot. Aggressor: ignore the first 2 inches of one climb up. Neutral: nothing.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.35"
+  }
+]

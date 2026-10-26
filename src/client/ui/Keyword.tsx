@@ -2,8 +2,9 @@
 // means and does in play (src/client/game/glossary.ts) in the shared Tooltip. <KeywordText text="..."/> does the same for every
 // glossary term found in a plain sentence. Unknown terms render as plain text.
 //
-// Touch: a tap on a keyword opens its tooltip and never reaches an enclosing button (the tap is swallowed here); a mouse click
-// still falls through to the parent as before. Do not put a Keyword inside the child of another <Tooltip>: both would open.
+// Touch: a tap on a keyword in running text opens its tooltip and is swallowed here; a keyword inside a button (an order card,
+// an option) lets the tap through, so a tap anywhere on the button presses it, as it does with a mouse. A mouse click always
+// falls through to the parent. Do not put a Keyword inside the child of another <Tooltip>: both would open.
 import { Fragment, memo, useRef, type ReactNode, type SyntheticEvent } from 'react'
 import { KIND_LABEL, linkTerms, lookupTerm, weaponRuleParts, type GlossaryEntry, type GlossaryKind, type WeaponRuleUseLike } from '../game/glossary'
 import { colors } from './theme'
@@ -31,8 +32,10 @@ function KeywordTip({ entry, children }: { entry: GlossaryEntry; children: React
           touch.current = (e.nativeEvent as PointerEvent).pointerType === 'touch'
         }}
         onClick={(e: SyntheticEvent) => {
-          // a touch tap only opens the tooltip; a mouse click is left alone for the parent
-          if (touch.current) {
+          // a touch tap only opens the tooltip, unless the keyword sits in a button: the button is what the tap means.
+          // A mouse click is left alone for the parent.
+          const inButton = !!(e.currentTarget as HTMLElement).parentElement?.closest('button, [role="button"]')
+          if (touch.current && !inButton) {
             e.stopPropagation()
             e.preventDefault()
           }

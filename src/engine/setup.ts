@@ -2,7 +2,8 @@
 // then deploys operatives alternately in batches of one third (rounded up).
 import type { EngineBundle } from './bundle'
 import { snapshotData } from './bundle'
-import { bearing, circleInsidePolygon, polygonBBox, round3 } from './geometry'
+import { bearing, polygonBBox, round3 } from './geometry'
+import { axisOf, footprintInsidePolygon, footprintOf } from './footprint'
 import { beginTurningPoint } from './strategy'
 import { SeededRng } from './rng'
 import { createCtx, reject, type Ctx, type Handled, type ModuleDef } from './registry'
@@ -10,7 +11,10 @@ import { EngineInvariantError, hashState, otherSeat, SEATS } from './state'
 import { placementProblem } from './terrain'
 // M2b-game
 import { allowedOrders, initTeamState } from './abilities'
-import { handleEquipMarker, nextPlacer, placeItem, selectionProblem, suggestEquipPlacement, territoryOf, DEFAULT_EQUIPMENT_LIMIT } from './equipment'
+import { setAside } from './reserve'
+import { notePicks, resolvePicks } from './operative-picks'
+import { providerAny, providerPreBattleChoices, providerSetAsideBatches, providerSetAsideCap } from './team-rules'
+import { handleEquipMarker, nextPlacer, placeItem, selectionProblem, suggestEquipPlacement, territoryOf, DEFAULT_EQUIPMENT_LIMIT, equipmentLimitFor } from './equipment'
 import { chooseMission, missionDef, objectiveOptions, objectiveSeat, placeObjective } from './missions'
 import { OBJECTIVE_RADIUS } from './missions'
 import {
@@ -57,11 +61,16 @@ function validateSetup(setup: GameSetup, bundle: EngineBundle): void {
     if (!bundle.teams[teamId]) fail(`unknown team ${teamId}`)
     const roster = setup.rosters[seat]
     if (roster.length === 0) fail(`seat ${seat} has an empty roster`)
+    const taken: Record<string, string[]> = {}
     for (const entry of roster) {
       const card = bundle.datacards[entry.datacardId]
       if (!card) fail(`unknown datacard ${entry.datacardId}`)
       else {
         if (card.teamId !== teamId) fail(`${card.id} does not belong to team ${teamId}`)
+        // M9 batch B: per-operative keyword picks (Marks of Chaos)
+        const picked = resolvePicks(bundle.teams[teamId], card, entry.picks, taken)
+        if (picked.problem) fail(picked.problem)
+        notePicks(taken, picked.picks)
         const chosen = entry.loadout?.weaponIds ?? defaultLoadout(card).weaponIds
         if (card.legalLoadouts) {
           // cards from the data adapter list every legal loadout (sets and profile groups included)
@@ -76,7 +85,7 @@ function validateSetup(setup: GameSetup, bundle: EngineBundle): void {
         }
       }
     }
-    const problem = selectionProblem(setup, seat, { ...(bundle.equipment ? { equipment: bundle.equipment } : {}), teamId, limit: Math.min(MAX_EQUIPMENT, DEFAULT_EQUIPMENT_LIMIT) })
+    const problem = selectionProblem(setup, seat, { ...(bundle.equipment ? { equipment: bundle.equipment } : {}), teamId, limit: equipmentLimitFor(bundle.datacards, roster.map((e) => e.datacardId), Math.min(MAX_EQUIPMENT, DEFAULT_EQUIPMENT_LIMIT)) })
     if (problem) fail(problem)
   }
 }
@@ -86,19 +95,23 @@ export function createGame(setup: GameSetup, seed: string, bundle: EngineBundle)
   const operatives: Record<string, Operative> = {}
   const cardIds: string[] = []
   for (const seat of SEATS) {
+    const taken: Record<string, string[]> = {}
     setup.rosters[seat].forEach((entry, i) => {
       const card = bundle.datacards[entry.datacardId]!
       cardIds.push(card.id)
       const id = `${seat}${i + 1}`
       const loadout = entry.loadout ?? defaultLoadout(card)
-      const baseRadius = round3(card.baseMm / 25.4 / 2)
+      // M9 batch B: an oval base (Hunter Clade arquebus GUNNER) for every loadout or only loadouts with its weapons
+      const weapons = [...card.fixedWeapons, ...loadout.weaponIds]
+      const oval = card.ovalBase && (!card.ovalBase.weapons || card.ovalBase.weapons.some((w) => weapons.includes(w))) ? card.ovalBase : undefined
+      const baseRadius = oval ? round3(oval.short / 25.4 / 2) : round3(card.baseMm / 25.4 / 2)
       operatives[id] = {
         id,
         seat,
         datacardId: card.id,
         name: entry.name ?? card.name,
         loadout: { weaponIds: [...loadout.weaponIds] },
-        weapons: [...card.fixedWeapons, ...loadout.weaponIds],
+        weapons,
         status: 'reserve',
         pos: { x: 0, y: 0, z: 0 },
         facing: 0,
@@ -116,6 +129,10 @@ export function createGame(setup: GameSetup, seed: string, bundle: EngineBundle)
         usedLimited: {},
         oncePerBattleUsed: [],
       }
+      if (oval && oval.long > oval.short) operatives[id]!.ovalHalfAxis = round3((oval.long - oval.short) / 25.4 / 2)
+      const { picks } = resolvePicks(bundle.teams[seat === 'A' ? setup.teams.A : setup.teams.B], card, entry.picks, taken)
+      notePicks(taken, picks)
+      if (Object.keys(picks).length > 0) operatives[id]!.picks = picks
     })
   }
 
@@ -203,8 +220,24 @@ function raiseDropZone(ctx: Ctx, seat: Seat): void {
   })
 }
 
+/** Operatives still to be set up (not those set aside on purpose, reserve.ts). */
 function reserveOf(s: GameState, seat: Seat): Operative[] {
-  return Object.values(s.operatives).filter((o) => o.seat === seat && o.status === 'reserve')
+  return Object.values(s.operatives).filter((o) => o.seat === seat && o.status === 'reserve' && o.offboard === undefined)
+}
+
+/** M9 prep: operatives the owner may still set aside instead of deploying (Wyrmblade HIDING), within the cap. */
+export function setAsideChoices(s: GameState, seat: Seat): string[] {
+  const taken = Object.values(s.operatives).filter((o) => o.seat === seat && o.offboard !== undefined).length
+  if (taken >= providerSetAsideCap(s, seat)) return []
+  // batch D prep (setAsideBatches): whole batches only, never the first one when the rule says so
+  const batches = providerSetAsideBatches(s, seat)
+  if (batches && s.setup.step === 'deploy' && s.setup.deploy.turn === seat) {
+    if (batches.skipFirst && (s.setup.batches?.[seat] ?? 1) <= 1) return []
+    if (s.setup.deploy.aside === false) return []
+  }
+  return reserveOf(s, seat)
+    .filter((o) => providerAny(s, o, 'setAsideAtSetup'))
+    .map((o) => o.id)
 }
 
 function raiseDeploy(ctx: Ctx): void {
@@ -212,13 +245,27 @@ function raiseDeploy(ctx: Ctx): void {
   const seat = s.setup.deploy.turn
   const reserve = reserveOf(s, seat)
   const zone = s.map.dropZones.find((z) => z.id === s.players[seat].dropZoneId)!
+  // batch D prep: a batch being set aside as a whole offers no deployment
+  const deployable = s.setup.deploy.aside === true ? [] : reserve.map((o) => o.id)
+  const asideIds = setAsideChoices(s, seat)
   ctx.raise({
     kind: 'setup.deploy',
     seat,
     window: 'setup.*',
-    context: { left: s.setup.deploy.left, reserveIds: reserve.map((o) => o.id), zoneId: zone.id },
-    constraints: { kind: 'deploy', operativeIds: reserve.map((o) => o.id), region: zone.polygon },
+    context: { left: s.setup.deploy.left, reserveIds: reserve.map((o) => o.id), zoneId: zone.id, setAsideIds: asideIds, ...(s.setup.deploy.aside === true ? { wholeBatchAside: true } : {}) },
+    constraints: { kind: 'deploy', operativeIds: deployable, region: zone.polygon },
+    // batch D (Tempestus Aquilons verification): a batch going aside whole is a finite decision, so legalActions lists
+    // the set-aside answers instead of returning null for a deployment nobody may make
+    ...(s.setup.deploy.aside === true
+      ? { options: asideIds.map((id) => ({ id: `aside:${id}`, labelKey: 'setup.setAside', type: 'setup.deploy' as const, payload: { operativeId: id, x: 0, z: 0, setAside: true } })) }
+      : {}),
   })
+}
+
+/** batch D prep: a new deploy batch for `seat` (setAsideBatches counts them; `aside` is decided by its first answer). */
+function newBatch(s: GameState, seat: Seat, left: number): void {
+  s.setup.deploy = { turn: seat, left }
+  s.setup.batches = { ...(s.setup.batches ?? {}), [seat]: (s.setup.batches?.[seat] ?? 0) + 1 }
 }
 
 function rosterSize(s: GameState, seat: Seat): number {
@@ -229,7 +276,7 @@ function startDeploy(ctx: Ctx): void {
   const s = ctx.state
   s.setup.step = 'deploy'
   const first = s.setup.setupInitiative!
-  s.setup.deploy = { turn: first, left: batchSize(rosterSize(s, first), reserveOf(s, first).length) }
+  newBatch(s, first, batchSize(rosterSize(s, first), reserveOf(s, first).length))
   raiseDeploy(ctx)
 }
 
@@ -244,16 +291,73 @@ function advanceDeploy(ctx: Ctx, justPlaced: Seat): void {
   const other = otherSeat(justPlaced)
   const theirs = reserveOf(s, other).length
   if (theirs > 0) {
-    s.setup.deploy = { turn: other, left: batchSize(rosterSize(s, other), theirs) }
+    newBatch(s, other, batchSize(rosterSize(s, other), theirs))
   } else if (mine > 0) {
-    s.setup.deploy = { turn: justPlaced, left: batchSize(rosterSize(s, justPlaced), mine) }
+    newBatch(s, justPlaced, batchSize(rosterSize(s, justPlaced), mine))
   } else {
-    s.setup.step = 'done'
-    ctx.emit({ type: 'PhaseEnded', name: 'setup' }, null)
-    beginTurningPoint(ctx)
+    startPreBattle(ctx)
     return
   }
   raiseDeploy(ctx)
+}
+
+/**
+ * batch D prep (preBattleChoices): once everyone is set up, team rules may make choices before turning point 1
+ * (Forward Scouting): one ability.choice (context.preBattle) at a time, seats alternating from the setup initiative
+ * holder while both have offers; a pass or no offer finishes that seat. Then the battle begins.
+ */
+function startPreBattle(ctx: Ctx): void {
+  const s = ctx.state
+  s.setup.step = 'preBattle'
+  s.setup.preBattle = { turn: s.setup.setupInitiative ?? 'A', done: [] }
+  nextPreBattleChoice(ctx)
+}
+
+function nextPreBattleChoice(ctx: Ctx): void {
+  const s = ctx.state
+  const pb = s.setup.preBattle
+  for (let tries = 0; pb && tries < 2; tries++) {
+    const seat = pb.turn
+    if (!pb.done.includes(seat)) {
+      const offers = providerPreBattleChoices(s, seat)
+      if (offers.length > 0) {
+        ctx.raise({
+          kind: 'ability.choice',
+          seat,
+          window: 'setup.*',
+          context: { hook: 'preBattle', preBattle: true, offers },
+          options: offers.map((r, i) => ({
+            id: `prebattle:${i}`,
+            labelKey: r.labelKey,
+            type: 'ability.choice' as const,
+            payload: { option: String(i) },
+            data: { hook: r.hook, operativeId: r.operativeId, ...(r.data ?? {}) },
+          })),
+          canPass: true,
+        })
+        return
+      }
+      pb.done.push(seat)
+    }
+    pb.turn = otherSeat(seat)
+  }
+  delete s.setup.preBattle
+  s.setup.step = 'done'
+  ctx.emit({ type: 'PhaseEnded', name: 'setup' }, null)
+  beginTurningPoint(ctx)
+}
+
+/**
+ * batch D prep: a pre-battle choice is finished (`passed`: the seat declined and is not asked again). The other seat
+ * chooses next while it still has offers.
+ */
+export function preBattleChoiceDone(ctx: Ctx, passed = false): void {
+  const pb = ctx.state.setup.preBattle
+  if (!pb) return
+  const seat = pb.turn
+  if (passed && !pb.done.includes(seat)) pb.done.push(seat)
+  if (!pb.done.includes(otherSeat(seat))) pb.turn = otherSeat(seat)
+  nextPreBattleChoice(ctx)
 }
 
 function numeric(v: unknown): v is number {
@@ -263,6 +367,21 @@ function numeric(v: unknown): v is number {
 function handleDeploy(state: GameState, action: Action): Handled {
   if (action.type !== 'setup.deploy') return reject('E_WRONG_DECISION', 'expected a deploy action')
   const p = action.payload
+  // M9 prep: set the operative aside instead of deploying it (payload { operativeId, setAside: true })
+  if (p && p.setAside === true && typeof p.operativeId === 'string') {
+    const id = p.operativeId
+    if (!setAsideChoices(state, action.seat).includes(id)) return reject('E_NOT_AN_OPTION', `${id} cannot be set aside`)
+    return {
+      run(ctx) {
+        setAside(ctx, id, 'setAside')
+        // batch D prep (setAsideBatches): the batch's first answer sets it aside as a whole
+        if (providerSetAsideBatches(ctx.state, action.seat)) ctx.state.setup.deploy.aside = true
+        ctx.state.setup.deploy.left -= 1
+        advanceDeploy(ctx, action.seat)
+      },
+    }
+  }
+  if (state.setup.deploy.aside === true) return reject('E_NOT_AN_OPTION', 'this batch is being set aside as a whole')
   if (!p || typeof p.operativeId !== 'string' || !numeric(p.x) || !numeric(p.z) || (p.y !== undefined && !numeric(p.y))) {
     return reject('E_SCHEMA', 'deploy needs operativeId, x and z')
   }
@@ -271,10 +390,13 @@ function handleDeploy(state: GameState, action: Action): Handled {
   if (op.status !== 'reserve') return reject('E_NOT_AN_OPTION', `${op.id} is already set up`)
   const pos: Vec3 = { x: round3(p.x), y: round3(p.y ?? 0), z: round3(p.z) }
   const zone = state.map.dropZones.find((z) => z.id === state.players[op.seat].dropZoneId)!
-  if (!circleInsidePolygon(pos, op.baseRadius, zone.polygon)) {
+  // M9 batch B: an oval base may be set up at any facing (payload `facing`, radians); default faces the centre
+  if (p.facing !== undefined && !numeric(p.facing)) return reject('E_SCHEMA', 'facing is a number (radians)')
+  const facing = op.ovalHalfAxis && p.facing !== undefined ? round3(p.facing as number) : bearing(pos, { x: 0, z: 0 })
+  if (!footprintInsidePolygon(footprintOf(op, pos, facing), zone.polygon)) {
     return reject('E_OUT_OF_RANGE', 'an operative must be set up wholly within its drop zone')
   }
-  const problem = placementProblem(state, { id: op.id, pos, radius: op.baseRadius, height: op.height })
+  const problem = placementProblem(state, { id: op.id, pos, radius: op.baseRadius, height: op.height, ...axisOf(op, facing) })
   if (problem) return { rejection: problem }
   return {
     run(ctx) {
@@ -284,8 +406,9 @@ function handleDeploy(state: GameState, action: Action): Handled {
       // set up with Conceal (R-1.5); the Bomb Squig cannot take Conceal (Stoopid) and is set up Engaged
       o.order = allowedOrders(ctx.state, o).includes('conceal') ? 'conceal' : 'engage'
       o.ready = false
-      o.facing = bearing(pos, { x: 0, z: 0 })
+      o.facing = facing
       ctx.emit({ type: 'OperativeDeployed', operativeId: o.id, pos })
+      if (providerSetAsideBatches(ctx.state, o.seat)) ctx.state.setup.deploy.aside = false
       ctx.state.setup.deploy.left -= 1
       advanceDeploy(ctx, o.seat)
     },
@@ -531,8 +654,9 @@ export function suggestPlacement(
     const x = round3(box.minX + (k % (cols + 1)) * step)
     const z = round3(box.minZ + Math.floor(k / (cols + 1)) * step)
     const pos = { x, y: 0, z }
-    if (!circleInsidePolygon(pos, op.baseRadius, c.region)) continue
-    if (placementProblem(state, { id: op.id, pos, radius: op.baseRadius, height: op.height })) continue
+    const facing = bearing(pos, { x: 0, z: 0 })
+    if (!footprintInsidePolygon(footprintOf(op, pos, facing), c.region)) continue
+    if (placementProblem(state, { id: op.id, pos, radius: op.baseRadius, height: op.height, ...axisOf(op, facing) })) continue
     return { operativeId: op.id, x, z, y: 0 }
   }
   return null

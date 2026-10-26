@@ -1,0 +1,676 @@
+[
+  {
+    "id": "lg.w.plasma-pistol-standard",
+    "name": "Plasma pistol",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "lg.wg.plasma-pistol",
+    "profile": "standard",
+    "text": "A heretic plasma sidearm fired at a safe setting.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.plasma-pistol-supercharge",
+    "name": "Plasma pistol",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.hot"
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "lg.wg.plasma-pistol",
+    "profile": "supercharge",
+    "text": "The same pistol pushed past its limits, at a risk to the bearer.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.tainted-bolt-pistol",
+    "name": "Tainted bolt pistol",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "A bolt pistol loaded with warp-cursed rounds that find the gaps in armour.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.power-fist",
+    "name": "Power fist",
+    "team": "legionaries",
+    "type": "melee",
+    "atk": 5,
+    "hit": "4+",
+    "dmg": {
+      "normal": 5,
+      "crit": 7
+    },
+    "rules": [
+      {
+        "rule": "core.wr.brutal"
+      }
+    ],
+    "text": "A crackling gauntlet that crushes whatever it grips; only a solid parry turns it.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.power-maul",
+    "name": "Power maul",
+    "team": "legionaries",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "An energised bludgeon whose best blows knock aside the foe's guard.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.power-weapon",
+    "name": "Power weapon",
+    "team": "legionaries",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "A blade sheathed in a disruption field, quick to land a killing cut.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.tainted-chainsword",
+    "name": "Tainted chainsword",
+    "team": "legionaries",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "A corrupted chain blade whose teeth chew deep once they bite.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.daemon-blade",
+    "name": "Daemon blade",
+    "team": "legionaries",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 7
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "A blade with something hungry bound inside it.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.bolt-pistol",
+    "name": "Bolt pistol",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      }
+    ],
+    "text": "A sidearm that fires small explosive rounds.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.daemonic-claw",
+    "name": "Daemonic claw",
+    "team": "legionaries",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "A mutated limb ending in warp-forged talons. Unleashing the daemon makes it relentless and deadly.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.fireblast",
+    "name": "Fireblast",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "lg.a.wr-psychic"
+      },
+      {
+        "rule": "core.wr.blast",
+        "inches": 2
+      },
+      {
+        "rule": "core.wr.devastating",
+        "x": 1,
+        "inches": 1
+      },
+      {
+        "rule": "core.wr.saturate"
+      }
+    ],
+    "text": "A gout of warp fire that scorches everything near the target, friend or foe. No printed range.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.life-siphon",
+    "name": "Life siphon",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "lg.a.wr-psychic"
+      },
+      {
+        "rule": "core.wr.saturate"
+      },
+      {
+        "rule": "lg.a.wr-siphon-life"
+      }
+    ],
+    "text": "A psychic lash that drinks life from the target and feeds a friend. No printed range.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.fell-dagger",
+    "name": "Fell dagger",
+    "team": "legionaries",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "lg.a.wr-psychic"
+      },
+      {
+        "rule": "core.wr.rending"
+      },
+      {
+        "rule": "lg.a.wr-siphon-life"
+      }
+    ],
+    "text": "A warp-steeped blade that drinks life from the wounded and feeds a friend.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.double-handed-chainaxe",
+    "name": "Double-handed chainaxe",
+    "team": "legionaries",
+    "type": "melee",
+    "atk": 5,
+    "hit": "4+",
+    "dmg": {
+      "normal": 5,
+      "crit": 7
+    },
+    "rules": [
+      {
+        "rule": "core.wr.brutal"
+      }
+    ],
+    "text": "An enormous chain axe swung with no finesse at all.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.flamer",
+    "name": "Flamer",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.saturate"
+      },
+      {
+        "rule": "core.wr.torrent",
+        "inches": 2
+      }
+    ],
+    "text": "A promethium sprayer that burns a whole cluster of light infantry.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.meltagun",
+    "name": "Meltagun",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 6,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      },
+      {
+        "rule": "core.wr.devastating",
+        "x": 4
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 2
+      }
+    ],
+    "text": "A short-range fusion beam that melts armour. Its crit damage is lower than its normal damage, as printed.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.plasma-gun-standard",
+    "name": "Plasma gun",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "lg.wg.plasma-gun",
+    "profile": "standard",
+    "text": "A plasma rifle on its safe setting. No printed range.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.plasma-gun-supercharge",
+    "name": "Plasma gun",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 5,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.hot"
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "lg.wg.plasma-gun",
+    "profile": "supercharge",
+    "text": "The same rifle overcharged, at a risk to the bearer. No printed range.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.heavy-bolter-focused",
+    "name": "Heavy bolter",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.heavy",
+        "only": "reposition"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1,
+        "crits": true
+      }
+    ],
+    "profileGroup": "lg.wg.heavy-bolter",
+    "profile": "focused",
+    "text": "A belt-fed cannon aimed at one target. Focused profile.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.heavy-bolter-sweeping",
+    "name": "Heavy bolter",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.heavy",
+        "only": "reposition"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1,
+        "crits": true
+      },
+      {
+        "rule": "core.wr.torrent",
+        "inches": 1
+      }
+    ],
+    "profileGroup": "lg.wg.heavy-bolter",
+    "profile": "sweeping",
+    "text": "A belt-fed cannon swept across two targets. Sweeping profile.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.missile-launcher-frag",
+    "name": "Missile launcher",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.blast",
+        "inches": 2
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "reposition"
+      }
+    ],
+    "profileGroup": "lg.wg.missile-launcher",
+    "profile": "frag",
+    "text": "A shoulder launcher firing a fragmentation missile. Frag profile.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.missile-launcher-krak",
+    "name": "Missile launcher",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 5,
+      "crit": 7
+    },
+    "rules": [
+      {
+        "rule": "core.wr.heavy",
+        "only": "reposition"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "lg.wg.missile-launcher",
+    "profile": "krak",
+    "text": "A shoulder launcher firing an armour-piercing missile. Krak profile.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.reaper-chaincannon-focused",
+    "name": "Reaper chaincannon",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.ceaseless"
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "reposition"
+      },
+      {
+        "rule": "core.wr.punishing"
+      }
+    ],
+    "profileGroup": "lg.wg.reaper-chaincannon",
+    "profile": "focused",
+    "text": "A rotary cannon that never stops spitting. Focused profile.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.reaper-chaincannon-sweeping",
+    "name": "Reaper chaincannon",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.ceaseless"
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "reposition"
+      },
+      {
+        "rule": "core.wr.punishing"
+      },
+      {
+        "rule": "core.wr.torrent",
+        "inches": 2
+      }
+    ],
+    "profileGroup": "lg.wg.reaper-chaincannon",
+    "profile": "sweeping",
+    "text": "A rotary cannon swept across a cluster. Sweeping profile.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.boltgun",
+    "name": "Boltgun",
+    "team": "legionaries",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [],
+    "text": "The standard bolt weapon of every Heretic Astartes.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.chainsword",
+    "name": "Chainsword",
+    "team": "legionaries",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [],
+    "text": "A roaring chain blade.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.fists",
+    "name": "Fists",
+    "team": "legionaries",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [],
+    "text": "Armoured gauntlets.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.flensing-blades",
+    "name": "Flensing blades",
+    "team": "legionaries",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "A cluster of hooked blades made for taking apart the living.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  },
+  {
+    "id": "lg.w.malefic-blade",
+    "name": "Malefic blade",
+    "team": "legionaries",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [],
+    "text": "A blade redolent with daemonic energy, carried by every Legionary when the Malefic Blades equipment is taken.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7.3"
+  }
+]

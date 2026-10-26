@@ -31,7 +31,7 @@ registerCodeHook({
     offers(state, op, def): OfferSeed[] {
       const p = codeParams(state, op, 'supportAplBoost') ?? {}
       // the Comms Device grows the range by 3" while a friendly operative controls it (M-5.1)
-      const range = ((p.range as number | undefined) ?? 6) + (p.comms !== false ? commsBonus(state, op.seat) : 0)
+      const range = ((p.range as number | undefined) ?? 6) + (p.comms !== false ? commsBonus(state, op.seat, op) : 0)
       const exclude = (p.excludeKeywords as string[] | undefined) ?? []
       const out: OfferSeed[] = []
       for (const f of friendsOf(state, op)) {

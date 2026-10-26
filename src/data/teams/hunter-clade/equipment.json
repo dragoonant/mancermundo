@@ -1,0 +1,74 @@
+[
+  {
+    "id": "hc.e.rad-bombardment",
+    "name": "RAD BOMBARDMENT",
+    "scope": "faction",
+    "team": "hunter-clade",
+    "count": 1,
+    "window": "strategy.gambit",
+    "limits": {
+      "uses": 1,
+      "per": "battle",
+      "scope": "team"
+    },
+    "effect": {
+      "code": "hcRadBombardment"
+    },
+    "text": "Once per battle, as a strategic gambit from the second turning point: pick an objective marker or the enemy drop zone. Each enemy in control range of that marker, or with any part of its base in that drop zone, rolls a D6 (minus 1 if any part of its base is under Vantage terrain). On 4+ it has 1 less APL until the end of its next activation; on a 6 it also takes D3 damage.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.36"
+  },
+  {
+    "id": "hc.e.redundancy-systems",
+    "name": "REDUNDANCY SYSTEMS",
+    "scope": "faction",
+    "team": "hunter-clade",
+    "count": 1,
+    "window": "firefight.activationStart",
+    "limits": {
+      "uses": 1,
+      "per": "turningPoint",
+      "scope": "team"
+    },
+    "effect": {
+      "code": "hcRedundancy"
+    },
+    "text": "Once per turning point, as a friendly Hunter Clade operative is activated outside an enemy control range, it may regain up to D3+2 lost wounds.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.37"
+  },
+  {
+    "id": "hc.e.refractor-field",
+    "name": "REFRACTOR FIELD",
+    "scope": "faction",
+    "team": "hunter-clade",
+    "count": 1,
+    "window": "shoot.beforeDefenceRoll",
+    "limits": {
+      "uses": 1,
+      "per": "turningPoint",
+      "scope": "team"
+    },
+    "effect": {
+      "code": "hcRefractor"
+    },
+    "text": "Once per turning point, when a friendly Hunter Clade operative is shot, just before defence dice are rolled: the x of the attack's Piercing is 1 lower for that sequence, so Piercing 1 disappears.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.38"
+  },
+  {
+    "id": "hc.e.extremis-mind-link",
+    "name": "EXTREMIS MIND-LINK",
+    "scope": "faction",
+    "team": "hunter-clade",
+    "count": 1,
+    "window": "firefight.activationStart",
+    "limits": {
+      "uses": 1,
+      "per": "battle",
+      "scope": "team"
+    },
+    "effect": {
+      "code": "hcMindLink"
+    },
+    "text": "Once per battle, CONTROL EDICT costs 0 CP, and the two operatives are activated together instead of one after the other: you perform their actions one at a time in any order until both are done.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.39"
+  }
+]

@@ -1,0 +1,121 @@
+{
+  "id": "chaos-cult",
+  "name": "Chaos Cult",
+  "factionKeyword": "CHAOS CULT",
+  "archetypes": [
+    "infiltration",
+    "seek-and-destroy"
+  ],
+  "selection": {
+    "slots": [
+      {
+        "id": "leader",
+        "label": "Leader",
+        "count": 1,
+        "from": [
+          "cc.demagogue"
+        ]
+      },
+      {
+        "id": "blessed-blades",
+        "label": "Blessed Blades",
+        "count": 2,
+        "from": [
+          "cc.blessed-blade"
+        ],
+        "repeatable": [
+          "cc.blessed-blade"
+        ]
+      },
+      {
+        "id": "devotees",
+        "label": "Devotees",
+        "count": 9,
+        "from": [
+          "cc.devotee"
+        ],
+        "repeatable": [
+          "cc.devotee"
+        ]
+      },
+      {
+        "id": "iconarch",
+        "label": "Iconarch",
+        "count": 1,
+        "from": [
+          "cc.iconarch"
+        ]
+      },
+      {
+        "id": "mindwitch",
+        "label": "Mindwitch",
+        "count": 1,
+        "from": [
+          "cc.mindwitch"
+        ]
+      }
+    ]
+  },
+  "factionRules": [
+    "cc.a.mutation",
+    "cc.a.accursed-gifts"
+  ],
+  "ploys": [
+    "cc.p.mutation",
+    "cc.p.exaltation-in-pain",
+    "cc.p.fervent-onslaught",
+    "cc.p.creatures-of-nightmare",
+    "cc.p.sickening-aura",
+    "cc.p.faithful-follower",
+    "cc.p.abhorrent-mutation",
+    "cc.p.frenzied-demise",
+    "cc.p.unleash-the-daemon",
+    "cc.p.baleful-script",
+    "cc.p.covert-guises"
+  ],
+  "equipment": [
+    "cc.e.baleful-script",
+    "cc.e.covert-guises",
+    "cc.e.unholy-talisman",
+    "cc.e.vile-blessing"
+  ],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "cc.demagogue",
+      "cc.blessed-blade",
+      "cc.blessed-blade",
+      "cc.devotee",
+      "cc.devotee",
+      "cc.devotee",
+      "cc.devotee",
+      "cc.devotee",
+      "cc.devotee",
+      "cc.devotee",
+      "cc.devotee",
+      "cc.devotee",
+      "cc.iconarch",
+      "cc.mindwitch"
+    ],
+    "equipment": [
+      "cc.e.unholy-talisman",
+      "cc.e.vile-blessing",
+      "core.e.ladders",
+      "core.e.utility-grenades"
+    ]
+  },
+  "paint": {
+    "major": {
+      "h": 0.0,
+      "s": 0.45,
+      "l": 0.25
+    },
+    "minor": {
+      "h": 0.1,
+      "s": 0.3,
+      "l": 0.55
+    }
+  },
+  "text": "A ragged congregation of heretics led by a preacher of the dark gods, whose rank and file twist mid-battle into mutants and daemon-bound horrors.",
+  "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md section 20"
+}

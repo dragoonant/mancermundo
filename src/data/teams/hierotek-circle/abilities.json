@@ -1,0 +1,428 @@
+[
+  {
+    "id": "hie.a.reanimation-protocols",
+    "kind": "factionRule",
+    "name": "REANIMATION PROTOCOLS",
+    "team": "hierotek-circle",
+    "scope": {
+      "side": "friendly",
+      "keyword": "HIEROTEK CIRCLE"
+    },
+    "text": "The first time each friendly Hierotek Circle operative is incapacitated, a Reanimation marker is left beside it. In each Ready step, after Living Metal, one marker is rolled for: on 3+ its operative returns with 1 wound, within 3 inches of the marker and outside enemy control ranges, with an order of your choice. The opponent's kill grade falls when it returns. An operative incapacitated a second time is gone for good.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.24 to T-HIE.27"
+  },
+  {
+    "id": "hie.a.living-metal",
+    "kind": "factionRule",
+    "name": "LIVING METAL",
+    "team": "hierotek-circle",
+    "scope": {
+      "side": "friendly",
+      "keyword": "HIEROTEK CIRCLE"
+    },
+    "text": "Necron bodies knit themselves back together: at the very start of each Ready step, ahead of this team's other Ready-step rules, every Hierotek Circle operative in the killzone rolls its own D3+1 and recovers that many lost wounds.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.29"
+  },
+  {
+    "id": "hie.a.wr-magnify",
+    "kind": "weaponRule",
+    "name": "Magnify",
+    "team": "hierotek-circle",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "magnify",
+      "params": {
+        "conditionsFromProxy": true
+      }
+    },
+    "text": "When shooting with this weapon, a friendly Apprentek or Cryptek with an Engage order that is outside enemy control ranges and visible to the shooter may stand in as the viewpoint for target validity, the Shoot conditions, cover and obscured. The weapon then has Ceaseless for the action. Ranges, Blast, Devastating and other distances still use the real shooter.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.28"
+  },
+  {
+    "id": "hie.a.scuttler",
+    "kind": "ability",
+    "name": "Scuttler",
+    "team": "hierotek-circle",
+    "text": "While it has a Conceal order and is in cover this operative cannot be chosen as a target unless the shooter is within 2 inches, whatever Seek or Vantage says. Fall Back costs it 1 less AP. It uses only the weapons on its datacard and no unique action but its own.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.17"
+  },
+  {
+    "id": "hie.a.apprentek-assistance",
+    "kind": "ability",
+    "name": "Apprentek Assistance",
+    "team": "hierotek-circle",
+    "text": "Borrows the toolkit of the Cryptek leading your team: it can use any of that Cryptek's unique actions, but just one such use each turning point, with every distance and expiry counted from the Apprentek itself. No other rule treats it as a Cryptek.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.20"
+  },
+  {
+    "id": "hie.a.deathmarked",
+    "kind": "ability",
+    "name": "Deathmarked",
+    "team": "hierotek-circle",
+    "text": "Every survivor of its fire is tagged: after this operative's Shoot, a target still standing (the primary one for multi-target weapons) carries your Deathmarked token for the rest of the battle. Any friendly Deathmark firing at a tagged enemy gains Seek on its ranged weapons.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.21"
+  },
+  {
+    "id": "hie.a.steadfast",
+    "kind": "ability",
+    "name": "Steadfast",
+    "team": "hierotek-circle",
+    "text": "Holds ground like a squad: for marker control it may count as APL 3 no matter how its APL has been changed. Rules that lower the whole side's total (Terror, Despair) still come off afterwards.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.23"
+  },
+  {
+    "id": "hie.a.interstitial-command",
+    "kind": "uniqueAction",
+    "name": "INTERSTITIAL COMMAND",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true,
+      "notCounteracting": true
+    },
+    "target": {
+      "side": "friendly",
+      "keyword": "HIEROTEK CIRCLE",
+      "visible": true,
+      "withinInches": 6,
+      "notSelf": true,
+      "notKeywords": [
+        "CRYPTEK",
+        "APPRENTEK"
+      ]
+    },
+    "effect": {
+      "code": "hieInterstitial",
+      "params": {
+        "relay": true,
+        "denyAccelerate": false
+      }
+    },
+    "text": "Pick another friendly Hierotek Circle operative that is not an Apprentek or Cryptek and is visible to and within 6 inches of this operative, or visible to and within 6 inches of a friendly Despotek that this operative can see. It performs one 1 AP action for free, moving no more than 2 inches. It may not pick an action it has done this turning point and cannot do that action again this turning point. Not in an enemy control range or while counteracting.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.6"
+  },
+  {
+    "id": "hie.a.interstitial-command-despotek",
+    "kind": "uniqueAction",
+    "name": "INTERSTITIAL COMMAND",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true,
+      "notCounteracting": true
+    },
+    "target": {
+      "side": "friendly",
+      "keyword": "HIEROTEK CIRCLE",
+      "visible": true,
+      "withinInches": 6,
+      "notSelf": true,
+      "notKeywords": [
+        "CRYPTEK",
+        "APPRENTEK"
+      ]
+    },
+    "effect": {
+      "code": "hieInterstitial",
+      "params": {
+        "relay": false,
+        "denyAccelerate": true
+      }
+    },
+    "text": "Pick another friendly Hierotek Circle operative that is not an Apprentek or Cryptek and is visible to and within 6 inches of this operative. It performs one 1 AP action for free (not Accelerate), moving no more than 2 inches. It may not pick an action it has done this turning point and cannot do that action again this turning point. Not in an enemy control range or while counteracting.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.7"
+  },
+  {
+    "id": "hie.a.timesplinter",
+    "kind": "uniqueAction",
+    "name": "TIMESPLINTER",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true,
+      "turningPoint": {
+        "min": 2
+      }
+    },
+    "target": {
+      "side": "friendly",
+      "keyword": "HIEROTEK CIRCLE",
+      "visible": true,
+      "withinInches": 5,
+      "notSelf": true
+    },
+    "effect": {
+      "code": "hieTimesplinter",
+      "params": {
+        "range": 5
+      }
+    },
+    "text": "Rewind a comrade's position: an already expended friendly Hierotek Circle operative this one can see within 5 inches is lifted and put down at any legal spot this operative can see within 5 inches horizontally. One use per turning point across the whole team, none in the first turning point, and not while an enemy has this operative in control range.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.8"
+  },
+  {
+    "id": "hie.a.nanomine",
+    "kind": "uniqueAction",
+    "name": "COUNTERTEMPORAL NANOMINE",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "hieMarker",
+      "params": {
+        "marker": "nanomine",
+        "range": 8
+      }
+    },
+    "text": "Seed a time-slowing field: put your Nanomine marker down up to 8 inches away, somewhere this operative can see or on the Vantage level of terrain it can see. Enemies within 4 inches of the marker lose 2 inches of Move. It lasts until this operative activates again or falls, or until a friendly operative uses this action again. Unavailable in an enemy control range.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.9"
+  },
+  {
+    "id": "hie.a.chronometron",
+    "kind": "uniqueAction",
+    "name": "CHRONOMETRON",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "target": {
+      "side": "friendly",
+      "keyword": "HIEROTEK CIRCLE",
+      "visible": true,
+      "withinInches": 6
+    },
+    "effect": {
+      "code": "hieSupport",
+      "params": {
+        "kind": "chronometron",
+        "range": 6,
+        "selfOk": true,
+        "support": true
+      }
+    },
+    "text": "Pick a friendly Hierotek Circle operative (it may be this one) visible to and within 6 inches. Until this operative next activates, is incapacitated, or a friendly operative performs this action again, every weapon has 1 less Atk while it shoots, fights or retaliates against the picked operative. Not in an enemy control range.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.10"
+  },
+  {
+    "id": "hie.a.harbinger-of-despair",
+    "kind": "uniqueAction",
+    "name": "HARBINGER OF DESPAIR",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "hieMarker",
+      "params": {
+        "marker": "despair",
+        "range": null
+      }
+    },
+    "text": "Place your Despair marker where this operative can see it, or on Vantage terrain of a visible terrain feature. While an enemy operative is within 2 inches of it, Pick Up Marker and mission actions cost that operative 1 extra AP, and the enemy's contesting APL total for a marker is 1 lower if any of its contesting operatives is within 2 inches of the Despair marker. It goes when this operative next activates, is incapacitated, or a friendly operative repeats the action. Not in an enemy control range.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.11"
+  },
+  {
+    "id": "hie.a.nightmare-shroud",
+    "kind": "uniqueAction",
+    "name": "NIGHTMARE SHROUD",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "hieShroud"
+    },
+    "text": "Until this operative next activates, is incapacitated, or a friendly operative repeats this action: whenever an enemy operative within 4 inches of this operative shoots, fights or retaliates, its dice cannot be re-rolled for any reason and no result below 6 can be kept as a critical success. Not in an enemy control range.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.12"
+  },
+  {
+    "id": "hie.a.vision-of-madness",
+    "kind": "uniqueAction",
+    "name": "VISION OF MADNESS",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "target": {
+      "side": "enemy",
+      "visible": true
+    },
+    "effect": {
+      "code": "hieMadness"
+    },
+    "text": "Pick an enemy operative visible to this operative; it gains your Madness token until this operative next activates, is incapacitated, or a friendly operative repeats this action. When the opponent would activate the token holder you roll a D6: on a result equal to or higher than its APL it cannot activate this time and the opponent must pick another operative. The token is removed when the holder activates or no other enemy operative can. Not in an enemy control range.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.13"
+  },
+  {
+    "id": "hie.a.canoptek-repair",
+    "kind": "uniqueAction",
+    "name": "CANOPTEK REPAIR",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "target": {
+      "side": "friendly",
+      "keyword": "HIEROTEK CIRCLE",
+      "visible": true,
+      "withinInches": 6
+    },
+    "effect": {
+      "code": "hieSupport",
+      "params": {
+        "kind": "repair",
+        "range": 6,
+        "selfOk": true,
+        "support": true
+      }
+    },
+    "text": "Pick a friendly Hierotek Circle operative (it may be this one) visible to and within 6 inches. It regains up to 2D3 lost wounds. Only once per turning point for the whole team. Not in an enemy control range.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.14"
+  },
+  {
+    "id": "hie.a.augment-weapon",
+    "kind": "uniqueAction",
+    "name": "AUGMENT WEAPON",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "target": {
+      "side": "friendly",
+      "keyword": "HIEROTEK CIRCLE",
+      "visible": true,
+      "withinInches": 6
+    },
+    "effect": {
+      "code": "hieSupport",
+      "params": {
+        "kind": "augment",
+        "range": 6,
+        "selfOk": true,
+        "support": true
+      }
+    },
+    "text": "Pick a friendly Hierotek Circle operative (it may be this one) visible to and within 6 inches, then one weapon on its datacard, then two of Lethal 5+, Rending, Saturate and Severe. Until this operative next activates, is incapacitated, or a friendly operative repeats this action, that weapon has both. For a staff of light or an arcane conduit pick one profile only. Not in an enemy control range.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.15"
+  },
+  {
+    "id": "hie.a.reinforce-metal",
+    "kind": "uniqueAction",
+    "name": "REINFORCE METAL",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "target": {
+      "side": "friendly",
+      "keyword": "HIEROTEK CIRCLE",
+      "visible": true,
+      "withinInches": 6
+    },
+    "effect": {
+      "code": "hieSupport",
+      "params": {
+        "kind": "reinforce",
+        "range": 6,
+        "selfOk": true,
+        "support": true
+      }
+    },
+    "text": "Pick a friendly Hierotek Circle operative (it may be this one) visible to and within 6 inches. Until this operative next activates, is incapacitated, or a friendly operative repeats this action, each attack die that would deal 3 or more damage to the picked operative deals 1 less. Devastating damage is not reduced. Not in an enemy control range.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.16"
+  },
+  {
+    "id": "hie.a.accelerate",
+    "kind": "uniqueAction",
+    "name": "ACCELERATE",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "target": {
+      "side": "friendly",
+      "keyword": "HIEROTEK CIRCLE",
+      "visible": true,
+      "withinInches": 6,
+      "notSelf": true
+    },
+    "effect": {
+      "code": "hieSupport",
+      "params": {
+        "kind": "accelerate",
+        "range": 6,
+        "selfOk": false,
+        "support": false,
+        "anyKeyword": [
+          "DEATHMARK",
+          "IMMORTAL"
+        ]
+      }
+    },
+    "text": "Pick a friendly Deathmark or Immortal visible to and within 6 inches. It gains 1 APL until the end of its next activation. Not in an enemy control range.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.18"
+  },
+  {
+    "id": "hie.a.reanimate",
+    "kind": "uniqueAction",
+    "name": "REANIMATE",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "hieReanimate",
+      "params": {
+        "range": 6
+      }
+    },
+    "text": "Pick one of your Reanimation markers visible to and within 6 inches. For 1 AP roll a D6: on 3+ the operative tied to the marker is reanimated. For 2 AP it is reanimated without a roll. If it was already expended this turning point it returns expended, otherwise ready. Not in an enemy control range.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.19"
+  },
+  {
+    "id": "hie.a.multi-dimensional-vision",
+    "kind": "uniqueAction",
+    "name": "MULTI-DIMENSIONAL VISION",
+    "team": "hierotek-circle",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "hieVision"
+    },
+    "text": "Slips its sight into another dimension: up to its next activation, nothing it fires at can be obscured. Unavailable in an enemy control range.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.22"
+  }
+]

@@ -7,6 +7,7 @@
 // matched segments). Pure TS, no React. The index and the matching regex are built once, lazily.
 import { ACTION_HELP, ACTION_LABEL, humanize } from './labels'
 import { dataBundle } from './adapter'
+import { TEAM_PRESENTATION } from '../teams'
 
 export type GlossaryKind = 'stat' | 'status' | 'rule' | 'weaponRule' | 'keyword' | 'ability' | 'ploy' | 'equipment' | 'action'
 
@@ -45,6 +46,8 @@ const CORE: Core[] = [
   { term: 'Wounds', kind: 'stat', aliases: ['Wound'], body: 'How much damage the operative can take. At 0 it is incapacitated and removed; below half it is Injured.' },
   { term: 'Atk', kind: 'stat', aliases: ['Attacks', 'Attack stat'], body: 'Attacks: how many attack dice the weapon rolls each time it is used.' },
   { term: 'Hit', kind: 'stat', aliases: ['Hit stat'], body: 'The target number for attack dice: a die at this value or higher is a success, a 6 is always a critical success and a 1 always fails. Lower is better.' },
+  { term: 'Rng', kind: 'stat', aliases: ['Reach'], body: 'How far the weapon reaches. A ranged weapon with the Range rule can only target enemies within that distance; one without it (∞) can target any valid target on the killzone. A melee weapon fights enemies in its control range (1 inch).' },
+  { term: 'Unlimited range', kind: 'rule', body: 'This ranged weapon has no Range rule, so distance never limits it: any valid target on the killzone can be shot.' },
   { term: 'Dmg', kind: 'stat', aliases: ['Damage'], body: 'Damage per successful attack die, shown as normal/critical. A normal success deals the first number and a critical success deals the second, taken off the target\'s Wounds.' },
   { term: 'Weapon rules', kind: 'rule', aliases: ['Weapon rule'], body: 'Special rules printed on a weapon profile, such as Piercing or Blast. They change how an attack with that weapon plays out; hover each one for its effect.' },
 
@@ -153,22 +156,23 @@ function actionEntries(): GlossaryEntry[] {
 
 // ---------------------------------------------------------------- data-built entries
 
-interface RecordLike { id: string; name?: string; text?: string; kind?: string; param?: string; ap?: number; cost?: number; type?: string; scope?: string; count?: number; critsVariant?: boolean; team?: string; stats?: unknown; keywords?: string[] }
+interface RecordLike { id: string; name?: string; text?: string; kind?: string; param?: string; ap?: number; cost?: number; type?: string; scope?: string; count?: number; critsVariant?: boolean; team?: string; stats?: unknown; keywords?: string[]; choiceGroup?: string }
 
 const ROLE_KEYWORD: Record<string, string> = {
-  LEADER: 'Role keyword: the one commander each kill team must include. Angels of Death take a Captain or a Sergeant, Kommandos take the Boss Nob. Leader abilities such as Heroic Leader build on it.',
+  LEADER: 'Role keyword: the commander a kill team must include when its rules call for one, and what Leader abilities such as Heroic Leader build on. Not every team has one; each team\'s own card names who fills the slot.',
   SERGEANT: 'Squad-leader role. Angels of Death Sergeants can fill the Leader slot and carry Doctrine Warfare and Chapter Veteran.',
   'SPACE MARINE CAPTAIN': 'The Angels of Death Captain: a Leader with Iron Halo and Heroic Leader, able to bend the team\'s ploys.',
   GRENADIER: 'Role keyword of the Assault Intercessor Grenadier, whose Grenadier ability sharpens frag and krak grenades.',
-  WARRIOR: 'Basic trooper role. Warriors are the Angels of Death selections that may be taken more than once.',
-  GUNNER: 'Heavy-weapon role (Intercessor and Heavy Intercessor Gunners). It identifies the operative type for roster selection; no rule refers to it directly.',
-  SNIPER: 'Long-range marksman role: the Eliminator Sniper, who has Camo Cloak and the Optics action.',
+  WARRIOR: 'Basic trooper role. Angels of Death and Wyrmblade Warriors may be taken more than once; a Plague Marine Warrior is a single selection.',
+  GUNNER: 'Heavy-weapon role (Intercessor, Heavy Intercessor and Wyrmblade Neophyte Gunners, who are capped at two). It identifies the operative type for roster selection; no rule refers to it directly.',
+  SNIPER: 'Long-range marksman role: the Eliminator Sniper (Camo Cloak, Optics) and the Wyrmblade Sanctus Sniper (Target Vulnerability, Soulsight).',
   'ASSAULT INTERCESSOR': 'Operative type: close-range Intercessors. Identifies the datacard for roster selection; no rule refers to it directly.',
   INTERCESSOR: 'Operative type: bolt-rifle Intercessors. Identifies the datacard for roster selection; no rule refers to it directly.',
   'HEAVY INTERCESSOR': 'Operative type: Heavy Intercessors. Identifies the datacard for roster selection; no rule refers to it directly.',
   ELIMINATOR: 'Operative type: Eliminators, stealthy marksmen. Identifies the datacard for roster selection; no rule refers to it directly.',
-  IMPERIUM: 'Allegiance keyword carried by every Angels of Death operative. Rules naming it would apply to all of them; no current rule does, so it only identifies the operative.',
-  'ADEPTUS ASTARTES': 'Space Marine keyword carried by every Angels of Death operative. Rules naming it would apply to all of them; no current rule does, so it only identifies the operative.',
+  IMPERIUM: 'Allegiance keyword carried by the operatives of Imperial teams. Rules naming it would apply to all of them; no current rule does, so it only identifies the operative.',
+  MEDIC: 'Healer role keyword, carried by the medics of several teams. Rules that heal, save or revive a friend look for it; each team\'s own cards say what its medic does.',
+  'ADEPTUS ASTARTES': 'Space Marine keyword carried by every operative of the Space Marine teams. Rules naming it would apply to all of them; no current rule does, so it only identifies the operative.',
   ORK: 'Species keyword carried by every Kommando operative. Rules naming it would apply to all of them; no current rule does, so it only identifies the operative.',
   'BOSS NOB': 'The Kommando Leader. Krumpin\' Time lets it Fight twice in one activation, and Get It Dun! pushes another Kommando on.',
   'BOMB SQUIG': 'A walking explosive. It cannot take Conceal, is left out of Throat Slittas, is ignored by the opponent\'s kill op (Expendable), and can blow up (Boom!, Explosive).',
@@ -208,6 +212,18 @@ function keywordEntries(): GlossaryEntry[] {
   return [...out.values()]
 }
 
+/** Team-supplied entries (teams/<team>.ts `glossary`) replace the generic entry of the same kind and term, else are added. */
+function mergeTeamGlossary(all: GlossaryEntry[]): void {
+  for (const p of Object.values(TEAM_PRESENTATION)) {
+    for (const e of p.glossary ?? []) {
+      const key = e.term.toLowerCase()
+      const at = all.findIndex((x) => x.kind === e.kind && x.term.toLowerCase() === key)
+      if (at >= 0) all[at] = e
+      else all.push(e)
+    }
+  }
+}
+
 /** "Piercing" -> body text with a parameter slot x; derived per use in lookupTerm. */
 function weaponRuleEntries(): GlossaryEntry[] {
   const out: GlossaryEntry[] = []
@@ -237,6 +253,19 @@ function recordEntries(): GlossaryEntry[] {
     }
     seen.set(key, e)
     out.push(e)
+  }
+  // pick-one option groups (Chapter Tactics): the faction rule that offers them lists every option, and the
+  // singular group name ("Chapter Tactic") links to the same list
+  const groups = new Map<string, RecordLike[]>()
+  for (const rec of Object.values(dataBundle().byId) as RecordLike[]) {
+    if (rec.choiceGroup && rec.name && rec.text) groups.set(rec.choiceGroup, [...(groups.get(rec.choiceGroup) ?? []), rec])
+  }
+  for (const [group, opts] of groups) {
+    const rule = (Object.values(dataBundle().byId) as RecordLike[]).find((r) => r.kind === 'factionRule' && (r.id.endsWith(`.${group}s`) || r.id.endsWith(`.${group}`)))
+    const list = opts.map((o) => `${o.name}: ${o.text}`).join(' ')
+    const term = group.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+    add({ term, kind: 'ability', body: `${rule?.text ? `${rule.text} ` : ''}Options: ${list}` })
+    if (rule?.name && rule.text) add({ term: rule.name, kind: 'ability', body: `${rule.text} Options: ${list}` })
   }
   for (const rec of Object.values(dataBundle().byId) as RecordLike[]) {
     if (!rec.name || !rec.text) continue
@@ -294,6 +323,7 @@ function build(): Index {
     ...recordEntries(),
     ...keywordEntries(),
   ]
+  mergeTeamGlossary(all)
   const byKey = new Map<string, GlossaryEntry[]>()
   const add = (key: string, e: GlossaryEntry) => {
     const k = bare(norm(key))
@@ -393,6 +423,20 @@ export function weaponRuleParts(r: WeaponRuleUseLike): { term: string; label: st
   const value = r.inches !== undefined ? ` ${r.inches}″` : r.x !== undefined ? ` ${r.x}` : r.target !== undefined ? ` ${String(r.target).replace(/\+?$/, '+')}` : ''
   const term = `${name}${r.crits ? ' Crits' : ''}${value}`
   return { term, label: r.only ? `${term} (${r.only} only)` : term }
+}
+
+/** The Range weapon rule, as data (`core.wr.range`) or engine state (`range`, after `ruleName`) spells it. */
+export const isRangeRule = (r: WeaponRuleUseLike): boolean => r.rule === 'core.wr.range' || r.rule === 'range'
+
+/**
+ * A weapon's reach as the sheet shows it. Range is a weapon rule, not a stat: a ranged profile without
+ * one reaches any valid target, and a melee profile fights enemies in
+ * control range (1″).
+ */
+export function weaponReach(w: { type: string; rules: readonly WeaponRuleUseLike[] }): { label: string; term: string } {
+  if (w.type === 'melee') return { label: '1″', term: 'Control range' }
+  const r = w.rules.find((u) => isRangeRule(u) && u.inches !== undefined)
+  return r ? { label: `${r.inches}″`, term: weaponRuleParts(r).term } : { label: '∞', term: 'Unlimited range' }
 }
 
 // ---------------------------------------------------------------- linking free text

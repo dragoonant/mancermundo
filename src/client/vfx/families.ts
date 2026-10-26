@@ -2,6 +2,7 @@
 // throwing knives get their own looks), explicit for every weapon of both teams and the core grenades; a test
 // fails when a weapon in the data has no entry. `vfxOf` classifies an unknown id by its flavour as a safety net.
 import { flavourOf } from '../weaponFlavour'
+import { teamTable } from '../teams'
 
 export type VfxFamily = 'bolt' | 'plasma' | 'flame' | 'explosive' | 'slugga' | 'shokka' | 'harpoon' | 'knives' | 'blade' | 'crush'
 
@@ -75,6 +76,8 @@ export const WEAPON_VFX: Record<string, WeaponVfx> = {
   'core.w.frag-grenade': w('explosive', 'frag'),
   'core.w.krak-grenade': w('explosive', 'krak'),
 }
+// M9 prep: teams added later bring their own entries (src/client/teams)
+Object.assign(WEAPON_VFX, teamTable('vfx'))
 
 /** The effect family of a weapon: the explicit entry, else a best guess from the flavour / id. Never throws. */
 export function vfxOf(weaponId: string | null | undefined): WeaponVfx {

@@ -1,0 +1,450 @@
+[
+  {
+    "id": "ex.w.combat-shotgun-proctor-close",
+    "name": "Combat shotgun",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 4,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      }
+    ],
+    "profileGroup": "ex.wg.combat-shotgun-proctor",
+    "profile": "close range",
+    "text": "The Proctor's combat shotgun at close range: a full blast into the face of the accused.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.combat-shotgun-proctor-long",
+    "name": "Combat shotgun",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 2
+    },
+    "rules": [],
+    "profileGroup": "ex.wg.combat-shotgun-proctor",
+    "profile": "long range",
+    "text": "The Proctor's combat shotgun at long range: the same shells spread thin over distance.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.combat-shotgun-close",
+    "name": "Combat shotgun",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      }
+    ],
+    "profileGroup": "ex.wg.combat-shotgun",
+    "profile": "close range",
+    "text": "The standard Arbites shotgun at close range: devastating at a few paces.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.combat-shotgun-long",
+    "name": "Combat shotgun",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "5+",
+    "dmg": {
+      "normal": 2,
+      "crit": 2
+    },
+    "rules": [],
+    "profileGroup": "ex.wg.combat-shotgun",
+    "profile": "long range",
+    "text": "The standard Arbites shotgun at long range: scattered shot that mostly stings.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.shotpistol-proctor",
+    "name": "Shotpistol",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      }
+    ],
+    "text": "The Proctor's sidearm, a short shotgun fired one-handed with a veteran's aim.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.shotpistol",
+    "name": "Shotpistol",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      }
+    ],
+    "text": "A short-barrelled shotgun carried as a sidearm.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.scoped-shotpistol-short",
+    "name": "Scoped shotpistol",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "profileGroup": "ex.wg.scoped-shotpistol",
+    "profile": "short range",
+    "text": "A scoped shotpistol used at short range, where its crit chance is sharpest.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.scoped-shotpistol-long",
+    "name": "Scoped shotpistol",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [],
+    "profileGroup": "ex.wg.scoped-shotpistol",
+    "profile": "long range",
+    "text": "A scoped shotpistol used at long range: steady and accurate, with no reach limit.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.executioner-shotgun-concealed",
+    "name": "Executioner shotgun",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 4,
+      "crit": 0
+    },
+    "rules": [
+      {
+        "rule": "core.wr.devastating",
+        "x": 4
+      },
+      {
+        "rule": "core.wr.heavy"
+      },
+      {
+        "rule": "core.wr.silent"
+      },
+      {
+        "rule": "ex.a.wr-concealed-position"
+      }
+    ],
+    "profileGroup": "ex.wg.executioner-shotgun",
+    "profile": "concealed",
+    "text": "A silenced executioner shotgun fired from hiding. A retained crit hurts through its devastating blast, not its dice.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.executioner-shotgun-mobile",
+    "name": "Executioner shotgun",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 4
+    },
+    "rules": [],
+    "profileGroup": "ex.wg.executioner-shotgun",
+    "profile": "mobile",
+    "text": "The executioner shotgun carried on the move.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.executioner-shotgun-stationary",
+    "name": "Executioner shotgun",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 4,
+      "crit": 0
+    },
+    "rules": [
+      {
+        "rule": "core.wr.devastating",
+        "x": 4
+      },
+      {
+        "rule": "core.wr.heavy"
+      }
+    ],
+    "profileGroup": "ex.wg.executioner-shotgun",
+    "profile": "stationary",
+    "text": "The executioner shotgun braced and aimed. A retained crit hurts through its devastating blast, not its dice.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.grenade-launcher",
+    "name": "Grenade launcher",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "text": "A launcher loaded with door-cracking armour-piercing rounds.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.heavy-stubber-focused",
+    "name": "Heavy stubber",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.heavy",
+        "only": "dash"
+      }
+    ],
+    "profileGroup": "ex.wg.heavy-stubber",
+    "profile": "focused",
+    "text": "A rapid-fire heavy stubber trained on one target.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.heavy-stubber-sweeping",
+    "name": "Heavy stubber",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.heavy",
+        "only": "dash"
+      },
+      {
+        "rule": "core.wr.torrent",
+        "inches": 1
+      }
+    ],
+    "profileGroup": "ex.wg.heavy-stubber",
+    "profile": "sweeping",
+    "text": "A rapid-fire heavy stubber swept across a crowd.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.webber",
+    "name": "Webber",
+    "team": "exaction-squad",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 12
+      },
+      {
+        "rule": "core.wr.severe"
+      },
+      {
+        "rule": "core.wr.stun"
+      }
+    ],
+    "text": "A chemical launcher that glues and paralyses its victim.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.dominator-maul-assault-shield",
+    "name": "Dominator maul & assault shield",
+    "team": "exaction-squad",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.shock"
+      },
+      {
+        "rule": "ex.a.wr-repress"
+      }
+    ],
+    "text": "The Proctor's shock maul with a riot shield that turns blows aside and strikes back first.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.excruciator-maul",
+    "name": "Excruciator maul",
+    "team": "exaction-squad",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 5,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.rending"
+      },
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "A heavy maul that crushes armour and jolts the nerves.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.shock-maul-assault-shield",
+    "name": "Shock maul & assault shield",
+    "team": "exaction-squad",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.shock"
+      },
+      {
+        "rule": "ex.a.wr-repress"
+      }
+    ],
+    "text": "A crackling maul and riot shield for pinning a quarry in place.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.mechanical-bite",
+    "name": "Mechanical bite",
+    "team": "exaction-squad",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "The cyber-mastiff's augmetic jaws.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.repression-baton-proctor",
+    "name": "Repression baton",
+    "team": "exaction-squad",
+    "type": "melee",
+    "atk": 3,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "The Proctor's baton, wielded with long practice.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  },
+  {
+    "id": "ex.w.repression-baton",
+    "name": "Repression baton",
+    "team": "exaction-squad",
+    "type": "melee",
+    "atk": 3,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "A stout riot baton for putting down trouble.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.3"
+  }
+]

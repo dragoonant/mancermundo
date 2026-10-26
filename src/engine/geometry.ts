@@ -12,9 +12,15 @@ export function dist2(a: Vec2, b: Vec2): number {
   return Math.hypot(a.x - b.x, a.z - b.z)
 }
 
+/**
+ * Measuring tolerance for rounding an increment up (1/200 inch). Waypoints are rounded to 1/1000 inch, so a step
+ * aimed at exactly 6" can land at 6.0004"; that is still a 6" move, not 7".
+ */
+export const INCREMENT_TOLERANCE = 0.005
+
 /** Movement cost of one straight-line increment: its length rounded UP to the next whole inch (R-4.1). */
 export function incrementCost(length: number): number {
-  return length <= EPS ? 0 : Math.ceil(length - EPS)
+  return length <= EPS ? 0 : Math.max(1, Math.ceil(length - INCREMENT_TOLERANCE))
 }
 
 /** Bearing of the vector a -> b with +Z as 0 and +X as pi/2. */
@@ -118,6 +124,9 @@ export function segmentBBoxOverlaps(a: Vec2, b: Vec2, box: BBox, pad = 0): boole
 
 /** Parameter intervals [t0, t1] of the segment a -> b that lie inside the polygon. */
 export function segmentPolygonIntervals(a: Vec2, b: Vec2, poly: Polygon): [number, number][] {
+  // M10 batch D shared (sim hot path): a segment whose box misses the polygon's box has no point inside it
+  const box = polyBox(poly)
+  if (Math.max(a.x, b.x) < box.minX - 1e-9 || Math.min(a.x, b.x) > box.maxX + 1e-9 || Math.max(a.z, b.z) < box.minZ - 1e-9 || Math.min(a.z, b.z) > box.maxZ + 1e-9) return []
   const dx = b.x - a.x
   const dz = b.z - a.z
   const ts: number[] = [0, 1]
@@ -179,4 +188,20 @@ export function ringPoints(c: Vec2, r: number, count: number, startAngle = 0): V
 
 export function mmToInches(mm: number): number {
   return mm / 25.4
+}
+
+const polyBoxes = new WeakMap<Polygon, { minX: number; maxX: number; minZ: number; maxZ: number }>()
+/** Bounding box of a polygon, cached per polygon array (polygons are never mutated in place). */
+function polyBox(poly: Polygon): { minX: number; maxX: number; minZ: number; maxZ: number } {
+  let b = polyBoxes.get(poly)
+  if (b) return b
+  b = { minX: Infinity, maxX: -Infinity, minZ: Infinity, maxZ: -Infinity }
+  for (const p of poly) {
+    if (p.x < b.minX) b.minX = p.x
+    if (p.x > b.maxX) b.maxX = p.x
+    if (p.z < b.minZ) b.minZ = p.z
+    if (p.z > b.maxZ) b.maxZ = p.z
+  }
+  polyBoxes.set(poly, b)
+  return b
 }

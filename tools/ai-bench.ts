@@ -1,10 +1,13 @@
-// npm run bench:ai -- --games 40 --seed 1 [--tier normal] [--vs random|easy] [--teams real|fixture] [--layout <id>]
-// Mirror matches on a fixed layout: both teams, both seats. Decisive results only. Gate (docs/spec/40-ai section 3):
-// normal beats random >= 95%, zero rejections / stalls / fallbacks, activations with no action < 2%.
+// npm run bench:ai -- --games 40 --seed 1 [--tier normal] [--vs random|easy] [--teams real|fixture] [--layout <id>] [--pair a,b]
+// Real teams: every playable team takes the tested tier in turn (game g: team g mod N, seats alternating), against
+// a rotating opponent team played by `--vs`, so `--games` is the total number of games whatever the team count.
+// `--pair a,b` restricts it to that pairing (the v1 mirror bench). Decisive results only; the report breaks the
+// result down per tested team. Gate (docs/spec/40-ai section 3): normal beats random >= 95% overall, zero
+// rejections / stalls / fallbacks, activations with no action < 2%.
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 import type { EngineBundle, GameSetup, Seat } from '@/engine'
-import { bundleFromData, realSetup } from '@/engine/bundle'
+import { bundleFromData, playableTeams, realSetup } from '@/engine/bundle'
 import { loadBundle } from '../src/data'
 import { createAiDecider } from '../src/ai/decider'
 import { aiBudgetMs, type Tier } from '../src/ai/tiers'
@@ -18,13 +21,13 @@ function arg(name: string, fallback: string): string {
 }
 
 const OUT = 'tools/out/bench-report.json'
-const TEAMS = ['angels-of-death', 'kommandos']
 
 interface BenchRow {
   game: number
   seed: string
   aiSeat: Seat
   aiTeam: string
+  vsTeam: string
   winner: Seat | 'draw' | null
   aiWon: boolean | null
   vp: Record<Seat, number>
@@ -50,16 +53,34 @@ const myWeights = weightsArg('weights')
 const vsWeights = weightsArg('vs-weights')
 
 let bundle: EngineBundle
+let TEAMS: string[] = []
 let setupFor: (g: number, aiSeat: Seat, teamIdx: number) => GameSetup
+/** The tested team of game g and its opponent: every team in turn, the opponent rotating through the others. */
+function pairingOf(g: number): { ti: number; oi: number } {
+  const n = TEAMS.length
+  // M10 batch D shared: team g mod n, so any n games test every team once (40 games, 24 teams: all of them, 16 twice);
+  // the opponent moves one further on each lap
+  const ti = g % n
+  if (n < 2) return { ti, oi: ti }
+  const round = Math.floor(g / n) % (n - 1)
+  return { ti, oi: (ti + 1 + round) % n }
+}
+/** The tested tier's seat: alternating by game, and flipped on each lap so a team's repeat games swap seats. */
+function aiSeatOf(g: number): Seat {
+  const lap = real && TEAMS.length > 0 ? Math.floor(g / TEAMS.length) : 0
+  return (g + lap) % 2 === 0 ? 'A' : 'B'
+}
 if (real) {
   bundle = bundleFromData(loadBundle())
+  // `--pair <teamA>,<teamB>` benchmarks one pairing; by default every playable team is tested
+  TEAMS = arg('pair', '') ? arg('pair', '').split(',') : playableTeams(bundle)
   const layouts = Object.keys(bundle.layouts ?? {}).sort()
   const layoutId = arg('layout', layouts[0] ?? '')
-  // `--layouts all` rotates the three killzone layouts per game pair
+  // `--layouts all` rotates the six killzone layouts per game pair
   const all = arg('layouts', '') === 'all'
   setupFor = (_g, aiSeat, ti) => {
     const ai = TEAMS[ti]!
-    const other = TEAMS[1 - ti]!
+    const other = TEAMS[pairingOf(_g).oi]!
     return realSetup(bundle, { teams: aiSeat === 'A' ? [ai, other] : [other, ai], layoutId: all ? layouts[Math.floor(_g / 4) % layouts.length]! : layoutId })
   }
 } else {
@@ -86,9 +107,10 @@ let hardStops = 0
 let vpDiff = 0
 let vpGames = 0
 const byKind: Record<string, { n: number; ms: number; max: number; fallbacks: number }> = {}
+const byTeam: Record<string, { games: number; wins: number; losses: number; draws: number; unfinished: number; vpDiff: number; vpGames: number }> = {}
 for (let g = 0; g < games; g++) {
-  const aiSeat: Seat = g % 2 === 0 ? 'A' : 'B'
-  const ti = Math.floor(g / 2) % 2
+  const aiSeat: Seat = aiSeatOf(g)
+  const ti = real ? pairingOf(g).ti : 0
   const gameSeed = `${seed}-${g}`
   const setup = setupFor(g, aiSeat, ti)
   const other: Seat = aiSeat === 'A' ? 'B' : 'A'
@@ -126,11 +148,23 @@ for (let g = 0; g < games; g++) {
   oppRejections += m.seats[other].rejections
   if (m.stalled || !m.ended) stalls++
   const team = real ? TEAMS[ti]! : 'fixture'
+  const vsTeam = real ? TEAMS[pairingOf(g).oi]! : 'fixture'
+  const t = (byTeam[team] ??= { games: 0, wins: 0, losses: 0, draws: 0, unfinished: 0, vpDiff: 0, vpGames: 0 })
+  t.games++
+  if (aiWon === true) t.wins++
+  else if (aiWon === false) t.losses++
+  else if (m.winner === 'draw') t.draws++
+  else t.unfinished++
+  if (m.ended) {
+    t.vpDiff += m.vp[aiSeat] - m.vp[other]
+    t.vpGames++
+  }
   rows.push({
     game: g,
     seed: gameSeed,
     aiSeat,
     aiTeam: team,
+    vsTeam,
     winner: m.winner,
     aiWon,
     vp: m.vp,
@@ -141,7 +175,7 @@ for (let g = 0; g < games; g++) {
     fallbacks: s.fallbacks,
   })
   console.log(
-    `game ${String(g).padStart(2)} ${aiSeat}/${team.slice(0, 3)} winner=${m.winner} vp=${m.vp.A}-${m.vp.B} dec=${m.decisions} ai=${Math.round(s.ms)}ms rej=${s.rejections} fb=${s.fallbacks}${m.firstRejection ? ` REJ(${m.firstRejection})` : ''}`,
+    `game ${String(g).padStart(2)} ${aiSeat}/${team.slice(0, 3)} v ${vsTeam.slice(0, 3)} winner=${m.winner} vp=${m.vp.A}-${m.vp.B} dec=${m.decisions} ai=${Math.round(s.ms)}ms rej=${s.rejections} fb=${s.fallbacks}${m.firstRejection ? ` REJ(${m.firstRejection})` : ''}`,
   )
 }
 const decisive = wins + losses
@@ -171,6 +205,9 @@ const report = {
   activations: acts,
   zeroActionShare: acts ? zero / acts : 0,
   wallMs: Date.now() - t0,
+  byTeam: Object.fromEntries(
+    Object.entries(byTeam).map(([k, v]) => [k, { ...v, winRate: v.wins + v.losses ? v.wins / (v.wins + v.losses) : 0, meanVpDiff: v.vpGames ? v.vpDiff / v.vpGames : 0 }]),
+  ),
   byKind: Object.fromEntries(Object.entries(byKind).map(([k, v]) => [k, { n: v.n, meanMs: v.ms / Math.max(1, v.n), maxMs: v.max, fallbacks: v.fallbacks }])),
   rows,
 }
@@ -181,6 +218,12 @@ console.log(
     `mean ${report.meanDecisionMs.toFixed(1)} ms/decision (max ${aiMax.toFixed(0)}), rejections ${rejections}, fallbacks ${aiFallbacks}, stalls ${stalls}, ` +
     `zero-action activations ${(report.zeroActionShare * 100).toFixed(1)}% of ${acts}, ${(report.wallMs / 1000).toFixed(0)} s`,
 )
+for (const [k, v] of Object.entries(byTeam).sort((a, b) => (a[0] < b[0] ? -1 : 1))) {
+  const dec = v.wins + v.losses
+  console.log(
+    `  ${tier} ${k.padEnd(18)} vs ${vs}: ${v.wins}W ${v.losses}L ${v.draws}D ${v.unfinished}U of ${v.games} (win rate ${dec ? ((v.wins / dec) * 100).toFixed(0) : '-'}%, mean VP diff ${(v.vpGames ? v.vpDiff / v.vpGames : 0).toFixed(1)})`,
+  )
+}
 for (const [k, v] of Object.entries(byKind).sort((a, b) => b[1].ms - a[1].ms).slice(0, 8)) {
   console.log(`  ${k.padEnd(22)} n=${String(v.n).padStart(5)} mean ${(v.ms / Math.max(1, v.n)).toFixed(1).padStart(6)} ms  max ${v.max.toFixed(0).padStart(4)}  fallbacks ${v.fallbacks}`)
 }

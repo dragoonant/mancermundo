@@ -1,0 +1,1707 @@
+{
+ "aod-space-marine-captain": {
+  "prompt": "super-deformed heroic body for aod-space-marine-captain, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/aod-space-marine-captain.png)",
+  "height": 1.3,
+  "base": 40
+ },
+ "aod-intercessor-sergeant": {
+  "prompt": "super-deformed heroic body for aod-intercessor-sergeant, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/aod-intercessor-sergeant.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "aod-intercessor-warrior": {
+  "prompt": "super-deformed heroic body for aod-intercessor-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/aod-intercessor-warrior.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "aod-intercessor-warrior-kneeling": {
+  "prompt": "super-deformed heroic body for aod-intercessor-warrior-kneeling, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/aod-intercessor-warrior-kneeling.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "aod-intercessor-gunner": {
+  "prompt": "super-deformed heroic body for aod-intercessor-gunner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/aod-intercessor-gunner.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "aod-heavy-intercessor-gunner": {
+  "prompt": "super-deformed heroic body for aod-heavy-intercessor-gunner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/aod-heavy-intercessor-gunner.png)",
+  "height": 1.35,
+  "base": 40
+ },
+ "aod-eliminator-sniper": {
+  "prompt": "super-deformed heroic body for aod-eliminator-sniper, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/aod-eliminator-sniper.png)",
+  "height": 1.2,
+  "base": 40
+ },
+ "aod-assault-intercessor-sergeant": {
+  "prompt": "super-deformed heroic body for aod-assault-intercessor-sergeant, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/aod-assault-intercessor-sergeant.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "aod-assault-intercessor-warrior": {
+  "prompt": "super-deformed heroic body for aod-assault-intercessor-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/aod-assault-intercessor-warrior.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "aod-assault-intercessor-grenadier": {
+  "prompt": "super-deformed heroic body for aod-assault-intercessor-grenadier, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/aod-assault-intercessor-grenadier.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "kom-boy": {
+  "prompt": "super-deformed heroic body for kom-boy, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/kom-boy.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "kom-boy-b": {
+  "prompt": "super-deformed heroic body for kom-boy-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/kom-boy-b.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "kom-boy-c": {
+  "prompt": "super-deformed heroic body for kom-boy-c, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/kom-boy-c.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "kom-boss-nob": {
+  "prompt": "super-deformed heroic body for kom-boss-nob, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/kom-boss-nob.png)",
+  "height": 1.35,
+  "base": 32
+ },
+ "kom-breacha-boy": {
+  "prompt": "super-deformed heroic body for kom-breacha-boy, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/kom-breacha-boy.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "kom-burna-boy": {
+  "prompt": "super-deformed heroic body for kom-burna-boy, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/kom-burna-boy.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "kom-comms-boy": {
+  "prompt": "super-deformed heroic body for kom-comms-boy, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/kom-comms-boy.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "kom-dakka-boy": {
+  "prompt": "super-deformed heroic body for kom-dakka-boy, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/kom-dakka-boy.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "kom-rokkit-boy": {
+  "prompt": "super-deformed heroic body for kom-rokkit-boy, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/kom-rokkit-boy.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "kom-slasha-boy": {
+  "prompt": "super-deformed heroic body for kom-slasha-boy, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/kom-slasha-boy.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "kom-snipa-boy": {
+  "prompt": "super-deformed heroic body for kom-snipa-boy, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/kom-snipa-boy.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "kom-grot": {
+  "prompt": "super-deformed heroic body for kom-grot, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/kom-grot.png)",
+  "height": 0.8,
+  "base": 25
+ },
+ "kom-bomb-squig": {
+  "prompt": "super-deformed heroic body for kom-bomb-squig, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/kom-bomb-squig.png)",
+  "height": 0.75,
+  "base": 25
+ },
+ "pf-assault-grenadier": {
+  "prompt": "super-deformed heroic body for pf-assault-grenadier, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-assault-grenadier.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "pf-blooded": {
+  "prompt": "super-deformed heroic body for pf-blooded, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-blooded.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "pf-comms-specialist": {
+  "prompt": "super-deformed heroic body for pf-comms-specialist, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-comms-specialist.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "pf-drone-controller": {
+  "prompt": "super-deformed heroic body for pf-drone-controller, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-drone-controller.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "pf-marksman": {
+  "prompt": "super-deformed heroic body for pf-marksman, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-marksman.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "pf-mb3-recon-drone": {
+  "prompt": "super-deformed heroic body for pf-mb3-recon-drone, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-mb3-recon-drone.png)",
+  "height": 0.8,
+  "base": 32
+ },
+ "pf-medical-technician": {
+  "prompt": "super-deformed heroic body for pf-medical-technician, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-medical-technician.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "pf-mv1-gun-drone": {
+  "prompt": "super-deformed heroic body for pf-mv1-gun-drone, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-mv1-gun-drone.png)",
+  "height": 0.8,
+  "base": 32
+ },
+ "pf-mv31-pulse-accelerator-drone": {
+  "prompt": "super-deformed heroic body for pf-mv31-pulse-accelerator-drone, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-mv31-pulse-accelerator-drone.png)",
+  "height": 0.9,
+  "base": 32
+ },
+ "pf-mv33-grav-inhibitor-drone": {
+  "prompt": "super-deformed heroic body for pf-mv33-grav-inhibitor-drone, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-mv33-grav-inhibitor-drone.png)",
+  "height": 0.8,
+  "base": 32
+ },
+ "pf-mv4-shield-drone": {
+  "prompt": "super-deformed heroic body for pf-mv4-shield-drone, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-mv4-shield-drone.png)",
+  "height": 0.85,
+  "base": 32
+ },
+ "pf-mv7-marker-drone": {
+  "prompt": "super-deformed heroic body for pf-mv7-marker-drone, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-mv7-marker-drone.png)",
+  "height": 0.85,
+  "base": 32
+ },
+ "pf-shasla": {
+  "prompt": "super-deformed heroic body for pf-shasla, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-shasla.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "pf-shasla-b": {
+  "prompt": "super-deformed heroic body for pf-shasla-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-shasla-b.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "pf-shasla-c": {
+  "prompt": "super-deformed heroic body for pf-shasla-c, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-shasla-c.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "pf-shasui": {
+  "prompt": "super-deformed heroic body for pf-shasui, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-shasui.png)",
+  "height": 1.15,
+  "base": 25
+ },
+ "pf-transpectral-interference": {
+  "prompt": "super-deformed heroic body for pf-transpectral-interference, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-transpectral-interference.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "pf-weapons-expert": {
+  "prompt": "super-deformed heroic body for pf-weapons-expert, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pf-weapons-expert.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "ht-immortal-guardian": {
+  "prompt": "super-deformed heroic body for ht-immortal-guardian, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ht-immortal-guardian.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "ht-immortal-guardian-b": {
+  "prompt": "super-deformed heroic body for ht-immortal-guardian-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ht-immortal-guardian-b.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "ht-immortal-despotek": {
+  "prompt": "super-deformed heroic body for ht-immortal-despotek, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ht-immortal-despotek.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "ht-deathmark": {
+  "prompt": "super-deformed heroic body for ht-deathmark, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ht-deathmark.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "ht-apprentek": {
+  "prompt": "super-deformed heroic body for ht-apprentek, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ht-apprentek.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "ht-chronomancer": {
+  "prompt": "super-deformed heroic body for ht-chronomancer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ht-chronomancer.png)",
+  "height": 1.4,
+  "base": 40
+ },
+ "ht-psychomancer": {
+  "prompt": "super-deformed heroic body for ht-psychomancer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ht-psychomancer.png)",
+  "height": 1.3,
+  "base": 40
+ },
+ "ht-technomancer": {
+  "prompt": "super-deformed heroic body for ht-technomancer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ht-technomancer.png)",
+  "height": 1.5,
+  "base": 50
+ },
+ "ht-plasmacyte-accelerator": {
+  "prompt": "super-deformed heroic body for ht-plasmacyte-accelerator, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ht-plasmacyte-accelerator.png)",
+  "height": 0.75,
+  "base": 25
+ },
+ "ht-plasmacyte-reanimator": {
+  "prompt": "super-deformed heroic body for ht-plasmacyte-reanimator, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ht-plasmacyte-reanimator.png)",
+  "height": 0.75,
+  "base": 25
+ },
+ "pm-plague-marine-warrior": {
+  "prompt": "super-deformed heroic body for pm-plague-marine-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pm-plague-marine-warrior.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "pm-plague-marine-champion": {
+  "prompt": "super-deformed heroic body for pm-plague-marine-champion, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pm-plague-marine-champion.png)",
+  "height": 1.4,
+  "base": 32
+ },
+ "pm-plague-marine-bombardier": {
+  "prompt": "super-deformed heroic body for pm-plague-marine-bombardier, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pm-plague-marine-bombardier.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "pm-plague-marine-fighter": {
+  "prompt": "super-deformed heroic body for pm-plague-marine-fighter, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pm-plague-marine-fighter.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "pm-plague-marine-heavy-gunner": {
+  "prompt": "super-deformed heroic body for pm-plague-marine-heavy-gunner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pm-plague-marine-heavy-gunner.png)",
+  "height": 1.35,
+  "base": 32
+ },
+ "pm-plague-marine-icon-bearer": {
+  "prompt": "super-deformed heroic body for pm-plague-marine-icon-bearer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pm-plague-marine-icon-bearer.png)",
+  "height": 1.7,
+  "base": 32
+ },
+ "pm-malignant-plaguecaster": {
+  "prompt": "super-deformed heroic body for pm-malignant-plaguecaster, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pm-malignant-plaguecaster.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "pm-plague-marine-warrior-b": {
+  "prompt": "super-deformed heroic body for pm-plague-marine-warrior-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/pm-plague-marine-warrior-b.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "wb-neophyte-warrior": {
+  "prompt": "super-deformed heroic body for wb-neophyte-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wb-neophyte-warrior.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "wb-neophyte-leader": {
+  "prompt": "super-deformed heroic body for wb-neophyte-leader, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wb-neophyte-leader.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "wb-neophyte-gunner": {
+  "prompt": "super-deformed heroic body for wb-neophyte-gunner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wb-neophyte-gunner.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "wb-neophyte-heavy-gunner": {
+  "prompt": "super-deformed heroic body for wb-neophyte-heavy-gunner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wb-neophyte-heavy-gunner.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "wb-neophyte-icon-bearer": {
+  "prompt": "super-deformed heroic body for wb-neophyte-icon-bearer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wb-neophyte-icon-bearer.png)",
+  "height": 1.45,
+  "base": 25
+ },
+ "wb-kelermorph": {
+  "prompt": "super-deformed heroic body for wb-kelermorph, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wb-kelermorph.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "wb-locus": {
+  "prompt": "super-deformed heroic body for wb-locus, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wb-locus.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "wb-sanctus-sniper": {
+  "prompt": "super-deformed heroic body for wb-sanctus-sniper, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wb-sanctus-sniper.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "wb-sanctus-talon": {
+  "prompt": "super-deformed heroic body for wb-sanctus-talon, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wb-sanctus-talon.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "wb-neophyte-warrior-b": {
+  "prompt": "super-deformed heroic body for wb-neophyte-warrior-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wb-neophyte-warrior-b.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "wb-neophyte-warrior-c": {
+  "prompt": "super-deformed heroic body for wb-neophyte-warrior-c, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wb-neophyte-warrior-c.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "lg-warrior": {
+  "prompt": "super-deformed heroic body for lg-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/lg-warrior.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "lg-aspiring-champion": {
+  "prompt": "super-deformed heroic body for lg-aspiring-champion, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/lg-aspiring-champion.png)",
+  "height": 1.4,
+  "base": 32
+ },
+ "lg-chosen": {
+  "prompt": "super-deformed heroic body for lg-chosen, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/lg-chosen.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "lg-anointed": {
+  "prompt": "super-deformed heroic body for lg-anointed, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/lg-anointed.png)",
+  "height": 1.4,
+  "base": 32
+ },
+ "lg-balefire-acolyte": {
+  "prompt": "super-deformed heroic body for lg-balefire-acolyte, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/lg-balefire-acolyte.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "lg-butcher": {
+  "prompt": "super-deformed heroic body for lg-butcher, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/lg-butcher.png)",
+  "height": 1.35,
+  "base": 32
+ },
+ "lg-gunner": {
+  "prompt": "super-deformed heroic body for lg-gunner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/lg-gunner.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "lg-heavy-gunner": {
+  "prompt": "super-deformed heroic body for lg-heavy-gunner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/lg-heavy-gunner.png)",
+  "height": 1.35,
+  "base": 32
+ },
+ "lg-icon-bearer": {
+  "prompt": "super-deformed heroic body for lg-icon-bearer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/lg-icon-bearer.png)",
+  "height": 1.7,
+  "base": 32
+ },
+ "lg-shrivetalon": {
+  "prompt": "super-deformed heroic body for lg-shrivetalon, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/lg-shrivetalon.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "lg-warrior-b": {
+  "prompt": "super-deformed heroic body for lg-warrior-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/lg-warrior-b.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "ha-agent": {
+  "prompt": "super-deformed heroic body for ha-agent, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ha-agent.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ha-archsybarite": {
+  "prompt": "super-deformed heroic body for ha-archsybarite, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ha-archsybarite.png)",
+  "height": 1.15,
+  "base": 25
+ },
+ "ha-crimson-duellist": {
+  "prompt": "super-deformed heroic body for ha-crimson-duellist, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ha-crimson-duellist.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "ha-disciple-of-yaelindra": {
+  "prompt": "super-deformed heroic body for ha-disciple-of-yaelindra, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ha-disciple-of-yaelindra.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ha-elixicant": {
+  "prompt": "super-deformed heroic body for ha-elixicant, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ha-elixicant.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ha-flayer": {
+  "prompt": "super-deformed heroic body for ha-flayer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ha-flayer.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "ha-gunner": {
+  "prompt": "super-deformed heroic body for ha-gunner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ha-gunner.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ha-heavy-gunner": {
+  "prompt": "super-deformed heroic body for ha-heavy-gunner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ha-heavy-gunner.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "ha-skysplinter-assassin": {
+  "prompt": "super-deformed heroic body for ha-skysplinter-assassin, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ha-skysplinter-assassin.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "ha-agent-b": {
+  "prompt": "super-deformed heroic body for ha-agent-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ha-agent-b.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "hc-skitarii-ranger-warrior": {
+  "prompt": "super-deformed heroic body for hc-skitarii-ranger-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-skitarii-ranger-warrior.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "hc-skitarii-ranger-alpha": {
+  "prompt": "super-deformed heroic body for hc-skitarii-ranger-alpha, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-skitarii-ranger-alpha.png)",
+  "height": 1.15,
+  "base": 25
+ },
+ "hc-skitarii-ranger-diktat": {
+  "prompt": "super-deformed heroic body for hc-skitarii-ranger-diktat, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-skitarii-ranger-diktat.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "hc-skitarii-ranger-surveyor": {
+  "prompt": "super-deformed heroic body for hc-skitarii-ranger-surveyor, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-skitarii-ranger-surveyor.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "hc-skitarii-ranger-gunner": {
+  "prompt": "super-deformed heroic body for hc-skitarii-ranger-gunner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-skitarii-ranger-gunner.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "hc-skitarii-vanguard-warrior": {
+  "prompt": "super-deformed heroic body for hc-skitarii-vanguard-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-skitarii-vanguard-warrior.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "hc-skitarii-vanguard-alpha": {
+  "prompt": "super-deformed heroic body for hc-skitarii-vanguard-alpha, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-skitarii-vanguard-alpha.png)",
+  "height": 1.15,
+  "base": 25
+ },
+ "hc-skitarii-vanguard-diktat": {
+  "prompt": "super-deformed heroic body for hc-skitarii-vanguard-diktat, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-skitarii-vanguard-diktat.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "hc-skitarii-vanguard-surveyor": {
+  "prompt": "super-deformed heroic body for hc-skitarii-vanguard-surveyor, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-skitarii-vanguard-surveyor.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "hc-skitarii-vanguard-gunner": {
+  "prompt": "super-deformed heroic body for hc-skitarii-vanguard-gunner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-skitarii-vanguard-gunner.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "hc-sicarian-infiltrator-warrior": {
+  "prompt": "super-deformed heroic body for hc-sicarian-infiltrator-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-sicarian-infiltrator-warrior.png)",
+  "height": 1.2,
+  "base": 40
+ },
+ "hc-sicarian-ruststalker-warrior": {
+  "prompt": "super-deformed heroic body for hc-sicarian-ruststalker-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-sicarian-ruststalker-warrior.png)",
+  "height": 1.2,
+  "base": 40
+ },
+ "hc-sicarian-infiltrator-princeps": {
+  "prompt": "super-deformed heroic body for hc-sicarian-infiltrator-princeps, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-sicarian-infiltrator-princeps.png)",
+  "height": 1.25,
+  "base": 40
+ },
+ "hc-sicarian-ruststalker-princeps": {
+  "prompt": "super-deformed heroic body for hc-sicarian-ruststalker-princeps, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-sicarian-ruststalker-princeps.png)",
+  "height": 1.25,
+  "base": 40
+ },
+ "hc-skitarii-ranger-warrior-b": {
+  "prompt": "super-deformed heroic body for hc-skitarii-ranger-warrior-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-skitarii-ranger-warrior-b.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "hc-skitarii-vanguard-warrior-b": {
+  "prompt": "super-deformed heroic body for hc-skitarii-vanguard-warrior-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-skitarii-vanguard-warrior-b.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "hc-sicarian-infiltrator-warrior-b": {
+  "prompt": "super-deformed heroic body for hc-sicarian-infiltrator-warrior-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-sicarian-infiltrator-warrior-b.png)",
+  "height": 1.2,
+  "base": 40
+ },
+ "hc-sicarian-ruststalker-warrior-b": {
+  "prompt": "super-deformed heroic body for hc-sicarian-ruststalker-warrior-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hc-sicarian-ruststalker-warrior-b.png)",
+  "height": 1.2,
+  "base": 40
+ },
+ "hk-warrior": {
+  "prompt": "super-deformed heroic body for hk-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hk-warrior.png)",
+  "height": 1,
+  "base": 28
+ },
+ "hk-theyn": {
+  "prompt": "super-deformed heroic body for hk-theyn, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hk-theyn.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "hk-dozr": {
+  "prompt": "super-deformed heroic body for hk-dozr, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hk-dozr.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "hk-field-medic": {
+  "prompt": "super-deformed heroic body for hk-field-medic, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hk-field-medic.png)",
+  "height": 1,
+  "base": 28
+ },
+ "hk-grenadier": {
+  "prompt": "super-deformed heroic body for hk-grenadier, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hk-grenadier.png)",
+  "height": 1,
+  "base": 28
+ },
+ "hk-gunner": {
+  "prompt": "super-deformed heroic body for hk-gunner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hk-gunner.png)",
+  "height": 1,
+  "base": 28
+ },
+ "hk-jump-pack-warrior": {
+  "prompt": "super-deformed heroic body for hk-jump-pack-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hk-jump-pack-warrior.png)",
+  "height": 1.15,
+  "base": 28
+ },
+ "hk-kinlynk": {
+  "prompt": "super-deformed heroic body for hk-kinlynk, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hk-kinlynk.png)",
+  "height": 1,
+  "base": 28
+ },
+ "hk-kognitaar": {
+  "prompt": "super-deformed heroic body for hk-kognitaar, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hk-kognitaar.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "hk-lokatr": {
+  "prompt": "super-deformed heroic body for hk-lokatr, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hk-lokatr.png)",
+  "height": 1,
+  "base": 28
+ },
+ "hk-lugger": {
+  "prompt": "super-deformed heroic body for hk-lugger, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hk-lugger.png)",
+  "height": 1,
+  "base": 28
+ },
+ "hk-warrior-b": {
+  "prompt": "super-deformed heroic body for hk-warrior-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hk-warrior-b.png)",
+  "height": 1,
+  "base": 28
+ },
+ "hk-warrior-c": {
+  "prompt": "super-deformed heroic body for hk-warrior-c, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/hk-warrior-c.png)",
+  "height": 1,
+  "base": 28
+ },
+ "ks-sergeant-bolt-pistol": {
+  "prompt": "super-deformed heroic body for ks-sergeant-bolt-pistol, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-sergeant-bolt-pistol.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "ks-sergeant-lasgun": {
+  "prompt": "super-deformed heroic body for ks-sergeant-lasgun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-sergeant-lasgun.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "ks-sergeant-laspistol": {
+  "prompt": "super-deformed heroic body for ks-sergeant-laspistol, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-sergeant-laspistol.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "ks-sergeant-plasma-pistol": {
+  "prompt": "super-deformed heroic body for ks-sergeant-plasma-pistol, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-sergeant-plasma-pistol.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "ks-combat-medic": {
+  "prompt": "super-deformed heroic body for ks-combat-medic, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-combat-medic.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ks-demo-trooper": {
+  "prompt": "super-deformed heroic body for ks-demo-trooper, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-demo-trooper.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ks-gunner-flamer": {
+  "prompt": "super-deformed heroic body for ks-gunner-flamer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-gunner-flamer.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ks-gunner-grenade-launcher": {
+  "prompt": "super-deformed heroic body for ks-gunner-grenade-launcher, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-gunner-grenade-launcher.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ks-gunner-volley-gun": {
+  "prompt": "super-deformed heroic body for ks-gunner-volley-gun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-gunner-volley-gun.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ks-gunner-meltagun": {
+  "prompt": "super-deformed heroic body for ks-gunner-meltagun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-gunner-meltagun.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ks-gunner-plasma-gun": {
+  "prompt": "super-deformed heroic body for ks-gunner-plasma-gun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-gunner-plasma-gun.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ks-recon-trooper": {
+  "prompt": "super-deformed heroic body for ks-recon-trooper, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-recon-trooper.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ks-sharpshooter": {
+  "prompt": "super-deformed heroic body for ks-sharpshooter, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-sharpshooter.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ks-trooper": {
+  "prompt": "super-deformed heroic body for ks-trooper, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-trooper.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ks-trooper-b": {
+  "prompt": "super-deformed heroic body for ks-trooper-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-trooper-b.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "ks-vox-trooper": {
+  "prompt": "super-deformed heroic body for ks-vox-trooper, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ks-vox-trooper.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "nv-superior-plasma-pistol": {
+  "prompt": "super-deformed heroic body for nv-superior-plasma-pistol, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-superior-plasma-pistol.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "nv-superior-relic-boltgun": {
+  "prompt": "super-deformed heroic body for nv-superior-relic-boltgun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-superior-relic-boltgun.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "nv-superior-relic-bolt-pistol": {
+  "prompt": "super-deformed heroic body for nv-superior-relic-bolt-pistol, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-superior-relic-bolt-pistol.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "nv-condemnor": {
+  "prompt": "super-deformed heroic body for nv-condemnor, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-condemnor.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "nv-dialogus": {
+  "prompt": "super-deformed heroic body for nv-dialogus, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-dialogus.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "nv-duellist": {
+  "prompt": "super-deformed heroic body for nv-duellist, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-duellist.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "nv-exactor": {
+  "prompt": "super-deformed heroic body for nv-exactor, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-exactor.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "nv-hospitaller": {
+  "prompt": "super-deformed heroic body for nv-hospitaller, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-hospitaller.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "nv-militant-autopistol-blade": {
+  "prompt": "super-deformed heroic body for nv-militant-autopistol-blade, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-militant-autopistol-blade.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "nv-militant-autogun": {
+  "prompt": "super-deformed heroic body for nv-militant-autogun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-militant-autogun.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "nv-penitent": {
+  "prompt": "super-deformed heroic body for nv-penitent, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-penitent.png)",
+  "height": 1.2,
+  "base": 25
+ },
+ "nv-preceptor": {
+  "prompt": "super-deformed heroic body for nv-preceptor, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-preceptor.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "nv-pronatus": {
+  "prompt": "super-deformed heroic body for nv-pronatus, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-pronatus.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "nv-purgatus": {
+  "prompt": "super-deformed heroic body for nv-purgatus, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-purgatus.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "nv-purgatus-b": {
+  "prompt": "super-deformed heroic body for nv-purgatus-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-purgatus-b.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "nv-reliquarius": {
+  "prompt": "super-deformed heroic body for nv-reliquarius, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nv-reliquarius.png)",
+  "height": 1.35,
+  "base": 25
+ },
+ "ph-infiltrator-sergeant": {
+  "prompt": "super-deformed heroic body for ph-infiltrator-sergeant, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-infiltrator-sergeant.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "ph-incursor-sergeant": {
+  "prompt": "super-deformed heroic body for ph-incursor-sergeant, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-incursor-sergeant.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "ph-reiver-sergeant-pistol-knife": {
+  "prompt": "super-deformed heroic body for ph-reiver-sergeant-pistol-knife, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-reiver-sergeant-pistol-knife.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "ph-reiver-sergeant-carbine": {
+  "prompt": "super-deformed heroic body for ph-reiver-sergeant-carbine, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-reiver-sergeant-carbine.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "ph-infiltrator-commsman": {
+  "prompt": "super-deformed heroic body for ph-infiltrator-commsman, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-infiltrator-commsman.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "ph-infiltrator-helix-adept": {
+  "prompt": "super-deformed heroic body for ph-infiltrator-helix-adept, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-infiltrator-helix-adept.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "ph-infiltrator-saboteur": {
+  "prompt": "super-deformed heroic body for ph-infiltrator-saboteur, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-infiltrator-saboteur.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "ph-infiltrator-veteran": {
+  "prompt": "super-deformed heroic body for ph-infiltrator-veteran, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-infiltrator-veteran.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "ph-infiltrator-voxbreaker": {
+  "prompt": "super-deformed heroic body for ph-infiltrator-voxbreaker, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-infiltrator-voxbreaker.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "ph-infiltrator-warrior": {
+  "prompt": "super-deformed heroic body for ph-infiltrator-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-infiltrator-warrior.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "ph-infiltrator-warrior-b": {
+  "prompt": "super-deformed heroic body for ph-infiltrator-warrior-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-infiltrator-warrior-b.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "ph-incursor-marksman": {
+  "prompt": "super-deformed heroic body for ph-incursor-marksman, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-incursor-marksman.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "ph-incursor-minelayer": {
+  "prompt": "super-deformed heroic body for ph-incursor-minelayer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-incursor-minelayer.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "ph-incursor-warrior": {
+  "prompt": "super-deformed heroic body for ph-incursor-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-incursor-warrior.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "ph-incursor-warrior-b": {
+  "prompt": "super-deformed heroic body for ph-incursor-warrior-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-incursor-warrior-b.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "ph-reiver-warrior-pistol-knife": {
+  "prompt": "super-deformed heroic body for ph-reiver-warrior-pistol-knife, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-reiver-warrior-pistol-knife.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "ph-reiver-warrior-carbine": {
+  "prompt": "super-deformed heroic body for ph-reiver-warrior-carbine, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ph-reiver-warrior-carbine.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "cv-felarch-shuriken-rifle": {
+  "prompt": "super-deformed heroic body for cv-felarch-shuriken-rifle, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-felarch-shuriken-rifle.png)",
+  "height": 1.15,
+  "base": 28
+ },
+ "cv-felarch-neuro-disruptor": {
+  "prompt": "super-deformed heroic body for cv-felarch-neuro-disruptor, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-felarch-neuro-disruptor.png)",
+  "height": 1.15,
+  "base": 28
+ },
+ "cv-fate-dealer": {
+  "prompt": "super-deformed heroic body for cv-fate-dealer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-fate-dealer.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "cv-gunner-blaster": {
+  "prompt": "super-deformed heroic body for cv-gunner-blaster, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-gunner-blaster.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "cv-gunner-shredder": {
+  "prompt": "super-deformed heroic body for cv-gunner-shredder, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-gunner-shredder.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "cv-heavy-gunner-shuriken-cannon": {
+  "prompt": "super-deformed heroic body for cv-heavy-gunner-shuriken-cannon, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-heavy-gunner-shuriken-cannon.png)",
+  "height": 1.15,
+  "base": 28
+ },
+ "cv-heavy-gunner-wraithcannon": {
+  "prompt": "super-deformed heroic body for cv-heavy-gunner-wraithcannon, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-heavy-gunner-wraithcannon.png)",
+  "height": 1.15,
+  "base": 28
+ },
+ "cv-kurnathi": {
+  "prompt": "super-deformed heroic body for cv-kurnathi, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-kurnathi.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "cv-kurnite-hunter": {
+  "prompt": "super-deformed heroic body for cv-kurnite-hunter, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-kurnite-hunter.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "cv-shade-runner": {
+  "prompt": "super-deformed heroic body for cv-shade-runner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-shade-runner.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "cv-soul-weaver": {
+  "prompt": "super-deformed heroic body for cv-soul-weaver, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-soul-weaver.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "cv-starstorm-duellist": {
+  "prompt": "super-deformed heroic body for cv-starstorm-duellist, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-starstorm-duellist.png)",
+  "height": 1.15,
+  "base": 28
+ },
+ "cv-warrior-pistol-power-weapon": {
+  "prompt": "super-deformed heroic body for cv-warrior-pistol-power-weapon, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-warrior-pistol-power-weapon.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "cv-warrior-rifle-fists": {
+  "prompt": "super-deformed heroic body for cv-warrior-rifle-fists, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-warrior-rifle-fists.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "cv-way-seeker": {
+  "prompt": "super-deformed heroic body for cv-way-seeker, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cv-way-seeker.png)",
+  "height": 1.15,
+  "base": 28
+ },
+ "wc-sorcerer-destiny-inferno-pistol": {
+  "prompt": "super-deformed heroic body for wc-sorcerer-destiny-inferno-pistol, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-sorcerer-destiny-inferno-pistol.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "wc-sorcerer-destiny-khopesh": {
+  "prompt": "super-deformed heroic body for wc-sorcerer-destiny-khopesh, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-sorcerer-destiny-khopesh.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "wc-sorcerer-destiny-warpflame-pistol": {
+  "prompt": "super-deformed heroic body for wc-sorcerer-destiny-warpflame-pistol, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-sorcerer-destiny-warpflame-pistol.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "wc-sorcerer-tempyrion-inferno-pistol": {
+  "prompt": "super-deformed heroic body for wc-sorcerer-tempyrion-inferno-pistol, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-sorcerer-tempyrion-inferno-pistol.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "wc-sorcerer-tempyrion-khopesh": {
+  "prompt": "super-deformed heroic body for wc-sorcerer-tempyrion-khopesh, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-sorcerer-tempyrion-khopesh.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "wc-sorcerer-tempyrion-warpflame-pistol": {
+  "prompt": "super-deformed heroic body for wc-sorcerer-tempyrion-warpflame-pistol, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-sorcerer-tempyrion-warpflame-pistol.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "wc-sorcerer-warpfire-inferno-pistol": {
+  "prompt": "super-deformed heroic body for wc-sorcerer-warpfire-inferno-pistol, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-sorcerer-warpfire-inferno-pistol.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "wc-sorcerer-warpfire-khopesh": {
+  "prompt": "super-deformed heroic body for wc-sorcerer-warpfire-khopesh, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-sorcerer-warpfire-khopesh.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "wc-sorcerer-warpfire-warpflame-pistol": {
+  "prompt": "super-deformed heroic body for wc-sorcerer-warpfire-warpflame-pistol, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-sorcerer-warpfire-warpflame-pistol.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "wc-rubric-marine-gunner-warpflamer": {
+  "prompt": "super-deformed heroic body for wc-rubric-marine-gunner-warpflamer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-rubric-marine-gunner-warpflamer.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "wc-rubric-marine-gunner-soulreaper-cannon": {
+  "prompt": "super-deformed heroic body for wc-rubric-marine-gunner-soulreaper-cannon, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-rubric-marine-gunner-soulreaper-cannon.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "wc-rubric-marine-icon-bearer": {
+  "prompt": "super-deformed heroic body for wc-rubric-marine-icon-bearer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-rubric-marine-icon-bearer.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "wc-rubric-marine-warrior": {
+  "prompt": "super-deformed heroic body for wc-rubric-marine-warrior, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-rubric-marine-warrior.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "wc-rubric-marine-warrior-b": {
+  "prompt": "super-deformed heroic body for wc-rubric-marine-warrior-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-rubric-marine-warrior-b.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "wc-tzaangor-champion-greataxe": {
+  "prompt": "super-deformed heroic body for wc-tzaangor-champion-greataxe, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-tzaangor-champion-greataxe.png)",
+  "height": 1.45,
+  "base": 32
+ },
+ "wc-tzaangor-champion-greatblade": {
+  "prompt": "super-deformed heroic body for wc-tzaangor-champion-greatblade, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-tzaangor-champion-greatblade.png)",
+  "height": 1.45,
+  "base": 32
+ },
+ "wc-tzaangor-horn-bearer": {
+  "prompt": "super-deformed heroic body for wc-tzaangor-horn-bearer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-tzaangor-horn-bearer.png)",
+  "height": 1.4,
+  "base": 32
+ },
+ "wc-tzaangor-icon-bearer": {
+  "prompt": "super-deformed heroic body for wc-tzaangor-icon-bearer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-tzaangor-icon-bearer.png)",
+  "height": 1.4,
+  "base": 32
+ },
+ "wc-tzaangor-warrior-blades": {
+  "prompt": "super-deformed heroic body for wc-tzaangor-warrior-blades, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-tzaangor-warrior-blades.png)",
+  "height": 1.35,
+  "base": 32
+ },
+ "wc-tzaangor-warrior-blade-shield": {
+  "prompt": "super-deformed heroic body for wc-tzaangor-warrior-blade-shield, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-tzaangor-warrior-blade-shield.png)",
+  "height": 1.35,
+  "base": 32
+ },
+ "wc-tzaangor-warrior-autopistol-chainsword": {
+  "prompt": "super-deformed heroic body for wc-tzaangor-warrior-autopistol-chainsword, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/wc-tzaangor-warrior-autopistol-chainsword.png)",
+  "height": 1.35,
+  "base": 32
+ },
+ "fk-kill-broker-kroot-rifle": {
+  "prompt": "super-deformed heroic body for fk-kill-broker-kroot-rifle, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-kill-broker-kroot-rifle.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "fk-kill-broker-pulse-weapon": {
+  "prompt": "super-deformed heroic body for fk-kill-broker-pulse-weapon, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-kill-broker-pulse-weapon.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "fk-bow-hunter": {
+  "prompt": "super-deformed heroic body for fk-bow-hunter, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-bow-hunter.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "fk-cold-blood": {
+  "prompt": "super-deformed heroic body for fk-cold-blood, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-cold-blood.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "fk-cut-skin": {
+  "prompt": "super-deformed heroic body for fk-cut-skin, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-cut-skin.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "fk-hound": {
+  "prompt": "super-deformed heroic body for fk-hound, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-hound.png)",
+  "height": 0.85,
+  "base": 32
+ },
+ "fk-hound-b": {
+  "prompt": "super-deformed heroic body for fk-hound-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-hound-b.png)",
+  "height": 0.85,
+  "base": 32
+ },
+ "fk-long-sight": {
+  "prompt": "super-deformed heroic body for fk-long-sight, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-long-sight.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "fk-pistolier": {
+  "prompt": "super-deformed heroic body for fk-pistolier, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-pistolier.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "fk-stalker": {
+  "prompt": "super-deformed heroic body for fk-stalker, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-stalker.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "fk-tracker": {
+  "prompt": "super-deformed heroic body for fk-tracker, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-tracker.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "fk-heavy-gunner-dvorgite-skinner": {
+  "prompt": "super-deformed heroic body for fk-heavy-gunner-dvorgite-skinner, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-heavy-gunner-dvorgite-skinner.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "fk-heavy-gunner-londaxi-tribalest": {
+  "prompt": "super-deformed heroic body for fk-heavy-gunner-londaxi-tribalest, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-heavy-gunner-londaxi-tribalest.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "fk-warrior-kroot-rifle": {
+  "prompt": "super-deformed heroic body for fk-warrior-kroot-rifle, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-warrior-kroot-rifle.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "fk-warrior-kroot-scattergun": {
+  "prompt": "super-deformed heroic body for fk-warrior-kroot-scattergun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fk-warrior-kroot-scattergun.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "nb-sergeant-at-arms-shotgun-hatchet": {
+  "prompt": "super-deformed heroic body for nb-sergeant-at-arms-shotgun-hatchet, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-sergeant-at-arms-shotgun-hatchet.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "nb-sergeant-at-arms-bolt-pistol-chainsword": {
+  "prompt": "super-deformed heroic body for nb-sergeant-at-arms-bolt-pistol-chainsword, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-sergeant-at-arms-bolt-pistol-chainsword.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "nb-sergeant-at-arms-bolt-pistol-power-weapon": {
+  "prompt": "super-deformed heroic body for nb-sergeant-at-arms-bolt-pistol-power-weapon, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-sergeant-at-arms-bolt-pistol-power-weapon.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "nb-sergeant-at-arms-autopistol-chainsword": {
+  "prompt": "super-deformed heroic body for nb-sergeant-at-arms-autopistol-chainsword, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-sergeant-at-arms-autopistol-chainsword.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "nb-sergeant-at-arms-autopistol-power-weapon": {
+  "prompt": "super-deformed heroic body for nb-sergeant-at-arms-autopistol-power-weapon, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-sergeant-at-arms-autopistol-power-weapon.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "nb-armsman": {
+  "prompt": "super-deformed heroic body for nb-armsman, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-armsman.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "nb-armsman-b": {
+  "prompt": "super-deformed heroic body for nb-armsman-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-armsman-b.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "nb-axejack": {
+  "prompt": "super-deformed heroic body for nb-axejack, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-axejack.png)",
+  "height": 1.15,
+  "base": 25
+ },
+ "nb-cat-unit": {
+  "prompt": "super-deformed heroic body for nb-cat-unit, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-cat-unit.png)",
+  "height": 0.7,
+  "base": 25
+ },
+ "nb-endurant": {
+  "prompt": "super-deformed heroic body for nb-endurant, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-endurant.png)",
+  "height": 1.15,
+  "base": 25
+ },
+ "nb-gheistskull": {
+  "prompt": "super-deformed heroic body for nb-gheistskull, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-gheistskull.png)",
+  "height": 0.8,
+  "base": 32
+ },
+ "nb-grenadier": {
+  "prompt": "super-deformed heroic body for nb-grenadier, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-grenadier.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "nb-gunner-las-volley": {
+  "prompt": "super-deformed heroic body for nb-gunner-las-volley, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-gunner-las-volley.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "nb-gunner-meltagun": {
+  "prompt": "super-deformed heroic body for nb-gunner-meltagun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-gunner-meltagun.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "nb-gunner-plasma-gun": {
+  "prompt": "super-deformed heroic body for nb-gunner-plasma-gun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-gunner-plasma-gun.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "nb-hatchcutter": {
+  "prompt": "super-deformed heroic body for nb-hatchcutter, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-hatchcutter.png)",
+  "height": 1.15,
+  "base": 25
+ },
+ "nb-surveyor": {
+  "prompt": "super-deformed heroic body for nb-surveyor, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-surveyor.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "nb-void-jammer": {
+  "prompt": "super-deformed heroic body for nb-void-jammer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/nb-void-jammer.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "bl-chieftain-autopistol-chainsword": {
+  "prompt": "super-deformed heroic body for bl-chieftain-autopistol-chainsword, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-chieftain-autopistol-chainsword.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "bl-chieftain-autopistol-power-weapon": {
+  "prompt": "super-deformed heroic body for bl-chieftain-autopistol-power-weapon, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-chieftain-autopistol-power-weapon.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "bl-chieftain-bolt-pistol": {
+  "prompt": "super-deformed heroic body for bl-chieftain-bolt-pistol, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-chieftain-bolt-pistol.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "bl-chieftain-boltgun": {
+  "prompt": "super-deformed heroic body for bl-chieftain-boltgun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-chieftain-boltgun.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "bl-chieftain-plasma-pistol": {
+  "prompt": "super-deformed heroic body for bl-chieftain-plasma-pistol, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-chieftain-plasma-pistol.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "bl-brimstone-grenadier": {
+  "prompt": "super-deformed heroic body for bl-brimstone-grenadier, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-brimstone-grenadier.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "bl-butcher": {
+  "prompt": "super-deformed heroic body for bl-butcher, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-butcher.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "bl-commsman": {
+  "prompt": "super-deformed heroic body for bl-commsman, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-commsman.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "bl-corpseman": {
+  "prompt": "super-deformed heroic body for bl-corpseman, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-corpseman.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "bl-enforcer": {
+  "prompt": "super-deformed heroic body for bl-enforcer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-enforcer.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "bl-flenser": {
+  "prompt": "super-deformed heroic body for bl-flenser, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-flenser.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "bl-gunner-flamer": {
+  "prompt": "super-deformed heroic body for bl-gunner-flamer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-gunner-flamer.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "bl-gunner-grenade-launcher": {
+  "prompt": "super-deformed heroic body for bl-gunner-grenade-launcher, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-gunner-grenade-launcher.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "bl-gunner-meltagun": {
+  "prompt": "super-deformed heroic body for bl-gunner-meltagun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-gunner-meltagun.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "bl-gunner-plasma-gun": {
+  "prompt": "super-deformed heroic body for bl-gunner-plasma-gun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-gunner-plasma-gun.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "bl-ogryn": {
+  "prompt": "super-deformed heroic body for bl-ogryn, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-ogryn.png)",
+  "height": 1.9,
+  "base": 40
+ },
+ "bl-sharpshooter": {
+  "prompt": "super-deformed heroic body for bl-sharpshooter, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-sharpshooter.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "bl-thug": {
+  "prompt": "super-deformed heroic body for bl-thug, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-thug.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "bl-trench-sweeper": {
+  "prompt": "super-deformed heroic body for bl-trench-sweeper, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-trench-sweeper.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "bl-trooper": {
+  "prompt": "super-deformed heroic body for bl-trooper, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-trooper.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "bl-trooper-b": {
+  "prompt": "super-deformed heroic body for bl-trooper-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/bl-trooper-b.png)",
+  "height": 1.05,
+  "base": 25
+ },
+ "fg-ironhorn-corrupted-pistol-chainsword": {
+  "prompt": "super-deformed heroic body for fg-ironhorn-corrupted-pistol-chainsword, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-ironhorn-corrupted-pistol-chainsword.png)",
+  "height": 1.5,
+  "base": 32
+ },
+ "fg-ironhorn-plasma-pistol-bludgeon": {
+  "prompt": "super-deformed heroic body for fg-ironhorn-plasma-pistol-bludgeon, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-ironhorn-plasma-pistol-bludgeon.png)",
+  "height": 1.5,
+  "base": 32
+ },
+ "fg-deathknell": {
+  "prompt": "super-deformed heroic body for fg-deathknell, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-deathknell.png)",
+  "height": 1.4,
+  "base": 32
+ },
+ "fg-fluxbray": {
+  "prompt": "super-deformed heroic body for fg-fluxbray, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-fluxbray.png)",
+  "height": 1.4,
+  "base": 32
+ },
+ "fg-gnarlscar": {
+  "prompt": "super-deformed heroic body for fg-gnarlscar, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-gnarlscar.png)",
+  "height": 1.4,
+  "base": 32
+ },
+ "fg-gorehorn": {
+  "prompt": "super-deformed heroic body for fg-gorehorn, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-gorehorn.png)",
+  "height": 1.45,
+  "base": 32
+ },
+ "fg-herd-goad": {
+  "prompt": "super-deformed heroic body for fg-herd-goad, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-herd-goad.png)",
+  "height": 1.4,
+  "base": 32
+ },
+ "fg-mangler": {
+  "prompt": "super-deformed heroic body for fg-mangler, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-mangler.png)",
+  "height": 1.5,
+  "base": 32
+ },
+ "fg-shaman": {
+  "prompt": "super-deformed heroic body for fg-shaman, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-shaman.png)",
+  "height": 1.4,
+  "base": 32
+ },
+ "fg-toxhorn": {
+  "prompt": "super-deformed heroic body for fg-toxhorn, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-toxhorn.png)",
+  "height": 1.4,
+  "base": 32
+ },
+ "fg-vandal": {
+  "prompt": "super-deformed heroic body for fg-vandal, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-vandal.png)",
+  "height": 1.5,
+  "base": 32
+ },
+ "fg-warrior-bludgeon": {
+  "prompt": "super-deformed heroic body for fg-warrior-bludgeon, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-warrior-bludgeon.png)",
+  "height": 1.35,
+  "base": 32
+ },
+ "fg-warrior-bludgeon-b": {
+  "prompt": "super-deformed heroic body for fg-warrior-bludgeon-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-warrior-bludgeon-b.png)",
+  "height": 1.35,
+  "base": 32
+ },
+ "fg-warrior-cleaver": {
+  "prompt": "super-deformed heroic body for fg-warrior-cleaver, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-warrior-cleaver.png)",
+  "height": 1.35,
+  "base": 32
+ },
+ "fg-warrior-cleaver-b": {
+  "prompt": "super-deformed heroic body for fg-warrior-cleaver-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/fg-warrior-cleaver-b.png)",
+  "height": 1.35,
+  "base": 32
+ },
+ "cc-cult-demagogue": {
+  "prompt": "super-deformed heroic body for cc-cult-demagogue, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cc-cult-demagogue.png)",
+  "height": 1.15,
+  "base": 32
+ },
+ "cc-blessed-blade": {
+  "prompt": "super-deformed heroic body for cc-blessed-blade, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cc-blessed-blade.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "cc-blessed-blade-b": {
+  "prompt": "super-deformed heroic body for cc-blessed-blade-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cc-blessed-blade-b.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "cc-iconarch": {
+  "prompt": "super-deformed heroic body for cc-iconarch, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cc-iconarch.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "cc-mindwitch": {
+  "prompt": "super-deformed heroic body for cc-mindwitch, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cc-mindwitch.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "cc-devotee": {
+  "prompt": "super-deformed heroic body for cc-devotee, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cc-devotee.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "cc-devotee-b": {
+  "prompt": "super-deformed heroic body for cc-devotee-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cc-devotee-b.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "cc-devotee-c": {
+  "prompt": "super-deformed heroic body for cc-devotee-c, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cc-devotee-c.png)",
+  "height": 1.0,
+  "base": 25
+ },
+ "cc-mutant": {
+  "prompt": "super-deformed heroic body for cc-mutant, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cc-mutant.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "cc-mutant-b": {
+  "prompt": "super-deformed heroic body for cc-mutant-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cc-mutant-b.png)",
+  "height": 1.1,
+  "base": 25
+ },
+ "cc-torment": {
+  "prompt": "super-deformed heroic body for cc-torment, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cc-torment.png)",
+  "height": 1.9,
+  "base": 40
+ },
+ "cc-torment-b": {
+  "prompt": "super-deformed heroic body for cc-torment-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/cc-torment-b.png)",
+  "height": 1.9,
+  "base": 40
+ },
+ "gm-blood-herald": {
+  "prompt": "super-deformed heroic body for gm-blood-herald, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/gm-blood-herald.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "gm-aspirant": {
+  "prompt": "super-deformed heroic body for gm-aspirant, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/gm-aspirant.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "gm-aspirant-b": {
+  "prompt": "super-deformed heroic body for gm-aspirant-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/gm-aspirant-b.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "gm-aspirant-c": {
+  "prompt": "super-deformed heroic body for gm-aspirant-c, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/gm-aspirant-c.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "gm-bloodtaker": {
+  "prompt": "super-deformed heroic body for gm-bloodtaker, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/gm-bloodtaker.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "gm-impaler": {
+  "prompt": "super-deformed heroic body for gm-impaler, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/gm-impaler.png)",
+  "height": 1.25,
+  "base": 32
+ },
+ "gm-inciter": {
+  "prompt": "super-deformed heroic body for gm-inciter, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/gm-inciter.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "gm-skullclaimer": {
+  "prompt": "super-deformed heroic body for gm-skullclaimer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/gm-skullclaimer.png)",
+  "height": 1.3,
+  "base": 32
+ },
+ "gm-stalker": {
+  "prompt": "super-deformed heroic body for gm-stalker, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/gm-stalker.png)",
+  "height": 1.2,
+  "base": 32
+ },
+ "ss-sergeant-astartes-shotgun": {
+  "prompt": "super-deformed heroic body for ss-sergeant-astartes-shotgun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-sergeant-astartes-shotgun.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "ss-sergeant-boltgun": {
+  "prompt": "super-deformed heroic body for ss-sergeant-boltgun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-sergeant-boltgun.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "ss-sergeant-bolt-pistol-chainsword": {
+  "prompt": "super-deformed heroic body for ss-sergeant-bolt-pistol-chainsword, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-sergeant-bolt-pistol-chainsword.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "ss-heavy-gunner-heavy-bolter": {
+  "prompt": "super-deformed heroic body for ss-heavy-gunner-heavy-bolter, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-heavy-gunner-heavy-bolter.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ss-heavy-gunner-missile-launcher": {
+  "prompt": "super-deformed heroic body for ss-heavy-gunner-missile-launcher, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-heavy-gunner-missile-launcher.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ss-hunter": {
+  "prompt": "super-deformed heroic body for ss-hunter, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-hunter.png)",
+  "height": 1.0,
+  "base": 28
+ },
+ "ss-sniper": {
+  "prompt": "super-deformed heroic body for ss-sniper, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-sniper.png)",
+  "height": 1.0,
+  "base": 28
+ },
+ "ss-tracker": {
+  "prompt": "super-deformed heroic body for ss-tracker, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-tracker.png)",
+  "height": 1.0,
+  "base": 28
+ },
+ "ss-warrior-shotgun": {
+  "prompt": "super-deformed heroic body for ss-warrior-shotgun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-warrior-shotgun.png)",
+  "height": 1.0,
+  "base": 28
+ },
+ "ss-warrior-shotgun-b": {
+  "prompt": "super-deformed heroic body for ss-warrior-shotgun-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-warrior-shotgun-b.png)",
+  "height": 1.0,
+  "base": 28
+ },
+ "ss-warrior-boltgun": {
+  "prompt": "super-deformed heroic body for ss-warrior-boltgun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-warrior-boltgun.png)",
+  "height": 1.0,
+  "base": 28
+ },
+ "ss-warrior-boltgun-b": {
+  "prompt": "super-deformed heroic body for ss-warrior-boltgun-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-warrior-boltgun-b.png)",
+  "height": 1.0,
+  "base": 28
+ },
+ "ss-warrior-bolt-pistol-blade": {
+  "prompt": "super-deformed heroic body for ss-warrior-bolt-pistol-blade, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-warrior-bolt-pistol-blade.png)",
+  "height": 1.0,
+  "base": 28
+ },
+ "ss-warrior-bolt-pistol-blade-b": {
+  "prompt": "super-deformed heroic body for ss-warrior-bolt-pistol-blade-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ss-warrior-bolt-pistol-blade-b.png)",
+  "height": 1.0,
+  "base": 28
+ },
+ "ta-tempestor-laspistol-power-weapon": {
+  "prompt": "super-deformed heroic body for ta-tempestor-laspistol-power-weapon, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-tempestor-laspistol-power-weapon.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "ta-tempestor-relic-bolt-pistol-chainsword": {
+  "prompt": "super-deformed heroic body for ta-tempestor-relic-bolt-pistol-chainsword, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-tempestor-relic-bolt-pistol-chainsword.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "ta-tempestor-lascarbine": {
+  "prompt": "super-deformed heroic body for ta-tempestor-lascarbine, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-tempestor-lascarbine.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "ta-servo-sentry-flamer": {
+  "prompt": "super-deformed heroic body for ta-servo-sentry-flamer, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-servo-sentry-flamer.png)",
+  "height": 1.2,
+  "base": 40
+ },
+ "ta-servo-sentry-grenade-launcher": {
+  "prompt": "super-deformed heroic body for ta-servo-sentry-grenade-launcher, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-servo-sentry-grenade-launcher.png)",
+  "height": 1.2,
+  "base": 40
+ },
+ "ta-servo-sentry-volley-gun": {
+  "prompt": "super-deformed heroic body for ta-servo-sentry-volley-gun, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-servo-sentry-volley-gun.png)",
+  "height": 1.2,
+  "base": 40
+ },
+ "ta-grenadier": {
+  "prompt": "super-deformed heroic body for ta-grenadier, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-grenadier.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ta-gunfighter": {
+  "prompt": "super-deformed heroic body for ta-gunfighter, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-gunfighter.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ta-gunner-melta-carbine": {
+  "prompt": "super-deformed heroic body for ta-gunner-melta-carbine, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-gunner-melta-carbine.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ta-gunner-plasma-carbine": {
+  "prompt": "super-deformed heroic body for ta-gunner-plasma-carbine, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-gunner-plasma-carbine.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ta-marksman": {
+  "prompt": "super-deformed heroic body for ta-marksman, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-marksman.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ta-precursor": {
+  "prompt": "super-deformed heroic body for ta-precursor, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-precursor.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ta-trooper": {
+  "prompt": "super-deformed heroic body for ta-trooper, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-trooper.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ta-trooper-b": {
+  "prompt": "super-deformed heroic body for ta-trooper-b, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-trooper-b.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ta-trooper-c": {
+  "prompt": "super-deformed heroic body for ta-trooper-c, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ta-trooper-c.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ex-proctor-exactant-combat-shotgun-baton": {
+  "prompt": "super-deformed heroic body for ex-proctor-exactant-combat-shotgun-baton, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-proctor-exactant-combat-shotgun-baton.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "ex-proctor-exactant-shotpistol-maul-shield": {
+  "prompt": "super-deformed heroic body for ex-proctor-exactant-shotpistol-maul-shield, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-proctor-exactant-shotpistol-maul-shield.png)",
+  "height": 1.1,
+  "base": 28
+ },
+ "ex-castigator": {
+  "prompt": "super-deformed heroic body for ex-castigator, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-castigator.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ex-chirurgant": {
+  "prompt": "super-deformed heroic body for ex-chirurgant, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-chirurgant.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ex-gunner-grenade-launcher": {
+  "prompt": "super-deformed heroic body for ex-gunner-grenade-launcher, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-gunner-grenade-launcher.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ex-gunner-heavy-stubber": {
+  "prompt": "super-deformed heroic body for ex-gunner-heavy-stubber, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-gunner-heavy-stubber.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ex-gunner-webber": {
+  "prompt": "super-deformed heroic body for ex-gunner-webber, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-gunner-webber.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ex-leashmaster": {
+  "prompt": "super-deformed heroic body for ex-leashmaster, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-leashmaster.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ex-cyber-mastiff": {
+  "prompt": "super-deformed heroic body for ex-cyber-mastiff, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-cyber-mastiff.png)",
+  "height": 0.95,
+  "base": 25
+ },
+ "ex-malocator": {
+  "prompt": "super-deformed heroic body for ex-malocator, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-malocator.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ex-marksman": {
+  "prompt": "super-deformed heroic body for ex-marksman, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-marksman.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ex-revelatum": {
+  "prompt": "super-deformed heroic body for ex-revelatum, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-revelatum.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ex-subductor": {
+  "prompt": "super-deformed heroic body for ex-subductor, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-subductor.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ex-vigilant": {
+  "prompt": "super-deformed heroic body for ex-vigilant, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-vigilant.png)",
+  "height": 1.05,
+  "base": 28
+ },
+ "ex-vox-signifier": {
+  "prompt": "super-deformed heroic body for ex-vox-signifier, weapons in hand, dynamic pose (concept image in art/unit-concepts/v2/ex-vox-signifier.png)",
+  "height": 1.05,
+  "base": 28
+ }
+}

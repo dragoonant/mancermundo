@@ -1,0 +1,68 @@
+[
+  {
+    "id": "nv.e.icon-of-faith",
+    "name": "ICON OF FAITH",
+    "scope": "faction",
+    "team": "novitiates",
+    "count": 1,
+    "effect": {
+      "code": "nvIconOfFaith",
+      "params": {
+        "oncePer": "turningPoint"
+      }
+    },
+    "text": "Once per turning point you may use two different ACTS OF FAITH in one sequence.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.7"
+  },
+  {
+    "id": "nv.e.sanctified-rounds",
+    "name": "SANCTIFIED ROUNDS",
+    "scope": "faction",
+    "team": "novitiates",
+    "count": 1,
+    "effect": {
+      "code": "nvSanctifiedRounds",
+      "params": {
+        "weapons": [
+          "autogun",
+          "autopistol",
+          "relic bolt pistol",
+          "relic boltgun"
+        ]
+      }
+    },
+    "text": "When a friendly Novitiate shoots with an autogun, autopistol, relic bolt pistol or relic boltgun and you spend a Faith point in that sequence, the weapon has Piercing Crits 1 for it. A single Faith point can be spent on its own for this.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.7"
+  },
+  {
+    "id": "nv.e.auto-chastisers",
+    "name": "AUTO-CHASTISERS",
+    "scope": "faction",
+    "team": "novitiates",
+    "count": 1,
+    "effect": {
+      "code": "nvAutoChastisers",
+      "params": {
+        "oncePer": "turningPoint",
+        "maxDamage": 3
+      }
+    },
+    "text": "Once per turning point, in the attack dice step, a Novitiate may take 1 to 3 damage (never enough to incapacitate it) and use one ACT OF FAITH of that cost or less for free.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.7"
+  },
+  {
+    "id": "nv.e.holy-embrocations",
+    "name": "HOLY EMBROCATIONS",
+    "scope": "faction",
+    "team": "novitiates",
+    "count": 1,
+    "effect": {
+      "code": "nvHolyEmbrocations",
+      "params": {
+        "moveBack": 2
+      }
+    },
+    "text": "Friendly Novitiates ignore the Move reduction from being injured. Their Hit worsening still applies.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.7"
+  }
+]

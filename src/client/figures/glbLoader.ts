@@ -83,3 +83,11 @@ export function glbStats(prefix = ''): { loaded: number; failed: number; loading
   }
   return { loaded, failed, loading, maxMs: Math.round(maxMs), totalMs: Math.round(totalMs) }
 }
+
+/** Called after every GLB load settles (ready or failed); returns the unsubscribe. */
+export function subscribeGlb(l: () => void): () => void {
+  listeners.add(l)
+  return () => {
+    listeners.delete(l)
+  }
+}

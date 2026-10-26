@@ -68,12 +68,13 @@ async function stagePath(page: Page, y: number, candidates: Pt[], click: (p: { x
   throw new Error('no end point accepted')
 }
 
+// open ground near the shooter (-2.5, 3.8) on Map 1, between the west stronghold and the large ruin's door
 const SHOOT_COVER_ENDS: Pt[] = [
-  { x: -5, z: 3.5 },
-  { x: -6, z: 2.5 },
-  { x: -4, z: 5.2 },
-  { x: -5.5, z: 6 },
-  { x: -7, z: 3 },
+  { x: -2.6, z: 6.2 },
+  { x: -3, z: 5.8 },
+  { x: -1.6, z: 6.4 },
+  { x: -3.1, z: 2 },
+  { x: -2.4, z: 1.8 },
 ]
 
 test('shoot-cover: the staged move shows what the end point sees, badges, panel, threat on Engage vs Conceal', async ({ page }) => {
@@ -175,11 +176,11 @@ test('shoot-cover: the measure tool (M) reads distance, control range and sight 
     if (!p) throw new Error(`no free pixel for ${x},${z}`)
     return p
   }
-  const a = await px(-8, 5.2)
+  const a = await px(-2.5, 3.8)
   await page.mouse.move(a.x, a.y)
   await page.mouse.click(a.x, a.y)
   await expect(page.getByTestId('measure-hint')).toContainText('second point')
-  const b = await px(1.6, 5.2)
+  const b = await px(1.2, -1.8)
   await page.mouse.move(b.x, b.y)
   await page.mouse.click(b.x, b.y)
   await expect(page.getByTestId('measure-distance')).toContainText(/\d+\.\d\d″/)
@@ -229,10 +230,10 @@ test('vantage: the staged move is evaluated at the end point height', async ({ p
     page,
     3,
     [
-      { x: -3.5, z: -4.75 },
-      { x: -4.75, z: -3.5 },
-      { x: -6, z: -4.75 },
-      { x: -4.75, z: -6 },
+      { x: 7.2, z: -4.2 },
+      { x: 6.4, z: -3.4 },
+      { x: 5.6, z: -4.2 },
+      { x: 6.4, z: -5 },
     ],
     async (p) => page.mouse.click(p.x, p.y),
   )
@@ -254,7 +255,8 @@ test.describe('phone', () => {
     page.on('pageerror', (e) => errors.push(e.message))
     await startBattle(page, '?scenario=shoot-cover&speed=instant&ff=compact')
     await page.waitForFunction(() => window.__ms!.settled())
-    // pick the shooter, open the move prompt
+    // pick the shooter (touch: the operative list sits behind the List button), open the move prompt
+    await page.getByTestId('activate-list-toggle').tap()
     await page.getByTestId('activate-A6').tap()
     await page.getByTestId('order-engage').tap()
     await page.getByTestId('act-reposition').tap()

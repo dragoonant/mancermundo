@@ -17,8 +17,10 @@ test('vantage: the target card notes the Accurate bonus and the odds include it'
   await expect(card).toContainText('Boy')
   await expect(card.getByTestId('target-line')).toContainText('Vantage: Accurate 1')
   await expect(card.getByTestId('target-line')).toContainText(/expected damage \d+\.\d/)
-  // the engine's own number: the same shot from the ground has no Vantage note
-  await expect(page.getByTestId('opt-B11').getByTestId('target-line')).not.toContainText('Vantage')
+  // the engine's own number: Vantage gives Accurate only against an Engage target, so the Concealed Grot gets no note
+  const grot = page.getByTestId('opt-B11')
+  await expect(grot).toContainText('Grot')
+  await expect(grot.getByTestId('target-line')).not.toContainText('Vantage')
   await screenshotRendered(page, 'e2e-out/scenario-vantage.png')
   expect(errors).toEqual([])
 })

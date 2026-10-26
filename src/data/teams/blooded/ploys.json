@@ -1,0 +1,180 @@
+[
+  {
+    "id": "bl.p.blooded",
+    "name": "BLOODED",
+    "team": "blooded",
+    "type": "strategy",
+    "cost": 0,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "blGambit",
+      "scope": {
+        "side": "friendly",
+        "keyword": "BLOODED"
+      }
+    },
+    "text": "Once per Strategy phase, for no CP: give any of your unassigned Blooded tokens to friendly Blooded operatives (one token each, kept for the battle). Then, with four or more token holders in the killzone, pick one holder to be under the Gaze of the Gods until the end of the turning point.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md T-BL.34"
+  },
+  {
+    "id": "bl.p.name-whispered",
+    "name": "A NAME WHISPERED IN BLOOD",
+    "team": "blooded",
+    "type": "strategy",
+    "cost": 0,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "blNameWhispered",
+      "scope": {
+        "side": "friendly",
+        "keyword": "BLOODED"
+      }
+    },
+    "text": "Turning point 1 only, with the Sharpshooter in the killzone: pick an enemy operative. For the rest of the battle the Sharpshooter shooting it counts as a token holder under the Gaze.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md T-BL.28"
+  },
+  {
+    "id": "bl.p.glory-kill",
+    "name": "GLORY KILL",
+    "team": "blooded",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "blGloryKill",
+      "scope": {
+        "side": "friendly",
+        "keyword": "BLOODED"
+      }
+    },
+    "text": "Pick an enemy operative visible to a friendly Blooded operative. This turning point, friendly Blooded operatives shooting, fighting or retaliating against it have Ceaseless on their weapons, or Relentless if they hold a token.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md T-BL.36"
+  },
+  {
+    "id": "bl.p.reckless-aspirant",
+    "name": "RECKLESS ASPIRANT",
+    "team": "blooded",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "blFlagPloy",
+      "scope": {
+        "side": "friendly",
+        "keyword": "BLOODED"
+      }
+    },
+    "text": "This turning point, a friendly Blooded operative wholly within your opponent's territory has Accurate 1 on its weapons while shooting or fighting if it holds no token, or Punishing on its weapons if it holds one.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md T-BL.37"
+  },
+  {
+    "id": "bl.p.malevolent-grit",
+    "name": "MALEVOLENT GRIT",
+    "team": "blooded",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "blFlagPloy",
+      "scope": {
+        "side": "friendly",
+        "keyword": "BLOODED"
+      }
+    },
+    "text": "This turning point, when an operative shoots a friendly Blooded token holder or one wholly within your opponent's territory, you may re-roll one defence die.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md T-BL.38"
+  },
+  {
+    "id": "bl.p.bitter-demise",
+    "name": "BITTER DEMISE",
+    "team": "blooded",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "blFlagPloy",
+      "scope": {
+        "side": "friendly",
+        "keyword": "BLOODED"
+      }
+    },
+    "text": "This turning point, when a friendly Blooded operative is incapacitated, before removal, roll a D3: on a 3 (2+ for a token holder) deal that much damage to one enemy visible to and within 2 inches of it.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md T-BL.39"
+  },
+  {
+    "id": "bl.p.callous-disregard",
+    "name": "CALLOUS DISREGARD",
+    "team": "blooded",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.actionDeclared",
+    "effect": {
+      "code": "blCallousDisregard",
+      "scope": {
+        "side": "friendly",
+        "keyword": "BLOODED"
+      }
+    },
+    "text": "A friendly Blooded operative performs Shoot: friendly operatives in an enemy's control range no longer stop it being chosen, and every attack die you discard as a fail hurts a friendly operative of your choice in the target's control range for its result.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md T-BL.40"
+  },
+  {
+    "id": "bl.p.moment-of-repute",
+    "name": "MOMENT OF REPUTE",
+    "team": "blooded",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "firefight.activationStart",
+      "firefight.actionEnded"
+    ],
+    "effect": {
+      "code": "blMomentOfRepute",
+      "scope": {
+        "side": "friendly",
+        "keyword": "BLOODED"
+      }
+    },
+    "text": "During the activation of a friendly Blooded operative under the Gaze, before or after an action: its APL is +1 until the end of that activation.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md T-BL.41"
+  },
+  {
+    "id": "bl.p.reward-earned",
+    "name": "REWARD EARNED",
+    "team": "blooded",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "operative.killed"
+    ],
+    "effect": {
+      "code": "blRewardEarned",
+      "scope": {
+        "side": "friendly",
+        "keyword": "BLOODED"
+      }
+    },
+    "text": "An enemy operative is incapacitated by a friendly Blooded token holder within 2 inches of it: you gain one unassigned Blooded token.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md T-BL.42"
+  },
+  {
+    "id": "bl.p.dark-favour",
+    "name": "DARK FAVOUR",
+    "team": "blooded",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "shoot.targetSelected",
+      "fight.weaponsSelected"
+    ],
+    "effect": {
+      "code": "blDarkFavour",
+      "scope": {
+        "side": "friendly",
+        "keyword": "BLOODED"
+      }
+    },
+    "text": "A friendly token holder is chosen as the target of a Shoot or the operative fought: pick another friendly Blooded operative visible to and within 3 inches; it is the target or the one fought instead, even if it would not normally qualify. No effect against Blast or Torrent.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md T-BL.43"
+  }
+]

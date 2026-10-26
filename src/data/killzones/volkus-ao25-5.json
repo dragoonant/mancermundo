@@ -1,0 +1,757 @@
+{
+  "id": "kz.volkus-ao25-5",
+  "name": "Volkus Map 5",
+  "size": { "x": 30, "z": 22 },
+  "pieces": [
+    {
+      "id": "p01",
+      "model": "t-stronghold",
+      "pos": { "x": 4, "z": 7 },
+      "yaw": 180,
+      "parts": [
+        {
+          "id": "upper-floor",
+          "footprint": [
+            { "x": 8, "z": 6.87 },
+            { "x": 6.12, "z": 6.87 },
+            { "x": 4.12, "z": 5.75 },
+            { "x": 3.25, "z": 5.75 },
+            { "x": 2.12, "z": 6.87 },
+            { "x": 0, "z": 6.87 },
+            { "x": 0, "z": 5.25 },
+            { "x": 2.25, "z": 5.25 },
+            { "x": 2.25, "z": 3 },
+            { "x": 8, "z": 3 }
+          ],
+          "height": 3,
+          "traits": [
+            "vantage",
+            "ceiling"
+          ],
+          "vantageFloors": [
+            3
+          ]
+        },
+        {
+          "id": "top-level",
+          "footprint": [
+            { "x": 2.25, "z": 5.25 },
+            { "x": 0, "z": 5.25 },
+            { "x": 0, "z": 3 },
+            { "x": 2.25, "z": 3 }
+          ],
+          "height": 5.5,
+          "traits": [
+            "vantage",
+            "ceiling"
+          ],
+          "vantageFloors": [
+            5.5
+          ]
+        },
+        {
+          "id": "wall-top",
+          "footprint": [
+            { "x": 8, "z": 11 },
+            { "x": 0, "z": 11 },
+            { "x": 0, "z": 10.5 },
+            { "x": 8, "z": 10.5 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "wall-left",
+          "footprint": [
+            { "x": 8, "z": 10.5 },
+            { "x": 7.5, "z": 10.5 },
+            { "x": 7.5, "z": 3.5 },
+            { "x": 8, "z": 3.5 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "wall-right",
+          "footprint": [
+            { "x": 0.5, "z": 10.5 },
+            { "x": 0, "z": 10.5 },
+            { "x": 0, "z": 3.5 },
+            { "x": 0.5, "z": 3.5 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "wall-bottom-a",
+          "footprint": [
+            { "x": 8, "z": 3.5 },
+            { "x": 4.45, "z": 3.5 },
+            { "x": 4.45, "z": 3 },
+            { "x": 8, "z": 3 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "door",
+          "footprint": [
+            { "x": 4.45, "z": 3.5 },
+            { "x": 2.45, "z": 3.5 },
+            { "x": 2.45, "z": 3 },
+            { "x": 4.45, "z": 3 }
+          ],
+          "height": 2.5,
+          "traits": [
+            "accessible",
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "wall-bottom-b",
+          "footprint": [
+            { "x": 2.45, "z": 3.5 },
+            { "x": 0, "z": 3.5 },
+            { "x": 0, "z": 3 },
+            { "x": 2.45, "z": 3 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        }
+      ]
+    },
+    {
+      "id": "p02",
+      "model": "t-heavy-rubble",
+      "pos": { "x": 6.77, "z": 9 },
+      "yaw": 90,
+      "parts": [
+        {
+          "id": "slab-l",
+          "footprint": [
+            { "x": 7.71, "z": 10.71 },
+            { "x": 5.83, "z": 10.71 },
+            { "x": 5.83, "z": 7.29 },
+            { "x": 7.71, "z": 7.29 }
+          ],
+          "height": 1.5,
+          "traits": [
+            "heavy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p03",
+      "model": "t-container",
+      "pos": { "x": 0.875, "z": 9.5 },
+      "yaw": 90,
+      "parts": [
+        {
+          "id": "crates",
+          "footprint": [
+            { "x": 1.46, "z": 10.71 },
+            { "x": 0.29, "z": 10.71 },
+            { "x": 0.29, "z": 8.29 },
+            { "x": 1.46, "z": 8.29 }
+          ],
+          "height": 1.5,
+          "traits": [
+            "heavy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p04",
+      "model": "t-small-ruin",
+      "pos": { "x": -8.21, "z": 6.585 },
+      "yaw": 180,
+      "parts": [
+        {
+          "id": "wall-short",
+          "footprint": [
+            { "x": -5.46, "z": 5.17 },
+            { "x": -5.46, "z": 7.5 },
+            { "x": -5.96, "z": 7.5 },
+            { "x": -5.96, "z": 5.17 }
+          ],
+          "height": 2.5,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "wall-long",
+          "footprint": [
+            { "x": -5.46, "z": 7.5 },
+            { "x": -5.46, "z": 8 },
+            { "x": -10.96, "z": 8 },
+            { "x": -10.96, "z": 7.5 }
+          ],
+          "height": 2.5,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        }
+      ]
+    },
+    {
+      "id": "p05",
+      "model": "t-large-ruin",
+      "pos": { "x": -10.125, "z": 0.895 },
+      "yaw": 180,
+      "parts": [
+        {
+          "id": "upper-floor",
+          "footprint": [
+            { "x": -7.21, "z": -1 },
+            { "x": -7.21, "z": 2.42 },
+            { "x": -8.96, "z": 2.42 },
+            { "x": -9.46, "z": 2.04 },
+            { "x": -9.83, "z": 2.42 },
+            { "x": -10.96, "z": 2.42 },
+            { "x": -11.08, "z": 2.04 },
+            { "x": -10.58, "z": 1.17 },
+            { "x": -11.21, "z": 1.04 },
+            { "x": -11.58, "z": -0.21 },
+            { "x": -12.46, "z": 0.04 },
+            { "x": -13.04, "z": -0.58 },
+            { "x": -13.04, "z": -1 }
+          ],
+          "height": 3,
+          "traits": [
+            "vantage",
+            "ceiling"
+          ],
+          "vantageFloors": [
+            3
+          ]
+        },
+        {
+          "id": "wall-top",
+          "footprint": [
+            { "x": -7.21, "z": -1 },
+            { "x": -7.21, "z": 2.79 },
+            { "x": -7.71, "z": 2.79 },
+            { "x": -7.71, "z": -1 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "wall-front-a",
+          "footprint": [
+            { "x": -7.71, "z": -1 },
+            { "x": -7.71, "z": -0.5 },
+            { "x": -8.01, "z": -0.5 },
+            { "x": -8.01, "z": -1 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "door",
+          "footprint": [
+            { "x": -8.01, "z": -1 },
+            { "x": -8.01, "z": -0.5 },
+            { "x": -9.96, "z": -0.5 },
+            { "x": -9.96, "z": -1 }
+          ],
+          "height": 2.5,
+          "traits": [
+            "accessible",
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "wall-front-b",
+          "footprint": [
+            { "x": -9.96, "z": -1 },
+            { "x": -9.96, "z": -0.5 },
+            { "x": -10.61, "z": -0.5 },
+            { "x": -10.61, "z": -1 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "window",
+          "footprint": [
+            { "x": -10.61, "z": -1 },
+            { "x": -10.61, "z": -0.5 },
+            { "x": -12.01, "z": -0.5 },
+            { "x": -12.01, "z": -1 }
+          ],
+          "height": 3,
+          "traits": [
+            "barred",
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "wall-front-c",
+          "footprint": [
+            { "x": -12.01, "z": -1 },
+            { "x": -12.01, "z": -0.5 },
+            { "x": -13.04, "z": -0.5 },
+            { "x": -13.04, "z": -1 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "rampart",
+          "footprint": [
+            { "x": -7.21, "z": -0.5 },
+            { "x": -7.21, "z": 2.79 },
+            { "x": -7.71, "z": 2.79 },
+            { "x": -7.71, "z": -0.5 }
+          ],
+          "height": 4,
+          "traits": [
+            "light"
+          ],
+          "thickness": 0.5
+        }
+      ]
+    },
+    {
+      "id": "p06",
+      "model": "t-large-ruin",
+      "pos": { "x": 9.835, "z": -2.23 },
+      "yaw": 90,
+      "parts": [
+        {
+          "id": "upper-floor",
+          "footprint": [
+            { "x": 11.13, "z": 1 },
+            { "x": 7.67, "z": 1 },
+            { "x": 7.67, "z": -5 },
+            { "x": 11.5, "z": -5 },
+            { "x": 11.13, "z": -3.88 },
+            { "x": 11.75, "z": -3.75 },
+            { "x": 11.75, "z": -3.25 },
+            { "x": 11.13, "z": -2.5 },
+            { "x": 11.5, "z": -2.25 },
+            { "x": 10.88, "z": -0.5 },
+            { "x": 11.25, "z": -0.25 }
+          ],
+          "height": 3,
+          "traits": [
+            "vantage",
+            "ceiling"
+          ],
+          "vantageFloors": [
+            3
+          ]
+        },
+        {
+          "id": "wall-front-a",
+          "footprint": [
+            { "x": 12, "z": 1 },
+            { "x": 11.6, "z": 1 },
+            { "x": 11.6, "z": 0.5 },
+            { "x": 12, "z": 0.5 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "window",
+          "footprint": [
+            { "x": 11.6, "z": 1 },
+            { "x": 10.2, "z": 1 },
+            { "x": 10.2, "z": 0.5 },
+            { "x": 11.6, "z": 0.5 }
+          ],
+          "height": 3,
+          "traits": [
+            "barred",
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "wall-front-b",
+          "footprint": [
+            { "x": 10.2, "z": 1 },
+            { "x": 9.92, "z": 1 },
+            { "x": 9.92, "z": 0.5 },
+            { "x": 10.2, "z": 0.5 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "door",
+          "footprint": [
+            { "x": 9.92, "z": 1 },
+            { "x": 8.17, "z": 1 },
+            { "x": 8.17, "z": 0.5 },
+            { "x": 9.92, "z": 0.5 }
+          ],
+          "height": 2.5,
+          "traits": [
+            "accessible",
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "wall-side",
+          "footprint": [
+            { "x": 8.17, "z": 1 },
+            { "x": 7.67, "z": 1 },
+            { "x": 7.67, "z": -5.46 },
+            { "x": 8.17, "z": -5.46 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "rampart",
+          "footprint": [
+            { "x": 8.17, "z": 0.5 },
+            { "x": 7.67, "z": 0.5 },
+            { "x": 7.67, "z": -5 },
+            { "x": 8.17, "z": -5 }
+          ],
+          "height": 4,
+          "traits": [
+            "light"
+          ],
+          "thickness": 0.5
+        }
+      ]
+    },
+    {
+      "id": "p07",
+      "model": "t-stronghold",
+      "pos": { "x": -2, "z": -7 },
+      "yaw": 90,
+      "parts": [
+        {
+          "id": "upper-floor",
+          "footprint": [
+            { "x": -5, "z": -3 },
+            { "x": -5, "z": -8.5 },
+            { "x": -3.6, "z": -8.5 },
+            { "x": -3.25, "z": -8.1 },
+            { "x": -3.25, "z": -7.4 },
+            { "x": -2.25, "z": -6.4 },
+            { "x": -0.9, "z": -6.4 },
+            { "x": -0.25, "z": -5.5 },
+            { "x": 1, "z": -5.5 },
+            { "x": 1, "z": -3 }
+          ],
+          "height": 3,
+          "traits": [
+            "vantage",
+            "ceiling"
+          ],
+          "vantageFloors": [
+            3
+          ]
+        },
+        {
+          "id": "wall-top",
+          "footprint": [
+            { "x": -5, "z": -3 },
+            { "x": -5, "z": -11 },
+            { "x": -4.5, "z": -11 },
+            { "x": -4.5, "z": -3 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "wall-bottom",
+          "footprint": [
+            { "x": 0.5, "z": -3 },
+            { "x": 0.5, "z": -11 },
+            { "x": 1, "z": -11 },
+            { "x": 1, "z": -3 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "wall-right",
+          "footprint": [
+            { "x": -4.5, "z": -10.5 },
+            { "x": -4.5, "z": -11 },
+            { "x": 0.5, "z": -11 },
+            { "x": 0.5, "z": -10.5 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "door",
+          "footprint": [
+            { "x": -4.5, "z": -3 },
+            { "x": -4.5, "z": -3.5 },
+            { "x": -3.25, "z": -3.5 },
+            { "x": -3.25, "z": -3 }
+          ],
+          "height": 2.5,
+          "traits": [
+            "accessible",
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "wall-left",
+          "footprint": [
+            { "x": -3.25, "z": -3 },
+            { "x": -3.25, "z": -3.5 },
+            { "x": 0.5, "z": -3.5 },
+            { "x": 0.5, "z": -3 }
+          ],
+          "height": 3,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        }
+      ]
+    },
+    {
+      "id": "p08",
+      "model": "t-heavy-rubble",
+      "pos": { "x": -3.46, "z": -9.895 },
+      "yaw": 0,
+      "parts": [
+        {
+          "id": "slab-m",
+          "footprint": [
+            { "x": -4.71, "z": -9.08 },
+            { "x": -4.71, "z": -10.71 },
+            { "x": -2.21, "z": -10.71 },
+            { "x": -2.21, "z": -9.08 }
+          ],
+          "height": 1.5,
+          "traits": [
+            "heavy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p09",
+      "model": "t-heavy-rubble",
+      "pos": { "x": 2.375, "z": -0.5 },
+      "yaw": 0,
+      "parts": [
+        {
+          "id": "rubble-h",
+          "footprint": [
+            { "x": 1, "z": 0 },
+            { "x": 1, "z": -1 },
+            { "x": 3.75, "z": -1 },
+            { "x": 3.75, "z": 0 }
+          ],
+          "height": 1.5,
+          "traits": [
+            "heavy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p10",
+      "model": "t-light-rubble",
+      "pos": { "x": -3, "z": 1.75 },
+      "yaw": 90,
+      "parts": [
+        {
+          "id": "rubble-i",
+          "footprint": [
+            { "x": -4, "z": 3.5 },
+            { "x": -4, "z": 0 },
+            { "x": -2, "z": 0 },
+            { "x": -2, "z": 3.5 }
+          ],
+          "height": 1,
+          "traits": [
+            "light"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p11",
+      "model": "t-heavy-rubble",
+      "pos": { "x": 7.5, "z": -7.5 },
+      "yaw": 0,
+      "parts": [
+        {
+          "id": "rubble-g",
+          "footprint": [
+            { "x": 6, "z": -7 },
+            { "x": 6, "z": -8 },
+            { "x": 9, "z": -8 },
+            { "x": 9, "z": -7 }
+          ],
+          "height": 1.5,
+          "traits": [
+            "heavy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p12",
+      "model": "t-light-rubble",
+      "pos": { "x": 11, "z": 7.625 },
+      "yaw": 0,
+      "parts": [
+        {
+          "id": "rubble-k",
+          "footprint": [
+            { "x": 10, "z": 8 },
+            { "x": 10, "z": 7.25 },
+            { "x": 12, "z": 7.25 },
+            { "x": 12, "z": 8 }
+          ],
+          "height": 1,
+          "traits": [
+            "light"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p13",
+      "model": "t-small-ruin",
+      "pos": { "x": -10.315, "z": -7.23 },
+      "yaw": 0,
+      "parts": [
+        {
+          "id": "arm-short",
+          "footprint": [
+            { "x": -8.5, "z": -6.5 },
+            { "x": -8.5, "z": -7.46 },
+            { "x": -8, "z": -7.46 },
+            { "x": -8, "z": -6.5 }
+          ],
+          "height": 2.5,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        },
+        {
+          "id": "arm-long",
+          "footprint": [
+            { "x": -12.63, "z": -7.46 },
+            { "x": -12.63, "z": -7.96 },
+            { "x": -8, "z": -7.96 },
+            { "x": -8, "z": -7.46 }
+          ],
+          "height": 2.5,
+          "traits": [
+            "heavy"
+          ],
+          "thickness": 0.5
+        }
+      ]
+    },
+    {
+      "id": "p14",
+      "model": "t-light-rubble",
+      "pos": { "x": 11.75, "z": -2.375 },
+      "yaw": 0,
+      "parts": [
+        {
+          "id": "rubble-j",
+          "footprint": [
+            { "x": 10.5, "z": -2 },
+            { "x": 10.5, "z": -2.75 },
+            { "x": 13, "z": -2.75 },
+            { "x": 13, "z": -2 }
+          ],
+          "height": 1,
+          "traits": [
+            "light"
+          ]
+        }
+      ]
+    }
+  ],
+  "maps": [
+    {
+      "id": "prelim-2",
+      "objectiveSpots": {
+        "centre": [
+          { "x": 0, "z": 0 }
+        ],
+        "territoryA": [
+          { "x": 9.81, "z": -2.98 }
+        ],
+        "territoryB": [
+          { "x": -10.23, "z": 2.73 }
+        ],
+        "default": {
+          "centre": { "x": 0, "z": 0 },
+          "a": { "x": 9.81, "z": -2.98 },
+          "b": { "x": -10.23, "z": 2.73 }
+        }
+      }
+    }
+  ],
+  "text": "A stronghold crowds each end of the long axis, a ruin and a pair of low rubble heaps cover the middle, and the centre marker sits on the line.",
+  "source": "Approved Ops 2025 card pack, Killzone: Volkus Map 5 (measured from the card)"
+}

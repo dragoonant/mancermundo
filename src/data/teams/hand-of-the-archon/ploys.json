@@ -1,0 +1,116 @@
+[
+  {
+    "id": "ha.p.blade-artists",
+    "name": "BLADE ARTISTS",
+    "team": "hand-of-the-archon",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "grantWeaponRule": { "rule": "core.wr.rending", "filter": { "weaponType": "melee" } },
+      "scope": { "side": "friendly", "keyword": "HAND OF THE ARCHON" },
+      "duration": "turningPoint"
+    },
+    "text": "This turning point, the melee weapons of your Hand of the Archon operatives have Rending.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.32"
+  },
+  {
+    "id": "ha.p.merciless-sadists",
+    "name": "MERCILESS SADISTS",
+    "team": "hand-of-the-archon",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "haMercilessSadists",
+      "params": { "rule": "core.wr.balanced" },
+      "scope": { "side": "friendly", "keyword": "HAND OF THE ARCHON" }
+    },
+    "text": "This turning point, when a Hand of the Archon operative shoots or fights an enemy that is already wounded (below its starting wounds), its weapons have Balanced.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.33"
+  },
+  {
+    "id": "ha.p.from-darkness-death",
+    "name": "FROM DARKNESS, DEATH",
+    "team": "hand-of-the-archon",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "haFromDarkness",
+      "params": { "retain": "crit" },
+      "scope": { "side": "friendly", "keyword": "HAND OF THE ARCHON" }
+    },
+    "text": "This turning point, as a Hand of the Archon operative is activated you may pick one enemy that cannot target it (judged on the order it had before). The first time it shoots or fights that enemy this activation, one normal success may be retained as a critical success. Obscured still wins.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.34"
+  },
+  {
+    "id": "ha.p.denizens-of-night",
+    "name": "DENIZENS OF NIGHT",
+    "team": "hand-of-the-archon",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "haDenizens",
+      "params": { "farFromEnemies": 2 },
+      "scope": { "side": "friendly", "keyword": "HAND OF THE ARCHON" }
+    },
+    "text": "This turning point, when an enemy shoots a Hand of the Archon operative that is more than 2 inches from every enemy, and Light or Heavy terrain is in the way or any of its base is under Vantage terrain, you may re-roll one defence die.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.35"
+  },
+  {
+    "id": "ha.p.cruel-deception",
+    "name": "CRUEL DECEPTION",
+    "team": "hand-of-the-archon",
+    "type": "firefight",
+    "cost": 1,
+    "window": ["firefight.activationStart", "firefight.actionEnded"],
+    "when": { "notCounteracting": true },
+    "effect": {
+      "code": "haCruelDeception",
+      "params": { "fallBackDelta": -1 },
+      "scope": { "side": "friendly", "keyword": "HAND OF THE ARCHON" }
+    },
+    "text": "During a friendly Hand of the Archon operative's activation, before or after one of its actions: for the rest of that activation its Fall Back costs 1 AP less.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.36"
+  },
+  {
+    "id": "ha.p.devious-scheme",
+    "name": "DEVIOUS SCHEME",
+    "team": "hand-of-the-archon",
+    "type": "firefight",
+    "cost": 1,
+    "window": "ploy.opponentUsed",
+    "limit": "unlimited",
+    "effect": { "code": "haDeviousScheme", "params": { "surcharge": 1 } },
+    "text": "Right after your opponent pays CP for a firefight ploy: the next time they use that same ploy it costs them 1 CP more, and then the effect ends. You cannot play it again while its effect is still waiting.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.37"
+  },
+  {
+    "id": "ha.p.heinous-arrogance",
+    "name": "HEINOUS ARROGANCE",
+    "team": "hand-of-the-archon",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.beforeActivation",
+    "effect": { "code": "haHeinousArrogance" },
+    "text": "When it is your turn to activate an operative, skip that activation; play passes to your opponent.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.38"
+  },
+  {
+    "id": "ha.p.prey-on-the-wounded",
+    "name": "PREY ON THE WOUNDED",
+    "team": "hand-of-the-archon",
+    "type": "firefight",
+    "cost": 1,
+    "window": ["shoot.beforeAttackRerolls", "fight.beforeRerolls"],
+    "effect": {
+      "code": "haPreyOnTheWounded",
+      "params": { "reroll": "any" },
+      "scope": { "side": "friendly", "keyword": "HAND OF THE ARCHON" }
+    },
+    "text": "Once the attack dice are rolled for a Hand of the Archon operative shooting or fighting an enemy that has lost wounds, re-roll as many of them as you like.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.39"
+  }
+]

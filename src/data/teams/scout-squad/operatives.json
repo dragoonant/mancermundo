@@ -1,0 +1,279 @@
+[
+  {
+    "id": "ss.sergeant",
+    "name": "Scout Sergeant",
+    "team": "scout-squad",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "4+",
+      "wounds": 11
+    },
+    "base": 28,
+    "keywords": [
+      "SCOUT SQUAD",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "LEADER",
+      "SERGEANT"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "astartes-shotgun-fists",
+              "name": "Astartes shotgun and fists",
+              "fixed": [
+                "ss.w.astartes-shotgun",
+                "ss.w.fists-sergeant"
+              ]
+            },
+            {
+              "id": "boltgun-fists",
+              "name": "Boltgun and fists",
+              "fixed": [
+                "ss.w.boltgun",
+                "ss.w.fists-sergeant"
+              ]
+            },
+            {
+              "id": "bolt-pistol-chainsword",
+              "name": "Bolt pistol and chainsword",
+              "fixed": [
+                "ss.w.bolt-pistol",
+                "ss.w.chainsword"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "ss.a.astartes"
+    ],
+    "uniqueActions": [
+      "ss.a.guidance-and-experience"
+    ],
+    "figure": {
+      "archetype": "ss-sergeant"
+    },
+    "text": "A full battle-brother who trains the neophytes: he can shoot or fight twice in an activation and spurs one other scout to act with an extra action point.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md 22.2"
+  },
+  {
+    "id": "ss.heavy-gunner",
+    "name": "Scout Heavy Gunner",
+    "team": "scout-squad",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 10
+    },
+    "base": 28,
+    "keywords": [
+      "SCOUT SQUAD",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "HEAVY GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ss.w.bolt-pistol",
+        "ss.w.fists"
+      ],
+      "options": [
+        {
+          "id": "heavy",
+          "label": "Heavy weapon",
+          "from": [
+            "ss.wg.heavy-bolter",
+            "ss.wg.missile-launcher"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "ss.a.heavy-weapon-bipod"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ss-heavy-gunner-heavy-bolter"
+    },
+    "text": "Carries a heavy bolter or a missile launcher and braces it on a bipod when it holds still. Each heavy weapon can be fielded once.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md 22.2"
+  },
+  {
+    "id": "ss.hunter",
+    "name": "Scout Hunter",
+    "team": "scout-squad",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 10
+    },
+    "base": 28,
+    "keywords": [
+      "SCOUT SQUAD",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "HUNTER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ss.w.bolt-pistol",
+        "ss.w.combat-blade"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ss.a.grapnel-launcher",
+      "ss.a.grapnel-assault"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ss-hunter"
+    },
+    "text": "A climber with a grapnel: every climb is cheap, and a charge that scales or drops makes its blade lethal.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md 22.2"
+  },
+  {
+    "id": "ss.sniper",
+    "name": "Scout Sniper",
+    "team": "scout-squad",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 10
+    },
+    "base": 28,
+    "keywords": [
+      "SCOUT SQUAD",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "SNIPER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ss.w.bolt-pistol",
+        "ss.wg.sniper-rifle",
+        "ss.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ss.a.camo-cloak"
+    ],
+    "uniqueActions": [
+      "ss.a.optics"
+    ],
+    "figure": {
+      "archetype": "ss-sniper"
+    },
+    "text": "A marksman in a camo cloak: hard to dig out of cover, and Optics strips the obscuring from its own targets.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md 22.2"
+  },
+  {
+    "id": "ss.tracker",
+    "name": "Scout Tracker",
+    "team": "scout-squad",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 10
+    },
+    "base": 28,
+    "keywords": [
+      "SCOUT SQUAD",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "TRACKER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ss.w.boltgun",
+        "ss.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "ss.a.track-enemy",
+      "ss.a.auspex-scan"
+    ],
+    "figure": {
+      "archetype": "ss-tracker"
+    },
+    "text": "The squad's spotter: it marks one enemy for everyone to find, and its scanner strips obscuring from nearby targets.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md 22.2"
+  },
+  {
+    "id": "ss.warrior",
+    "name": "Scout Warrior",
+    "team": "scout-squad",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 10
+    },
+    "base": 28,
+    "keywords": [
+      "SCOUT SQUAD",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "astartes-shotgun-fists",
+              "name": "Astartes shotgun and fists",
+              "fixed": [
+                "ss.w.astartes-shotgun",
+                "ss.w.fists"
+              ]
+            },
+            {
+              "id": "boltgun-fists",
+              "name": "Boltgun and fists",
+              "fixed": [
+                "ss.w.boltgun",
+                "ss.w.fists"
+              ]
+            },
+            {
+              "id": "bolt-pistol-combat-blade",
+              "name": "Bolt pistol and combat blade",
+              "fixed": [
+                "ss.w.bolt-pistol",
+                "ss.w.combat-blade"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "ss.a.adaptive-equipment"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ss-warrior-boltgun"
+    },
+    "text": "The line neophyte. Once a turning point one of them can throw a smoke grenade and one a stun grenade without using up your grenade equipment.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md 22.2"
+  }
+]

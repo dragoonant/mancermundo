@@ -1,0 +1,442 @@
+[
+  {
+    "id": "fk.kill-broker",
+    "name": "Kroot Kill-Broker",
+    "team": "farstalker-kinband",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 9
+    },
+    "base": 32,
+    "keywords": [
+      "FARSTALKER KINBAND",
+      "T'AU EMPIRE",
+      "LEADER",
+      "KROOT",
+      "KILL-BROKER"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "kroot-rifle-ritual-blade",
+              "name": "Kroot rifle and ritual blade",
+              "fixed": [
+                "fk.w.kroot-rifle-elite",
+                "fk.w.ritual-blade"
+              ]
+            },
+            {
+              "id": "pulse-weapon-ritual-blade",
+              "name": "Pulse weapon and ritual blade",
+              "fixed": [
+                "fk.w.pulse-weapon",
+                "fk.w.ritual-blade"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "fk.a.call-the-kill",
+      "fk.a.victory-shriek"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "fk-kill-broker"
+    },
+    "text": "The hunt leader: it names a mark each turning point, and each time the mark falls a nearby kinsman grows deadlier.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.2"
+  },
+  {
+    "id": "fk.bow-hunter",
+    "name": "Kroot Bow-Hunter",
+    "team": "farstalker-kinband",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "FARSTALKER KINBAND",
+      "T'AU EMPIRE",
+      "KROOT",
+      "BOW-HUNTER"
+    ],
+    "weapons": {
+      "fixed": [
+        "fk.wg.accelerator-bow",
+        "fk.w.blade"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "fk.a.energise"
+    ],
+    "figure": {
+      "archetype": "fk-bow-hunter"
+    },
+    "text": "An archer with three kinds of arrow; a quick charge of the bow makes every arrow lethal.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.2"
+  },
+  {
+    "id": "fk.cold-blood",
+    "name": "Kroot Cold-Blood",
+    "team": "farstalker-kinband",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 9
+    },
+    "base": 28,
+    "keywords": [
+      "FARSTALKER KINBAND",
+      "T'AU EMPIRE",
+      "KROOT",
+      "COLD-BLOOD"
+    ],
+    "weapons": {
+      "fixed": [
+        "fk.w.kroot-rifle-elite",
+        "fk.w.blade"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "fk.a.hardy",
+      "fk.a.cold-blooded"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "fk-cold-blood"
+    },
+    "text": "A patient killer who shrugs off the worst blows and finishes anything already bleeding.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.2"
+  },
+  {
+    "id": "fk.cut-skin",
+    "name": "Kroot Cut-Skin",
+    "team": "farstalker-kinband",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "FARSTALKER KINBAND",
+      "T'AU EMPIRE",
+      "KROOT",
+      "CUT-SKIN"
+    ],
+    "weapons": {
+      "fixed": [
+        "fk.w.cut-skins-blades"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "fk.a.vicious-duellist",
+      "fk.a.savage-assault"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "fk-cut-skin"
+    },
+    "text": "A whirling duellist who bleeds every wasted swing out of its enemy and wades straight back in.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.2"
+  },
+  {
+    "id": "fk.heavy-gunner",
+    "name": "Kroot Heavy Gunner",
+    "team": "farstalker-kinband",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "FARSTALKER KINBAND",
+      "T'AU EMPIRE",
+      "KROOT",
+      "HEAVY GUNNER"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "dvorgite-skinner-blade",
+              "name": "Dvorgite skinner and blade",
+              "fixed": [
+                "fk.w.dvorgite-skinner",
+                "fk.w.blade"
+              ]
+            },
+            {
+              "id": "londaxi-tribalest-blade",
+              "name": "Londaxi tribalest and blade",
+              "fixed": [
+                "fk.w.londaxi-tribalest",
+                "fk.w.blade"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "fk-heavy-gunner-dvorgite-skinner"
+    },
+    "text": "Carries the band's heavy gun: a short-range skinner that rakes a cluster, or a tribalest that wrecks one target.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.2"
+  },
+  {
+    "id": "fk.hound",
+    "name": "Kroot Hound",
+    "team": "farstalker-kinband",
+    "stats": {
+      "apl": 2,
+      "move": 8,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 28,
+    "keywords": [
+      "FARSTALKER KINBAND",
+      "T'AU EMPIRE",
+      "KROOT",
+      "HOUND"
+    ],
+    "weapons": {
+      "fixed": [
+        "fk.w.ripping-fangs"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "fk.a.beast",
+      "fk.a.bad-tempered"
+    ],
+    "uniqueActions": [
+      "fk.a.gather"
+    ],
+    "figure": {
+      "archetype": "fk-hound"
+    },
+    "text": "A fast, snarling beast that draws enemy blows onto itself and bounds in whenever a packmate is charged.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.2"
+  },
+  {
+    "id": "fk.long-sight",
+    "name": "Kroot Long-Sight",
+    "team": "farstalker-kinband",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "FARSTALKER KINBAND",
+      "T'AU EMPIRE",
+      "KROOT",
+      "LONG-SIGHT"
+    ],
+    "weapons": {
+      "fixed": [
+        "fk.wg.kroot-hunting-rifle",
+        "fk.w.blade"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "fk.a.long-sight"
+    ],
+    "figure": {
+      "archetype": "fk-long-sight"
+    },
+    "text": "A marksman: one perfect hidden shot, then a braced rifle that sees through cover-fuzz.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.2"
+  },
+  {
+    "id": "fk.pistolier",
+    "name": "Kroot Pistolier",
+    "team": "farstalker-kinband",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "FARSTALKER KINBAND",
+      "T'AU EMPIRE",
+      "KROOT",
+      "PISTOLIER"
+    ],
+    "weapons": {
+      "fixed": [
+        "fk.wg.dual-kroot-pistols",
+        "fk.w.blade"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "fk.a.quick-draw"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "fk-pistolier"
+    },
+    "text": "A gunslinger who answers a shooter with a shot of its own, and fires one pistol at each of two marks.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.2"
+  },
+  {
+    "id": "fk.stalker",
+    "name": "Kroot Stalker",
+    "team": "farstalker-kinband",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "FARSTALKER KINBAND",
+      "T'AU EMPIRE",
+      "KROOT",
+      "STALKER"
+    ],
+    "weapons": {
+      "fixed": [
+        "fk.w.kroot-scattergun",
+        "fk.w.stalkers-blade"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "fk.a.stalker"
+    ],
+    "uniqueActions": [
+      "fk.a.stealth-attack"
+    ],
+    "figure": {
+      "archetype": "fk-stalker"
+    },
+    "text": "An ambusher that charges out of hiding and strikes twice before the victim can answer.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.2"
+  },
+  {
+    "id": "fk.tracker",
+    "name": "Kroot Tracker",
+    "team": "farstalker-kinband",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "FARSTALKER KINBAND",
+      "T'AU EMPIRE",
+      "KROOT",
+      "TRACKER"
+    ],
+    "weapons": {
+      "fixed": [
+        "fk.w.kroot-rifle",
+        "fk.w.blade"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "fk.a.marked-for-the-hunt",
+      "fk.a.from-the-eye-above"
+    ],
+    "figure": {
+      "archetype": "fk-tracker"
+    },
+    "text": "Spots the prey for everyone else with a Pech'ra marker and lends its watching eye to a packmate.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.2"
+  },
+  {
+    "id": "fk.warrior",
+    "name": "Kroot Warrior",
+    "team": "farstalker-kinband",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "FARSTALKER KINBAND",
+      "T'AU EMPIRE",
+      "KROOT",
+      "WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "kroot-rifle-blade",
+              "name": "Kroot rifle and blade",
+              "fixed": [
+                "fk.w.kroot-rifle",
+                "fk.w.blade"
+              ]
+            },
+            {
+              "id": "kroot-scattergun-blade",
+              "name": "Kroot scattergun and blade",
+              "fixed": [
+                "fk.w.kroot-scattergun",
+                "fk.w.blade"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "fk.a.ready-for-anything"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "fk-warrior-kroot-rifle"
+    },
+    "text": "The rank and file of the band. Once per turning point one Warrior can eat or load a special round (Meat, Piercing Shot or Toxin Shot) without using that rule's own once-per-turning-point allowance.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.2"
+  }
+]

@@ -66,7 +66,7 @@
       "params": { "replace": "secondary", "group": "chapter-tactic" },
       "duration": "turningPoint"
     },
-    "text": "Swap your secondary Chapter Tactic for another until the end of the turning point, when it returns.",
+    "text": "Until the end of the turning point, swap your secondary Chapter Tactic for one you did not pick; it switches back when the turning point ends.",
     "source": "team-angels-of-death.pdf; docs/spec/13-teams.md Ploys table"
   },
   {

@@ -5,7 +5,7 @@
  */
 
 // ---------------------------------------------------------------- primitives
-/** Lowercase kebab, dot-namespaced: aod.intercessor-sergeant, core.wr.piercing, kz.volkus-01. */
+/** Lowercase kebab, dot-namespaced: aod.intercessor-sergeant, core.wr.piercing, kz.volkus-ao25-1. */
 export type Id = string
 export type Slug = string
 export type ActionId = string
@@ -56,6 +56,7 @@ export type TerrainTrait =
 export type TimingWindowId =
   | 'turningPoint.start'
   | 'strategy.gambit'
+  | 'firefight.start'
   | 'firefight.activationStart'
   | 'firefight.actionDeclared'
   | 'firefight.actionEnded'
@@ -66,6 +67,23 @@ export type TimingWindowId =
   | 'fight.weaponsSelected'
   | 'fight.rolled'
   | 'fight.resolved'
+  | 'shoot.beforeDefenceRerolls'
+  | 'fight.beforeRerolls'
+  // M9 batch B
+  | 'firefight.opponentActionDeclared'
+  | 'firefight.beforeActivation'
+  | 'ploy.opponentUsed'
+  | 'operative.killed'
+  | 'shoot.beforeAttackRerolls'
+  | 'shoot.beforeDefenceRoll'
+  | 'shoot.defenderBeforeRerolls'
+  // M9 batch B shared: the attacker once the defence dice are final (Siphon Life)
+  | 'shoot.attackerDefenceRolled'
+  // batch C shared: the defender before attack re-rolls; the Fall Back mover after its move
+  | 'shoot.defenderAttackRolled'
+  | 'firefight.fallBackMoved'
+  | 'firefight.chargeMoved'
+  | 'shoot.beforeResolve'
   | 'operative.incapacitated'
   | 'firefight.activationEnded'
   | 'turningPoint.end'
@@ -148,7 +166,7 @@ export interface WeaponRuleUse {
 }
 
 export interface Effect {
-  modifyStat?: { stat: 'apl' | 'move' | 'save' | 'wounds' | 'hit' | 'atk'; value: number; cap?: number; filter?: WeaponFilter }
+  modifyStat?: { stat: 'move' | 'hit' | 'atk'; value: number; cap?: number; filter?: WeaponFilter }
   grantWeaponRule?: WeaponRuleUse & { filter?: WeaponFilter }
   removeWeaponRule?: { rule: Id; filter?: WeaponFilter }
   reroll?: { dice: 'attack' | 'defence' | 'own'; which: 'one' | 'any' | 'result'; result?: number }
@@ -256,6 +274,10 @@ export interface EquipmentData {
   team?: Id
   count: number
   enabled?: boolean
+  /** M9 prep: the opponent cannot see its markers until they trigger (as Mines) */
+  hidden?: boolean
+  /** M9 prep: equipment ids this option cannot be taken with */
+  excludes?: Id[]
   setup?: {
     type: 'marker' | 'terrain'
     markerMm?: number
@@ -263,11 +285,12 @@ export interface EquipmentData {
     withinDropZoneInches?: Inches
     onFloor?: boolean
     uprightAgainstMinHeight?: Inches
-    clearances?: { from: ClearanceFrom[]; moreThan: Inches }[]
+    /** M10 batch D shared: `except` lists markers the clearance ignores (equipment id, marker kind or marker id) */
+    clearances?: { from: ClearanceFrom[]; moreThan: Inches; except?: string[] }[]
   }
   terrain?: { model?: Slug; traits?: TerrainTrait[]; tags?: Slug[]; height?: Inches }
   choice?: { pick: number; from: Id[]; repeatable?: boolean }
-  grants?: { weapons?: Id[]; abilities?: Id[]; actions?: Id[] }
+  grants?: { weapons?: Id[]; abilities?: Id[]; actions?: Id[]; to?: { keyword?: Keyword; notKeywords?: Keyword[] } }
   actions?: Id[]
   limits?: { uses: number; per: 'battle' | 'turningPoint'; scope?: 'team' | 'operative' }
   window?: WindowSet
@@ -306,6 +329,10 @@ export interface DatacardData {
   team: Id
   stats: { apl: number; move: Inches; save: RollTarget; wounds: number }
   base: number
+  /** M9 batch B: extra equipment options the team may take while this operative is on the roster (Hearthkyn Lugger) */
+  extraEquipment?: number
+  /** M9 batch B: oval base in mm (long axis along the facing), optionally only for loadouts with one of `weapons` */
+  ovalBase?: { long: number; short: number; weapons?: Id[] }
   keywords: Keyword[]
   weapons: { fixed: Id[]; options?: LoadoutSlot[] }
   abilities: Id[]
@@ -313,6 +340,8 @@ export interface DatacardData {
   figure: { archetype: string; variant?: Slug }
   expendable?: boolean
   nonOperativeForSelection?: boolean
+  /** batch D prep: false = never on a roster; reached only by changing datacard mid-battle (transformOperative) */
+  selectable?: boolean
   text: string
   source: Source
 }
@@ -325,6 +354,37 @@ export interface SelectionSlot {
   from: Id[]
   repeatable?: Id[]
   halfSelections?: Id[]
+  /** M9 prep: datacard id -> selections it counts as (2 for the MB3 Recon Drone and Wyrmblade cult agents) */
+  weights?: Record<Id, number>
+  /** M9 prep: at most `max` operatives from `from` together */
+  caps?: { label?: string; from: Id[]; max: number }[]
+}
+/**
+ * M9 batch B: at most `max` operatives (over every slot) that have `keyword` or are one of `from`. M9 batch C: or at
+ * least `min` of them (Warpcoven: at least one SORCERER); give `max`, `min` or both.
+ */
+export interface TeamCap {
+  label?: string
+  keyword?: Keyword
+  from?: Id[]
+  max?: number
+  min?: number
+}
+/** M9 batch C: the roster may include `id` only if it also includes one of `needs` (a GHEISTSKULL needs a VOID-JAMMER). */
+export interface RosterRequirement {
+  label?: string
+  id: Id
+  needs: Id[]
+}
+/**
+ * M9 batch B: at most `max` operatives of the roster carry any of `weapons` (profile or profileGroup ids), or, with
+ * `each`, at most `max` carry each one of them. Fixed weapons count too.
+ */
+export interface LoadoutCap {
+  label?: string
+  weapons: Id[]
+  max: number
+  each?: boolean
 }
 export interface TeamChoice {
   id: Slug
@@ -332,16 +392,57 @@ export interface TeamChoice {
   group: Slug
   distinctFrom?: Slug[]
 }
+/**
+ * M9 batch B: a keyword each operative of the team takes at selection (Legionaries Marks of Chaos). `forKeyword`
+ * limits it to operatives with that keyword; `exclude` bars some keywords for some datacards.
+ */
+export interface OperativeChoice {
+  id: Slug
+  label: string
+  keywords: Keyword[]
+  forKeyword?: Keyword
+  exclude?: { datacards: Id[]; keywords: Keyword[] }[]
+  /** M9 batch C: no two operatives of the roster take the same pick (Boons of Tzeentch) */
+  unique?: boolean
+  /** M9 batch C: the pick must differ from the same operative's picks for these choices (Custom: two different rules) */
+  distinctFrom?: Slug[]
+  /** M9 batch C: false makes the pick a tag for team code instead of a keyword (hasKeyword ignores it); default true */
+  keyword?: boolean
+  /** batch C shared: display label per pick, keyed by keyword (labels may hold "+" and lower case; keywords may not) */
+  labels?: Record<Keyword, string>
+}
 export interface TeamData {
   id: Id
   name: string
   factionKeyword: Keyword
   archetypes: Slug[]
-  selection: { slots: SelectionSlot[] }
+  selection: {
+    slots: SelectionSlot[]
+    /** M9 batch B: caps counted over every slot (at most five SICARIAN operatives, the leader included) */
+    caps?: TeamCap[]
+    /** M9 batch B: caps on chosen weapons across the whole roster (one arc rifle, one plasma caliver, one arquebus) */
+    loadoutCaps?: LoadoutCap[]
+    /** M9 batch C: datacards that need another datacard on the roster (Gheistskull needs Void-Jammer) */
+    requires?: RosterRequirement[]
+  }
   teamChoices?: TeamChoice[]
+  /** M9 batch B: per-operative keyword picks made at selection (Marks of Chaos) */
+  operativeChoices?: OperativeChoice[]
   factionRules: Id[]
   ploys: Id[]
   equipment: Id[]
+  /** false while the team is scaffolded: validated and loaded, but left out of the picker, sims and bench */
+  playable?: boolean
+  /** default roster (datacard ids, first legal loadout each), equipment and team picks for realSetup */
+  defaults?: {
+    roster?: Id[]
+    equipment?: Id[]
+    teamChoices?: Record<Slug, Id>
+    /** M9 batch B: operative choice picks per default roster entry (same order); missing picks take the first allowed keyword */
+    operativePicks?: Record<Slug, Keyword>[]
+    /** M9 batch B: loadout answers per default roster entry (same order) where the first legal loadout will not do (loadout caps) */
+    loadouts?: Record<Slug, Id[]>[]
+  }
   paint: { major: Hsl; minor: Hsl }
   text: string
   source: Source

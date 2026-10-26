@@ -25,6 +25,7 @@ export {
   defaultTeamChoicesFor,
   enumerateLoadoutChoices,
   layoutMap,
+  playableTeams,
   realSetup,
   resolveLoadoutChoice,
   validateLoadoutChoice,

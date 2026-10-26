@@ -4,9 +4,13 @@ import { gradeThresholds, missionView, onOperativeRemoved } from '@/engine/missi
 import { createCtx } from '@/engine/registry'
 import { ScriptedRng, SeededRng } from '@/engine/rng'
 import { cloneState } from '@/engine/state'
-import { distPointSegment } from '@/engine/geometry'
+import { distPointSegment, distToPolygon, pointInPolygon } from '@/engine/geometry'
+import { discBlockedBy, insideKillzone, obstructs, terrainOf } from '@/engine/terrain'
+import { bundleFromData, layoutMap } from '@/engine/bundle'
 import type { GameEvent } from '@/engine/events'
-import type { GameState, Seat } from '@/engine/types'
+import type { GameState, MapDef, Seat, Vec2 } from '@/engine/types'
+import { loadBundle } from '@/data'
+import loot from '@/data/missions/preliminary-ops-loot.json'
 import { defaultAnswer, drive, place } from '../fixtures/helpers'
 import { activateOp, edit, hasOption, inTp, newRealGame, openReal, opOf, optionIds, realGame, roster, take } from '../fixtures/real'
 
@@ -306,4 +310,61 @@ describe('MISSION battle end', () => {
     void step
     void defaultAnswer
   })
+})
+
+describe('MISSION official card objective spots', () => {
+  // Ground cells a round base can stand on, with the Accessible doorway rule: beside a doorway the base may overlap the
+  // walls of that feature but its centre may not be inside them (R-11.6). Flood-filled from the drop zone.
+  function reachable(map: MapDef, r: number, zone: Vec2[], h = 2.4, step = 0.125): (p: Vec2) => boolean {
+    const idx = terrainOf(map)
+    const nx = Math.floor(map.size.x / step)
+    const nz = Math.floor(map.size.z / step)
+    const at = (i: number, j: number): Vec2 => ({ x: -map.size.x / 2 + (i + 0.5) * step, z: -map.size.z / 2 + (j + 0.5) * step })
+    const free = (c: Vec2): boolean => {
+      if (!insideKillzone(idx, c, r)) return false
+      const doors = new Set(idx.solids.filter((s) => s.accessible && distToPolygon(c, s.polygon) <= r).map((s) => s.featureId))
+      const skip = new Set<string>()
+      for (const s of idx.solids) {
+        if (!doors.has(s.featureId)) continue
+        if (!s.accessible && obstructs(s, 0, r, h) && pointInPolygon(c, s.polygon)) return false
+        skip.add(s.partId)
+      }
+      return discBlockedBy(idx, c, 0, r, h, skip) === null
+    }
+    const seen = new Uint8Array(nx * nz)
+    const queue: number[] = []
+    for (let i = 0; i < nx; i++) for (let j = 0; j < nz; j++) if (pointInPolygon(at(i, j), zone) && free(at(i, j))) (seen[i * nz + j] = 1), queue.push(i * nz + j)
+    while (queue.length) {
+      const k = queue.pop()!
+      const i = Math.floor(k / nz)
+      const j = k % nz
+      for (const [a, b] of [[i + 1, j], [i - 1, j], [i, j + 1], [i, j - 1]] as const) {
+        if (a < 0 || b < 0 || a >= nx || b >= nz || seen[a * nz + b]) continue
+        seen[a * nz + b] = 2
+        if (free(at(a, b))) (seen[a * nz + b] = 1), queue.push(a * nz + b)
+      }
+    }
+    // in control range: base edge within 1" of the 40mm marker's edge
+    return (p) => {
+      for (let i = 0; i < nx; i++) for (let j = 0; j < nz; j++) if (seen[i * nz + j] === 1 && Math.hypot(at(i, j).x - p.x, at(i, j).z - p.z) <= r + 1 + 20 / 25.4) return true
+      return false
+    }
+  }
+
+  it('MISSION-002c every objective spot of the six official cards can be reached on foot from both drop zones (25mm to 40mm bases)', () => {
+    const bundle = bundleFromData(loadBundle())
+    for (const id of Object.keys(bundle.layouts ?? {}).sort()) {
+      for (const [mapId, spots] of Object.entries(bundle.layouts![id]!.spots)) {
+        const zones = (loot.maps as { id: string; dropZones: Record<Seat, Vec2[]> }[]).find((x) => x.id === mapId)!.dropZones
+        const map = layoutMap(bundle, id)
+        const all = [...spots.centre, ...spots.territoryA, ...spots.territoryB, ...Object.values(spots.default)]
+        for (const mm of [25, 40]) {
+          for (const seat of ['A', 'B'] as const) {
+            const ok = reachable(map, mm / 25.4 / 2, zones[seat])
+            for (const p of all) expect(ok(p), `${id} ${mapId} ${mm}mm from ${seat} to (${p.x}, ${p.z})`).toBe(true)
+          }
+        }
+      }
+    }
+  }, 60_000)
 })

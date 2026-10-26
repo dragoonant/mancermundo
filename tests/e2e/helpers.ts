@@ -1,6 +1,6 @@
 // Shared e2e helpers: start a battle through the test URL parameters, wait for the presentation to settle,
 // and take a screenshot only once the demand-driven canvas has actually been drawn.
-import type { Page } from '@playwright/test'
+import type { Locator, Page } from '@playwright/test'
 
 export const TEST_QUERY = '?test=1&seats=human,bot&seed=e2e-1&mission=secure&layout=01&teams=aod,kom&speed=instant'
 
@@ -145,26 +145,87 @@ export function nearestEnemy(ops: E2eOp[], me: E2eOp): { op: E2eOp; dist: number
 }
 
 /** Try each world point as the end of a one-step path; confirm the first the engine accepts. False when none worked (the action is cancelled). */
+/** Is the button there and enabled right now (false, never a wait, when the prompt has just closed)? */
+async function enabledNow(btn: Locator): Promise<boolean> {
+  return (await btn.count()) > 0 && (await btn.isEnabled({ timeout: 500 }).catch(() => false))
+}
+
 export async function tryMovePoints(page: Page, y: number, points: { x: number; z: number }[]): Promise<boolean> {
-  for (const p of points) {
-    const px = await boardPixel(page, p.x, y, p.z)
-    if (!px) continue
-    await page.mouse.move(px.x, px.y)
-    await page.mouse.click(px.x, px.y)
-    await page.waitForTimeout(30)
-    const confirm = page.getByTestId('move-confirm')
-    // the prompt can change under us (the decision was answered): stop instead of waiting for buttons that are gone
+  return tryMoveRoutes(page, y, points.map((p) => [p]))
+}
+
+/** Lay each route (its waypoints clicked in turn) until the engine accepts one and confirm it; cancel when none fits. */
+export async function tryMoveRoutes(page: Page, y: number, routes: { x: number; z: number }[][]): Promise<boolean> {
+  // ask the engine first (a dry run) and keep the first few routes it accepts whose every waypoint can be clicked
+  // (not under a panel); each rejected or blocked click costs a round trip
+  const legal = await page.evaluate(
+    ([rs, wy]) => {
+      const clickable = (q: { x: number; z: number }) => {
+        const px = window.__ms?.project(q.x, wy, q.z)
+        return !!px && document.elementFromPoint(px.x, px.y)?.tagName === 'CANVAS'
+      }
+      const out: number[] = []
+      for (let i = 0; i < rs.length && out.length < 3; i++) if (rs[i]!.every(clickable) && (window.__ms?.pathOk(rs[i]!) ?? true)) out.push(i)
+      return out
+    },
+    [routes, y] as const,
+  )
+  const confirm = page.getByTestId('move-confirm')
+  const clear = page.getByTestId('move-clear')
+  for (const route of legal.map((i) => routes[i]!)) {
+    for (const p of route) {
+      const px = await boardPixel(page, p.x, y, p.z)
+      if (!px) break
+      await page.mouse.move(px.x, px.y)
+      await page.mouse.click(px.x, px.y)
+      await page.waitForTimeout(30)
+    }
+    // the prompt can change under us (the decision was answered), even between two reads: stop instead of waiting
+    // for buttons that are gone, so every read below has a short timeout
     if ((await confirm.count()) === 0) return false
-    if (await confirm.isEnabled()) {
+    if (await enabledNow(confirm)) {
       await confirm.click()
       return true
     }
-    // the click may not have landed a waypoint at all (then Clear is disabled)
-    const clear = page.getByTestId('move-clear')
-    if ((await clear.count()) > 0 && (await clear.isEnabled())) await clear.click()
+    // a click may not have landed a waypoint at all (then Clear is disabled)
+    if (await enabledNow(clear)) await clear.click()
   }
-  if ((await page.getByTestId('move-cancel').count()) > 0) await page.getByTestId('move-cancel').click()
+  const cancel = page.getByTestId('move-cancel')
+  if (await enabledNow(cancel)) await cancel.click()
   return false
+}
+
+/** Answer the pending move with the first route the engine accepts (dispatched, not clicked: for tests about what
+ *  happens after the move); cancel the action when none fits. */
+export async function dispatchMove(page: Page, routes: { x: number; z: number }[][]): Promise<boolean> {
+  const moved = await page.evaluate((rs) => {
+    const ms = window.__ms!
+    const p = ms.getPending() as { id: string; seat: 'A' | 'B'; kind: string } | null
+    if (!p || p.kind !== 'move.path') return false
+    const route = rs.find((r) => ms.pathOk(r))
+    if (!route) return false
+    return ms.dispatch({ type: 'move.path', seat: p.seat, decisionId: p.id, payload: { waypoints: route } } as never) === null
+  }, routes)
+  if (moved) return true
+  const cancel = page.getByTestId('move-cancel')
+  if (await enabledNow(cancel)) await cancel.click()
+  return false
+}
+
+/** The end points as straight steps first, then as two steps via a detour point around `me` (around terrain in the way). */
+export function detourRoutes(me: E2eOp, ends: { x: number; z: number }[], radii = [2, 3.5]): { x: number; z: number }[][] {
+  const direct = ends.map((e) => [e])
+  const detours: { route: { x: number; z: number }[]; len: number }[] = []
+  for (const e of ends) {
+    for (const r of radii) {
+      for (let i = 0; i < 8; i++) {
+        const a = (i * Math.PI) / 4
+        const via = { x: me.pos.x + Math.sin(a) * r, z: me.pos.z + Math.cos(a) * r }
+        detours.push({ route: [via, e], len: r + Math.hypot(e.x - via.x, e.z - via.z) })
+      }
+    }
+  }
+  return [...direct, ...detours.sort((p, q) => p.len - q.len).map((d) => d.route)]
 }
 
 /** Candidate end points for moving `me` toward `foe`: `stop` inches short of its centre, fanned by a few angles, then shorter hops. */

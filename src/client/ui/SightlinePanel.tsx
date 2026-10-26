@@ -1,12 +1,16 @@
 // Side panel for the sight-line tools: every enemy as seen from the operative's planned end point (or from where
 // it stands), sorted by expected damage, plus the threat view (who could hit it back there, under Engage and under
 // Conceal). On a phone the same list folds into a bottom sheet above the decision prompt. Read-only.
+// The "Sightlines: off" chip sits in the HUD toolbar row on touch devices (SightlineChip), floating on desktop; the
+// floating panel carries a drawer button (id 'sightlines') that folds it to a title tab.
 import { useEffect, type CSSProperties } from 'react'
 import { SIGHT_COLOR, THREAT_COLOR } from '../board/Sightlines'
 import { threatShowing, useSightData, type SightData } from '../interaction/sightData'
 import { useSight } from '../interaction/sightStore'
 import type { SightEntry, ThreatEntry, ThreatSet } from '../interaction/sightlines'
 import { BottomSheet } from './BottomSheet'
+import { CollapseButton, CollapsedTab, useCollapsed } from './collapse'
+import { touchToolbar } from './hudLayout'
 import { Keyword, KeywordText } from './Keyword'
 import { useFormFactor } from './formFactor'
 import { colors, fontStack, panel } from './theme'
@@ -249,22 +253,31 @@ const floating: CSSProperties = {
   gap: 3,
 }
 
-export function SightlinePanel() {
-  useThreatHotkey()
+/** The "Sightlines: off" chip. `inline` puts it in a flex row (the touch toolbar) instead of floating it at the top left. */
+export function SightlineChip({ inline = false }: { inline?: boolean }) {
   const compact = useFormFactor().compact
   const on = useSight((s) => s.on)
+  if (on) return null
+  return (
+    <Btn
+      data-testid="sight-show"
+      style={{ ...(inline ? { position: 'relative' } : { position: 'absolute', top: compact ? 60 : 66, left: 8, zIndex: 18 }), padding: '3px 8px', fontSize: 12, pointerEvents: 'auto' }}
+      onClick={() => useSight.getState().setOn(true)}
+    >
+      Sightlines: off
+    </Btn>
+  )
+}
+
+export function SightlinePanel() {
+  useThreatHotkey()
+  const ff = useFormFactor()
+  const compact = ff.compact
+  const on = useSight((s) => s.on)
   const d = useSightData()
-  if (!on) {
-    return (
-      <Btn
-        data-testid="sight-show"
-        style={{ position: 'absolute', top: compact ? 60 : 66, left: 8, padding: '3px 8px', fontSize: 12, pointerEvents: 'auto', zIndex: 18 }}
-        onClick={() => useSight.getState().setOn(true)}
-      >
-        Sightlines: off
-      </Btn>
-    )
-  }
+  const [folded] = useCollapsed('sightlines')
+  // on touch the chip lives in the HUD toolbar row, and the panel opens below that row
+  if (!on) return ff.touch ? null : <SightlineChip />
   if (!d) return null
   if (compact) {
     return (
@@ -281,13 +294,18 @@ export function SightlinePanel() {
       </div>
     )
   }
+  const top = ff.touch ? touchToolbar(false).below : 66
+  if (folded) return <CollapsedTab id="sightlines" title="Sightlines" style={{ position: 'absolute', top, left: 8, zIndex: 18 }} />
   return (
-    <div data-testid="sight-panel" className="ms-touch" style={floating}>
+    <div data-testid="sight-panel" className="ms-touch" style={{ ...floating, top }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flex: '0 0 auto' }}>
         <b style={{ fontSize: 14 }}>Sightlines</b>
-        <Btn data-testid="sight-hide" style={{ padding: '1px 7px', fontSize: 11 }} onClick={() => useSight.getState().setOn(false)}>
-          Hide
-        </Btn>
+        <span style={{ display: 'flex', gap: 6 }}>
+          <Btn data-testid="sight-hide" style={{ padding: '1px 7px', fontSize: 11 }} onClick={() => useSight.getState().setOn(false)}>
+            Hide
+          </Btn>
+          <CollapseButton id="sightlines" title="sightlines" />
+        </span>
       </div>
       <Body d={d} compact={false} />
     </div>

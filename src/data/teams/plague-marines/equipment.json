@@ -1,0 +1,46 @@
+[
+  {
+    "id": "pm.e.plague-bells",
+    "name": "PLAGUE BELLS",
+    "scope": "faction",
+    "team": "plague-marines",
+    "count": 1,
+    "effect": { "code": "plagueBells", "params": { "ignoreInjured": true } },
+    "text": "Injury does not slow the warband: friendly Plague Marines keep their full Move and their weapons' printed Hit while injured.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md T-PM.28"
+  },
+  {
+    "id": "pm.e.plague-rounds",
+    "name": "PLAGUE ROUNDS",
+    "scope": "faction",
+    "team": "plague-marines",
+    "count": 1,
+    "effect": [
+      { "grantWeaponRule": { "rule": "pm.a.wr-poison", "filter": { "weaponIds": ["pm.w.boltgun-bombardier", "pm.w.boltgun-warrior", "pm.w.bolt-pistol"] } } },
+      { "grantWeaponRule": { "rule": "core.wr.severe", "filter": { "weaponIds": ["pm.w.boltgun-bombardier", "pm.w.boltgun-warrior", "pm.w.bolt-pistol"] } } }
+    ],
+    "text": "Poison and Severe are added to the team's boltguns and bolt pistols.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md T-PM.29"
+  },
+  {
+    "id": "pm.e.blight-grenades",
+    "name": "BLIGHT GRENADES",
+    "scope": "faction",
+    "team": "plague-marines",
+    "count": 1,
+    "grants": { "weapons": ["pm.w.blight-grenade"], "to": { "keyword": "PLAGUE MARINE" } },
+    "limits": { "uses": 2, "per": "battle", "scope": "team" },
+    "text": "Every friendly Plague Marine can throw a blight grenade, but the whole team may do so only twice in the battle.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md T-PM.30"
+  },
+  {
+    "id": "pm.e.poison-vents",
+    "name": "POISON VENTS",
+    "scope": "faction",
+    "team": "plague-marines",
+    "count": 1,
+    "effect": { "code": "poisonVents", "params": { "inches": 3, "tokenOn": 3 } },
+    "text": "An enemy that starts its activation within 3 inches of a Plague Marine (sight not needed) breathes the fumes: a poisoned one loses D3 wounds to Poison that activation instead of 1; an unpoisoned one is poisoned on a D3 roll of 3.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md T-PM.31"
+  }
+]

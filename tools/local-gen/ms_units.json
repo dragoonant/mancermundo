@@ -98,5 +98,430 @@
     "prompt": "MGSD super-deformed bare-handed body for kom-bomb-squig (concept image in art/unit-concepts/kom-bomb-squig.png)",
     "height": 0.75,
     "base": 25
+  },
+  "pf-shasui": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-shasui (concept image in art/unit-concepts/pf-shasui.png)",
+    "height": 1.15,
+    "base": 25
+  },
+  "pf-assault-grenadier": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-assault-grenadier (concept image in art/unit-concepts/pf-assault-grenadier.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "pf-blooded": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-blooded (concept image in art/unit-concepts/pf-blooded.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "pf-comms-specialist": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-comms-specialist (concept image in art/unit-concepts/pf-comms-specialist.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "pf-drone-controller": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-drone-controller (concept image in art/unit-concepts/pf-drone-controller.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "pf-marksman": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-marksman (concept image in art/unit-concepts/pf-marksman.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "pf-medical-technician": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-medical-technician (concept image in art/unit-concepts/pf-medical-technician.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "pf-shasla": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-shasla (concept image in art/unit-concepts/pf-shasla.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "pf-transpectral-interference": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-transpectral-interference (concept image in art/unit-concepts/pf-transpectral-interference.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "pf-weapons-expert": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-weapons-expert (concept image in art/unit-concepts/pf-weapons-expert.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "pf-mb3-recon-drone": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-mb3-recon-drone (concept image in art/unit-concepts/pf-mb3-recon-drone.png)",
+    "height": 0.8,
+    "base": 32
+  },
+  "pf-mv1-gun-drone": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-mv1-gun-drone (concept image in art/unit-concepts/pf-mv1-gun-drone.png)",
+    "height": 0.8,
+    "base": 32
+  },
+  "pf-mv4-shield-drone": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-mv4-shield-drone (concept image in art/unit-concepts/pf-mv4-shield-drone.png)",
+    "height": 0.85,
+    "base": 32
+  },
+  "pf-mv7-marker-drone": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-mv7-marker-drone (concept image in art/unit-concepts/pf-mv7-marker-drone.png)",
+    "height": 0.85,
+    "base": 32
+  },
+  "pf-mv31-pulse-accelerator-drone": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-mv31-pulse-accelerator-drone (concept image in art/unit-concepts/pf-mv31-pulse-accelerator-drone.png)",
+    "height": 0.9,
+    "base": 32
+  },
+  "pf-mv33-grav-inhibitor-drone": {
+    "prompt": "MGSD super-deformed bare-handed body for pf-mv33-grav-inhibitor-drone (concept image in art/unit-concepts/pf-mv33-grav-inhibitor-drone.png)",
+    "height": 0.8,
+    "base": 32
+  },
+  "ht-chronomancer": {
+    "prompt": "MGSD super-deformed bare-handed body for ht-chronomancer (concept image in art/unit-concepts/ht-chronomancer.png)",
+    "height": 1.4,
+    "base": 40
+  },
+  "ht-psychomancer": {
+    "prompt": "MGSD super-deformed bare-handed body for ht-psychomancer (concept image in art/unit-concepts/ht-psychomancer.png)",
+    "height": 1.3,
+    "base": 40
+  },
+  "ht-technomancer": {
+    "prompt": "MGSD super-deformed bare-handed body for ht-technomancer (concept image in art/unit-concepts/ht-technomancer.png)",
+    "height": 1.5,
+    "base": 50
+  },
+  "ht-plasmacyte-accelerator": {
+    "prompt": "MGSD super-deformed bare-handed body for ht-plasmacyte-accelerator (concept image in art/unit-concepts/ht-plasmacyte-accelerator.png)",
+    "height": 0.75,
+    "base": 25
+  },
+  "ht-plasmacyte-reanimator": {
+    "prompt": "MGSD super-deformed bare-handed body for ht-plasmacyte-reanimator (concept image in art/unit-concepts/ht-plasmacyte-reanimator.png)",
+    "height": 0.75,
+    "base": 25
+  },
+  "ht-apprentek": {
+    "prompt": "MGSD super-deformed bare-handed body for ht-apprentek (concept image in art/unit-concepts/ht-apprentek.png)",
+    "height": 1.15,
+    "base": 32
+  },
+  "ht-deathmark": {
+    "prompt": "MGSD super-deformed bare-handed body for ht-deathmark (concept image in art/unit-concepts/ht-deathmark.png)",
+    "height": 1.25,
+    "base": 32
+  },
+  "ht-immortal-despotek": {
+    "prompt": "MGSD super-deformed bare-handed body for ht-immortal-despotek (concept image in art/unit-concepts/ht-immortal-despotek.png)",
+    "height": 1.3,
+    "base": 32
+  },
+  "ht-immortal-guardian": {
+    "prompt": "MGSD super-deformed bare-handed body for ht-immortal-guardian (concept image in art/unit-concepts/ht-immortal-guardian.png)",
+    "height": 1.25,
+    "base": 32
+  },
+  "pm-plague-marine-champion": {
+    "prompt": "MGSD super-deformed bare-handed body for pm-plague-marine-champion (concept image in art/unit-concepts/pm-plague-marine-champion.png)",
+    "height": 1.4,
+    "base": 32
+  },
+  "pm-plague-marine-bombardier": {
+    "prompt": "MGSD super-deformed bare-handed body for pm-plague-marine-bombardier (concept image in art/unit-concepts/pm-plague-marine-bombardier.png)",
+    "height": 1.3,
+    "base": 32
+  },
+  "pm-plague-marine-fighter": {
+    "prompt": "MGSD super-deformed bare-handed body for pm-plague-marine-fighter (concept image in art/unit-concepts/pm-plague-marine-fighter.png)",
+    "height": 1.25,
+    "base": 32
+  },
+  "pm-plague-marine-heavy-gunner": {
+    "prompt": "MGSD super-deformed bare-handed body for pm-plague-marine-heavy-gunner (concept image in art/unit-concepts/pm-plague-marine-heavy-gunner.png)",
+    "height": 1.35,
+    "base": 32
+  },
+  "pm-plague-marine-icon-bearer": {
+    "prompt": "MGSD super-deformed bare-handed body for pm-plague-marine-icon-bearer (concept image in art/unit-concepts/pm-plague-marine-icon-bearer.png)",
+    "height": 1.7,
+    "base": 32
+  },
+  "pm-malignant-plaguecaster": {
+    "prompt": "MGSD super-deformed bare-handed body for pm-malignant-plaguecaster (concept image in art/unit-concepts/pm-malignant-plaguecaster.png)",
+    "height": 1.3,
+    "base": 32
+  },
+  "pm-plague-marine-warrior": {
+    "prompt": "MGSD super-deformed bare-handed body for pm-plague-marine-warrior (concept image in art/unit-concepts/pm-plague-marine-warrior.png)",
+    "height": 1.25,
+    "base": 32
+  },
+  "wb-neophyte-leader": {
+    "prompt": "MGSD super-deformed bare-handed body for wb-neophyte-leader (concept image in art/unit-concepts/wb-neophyte-leader.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "wb-kelermorph": {
+    "prompt": "MGSD super-deformed bare-handed body for wb-kelermorph (concept image in art/unit-concepts/wb-kelermorph.png)",
+    "height": 1.15,
+    "base": 32
+  },
+  "wb-locus": {
+    "prompt": "MGSD super-deformed bare-handed body for wb-locus (concept image in art/unit-concepts/wb-locus.png)",
+    "height": 1.2,
+    "base": 32
+  },
+  "wb-neophyte-gunner": {
+    "prompt": "MGSD super-deformed bare-handed body for wb-neophyte-gunner (concept image in art/unit-concepts/wb-neophyte-gunner.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "wb-neophyte-heavy-gunner": {
+    "prompt": "MGSD super-deformed bare-handed body for wb-neophyte-heavy-gunner (concept image in art/unit-concepts/wb-neophyte-heavy-gunner.png)",
+    "height": 1.15,
+    "base": 32
+  },
+  "wb-neophyte-icon-bearer": {
+    "prompt": "MGSD super-deformed bare-handed body for wb-neophyte-icon-bearer (concept image in art/unit-concepts/wb-neophyte-icon-bearer.png)",
+    "height": 1.45,
+    "base": 25
+  },
+  "wb-sanctus-sniper": {
+    "prompt": "MGSD super-deformed bare-handed body for wb-sanctus-sniper (concept image in art/unit-concepts/wb-sanctus-sniper.png)",
+    "height": 1.15,
+    "base": 32
+  },
+  "wb-sanctus-talon": {
+    "prompt": "MGSD super-deformed bare-handed body for wb-sanctus-talon (concept image in art/unit-concepts/wb-sanctus-talon.png)",
+    "height": 1.15,
+    "base": 32
+  },
+  "wb-neophyte-warrior": {
+    "prompt": "MGSD super-deformed bare-handed body for wb-neophyte-warrior (concept image in art/unit-concepts/wb-neophyte-warrior.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "lg-aspiring-champion": {
+    "prompt": "MGSD super-deformed bare-handed body for lg-aspiring-champion (concept image in art/unit-concepts/lg-aspiring-champion.png)",
+    "height": 1.4,
+    "base": 32
+  },
+  "lg-chosen": {
+    "prompt": "MGSD super-deformed bare-handed body for lg-chosen (concept image in art/unit-concepts/lg-chosen.png)",
+    "height": 1.3,
+    "base": 32
+  },
+  "lg-anointed": {
+    "prompt": "MGSD super-deformed bare-handed body for lg-anointed (concept image in art/unit-concepts/lg-anointed.png)",
+    "height": 1.4,
+    "base": 32
+  },
+  "lg-balefire-acolyte": {
+    "prompt": "MGSD super-deformed bare-handed body for lg-balefire-acolyte (concept image in art/unit-concepts/lg-balefire-acolyte.png)",
+    "height": 1.3,
+    "base": 32
+  },
+  "lg-butcher": {
+    "prompt": "MGSD super-deformed bare-handed body for lg-butcher (concept image in art/unit-concepts/lg-butcher.png)",
+    "height": 1.35,
+    "base": 32
+  },
+  "lg-gunner": {
+    "prompt": "MGSD super-deformed bare-handed body for lg-gunner (concept image in art/unit-concepts/lg-gunner.png)",
+    "height": 1.25,
+    "base": 32
+  },
+  "lg-heavy-gunner": {
+    "prompt": "MGSD super-deformed bare-handed body for lg-heavy-gunner (concept image in art/unit-concepts/lg-heavy-gunner.png)",
+    "height": 1.35,
+    "base": 32
+  },
+  "lg-icon-bearer": {
+    "prompt": "MGSD super-deformed bare-handed body for lg-icon-bearer (concept image in art/unit-concepts/lg-icon-bearer.png)",
+    "height": 1.7,
+    "base": 32
+  },
+  "lg-shrivetalon": {
+    "prompt": "MGSD super-deformed bare-handed body for lg-shrivetalon (concept image in art/unit-concepts/lg-shrivetalon.png)",
+    "height": 1.3,
+    "base": 32
+  },
+  "lg-warrior": {
+    "prompt": "MGSD super-deformed bare-handed body for lg-warrior (concept image in art/unit-concepts/lg-warrior.png)",
+    "height": 1.25,
+    "base": 32
+  },
+  "ha-archsybarite": {
+    "prompt": "MGSD super-deformed bare-handed body for ha-archsybarite (concept image in art/unit-concepts/ha-archsybarite.png)",
+    "height": 1.15,
+    "base": 25
+  },
+  "ha-agent": {
+    "prompt": "MGSD super-deformed bare-handed body for ha-agent (concept image in art/unit-concepts/ha-agent.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "ha-crimson-duellist": {
+    "prompt": "MGSD super-deformed bare-handed body for ha-crimson-duellist (concept image in art/unit-concepts/ha-crimson-duellist.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "ha-disciple-of-yaelindra": {
+    "prompt": "MGSD super-deformed bare-handed body for ha-disciple-of-yaelindra (concept image in art/unit-concepts/ha-disciple-of-yaelindra.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "ha-elixicant": {
+    "prompt": "MGSD super-deformed bare-handed body for ha-elixicant (concept image in art/unit-concepts/ha-elixicant.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "ha-flayer": {
+    "prompt": "MGSD super-deformed bare-handed body for ha-flayer (concept image in art/unit-concepts/ha-flayer.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "ha-gunner": {
+    "prompt": "MGSD super-deformed bare-handed body for ha-gunner (concept image in art/unit-concepts/ha-gunner.png)",
+    "height": 1.05,
+    "base": 25
+  },
+  "ha-heavy-gunner": {
+    "prompt": "MGSD super-deformed bare-handed body for ha-heavy-gunner (concept image in art/unit-concepts/ha-heavy-gunner.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "ha-skysplinter-assassin": {
+    "prompt": "MGSD super-deformed bare-handed body for ha-skysplinter-assassin (concept image in art/unit-concepts/ha-skysplinter-assassin.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "hc-sicarian-ruststalker-princeps": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-sicarian-ruststalker-princeps (concept image in art/unit-concepts/hc-sicarian-ruststalker-princeps.png)",
+    "height": 1.25,
+    "base": 40
+  },
+  "hc-sicarian-infiltrator-princeps": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-sicarian-infiltrator-princeps (concept image in art/unit-concepts/hc-sicarian-infiltrator-princeps.png)",
+    "height": 1.25,
+    "base": 40
+  },
+  "hc-sicarian-infiltrator-warrior": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-sicarian-infiltrator-warrior (concept image in art/unit-concepts/hc-sicarian-infiltrator-warrior.png)",
+    "height": 1.2,
+    "base": 40
+  },
+  "hc-sicarian-ruststalker-warrior": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-sicarian-ruststalker-warrior (concept image in art/unit-concepts/hc-sicarian-ruststalker-warrior.png)",
+    "height": 1.2,
+    "base": 40
+  },
+  "hc-skitarii-ranger-alpha": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-skitarii-ranger-alpha (concept image in art/unit-concepts/hc-skitarii-ranger-alpha.png)",
+    "height": 1.15,
+    "base": 25
+  },
+  "hc-skitarii-vanguard-alpha": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-skitarii-vanguard-alpha (concept image in art/unit-concepts/hc-skitarii-vanguard-alpha.png)",
+    "height": 1.15,
+    "base": 25
+  },
+  "hc-skitarii-ranger-diktat": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-skitarii-ranger-diktat (concept image in art/unit-concepts/hc-skitarii-ranger-diktat.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "hc-skitarii-ranger-gunner": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-skitarii-ranger-gunner (concept image in art/unit-concepts/hc-skitarii-ranger-gunner.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "hc-skitarii-ranger-surveyor": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-skitarii-ranger-surveyor (concept image in art/unit-concepts/hc-skitarii-ranger-surveyor.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "hc-skitarii-ranger-warrior": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-skitarii-ranger-warrior (concept image in art/unit-concepts/hc-skitarii-ranger-warrior.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "hc-skitarii-vanguard-diktat": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-skitarii-vanguard-diktat (concept image in art/unit-concepts/hc-skitarii-vanguard-diktat.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "hc-skitarii-vanguard-gunner": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-skitarii-vanguard-gunner (concept image in art/unit-concepts/hc-skitarii-vanguard-gunner.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "hc-skitarii-vanguard-surveyor": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-skitarii-vanguard-surveyor (concept image in art/unit-concepts/hc-skitarii-vanguard-surveyor.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "hc-skitarii-vanguard-warrior": {
+    "prompt": "MGSD super-deformed bare-handed body for hc-skitarii-vanguard-warrior (concept image in art/unit-concepts/hc-skitarii-vanguard-warrior.png)",
+    "height": 1.1,
+    "base": 25
+  },
+  "hk-theyn": {
+    "prompt": "MGSD super-deformed bare-handed body for hk-theyn (concept image in art/unit-concepts/hk-theyn.png)",
+    "height": 1.05,
+    "base": 28
+  },
+  "hk-dozr": {
+    "prompt": "MGSD super-deformed bare-handed body for hk-dozr (concept image in art/unit-concepts/hk-dozr.png)",
+    "height": 1.05,
+    "base": 28
+  },
+  "hk-field-medic": {
+    "prompt": "MGSD super-deformed bare-handed body for hk-field-medic (concept image in art/unit-concepts/hk-field-medic.png)",
+    "height": 1,
+    "base": 28
+  },
+  "hk-grenadier": {
+    "prompt": "MGSD super-deformed bare-handed body for hk-grenadier (concept image in art/unit-concepts/hk-grenadier.png)",
+    "height": 1,
+    "base": 28
+  },
+  "hk-gunner": {
+    "prompt": "MGSD super-deformed bare-handed body for hk-gunner (concept image in art/unit-concepts/hk-gunner.png)",
+    "height": 1,
+    "base": 28
+  },
+  "hk-jump-pack-warrior": {
+    "prompt": "MGSD super-deformed bare-handed body for hk-jump-pack-warrior (concept image in art/unit-concepts/hk-jump-pack-warrior.png)",
+    "height": 1.15,
+    "base": 28
+  },
+  "hk-kinlynk": {
+    "prompt": "MGSD super-deformed bare-handed body for hk-kinlynk (concept image in art/unit-concepts/hk-kinlynk.png)",
+    "height": 1,
+    "base": 28
+  },
+  "hk-kognitaar": {
+    "prompt": "MGSD super-deformed bare-handed body for hk-kognitaar (concept image in art/unit-concepts/hk-kognitaar.png)",
+    "height": 1.05,
+    "base": 28
+  },
+  "hk-lokatr": {
+    "prompt": "MGSD super-deformed bare-handed body for hk-lokatr (concept image in art/unit-concepts/hk-lokatr.png)",
+    "height": 1,
+    "base": 28
+  },
+  "hk-lugger": {
+    "prompt": "MGSD super-deformed bare-handed body for hk-lugger (concept image in art/unit-concepts/hk-lugger.png)",
+    "height": 1,
+    "base": 28
+  },
+  "hk-warrior": {
+    "prompt": "MGSD super-deformed bare-handed body for hk-warrior (concept image in art/unit-concepts/hk-warrior.png)",
+    "height": 1,
+    "base": 28
   }
 }

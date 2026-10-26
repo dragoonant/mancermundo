@@ -1,0 +1,716 @@
+[
+  {
+    "id": "wyr.w.autogun-leader",
+    "name": "Autogun",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "A reliable automatic rifle in practised hands, more accurate than the rank and file version.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.shotgun-leader",
+    "name": "Shotgun",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      }
+    ],
+    "text": "A close-range scattergun that the cell leader fires with great accuracy.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.bolt-pistol",
+    "name": "Bolt pistol",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      }
+    ],
+    "text": "A heavy sidearm firing explosive rounds.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.master-crafted-autopistol",
+    "name": "Master-crafted autopistol",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "A finely made automatic pistol that finds the weak spot on a lucky roll.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.web-pistol",
+    "name": "Web pistol",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      },
+      {
+        "rule": "core.wr.severe"
+      },
+      {
+        "rule": "core.wr.stun"
+      }
+    ],
+    "text": "A sidearm that sprays sticky strands to entangle its victim.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.chainsword",
+    "name": "Chainsword",
+    "team": "wyrmblade",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [],
+    "text": "A motorised blade that chews through whatever it meets.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.power-maul",
+    "name": "Power maul",
+    "team": "wyrmblade",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "A crackling baton that hammers an enemy off balance.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.power-pick",
+    "name": "Power pick",
+    "team": "wyrmblade",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "A mining pick with a powered head that punches through plating.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.gun-butt",
+    "name": "Gun butt",
+    "team": "wyrmblade",
+    "type": "melee",
+    "atk": 3,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "The rifle stock, swung as a club.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.liberator-autostubs-hypersense",
+    "name": "Liberator autostubs",
+    "profile": "hypersense",
+    "profileGroup": "wyr.wg.liberator-autostubs",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      },
+      {
+        "rule": "core.wr.saturate"
+      },
+      {
+        "rule": "core.wr.seek-light"
+      },
+      {
+        "rule": "wyr.a.wr-hypersense"
+      }
+    ],
+    "text": "Twin autoguns fired by an uncanny shot; this profile sees targets however well they hide.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.liberator-autostubs-long-range",
+    "name": "Liberator autostubs",
+    "profile": "long range",
+    "profileGroup": "wyr.wg.liberator-autostubs",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1,
+        "crits": true
+      },
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "Twin autoguns fired by an uncanny shot; this profile reaches out at long range.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.liberator-autostubs-short-range",
+    "name": "Liberator autostubs",
+    "profile": "short range",
+    "profileGroup": "wyr.wg.liberator-autostubs",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      },
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "Twin autoguns fired by an uncanny shot; this profile rips apart close targets.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.kelermorph-knife",
+    "name": "Kelermorph knife",
+    "team": "wyrmblade",
+    "type": "melee",
+    "atk": 3,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "A slim blade kept for when the guns run dry.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.barbed-tail",
+    "name": "Barbed tail",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 3
+      },
+      {
+        "rule": "core.wr.silent"
+      }
+    ],
+    "text": "A hidden barbed tail that lashes out without a sound.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.locus-blades",
+    "name": "Locus blades",
+    "team": "wyrmblade",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "Four clawed hands that blur into a storm of cuts.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.flamer",
+    "name": "Flamer",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.saturate"
+      },
+      {
+        "rule": "core.wr.torrent",
+        "inches": 2
+      }
+    ],
+    "text": "A fuel-tank burner that washes flame over everything in front of it.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.grenade-launcher-frag",
+    "name": "Grenade launcher",
+    "profile": "frag",
+    "profileGroup": "wyr.wg.grenade-launcher",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.blast",
+        "inches": 2
+      }
+    ],
+    "text": "A launcher lobbing blast grenades; this is the frag profile.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.grenade-launcher-krak",
+    "name": "Grenade launcher",
+    "profile": "krak",
+    "profileGroup": "wyr.wg.grenade-launcher",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "text": "A launcher lobbing armour-piercing grenades; this is the krak profile.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.webber",
+    "name": "Webber",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 12
+      },
+      {
+        "rule": "core.wr.severe"
+      },
+      {
+        "rule": "core.wr.stun"
+      }
+    ],
+    "text": "A launcher that fires clinging webbing to bind and stun.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.heavy-stubber-focused",
+    "name": "Heavy stubber",
+    "profile": "focused",
+    "profileGroup": "wyr.wg.heavy-stubber",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.heavy",
+        "only": "dash"
+      }
+    ],
+    "text": "A mounted heavy machine gun; this is the focused profile.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.heavy-stubber-sweeping",
+    "name": "Heavy stubber",
+    "profile": "sweeping",
+    "profileGroup": "wyr.wg.heavy-stubber",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.heavy",
+        "only": "dash"
+      },
+      {
+        "rule": "core.wr.torrent",
+        "inches": 1
+      }
+    ],
+    "text": "A mounted heavy machine gun; this is the sweeping profile.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.mining-laser",
+    "name": "Mining laser",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "4+",
+    "dmg": {
+      "normal": 5,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.heavy",
+        "only": "dash"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "text": "A rock-cutting laser turned on living targets.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.seismic-cannon-long-wave",
+    "name": "Seismic cannon",
+    "profile": "long-wave",
+    "profileGroup": "wyr.wg.seismic-cannon",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "4+",
+    "dmg": {
+      "normal": 5,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.blast",
+        "inches": 1
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "dash"
+      },
+      {
+        "rule": "core.wr.stun"
+      }
+    ],
+    "text": "A quarry cannon that shakes the ground; this is the long-wave profile.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.seismic-cannon-short-wave",
+    "name": "Seismic cannon",
+    "profile": "short-wave",
+    "profileGroup": "wyr.wg.seismic-cannon",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "dash"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1,
+        "crits": true
+      },
+      {
+        "rule": "core.wr.stun"
+      }
+    ],
+    "text": "A quarry cannon that shakes the ground; this is the short-wave profile.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.autogun",
+    "name": "Autogun",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "A common automatic rifle carried by the rank and file.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.shotgun",
+    "name": "Shotgun",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      }
+    ],
+    "text": "A close-range scattergun.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.sanctus-sniper-rifle-mobile",
+    "name": "Sanctus sniper rifle",
+    "profile": "mobile",
+    "profileGroup": "wyr.wg.sanctus-sniper-rifle",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [],
+    "text": "A calibrated long rifle; this is the mobile profile for shooting on the move.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.sanctus-sniper-rifle-stationary",
+    "name": "Sanctus sniper rifle",
+    "profile": "stationary",
+    "profileGroup": "wyr.wg.sanctus-sniper-rifle",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.devastating",
+        "x": 3
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "dash"
+      },
+      {
+        "rule": "core.wr.silent"
+      }
+    ],
+    "text": "A calibrated long rifle; this is the stationary profile for a patient, silent shot.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.fists",
+    "name": "Fists",
+    "team": "wyrmblade",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 4
+    },
+    "rules": [],
+    "text": "Bare hands.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.sanctus-bio-dagger",
+    "name": "Sanctus bio-dagger",
+    "team": "wyrmblade",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "4+"
+      },
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "A grown blade that finds the fatal cut and rattles the victim.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.blasting-charge",
+    "name": "Blasting charge",
+    "team": "wyrmblade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 4
+      },
+      {
+        "rule": "core.wr.blast",
+        "inches": 1
+      },
+      {
+        "rule": "core.wr.saturate"
+      }
+    ],
+    "text": "Mining explosives thrown at the enemy.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  },
+  {
+    "id": "wyr.w.cult-knife",
+    "name": "Cult knife",
+    "team": "wyrmblade",
+    "type": "melee",
+    "atk": 3,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [],
+    "text": "A ritual or working blade that every Neophyte carries.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.3"
+  }
+]

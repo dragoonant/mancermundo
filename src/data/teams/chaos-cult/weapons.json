@@ -1,0 +1,234 @@
+[
+  {
+    "id": "cc.w.diabolical-stave-ranged",
+    "name": "Diabolical stave (ranged)",
+    "team": "chaos-cult",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 2
+      },
+      {
+        "rule": "core.wr.stun"
+      }
+    ],
+    "text": "The Demagogue's warp-touched staff, loosing a crackle of dark power at arm's length.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md section 20.3"
+  },
+  {
+    "id": "cc.w.pistol",
+    "name": "Pistol",
+    "team": "chaos-cult",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      }
+    ],
+    "text": "A battered sidearm of the kind every cultist scavenges; the Demagogue, Iconarch and Devotees share this profile.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md section 20.3"
+  },
+  {
+    "id": "cc.w.burning-censer",
+    "name": "Burning censer",
+    "team": "chaos-cult",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 4,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 5
+      },
+      {
+        "rule": "core.wr.saturate"
+      },
+      {
+        "rule": "core.wr.torrent",
+        "inches": 2
+      }
+    ],
+    "text": "The Iconarch's swinging censer, a sheet of unholy fire that washes over everything near its target.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md section 20.3"
+  },
+  {
+    "id": "cc.w.infernal-gaze",
+    "name": "Infernal gaze",
+    "team": "chaos-cult",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 0,
+      "crit": 0
+    },
+    "rules": [
+      {
+        "rule": "cc.a.wr-psychic"
+      },
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      },
+      {
+        "rule": "core.wr.devastating",
+        "x": 2
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "3+"
+      }
+    ],
+    "text": "The Mindwitch's mind-searing stare: it wounds nothing by itself, but every success tears the victim apart from inside.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md section 20.3"
+  },
+  {
+    "id": "cc.w.diabolical-stave-melee",
+    "name": "Diabolical stave (melee)",
+    "team": "chaos-cult",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.shock"
+      },
+      {
+        "rule": "core.wr.stun"
+      }
+    ],
+    "text": "The same staff swung as a cudgel, its touch numbing the victim's mind.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md section 20.3"
+  },
+  {
+    "id": "cc.w.commune-blade",
+    "name": "Commune blade",
+    "team": "chaos-cult",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "A ritual blade carried by the Demagogue's bodyguards, wickedly quick to find a throat.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md section 20.3"
+  },
+  {
+    "id": "cc.w.crude-melee-weapon-iconarch",
+    "name": "Crude melee weapon",
+    "team": "chaos-cult",
+    "type": "melee",
+    "atk": 3,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "Whatever the Iconarch grabbed when the censer was not enough: a hatchet, a length of chain, a broken pole.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md section 20.3"
+  },
+  {
+    "id": "cc.w.crude-melee-weapon",
+    "name": "Crude melee weapon",
+    "team": "chaos-cult",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "Cleavers, clubs and pry bars: the common weapons of the cult's rank and file.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md section 20.3"
+  },
+  {
+    "id": "cc.w.fists",
+    "name": "Fists",
+    "team": "chaos-cult",
+    "type": "melee",
+    "atk": 3,
+    "hit": "5+",
+    "dmg": {
+      "normal": 1,
+      "crit": 2
+    },
+    "rules": [],
+    "text": "The Mindwitch's mindless carrier swings its limbs, but only as a last resort.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md section 20.3"
+  },
+  {
+    "id": "cc.w.blasphemous-appendages",
+    "name": "Blasphemous appendages",
+    "team": "chaos-cult",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.ceaseless"
+      },
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "Claws, tentacles and barbed limbs erupting from a transformed devotee, lashing without pause.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md section 20.3"
+  },
+  {
+    "id": "cc.w.hideous-mutations",
+    "name": "Hideous mutations",
+    "team": "chaos-cult",
+    "type": "melee",
+    "atk": 5,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.ceaseless"
+      },
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "A daemon-ridden body made of a dozen weapons at once.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md section 20.3"
+  }
+]

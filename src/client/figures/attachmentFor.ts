@@ -2,6 +2,7 @@
 // Profile groups share one mesh; an empty list is an explicit "draws nothing" (natural weapons, bare fists,
 // abstract explosives); two slugs draw a pair (twin choppas). An id absent from the table is unmapped: the
 // renderer falls back to the hold-class box and tests/client/attachments.test.ts fails on it.
+import { teamTable } from '../teams'
 export type AttachmentSlug = string
 
 export const ATTACHMENT_FOR: Record<string, AttachmentSlug[]> = {
@@ -61,6 +62,8 @@ export const ATTACHMENT_FOR: Record<string, AttachmentSlug[]> = {
   'core.w.frag-grenade': ['e-frag-grenade'],
   'core.w.krak-grenade': ['e-krak-grenade'],
 }
+// M9 prep: teams added later bring their own entries (src/client/teams)
+Object.assign(ATTACHMENT_FOR, teamTable('attachments'))
 
 /** The attachment slugs a weapon draws: [] draws nothing, undefined means the id is unmapped. */
 export function attachmentFor(weaponId: string): AttachmentSlug[] | undefined {
@@ -79,4 +82,20 @@ export const AOD_SLUGS: readonly AttachmentSlug[] = [
   'w-hand-flamer', 'w-heavy-bolt-pistol', 'w-plasma-pistol', 'w-auto-bolt-rifle', 'w-bolt-rifle', 'w-stalker-bolt-rifle',
   'w-auxiliary-grenade-launcher', 'w-bolt-pistol', 'w-heavy-bolter', 'w-bolt-sniper-rifle', 'w-chainsword', 'w-power-fist',
   'w-power-sword', 'w-thunder-hammer', 'e-frag-grenade', 'e-krak-grenade',
+]
+export const PF_SLUGS: readonly AttachmentSlug[] = [
+  'pf-w-pulse-carbine', 'pf-w-suppressed-pulse-carbine', 'pf-w-twin-pulse-carbine', 'pf-w-ion-rifle', 'pf-w-rail-rifle',
+  'pf-w-marksman-rail-rifle', 'pf-w-burst-cannon', 'pf-e-fusion-grenade',
+]
+export const HT_SLUGS: readonly AttachmentSlug[] = [
+  'ht-w-gauss-blaster', 'ht-w-tesla-carbine', 'ht-w-arcane-conduit', 'ht-w-atomiser-beam', 'ht-w-spark', 'ht-w-entropic-lance',
+  'ht-w-synaptic-disintegrator', 'ht-w-abyssal-lance', 'ht-w-aeonstave', 'ht-w-staff-of-light',
+]
+export const PM_SLUGS: readonly AttachmentSlug[] = [
+  'pm-w-boltgun', 'pm-w-plague-spewer', 'pm-w-plague-sword', 'pm-w-plague-knife', 'pm-w-flail-of-corruption', 'pm-w-corrupted-staff',
+]
+export const WB_SLUGS: readonly AttachmentSlug[] = [
+  'wb-w-autogun', 'wb-w-shotgun', 'wb-w-master-crafted-autopistol', 'wb-w-web-pistol', 'wb-w-liberator-autostubs', 'wb-w-flamer',
+  'wb-w-grenade-launcher', 'wb-w-webber', 'wb-w-heavy-stubber', 'wb-w-mining-laser', 'wb-w-seismic-cannon', 'wb-w-sanctus-sniper-rifle',
+  'wb-w-power-maul', 'wb-w-power-pick', 'wb-w-kelermorph-knife', 'wb-w-sanctus-bio-dagger', 'wb-w-locus-blades', 'wb-w-barbed-tail',
 ]

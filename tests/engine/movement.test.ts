@@ -21,6 +21,9 @@ describe('MOVE movement and control range', () => {
     expect(code(path(s, seven))).toBe('E_OUT_OF_RANGE')
     expect(code(path(s, [wp(6, 0)]))).toBeUndefined()
     expect(code(path(s, [wp(6.01, 0)]))).toBe('E_OUT_OF_RANGE')
+    // a full-length step that lands a hair past 6" from 1/1000" rounding is still a 6" move
+    expect(code(path(s, [wp(4.2431, 4.2429)]))).toBeUndefined()
+    expect(moved(expectOk(path(s, [wp(6.004, 0)]))).cost).toBe(6)
   })
 
   it('MOVE-002 Reposition is rejected while in an enemy control range and after Fall Back or Charge', () => {
@@ -129,6 +132,8 @@ describe('TERR movement over terrain', () => {
     const through = path(s, [wp(0, -6.5)])
     expect(moved(through).cost).toBe(4) // 3" + 1" Accessible
     expect(code(path(s, [wp(1.2, -3.5), wp(1.2, -6.5)]))).toBe('E_OVERLAP') // through the wall instead
+    // the base touches the doorway but its centre crosses the wall beside it
+    expect(code(path(s, [wp(0.75, -3.5), wp(0.75, -6.5)]))).toBe('E_OVERLAP')
   })
 
   it('TERR-008 Insignificant terrain does not count as a climb or a drop', () => {

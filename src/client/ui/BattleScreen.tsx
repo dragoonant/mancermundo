@@ -10,10 +10,12 @@ import { DecisionPrompt } from './DecisionPrompt'
 import { EndScreen } from './EndScreen'
 import { useBoardTip } from './markerInfo'
 import { PointTooltip } from './Tooltip'
+import { HiddenTray } from './HiddenTray'
 import { Hud } from './Hud'
 import { DiceLog, EventFeed, MissionPanel, OperativeCard, SettingsPanel } from './Panels'
 import { RotatePrompt } from './RotatePrompt'
 import { useFormFactor } from './formFactor'
+import { OVERLAY_H, touchToolbar } from './hudLayout'
 import { colors, fontStack, panel } from './theme'
 import { Die, seatColor } from './widgets'
 
@@ -102,7 +104,7 @@ export function BattleScreen() {
   }
   const rail: CSSProperties = {
     position: 'absolute',
-    top: 66,
+    top: ff.touch ? OVERLAY_H : 66,
     right: 8,
     bottom: 10,
     width: 290,
@@ -139,9 +141,16 @@ export function BattleScreen() {
             <EventFeed />
             <DiceLog />
             <DiceTray />
-            <OperativeCard />
+            {/* the one-line operative strip pins itself top-right (y 62): on touch it moves below the system overlay */}
+            <div style={{ position: 'absolute', inset: 0, top: ff.touch ? OVERLAY_H - 66 : 0, pointerEvents: 'none' }}>
+              <OperativeCard />
+            </div>
           </>
         )}
+        {/* pins itself at y 62, left: on touch it moves below the HUD toolbar row */}
+        <div style={{ position: 'absolute', inset: 0, top: ff.touch ? touchToolbar(ff.compact).below - 62 : 0, pointerEvents: 'none' }}>
+          <HiddenTray />
+        </div>
         <SettingsPanel />
         <DecisionPrompt />
         <Banner />

@@ -1,0 +1,329 @@
+[
+  {
+    "id": "ks.sergeant",
+    "name": "Kasrkin Sergeant",
+    "team": "kasrkin",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "4+",
+      "wounds": 9
+    },
+    "base": 28,
+    "keywords": [
+      "KASRKIN",
+      "IMPERIUM",
+      "ASTRA MILITARUM",
+      "LEADER",
+      "SERGEANT"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "bolt-pistol-power-weapon",
+              "name": "Bolt pistol and power weapon",
+              "fixed": [
+                "ks.w.bolt-pistol",
+                "ks.w.power-weapon"
+              ]
+            },
+            {
+              "id": "hot-shot-lasgun-gun-butt",
+              "name": "Hot-shot lasgun and gun butt",
+              "fixed": [
+                "ks.w.hot-shot-lasgun",
+                "ks.w.gun-butt-sergeant"
+              ]
+            },
+            {
+              "id": "hot-shot-laspistol-power-weapon",
+              "name": "Hot-shot laspistol and power weapon",
+              "fixed": [
+                "ks.w.hot-shot-laspistol",
+                "ks.w.power-weapon"
+              ]
+            },
+            {
+              "id": "plasma-pistol-chainsword",
+              "name": "Plasma pistol and chainsword",
+              "fixed": [
+                "ks.wg.plasma-pistol",
+                "ks.w.chainsword"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "ks.a.veteran-leadership"
+    ],
+    "uniqueActions": [
+      "ks.a.tactical-command"
+    ],
+    "figure": {
+      "archetype": "ks-sergeant"
+    },
+    "text": "The squad leader: a hardened veteran who can grant an extra battlefield skill and hand one to a single trooper.",
+    "source": "team-kasrkin.pdf (Apr '26); docs/spec/13-teams.md 11.2"
+  },
+  {
+    "id": "ks.combat-medic",
+    "name": "Kasrkin Combat Medic",
+    "team": "kasrkin",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "KASRKIN",
+      "IMPERIUM",
+      "ASTRA MILITARUM",
+      "MEDIC",
+      "COMBAT MEDIC"
+    ],
+    "weapons": {
+      "fixed": [
+        "ks.w.hot-shot-lasgun",
+        "ks.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ks.a.medic"
+    ],
+    "uniqueActions": [
+      "ks.a.medikit"
+    ],
+    "figure": {
+      "archetype": "ks-combat-medic"
+    },
+    "text": "Keeps the squad on its feet: can pull a falling comrade back from the brink and patch wounds in the field.",
+    "source": "team-kasrkin.pdf (Apr '26); docs/spec/13-teams.md 11.2"
+  },
+  {
+    "id": "ks.demo-trooper",
+    "name": "Kasrkin Demo-Trooper",
+    "team": "kasrkin",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "KASRKIN",
+      "IMPERIUM",
+      "ASTRA MILITARUM",
+      "DEMO-TROOPER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ks.w.hot-shot-laspistol",
+        "ks.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ks.a.melta-mine",
+      "ks.a.proximity-mine",
+      "ks.a.blast-padding"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ks-demo-trooper"
+    },
+    "text": "Carries a melta mine into the fight and sets it where the enemy will walk; padded against blasts and flame.",
+    "source": "team-kasrkin.pdf (Apr '26); docs/spec/13-teams.md 11.2"
+  },
+  {
+    "id": "ks.gunner",
+    "name": "Kasrkin Gunner",
+    "team": "kasrkin",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "KASRKIN",
+      "IMPERIUM",
+      "ASTRA MILITARUM",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ks.w.gun-butt"
+      ],
+      "options": [
+        {
+          "id": "special",
+          "label": "Special weapon",
+          "from": [
+            "ks.w.flamer",
+            "ks.wg.grenade-launcher",
+            "ks.wg.hot-shot-volley-gun",
+            "ks.w.meltagun",
+            "ks.wg.plasma-gun"
+          ]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ks-gunner-flamer"
+    },
+    "text": "Carries a flamer, grenade launcher, hot-shot volley gun, meltagun or plasma gun. Each special weapon can be fielded once.",
+    "source": "team-kasrkin.pdf (Apr '26); docs/spec/13-teams.md 11.2"
+  },
+  {
+    "id": "ks.recon-trooper",
+    "name": "Kasrkin Recon-Trooper",
+    "team": "kasrkin",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "KASRKIN",
+      "IMPERIUM",
+      "ASTRA MILITARUM",
+      "RECON-TROOPER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ks.w.hot-shot-lasgun",
+        "ks.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ks.a.reconnoitre-killzone"
+    ],
+    "uniqueActions": [
+      "ks.a.auspex-scan"
+    ],
+    "figure": {
+      "archetype": "ks-recon-trooper"
+    },
+    "text": "Scouts ahead with an auspex, stripping cover and concealment from nearby enemies and making the squad's relocations free.",
+    "source": "team-kasrkin.pdf (Apr '26); docs/spec/13-teams.md 11.2"
+  },
+  {
+    "id": "ks.sharpshooter",
+    "name": "Kasrkin Sharpshooter",
+    "team": "kasrkin",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "KASRKIN",
+      "IMPERIUM",
+      "ASTRA MILITARUM",
+      "SHARPSHOOTER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ks.wg.hot-shot-marksman-rifle",
+        "ks.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ks.a.camo-cloak"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ks-sharpshooter"
+    },
+    "text": "A marksman in a camouflage cloak whose opening shot from hiding is deadly.",
+    "source": "team-kasrkin.pdf (Apr '26); docs/spec/13-teams.md 11.2"
+  },
+  {
+    "id": "ks.trooper",
+    "name": "Kasrkin Trooper",
+    "team": "kasrkin",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "KASRKIN",
+      "IMPERIUM",
+      "ASTRA MILITARUM",
+      "TROOPER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ks.w.hot-shot-lasgun",
+        "ks.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ks.a.adaptive-equipment"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ks-trooper"
+    },
+    "text": "The backbone of the squad. Troopers can throw a smoke and a stun grenade each turning point without spending equipment.",
+    "source": "team-kasrkin.pdf (Apr '26); docs/spec/13-teams.md 11.2"
+  },
+  {
+    "id": "ks.vox-trooper",
+    "name": "Kasrkin Vox-Trooper",
+    "team": "kasrkin",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "KASRKIN",
+      "IMPERIUM",
+      "ASTRA MILITARUM",
+      "VOX-TROOPER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ks.w.hot-shot-lasgun",
+        "ks.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "ks.a.battle-comms"
+    ],
+    "figure": {
+      "archetype": "ks-vox-trooper"
+    },
+    "text": "Carries the squad's vox set and passes orders that sharpen a comrade's next activation.",
+    "source": "team-kasrkin.pdf (Apr '26); docs/spec/13-teams.md 11.2"
+  }
+]

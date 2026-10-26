@@ -2,14 +2,16 @@
 // Mines, Ammo Cache, Razor Wire, Ladders, Portable Barricade, grenades). Names match src/data/code-hooks.json.
 import { registerCodeHook, markFired, type OfferSeed } from './code-hooks'
 import { codeParams, evalCondition } from './conditions'
-import { addEffect, addUse, markUsedTp, usedThisTp, usesOf } from './effects'
+import { addEffect, addTpUse, addUse, markUsedTp, tpUsesOf, usedThisTp, usesOf } from './effects'
 import { cancelAction, finishAction } from './firefight'
 import { placementIssue } from './equipment'
 import { applyAplEffect } from './attack-common'
 import { bodyOf, visible } from './los'
 import { distanceBetween } from './measure'
 import { dist2, round3 } from './geometry'
-import { controlledBy, newMarkerId } from './markers'
+import { discCentres, footprintDistToPolygon, footprintOf, pointGapToFootprint } from './footprint'
+import { providerOwnGrenades } from './team-rules'
+import { actionMarkers, controlledBy, newMarkerId } from './markers'
 import { markLooted, markSecured, markTransmitting } from './missions'
 import { moveConstraints } from './movement'
 import type { Ctx } from './registry'
@@ -24,8 +26,9 @@ const OBJECTIVE_ACTION = (
   registerCodeHook({
     name,
     action: {
-      offers(state, op): OfferSeed[] {
-        return controlledBy(state, op, (m) => m.kind === 'objective' && filter(state, m, op)).map((m) => ({ key: m.id, params: { markerId: m.id } }))
+      offers(state, op, def): OfferSeed[] {
+        // M9 batch C: a team rule may let contesting the objective suffice (Poach)
+        return actionMarkers(state, op, `ability:${def.id}`, (m) => m.kind === 'objective' && filter(state, m, op)).map((m) => ({ key: m.id, params: { markerId: m.id } }))
       },
       perform(ctx, op, def, params) {
         const m = ctx.state.markers.find((k) => k.id === params.markerId)
@@ -98,13 +101,15 @@ registerCodeHook({ name: 'razorWire' })
 registerCodeHook({ name: 'ladders' })
 
 /** Comms Device (M-5.1): +3" to SUPPORT distances while a friendly operative controls the team's own marker. */
-export function commsBonus(state: GameState, seat: Seat): number {
+export function commsBonus(state: GameState, seat: Seat, user?: Operative): number {
   const p = state.data.abilities['core.e.comms-device']
   void p
   for (const m of state.markers) {
     if (m.equipmentId !== 'core.e.comms-device' || m.owner !== seat) continue
     for (const op of Object.values(state.operatives)) {
       if (op.seat !== seat || op.status !== 'active') continue
+      // batch C shared: "add 3" to ITS SUPPORT rules": only the operative that controls the marker benefits (M-5.1)
+      if (user && op.id !== user.id) continue
       if (controlledBy(state, op, (k) => k.id === m.id).length > 0) {
         markFired('commsDevice')
         return codeParamsFromEquipment(state, 'core.e.comms-device', 'supportRangeBonus', 3)
@@ -125,12 +130,19 @@ function codeParamsFromEquipment(state: GameState, equipmentId: string, key: str
 // Grenades: stun and smoke (M-5.5), team totals and Taktical Wot-notz
 // ---------------------------------------------------------------------------
 
-export type GrenadeSource = 'team' | 'taktical'
+/** M9 batch B: 'own' is a team rule's per-operative allowance (team-rules ownGrenades: Hearthkyn Grenadier) */
+export type GrenadeSource = 'team' | 'taktical' | 'own' | 'ownTp'
 
 /** Which allowance covers a grenade action for this operative now, or null. Taktical Wot-notz is used first. */
 export function grenadeSource(state: GameState, op: Operative, abilityId: string): GrenadeSource | null {
   const card = state.data.datacards[op.datacardId]
   if (card?.abilities.includes('kom.a.taktical-wot-notz') && !usedThisTp(state, op.seat, `taktical:${abilityId}`)) return 'taktical'
+  const allowance = providerOwnGrenades(state, op)
+  const own = allowance.actions[abilityId] ?? 0
+  if (own > 0 && usesOf(state, op.seat, `own:${op.id}:${abilityId}`) < own) return 'own'
+  // M9 batch C: a seat-wide allowance per turning point (Kasrkin Adaptive Equipment), not counted against the picks
+  const perTp = allowance.tpActions[abilityId] ?? 0
+  if (perTp > 0 && tpUsesOf(state, op.seat, `ownTp:${abilityId}`) < perTp) return 'ownTp'
   const picks = state.equipment.picks[op.seat]?.['core.e.utility-grenades'] ?? []
   const total = picks.filter((p) => p === abilityId).length
   if (usesOf(state, op.seat, abilityId) < total) return 'team'
@@ -141,7 +153,9 @@ function spendGrenade(ctx: Ctx, op: Operative, abilityId: string, source: Grenad
   if (source === 'taktical') {
     markUsedTp(ctx.state, op.seat, `taktical:${abilityId}`)
     markFired('taktikalWotNotz')
-  } else addUse(ctx.state, op.seat, abilityId)
+  } else if (source === 'own') addUse(ctx.state, op.seat, `own:${op.id}:${abilityId}`)
+  else if (source === 'ownTp') addTpUse(ctx.state, op.seat, `ownTp:${abilityId}`)
+  else addUse(ctx.state, op.seat, abilityId)
 }
 
 /** Enemies visible to the operative and within `range` (inches, base to base). */
@@ -185,7 +199,7 @@ function smokeSpots(state: GameState, op: Operative, range: number): Vec2[] {
     const q = { x: round3(p.x), z: round3(p.z) }
     const k = `${q.x},${q.z}`
     if (seen.has(k) || Math.abs(q.x) > 15 || Math.abs(q.z) > 11) return
-    if (Math.max(0, dist2(q, op.pos) - op.baseRadius) > range + 1e-6) return
+    if (pointGapToFootprint(q, footprintOf(op)) > range + 1e-6) return
     const probe = { id: 'smoke-probe', pos: { x: q.x, y: op.pos.y, z: q.z }, baseRadius: 0.05, height: 0.05 }
     // a marker may lie under an operative, so operatives do not block the line to the spot
     if (!visible(state, bodyOf(op), probe, { operativesBlock: false })) return
@@ -252,10 +266,11 @@ registerCodeHook({
 registerCodeHook({ name: 'taktikalWotNotz' })
 
 /** Is the base wholly inside a smoke cloud (1" radius around a Smoke marker)? */
-export function whollyInSmoke(state: GameState, pos: Vec2, baseRadius: number): boolean {
+export function whollyInSmoke(state: GameState, pos: Vec2, baseRadius: number, axis?: Vec2): boolean {
+  const discs = discCentres(axis ? { pos, baseRadius, axis } : { pos, baseRadius })
   for (const m of state.markers) {
     if (m.equipmentId !== 'smoke') continue
-    if (dist2(m.pos, pos) + baseRadius <= 1 + 1e-6) return true
+    if (discs.every((c) => dist2(m.pos, c) + baseRadius <= 1 + 1e-6)) return true
   }
   return false
 }
@@ -263,7 +278,7 @@ export function whollyInSmoke(state: GameState, pos: Vec2, baseRadius: number): 
 /** Smoke obscures an operative wholly in it to operatives more than 2" away, and vice versa (M-5.5). */
 export function smokeObscures(state: GameState, shooter: Operative, target: Operative): boolean {
   if (distanceBetween(bodyOf(shooter), bodyOf(target)) <= 2 + 1e-6) return false
-  return whollyInSmoke(state, target.pos, target.baseRadius) || whollyInSmoke(state, shooter.pos, shooter.baseRadius)
+  return whollyInSmoke(state, target.pos, target.baseRadius, footprintOf(target).axis) || whollyInSmoke(state, shooter.pos, shooter.baseRadius, footprintOf(shooter).axis)
 }
 
 /** Ready step: smoke placed last turning point starts its countdown (D3 activations of this TP). */
@@ -321,6 +336,7 @@ function connected(state: GameState, op: Operative, f: TerrainFeatureDef): boole
     const t = l2 === 0 ? 0 : Math.max(0, Math.min(1, ((op.pos.x - a.x) * dx + (op.pos.z - a.z) * dz) / l2))
     best = Math.min(best, Math.hypot(op.pos.x - (a.x + dx * t), op.pos.z - (a.z + dz * t)))
   }
+  if (op.ovalHalfAxis) return footprintDistToPolygon(footprintOf(op), poly) <= 1 + 1e-6 && state.operatives[op.id] !== undefined
   return best - op.baseRadius <= 1 + 1e-6 && state.operatives[op.id] !== undefined
 }
 
@@ -336,7 +352,7 @@ registerCodeHook({
       const act = ctx.state.firefight.activation!
       const maxInches = Math.max(0, op.move - 2)
       act.declared = { ...act.declared!, params: { moveKind: 'reposition', maxInches, afterMove: 'moveWithBarricade', featureId: params.featureId, treatedAs: 'reposition' } }
-      const c = moveConstraints(op, 'reposition', act.counteract)
+      const c = moveConstraints(op, 'reposition', act.counteract, ctx.state)
       c.maxInches = Math.min(c.maxInches ?? maxInches, maxInches)
       ctx.raise({
         kind: 'move.path',

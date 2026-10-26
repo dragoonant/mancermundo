@@ -1,0 +1,107 @@
+{
+  "id": "hierotek-circle",
+  "name": "Hierotek Circle",
+  "factionKeyword": "HIEROTEK CIRCLE",
+  "archetypes": [
+    "recon",
+    "security"
+  ],
+  "selection": {
+    "slots": [
+      {
+        "id": "leader",
+        "label": "Cryptek",
+        "count": 1,
+        "from": [
+          "hie.chronomancer",
+          "hie.psychomancer",
+          "hie.technomancer"
+        ]
+      },
+      {
+        "id": "accelerator",
+        "label": "Plasmacyte Accelerator",
+        "count": 1,
+        "from": [
+          "hie.plasmacyte-accelerator"
+        ]
+      },
+      {
+        "id": "reanimator",
+        "label": "Plasmacyte Reanimator",
+        "count": 1,
+        "from": [
+          "hie.plasmacyte-reanimator"
+        ]
+      },
+      {
+        "id": "main",
+        "label": "Selections",
+        "count": 5,
+        "from": [
+          "hie.apprentek",
+          "hie.deathmark",
+          "hie.immortal-despotek",
+          "hie.immortal-guardian"
+        ],
+        "repeatable": [
+          "hie.deathmark",
+          "hie.immortal-guardian"
+        ]
+      }
+    ]
+  },
+  "factionRules": [
+    "hie.a.reanimation-protocols",
+    "hie.a.living-metal"
+  ],
+  "ploys": [
+    "hie.p.relentless-onslaught",
+    "hie.p.undying-androids",
+    "hie.p.methodical-elimination",
+    "hie.p.command-underlings",
+    "hie.p.cortical-control",
+    "hie.p.reanimated-function",
+    "hie.p.living-lightning",
+    "hie.p.dimensional-ambush"
+  ],
+  "equipment": [
+    "hie.e.magnification-conduits",
+    "hie.e.phase-shifter",
+    "hie.e.tesseract-cube",
+    "hie.e.tesla-weave"
+  ],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "hie.technomancer",
+      "hie.plasmacyte-accelerator",
+      "hie.plasmacyte-reanimator",
+      "hie.apprentek",
+      "hie.deathmark",
+      "hie.deathmark",
+      "hie.immortal-despotek",
+      "hie.immortal-guardian"
+    ],
+    "equipment": [
+      "hie.e.tesseract-cube",
+      "core.e.comms-device",
+      "core.e.ladders",
+      "core.e.utility-grenades"
+    ]
+  },
+  "paint": {
+    "major": {
+      "h": 0.6,
+      "s": 0.05,
+      "l": 0.22
+    },
+    "minor": {
+      "h": 0.33,
+      "s": 0.8,
+      "l": 0.45
+    }
+  },
+  "text": "A Cryptek and its retinue of metal servants that mend, return and outlast whatever is thrown at them.",
+  "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md 4.1"
+}

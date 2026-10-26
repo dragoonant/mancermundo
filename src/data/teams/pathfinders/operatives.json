@@ -1,0 +1,567 @@
+[
+  {
+    "id": "pf.shasui",
+    "name": "Shas'ui Pathfinder",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "LEADER",
+      "SHAS'UI"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.pulse-carbine-shasui",
+        "pf.w.gun-butt-shasui"
+      ]
+    },
+    "abilities": [
+      "pf.a.art-of-war"
+    ],
+    "uniqueActions": [
+      "pf.a.markerlight"
+    ],
+    "figure": {
+      "archetype": "pf-shasui"
+    },
+    "text": "The team leader, a veteran who calls the shots and chooses between a bold advance and a patient ambush.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.assault-grenadier",
+    "name": "Assault Grenadier Pathfinder",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "ASSAULT GRENADIER"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.fusion-grenade",
+        "pf.w.pulse-carbine",
+        "pf.w.gun-butt"
+      ]
+    },
+    "abilities": [
+      "pf.a.grenadier-specialist"
+    ],
+    "uniqueActions": [
+      "pf.a.markerlight"
+    ],
+    "figure": {
+      "archetype": "pf-assault-grenadier"
+    },
+    "text": "Carries a fusion grenade for armoured targets and may throw frag and krak grenades with better aim.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.blooded",
+    "name": "Blooded Pathfinder",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "BLOODED"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.suppressed-pulse-carbine",
+        "pf.w.bionic-arm"
+      ]
+    },
+    "abilities": [
+      "pf.a.veteran"
+    ],
+    "uniqueActions": [
+      "pf.a.markerlight"
+    ],
+    "figure": {
+      "archetype": "pf-blooded"
+    },
+    "text": "A bionic-limbed veteran with a quiet carbine, able to swap the Shas'ui's doctrine for itself.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.comms-specialist",
+    "name": "Comms Specialist Pathfinder",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "COMMS SPECIALIST"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.pulse-carbine",
+        "pf.w.fists"
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "pf.a.markerlight",
+      "pf.a.signal"
+    ],
+    "figure": {
+      "archetype": "pf-comms-specialist"
+    },
+    "text": "The signaller who keeps the team linked and hurries a comrade on with SIGNAL.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.drone-controller",
+    "name": "Drone Controller Pathfinder",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "DRONE CONTROLLER"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.pulse-carbine",
+        "pf.w.gun-butt"
+      ]
+    },
+    "abilities": [
+      "pf.a.drone-controller"
+    ],
+    "uniqueActions": [
+      "pf.a.markerlight",
+      "pf.a.remote-pilot"
+    ],
+    "figure": {
+      "archetype": "pf-drone-controller"
+    },
+    "text": "Speeds up the team's drones and can pilot one by hand to do what its own programming forbids.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.marksman",
+    "name": "Marksman Pathfinder",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "MARKSMAN"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.wg.marksman-rail-rifle",
+        "pf.w.gun-butt"
+      ]
+    },
+    "abilities": [
+      "pf.a.inertial-dampener"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "pf-marksman"
+    },
+    "text": "A sniper with a rail rifle and near-silent dart rounds; steady hands ignore any Hit penalty.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.medical-technician",
+    "name": "Medical Technician Pathfinder",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "MEDIC",
+      "MEDICAL TECHNICIAN"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.pulse-carbine",
+        "pf.w.gun-butt"
+      ]
+    },
+    "abilities": [
+      "pf.a.medic"
+    ],
+    "uniqueActions": [
+      "pf.a.markerlight",
+      "pf.a.medikit"
+    ],
+    "figure": {
+      "archetype": "pf-medical-technician"
+    },
+    "text": "Pulls a falling comrade back from the brink and patches wounds with a medikit.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.shasla",
+    "name": "Shas'la Pathfinder",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "SHAS'LA"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.pulse-carbine",
+        "pf.w.gun-butt"
+      ]
+    },
+    "abilities": [
+      "pf.a.group-activation",
+      "pf.a.fearless-on-the-frontline"
+    ],
+    "uniqueActions": [
+      "pf.a.markerlight-shasla"
+    ],
+    "figure": {
+      "archetype": "pf-shasla"
+    },
+    "text": "The rank and file: they move in pairs and keep marking targets even with an enemy at their throats.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.transpectral-interference",
+    "name": "Transpectral Interference Pathfinder",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "TRANSPECTRAL INTERFERENCE"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.pulse-carbine",
+        "pf.w.gun-butt"
+      ]
+    },
+    "abilities": [
+      "pf.a.multi-dimensional-vision"
+    ],
+    "uniqueActions": [
+      "pf.a.markerlight",
+      "pf.a.system-jam"
+    ],
+    "figure": {
+      "archetype": "pf-transpectral-interference"
+    },
+    "text": "Jams enemy command links and sees through any cover its target hides behind.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.weapons-expert",
+    "name": "Weapons Expert Pathfinder",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "WEAPONS EXPERT"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.gun-butt"
+      ],
+      "options": [
+        {
+          "id": "heavy",
+          "label": "Heavy weapon",
+          "sets": [
+            {
+              "id": "ion-rifle",
+              "name": "Ion rifle (both profiles)",
+              "fixed": [
+                "pf.wg.ion-rifle"
+              ]
+            },
+            {
+              "id": "rail-rifle",
+              "name": "Rail rifle",
+              "fixed": [
+                "pf.w.rail-rifle"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "pf-weapons-expert"
+    },
+    "text": "Carries the team's heavy weapon: an ion rifle with a risky overcharge, or a rail rifle.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.mb3-recon-drone",
+    "name": "MB3 Recon Drone",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "4+",
+      "wounds": 12
+    },
+    "base": 32,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "MB3 RECON",
+      "DRONE"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.wg.burst-cannon",
+        "pf.w.ram"
+      ]
+    },
+    "abilities": [
+      "pf.a.drone-mb3",
+      "pf.a.analyse"
+    ],
+    "uniqueActions": [
+      "pf.a.markerlight"
+    ],
+    "figure": {
+      "archetype": "pf-mb3-recon-drone"
+    },
+    "text": "A large recon drone with a burst cannon whose marking beam lights up everything near its target. Counts as two selections.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.mv1-gun-drone",
+    "name": "MV1 Gun Drone",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 32,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "MV1 GUN",
+      "DRONE"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.twin-pulse-carbine",
+        "pf.w.ram"
+      ]
+    },
+    "abilities": [
+      "pf.a.drone-mv1"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "pf-mv1-gun-drone"
+    },
+    "text": "A small drone with a twin pulse carbine that fights alongside the Fire Warriors.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.mv4-shield-drone",
+    "name": "MV4 Shield Drone",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 32,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "MV4 SHIELD",
+      "DRONE"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.ram"
+      ]
+    },
+    "abilities": [
+      "pf.a.drone-mv4",
+      "pf.a.shield-generator"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "pf-mv4-shield-drone"
+    },
+    "text": "Carries a shield generator and throws itself in front of the team's warriors.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.mv7-marker-drone",
+    "name": "MV7 Marker Drone",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 32,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "MV7 MARKER",
+      "DRONE"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.ram"
+      ]
+    },
+    "abilities": [
+      "pf.a.drone-mv7",
+      "pf.a.mv7-markerlight"
+    ],
+    "uniqueActions": [
+      "pf.a.markerlight"
+    ],
+    "figure": {
+      "archetype": "pf-mv7-marker-drone"
+    },
+    "text": "A drone with a powerful targeting laser that marks its target twice over.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.mv31-pulse-accelerator-drone",
+    "name": "MV31 Pulse Accelerator Drone",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 32,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "MV31 PULSE ACCELERATOR",
+      "DRONE"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.ram"
+      ]
+    },
+    "abilities": [
+      "pf.a.drone-mv31"
+    ],
+    "uniqueActions": [
+      "pf.a.pulse-accelerator"
+    ],
+    "figure": {
+      "archetype": "pf-mv31-pulse-accelerator-drone"
+    },
+    "text": "Boosts the pulse weapons of the warriors that stand close to it.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  },
+  {
+    "id": "pf.mv33-grav-inhibitor-drone",
+    "name": "MV33 Grav-inhibitor Drone",
+    "team": "pathfinders",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 32,
+    "keywords": [
+      "PATHFINDER",
+      "T'AU EMPIRE",
+      "MV33 GRAV-INHIBITOR",
+      "DRONE"
+    ],
+    "weapons": {
+      "fixed": [
+        "pf.w.ram"
+      ]
+    },
+    "abilities": [
+      "pf.a.drone-mv33",
+      "pf.a.grav-inhibitor"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "pf-mv33-grav-inhibitor-drone"
+    },
+    "text": "Warps gravity around itself so enemies close to it move and fight at a disadvantage.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.2"
+  }
+]

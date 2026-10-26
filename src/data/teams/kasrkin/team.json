@@ -1,0 +1,142 @@
+{
+  "id": "kasrkin",
+  "name": "Kasrkin",
+  "factionKeyword": "KASRKIN",
+  "archetypes": [
+    "seek-and-destroy",
+    "security"
+  ],
+  "selection": {
+    "slots": [
+      {
+        "id": "leader",
+        "label": "Leader",
+        "count": 1,
+        "from": [
+          "ks.sergeant"
+        ]
+      },
+      {
+        "id": "main",
+        "label": "Selections",
+        "count": 9,
+        "from": [
+          "ks.combat-medic",
+          "ks.demo-trooper",
+          "ks.gunner",
+          "ks.recon-trooper",
+          "ks.sharpshooter",
+          "ks.trooper",
+          "ks.vox-trooper"
+        ],
+        "repeatable": [
+          "ks.trooper",
+          "ks.gunner"
+        ]
+      }
+    ],
+    "caps": [
+      {
+        "label": "Gunners and Sharpshooter",
+        "from": [
+          "ks.gunner",
+          "ks.sharpshooter"
+        ],
+        "max": 4
+      }
+    ],
+    "loadoutCaps": [
+      {
+        "label": "Gunner weapon",
+        "weapons": [
+          "ks.w.flamer",
+          "ks.wg.grenade-launcher",
+          "ks.wg.hot-shot-volley-gun",
+          "ks.w.meltagun",
+          "ks.wg.plasma-gun"
+        ],
+        "max": 1,
+        "each": true
+      }
+    ]
+  },
+  "factionRules": [
+    "ks.a.rapid-fire",
+    "ks.a.light-em-up",
+    "ks.a.strike-fast",
+    "ks.a.ice-in-your-veins",
+    "ks.a.for-cadia"
+  ],
+  "ploys": [
+    "ks.p.skill-at-arms",
+    "ks.p.elimination-pattern",
+    "ks.p.engage-from-cover",
+    "ks.p.clearance-sweep",
+    "ks.p.relocate",
+    "ks.p.seize-the-initiative",
+    "ks.p.cover-retreat",
+    "ks.p.neutralise-target",
+    "ks.p.give-no-ground"
+  ],
+  "equipment": [
+    "ks.e.foregrip",
+    "ks.e.long-range-scope",
+    "ks.e.relics-of-cadia",
+    "ks.e.combat-daggers"
+  ],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "ks.sergeant",
+      "ks.combat-medic",
+      "ks.demo-trooper",
+      "ks.gunner",
+      "ks.gunner",
+      "ks.recon-trooper",
+      "ks.sharpshooter",
+      "ks.trooper",
+      "ks.trooper",
+      "ks.vox-trooper"
+    ],
+    "equipment": [
+      "ks.e.foregrip",
+      "ks.e.relics-of-cadia",
+      "core.e.ladders",
+      "core.e.utility-grenades"
+    ],
+    "loadouts": [
+      {},
+      {},
+      {},
+      {
+        "special": [
+          "ks.w.flamer"
+        ]
+      },
+      {
+        "special": [
+          "ks.wg.plasma-gun"
+        ]
+      },
+      {},
+      {},
+      {},
+      {},
+      {}
+    ]
+  },
+  "paint": {
+    "major": {
+      "h": 0.3,
+      "s": 0.2,
+      "l": 0.3
+    },
+    "minor": {
+      "h": 0.08,
+      "s": 0.25,
+      "l": 0.55
+    }
+  },
+  "text": "Elite storm troopers from a fallen fortress world: drilled marksmen who pick a battlefield skill each turning point and pour hot-shot fire on anything that moves.",
+  "source": "team-kasrkin.pdf (Apr '26); docs/spec/13-teams.md section 11"
+}

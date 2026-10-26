@@ -15,7 +15,8 @@ export interface MoveSegmentEvent {
   length: number
   /** movement spent by this increment (rounded up, plus Accessible surcharges) */
   cost: number
-  kind: 'walk' | 'climb' | 'drop' | 'jump'
+  /** M9 batch B: 'fly' is a FLY set-up (Jump Pack): one increment from the start to the set-up point */
+  kind: 'walk' | 'climb' | 'drop' | 'jump' | 'fly'
 }
 
 export type GameEventBody =
@@ -120,6 +121,19 @@ export type GameEventBody =
   | { type: 'ConfigChanged'; key: string; value: string | null }
   | { type: 'EffectStarted'; effectId: string; source: string; kind: string }
   | { type: 'EffectEnded'; effectId: string; source: string }
+  // M9 prep: generic team capabilities (tokens.ts, reserve.ts, effects.regainWounds, team-rules chains and gates)
+  | { type: 'TokenChanged'; operativeId: string; kind: string; owner: Seat; count: number; delta: number; reason: string }
+  | { type: 'WoundsRegained'; operativeId: string; amount: number; wounds: number; source: string }
+  | { type: 'OperativeSetAside'; operativeId: string; kind: string }
+  /** M9 batch B: an operative's selection keyword changed (Infernal Pact); `from` is null at set-up */
+  | { type: 'OperativePickChanged'; operativeId: string; choiceId: string; from: string | null; to: string; reason: string }
+  /** batch D prep (transformOperative): the operative now uses datacard `to` (Chaos Cult Mutation) */
+  | { type: 'OperativeTransformed'; operativeId: string; from: string; to: string }
+  // M9 batch C: a team resource pool changed (pools.ts); the event's seat owns the pool
+  | { type: 'PoolChanged'; kind: string; delta: number; value: number; reason: string }
+  | { type: 'OperativeReturned'; operativeId: string; pos: { x: number; y: number; z: number }; wounds: number; ready: boolean; kind: string }
+  | { type: 'ActivationChained'; fromId: string; operativeIds: string[] }
+  | { type: 'ActivationGated'; operativeId: string; by: string }
   // dice
   | { type: 'DiceRolled'; purpose: string; dice: number[]; final: boolean }
   // meta

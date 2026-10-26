@@ -36,7 +36,10 @@ test('team builder enforces the selection rules and starts a battle', async ({ p
   await expect(page.getByTestId('slot-count-main')).toHaveText('5/5')
   await expect(page.getByTestId('builder-ok')).toBeVisible()
 
-  // loadout sets: the leader has two kits; switching shows different options
+  // loadout sets: the assault sergeant leader has two kits (the default leader is the captain: swap it); switching shows different options
+  await page.getByTestId('remove-leader-0').click()
+  await page.getByTestId('add-aod.assault-intercessor-sergeant').click()
+  await expect(page.getByTestId('slot-count-leader')).toHaveText('1/1')
   await page.getByTestId('pick-row-leader-0').click()
   await expect(page.getByTestId('builder-loadout')).toContainText('Sergeant kit')
   await page.getByTestId('set-plasma-and-chainsword').click()

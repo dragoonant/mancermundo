@@ -1,12 +1,16 @@
 // Measure / line-of-sight tool (hotkey M, HUD button): click two points or operatives for the distance in inches
 // (with the rounded-up increments), whether it is inside the 1" control range and, for two operatives, what each
 // sees of the other. Strictly read-only: it never dispatches an action, so it works between decisions and on bot turns.
+// The panel carries a drawer button (id 'measure') that folds it to a title tab. On touch devices it opens below the
+// HUD toolbar row, clear of the system overlay in the top-right corner.
 import { useEffect, type CSSProperties } from 'react'
 import { MEASURE_COLOR } from '../board/MeasureLayer'
 import { measure, type SightFacts } from '../interaction/sightlines'
 import { useSight } from '../interaction/sightStore'
 import { useDisplayState } from '../presentation/presentedStore'
+import { CollapseButton, CollapsedTab, useCollapsed } from './collapse'
 import { useFormFactor } from './formFactor'
+import { touchToolbar } from './hudLayout'
 import { colors, fontStack, panel } from './theme'
 import { Tooltip } from './Tooltip'
 import { Keyword, KeywordText } from './Keyword'
@@ -85,15 +89,23 @@ const boxCompact: CSSProperties = { ...box, top: 56, left: 8, right: 'auto', wid
 
 export function MeasurePanel() {
   useMeasureHotkeys()
-  const compact = useFormFactor().compact
+  const ff = useFormFactor()
+  const compact = ff.compact
   const state = useDisplayState()
   const on = useSight((s) => s.measureOn)
   const a = useSight((s) => s.mA)
   const b = useSight((s) => s.mB)
+  const [folded] = useCollapsed('measure')
   if (!on || !state) return null
+  const top = ff.touch ? touchToolbar(compact).below : undefined
+  const place: CSSProperties = compact ? { ...boxCompact, ...(top !== undefined ? { top } : {}) } : { ...box, ...(top !== undefined ? { top } : {}) }
+  if (folded) {
+    const tab: CSSProperties = compact ? { top: top ?? 56, left: 8 } : { top: top ?? 66, left: '50%', transform: 'translateX(-50%)' }
+    return <CollapsedTab id="measure" title="Measure" accent={MEASURE_COLOR} style={{ position: 'absolute', zIndex: 19, ...tab }} />
+  }
   const r = a && b ? measure(state, a, b) : null
   return (
-    <div data-testid="measure-panel" className="ms-touch" style={compact ? boxCompact : box}>
+    <div data-testid="measure-panel" className="ms-touch" style={place}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
         <b style={{ fontSize: 14, color: MEASURE_COLOR }}>Measure</b>
         <span style={{ display: 'flex', gap: 6 }}>
@@ -103,6 +115,7 @@ export function MeasurePanel() {
           <Btn data-testid="measure-close" style={{ padding: '1px 7px', fontSize: 11 }} onClick={() => useSight.getState().toggleMeasure()}>
             Done
           </Btn>
+          <CollapseButton id="measure" title="measure panel" />
         </span>
       </div>
       {!a && <div data-testid="measure-hint" style={{ fontSize: 12, color: colors.muted }}>{compact ? 'Tap the first point (ground or operative).' : 'Click the first point: a spot on the board or an operative. Esc clears; M closes.'}</div>}

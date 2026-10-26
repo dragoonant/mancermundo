@@ -1,0 +1,241 @@
+[
+  {
+    "id": "pf.w.pulse-carbine-shasui",
+    "name": "Pulse carbine",
+    "team": "pathfinders",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [],
+    "text": "A rapid-firing plasma-pulse rifle, tuned for the Shas'ui's steadier aim.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.pulse-carbine",
+    "name": "Pulse carbine",
+    "team": "pathfinders",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [],
+    "text": "A rapid-firing plasma-pulse rifle, the standard Fire Warrior long arm.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.suppressed-pulse-carbine",
+    "name": "Suppressed pulse carbine",
+    "team": "pathfinders",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [{ "rule": "core.wr.silent" }],
+    "text": "A pulse carbine with a dampened emitter that can be fired without giving the shooter away.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.fusion-grenade",
+    "name": "Fusion grenade",
+    "team": "pathfinders",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 4, "crit": 3 },
+    "rules": [
+      { "rule": "core.wr.range", "inches": 6 },
+      { "rule": "core.wr.devastating", "x": 2 },
+      { "rule": "core.wr.limited", "x": 1 },
+      { "rule": "core.wr.piercing", "x": 2 },
+      { "rule": "core.wr.saturate" }
+    ],
+    "text": "A thrown shaped charge that burns through armour and cover alike. One use per battle.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.marksman-rail-rifle-standard",
+    "name": "Marksman rail rifle",
+    "profileGroup": "pf.wg.marksman-rail-rifle",
+    "profile": "standard",
+    "team": "pathfinders",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 4, "crit": 4 },
+    "rules": [
+      { "rule": "core.wr.devastating", "x": 2 },
+      { "rule": "core.wr.lethal", "target": "5+" },
+      { "rule": "core.wr.piercing", "x": 1 }
+    ],
+    "text": "A long, accurate rail rifle firing hypervelocity slugs. This is the standard profile.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.marksman-rail-rifle-dart",
+    "name": "Marksman rail rifle",
+    "profileGroup": "pf.wg.marksman-rail-rifle",
+    "profile": "dart round",
+    "team": "pathfinders",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 4 },
+    "rules": [{ "rule": "core.wr.piercing", "x": 1 }, { "rule": "core.wr.silent" }],
+    "text": "The same rifle loaded with near-silent dart rounds. This is the dart round profile.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3 (dart round Dmg 3/4 per the PDF)"
+  },
+  {
+    "id": "pf.w.ion-rifle-standard",
+    "name": "Ion rifle",
+    "profileGroup": "pf.wg.ion-rifle",
+    "profile": "standard",
+    "team": "pathfinders",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "4+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [{ "rule": "core.wr.piercing", "x": 1, "crits": true }],
+    "text": "A heavy ion weapon fired at a safe power setting. This is the standard profile.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.ion-rifle-overcharge",
+    "name": "Ion rifle",
+    "profileGroup": "pf.wg.ion-rifle",
+    "profile": "overcharge",
+    "team": "pathfinders",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "4+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [{ "rule": "core.wr.hot" }, { "rule": "core.wr.lethal", "target": "5+" }, { "rule": "core.wr.piercing", "x": 1 }],
+    "text": "The same ion rifle pushed past its limits: sharper, but it can burn its user. This is the overcharge profile.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.rail-rifle",
+    "name": "Rail rifle",
+    "team": "pathfinders",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": { "normal": 4, "crit": 4 },
+    "rules": [
+      { "rule": "core.wr.devastating", "x": 2 },
+      { "rule": "core.wr.lethal", "target": "5+" },
+      { "rule": "core.wr.piercing", "x": 1 }
+    ],
+    "text": "A rail rifle in the field issue pattern: slower to aim, devastating when it lands.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.burst-cannon-focused",
+    "name": "Burst cannon",
+    "profileGroup": "pf.wg.burst-cannon",
+    "profile": "focused",
+    "team": "pathfinders",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "4+",
+    "dmg": { "normal": 3, "crit": 4 },
+    "rules": [
+      { "rule": "core.wr.ceaseless" },
+      { "rule": "core.wr.heavy", "only": "reposition" },
+      { "rule": "core.wr.punishing" }
+    ],
+    "text": "A drone-mounted rapid-fire cannon aimed at a single target. This is the focused profile.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.burst-cannon-sweeping",
+    "name": "Burst cannon",
+    "profileGroup": "pf.wg.burst-cannon",
+    "profile": "sweeping",
+    "team": "pathfinders",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": { "normal": 3, "crit": 4 },
+    "rules": [
+      { "rule": "core.wr.ceaseless" },
+      { "rule": "core.wr.heavy", "only": "reposition" },
+      { "rule": "core.wr.punishing" },
+      { "rule": "core.wr.torrent", "inches": 1 }
+    ],
+    "text": "The same cannon swept across a cluster of enemies. This is the sweeping profile.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.twin-pulse-carbine",
+    "name": "Twin pulse carbine",
+    "team": "pathfinders",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [{ "rule": "core.wr.ceaseless" }],
+    "text": "A pair of linked pulse carbines slung under a gun drone.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.gun-butt-shasui",
+    "name": "Gun butt",
+    "team": "pathfinders",
+    "type": "melee",
+    "atk": 3,
+    "hit": "4+",
+    "dmg": { "normal": 2, "crit": 3 },
+    "rules": [],
+    "text": "The stock of the carbine, used as a club.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.gun-butt",
+    "name": "Gun butt",
+    "team": "pathfinders",
+    "type": "melee",
+    "atk": 3,
+    "hit": "5+",
+    "dmg": { "normal": 2, "crit": 3 },
+    "rules": [],
+    "text": "The stock of the rifle, used as a club.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.bionic-arm",
+    "name": "Bionic arm",
+    "team": "pathfinders",
+    "type": "melee",
+    "atk": 3,
+    "hit": "4+",
+    "dmg": { "normal": 3, "crit": 4 },
+    "rules": [],
+    "text": "A powered replacement limb that hits harder than flesh.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.fists",
+    "name": "Fists",
+    "team": "pathfinders",
+    "type": "melee",
+    "atk": 3,
+    "hit": "5+",
+    "dmg": { "normal": 2, "crit": 3 },
+    "rules": [],
+    "text": "Bare hands in armoured gauntlets.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  },
+  {
+    "id": "pf.w.ram",
+    "name": "Ram",
+    "team": "pathfinders",
+    "type": "melee",
+    "atk": 3,
+    "hit": "5+",
+    "dmg": { "normal": 2, "crit": 3 },
+    "rules": [],
+    "text": "A drone bumps its hull into the enemy.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md 3.3"
+  }
+]

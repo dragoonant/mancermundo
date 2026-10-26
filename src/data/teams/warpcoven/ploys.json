@@ -1,0 +1,150 @@
+[
+  {
+    "team": "warpcoven",
+    "cost": 1,
+    "id": "wc.p.aetherial-warding",
+    "name": "AETHERIAL WARDING",
+    "type": "strategy",
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "wcFlagPloy",
+      "params": {
+        "flag": "aetherialWarding"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "WARPCOVEN"
+      }
+    },
+    "text": "This turning point, any weapon with Piercing 1 that shoots a friendly Warpcoven operative has Piercing Crits 1 instead. Piercing 2 and existing Piercing Crits are unchanged.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.32"
+  },
+  {
+    "team": "warpcoven",
+    "cost": 1,
+    "id": "wc.p.fate-itself-is-my-weapon",
+    "name": "FATE ITSELF IS MY WEAPON",
+    "type": "strategy",
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "fateItselfIsMyWeapon",
+      "scope": {
+        "side": "friendly",
+        "keyword": "WARPCOVEN"
+      }
+    },
+    "text": "Roll two D6 and set them aside face up. In this turning point's Firefight phase, once the attack dice of a shooting, fighting or retaliating sequence are rolled and before anyone re-rolls, you may swap one rolled die (either side's) for a set-aside die. The swapped-in die is final: it cannot be re-rolled or changed, and it only counts as the success it actually shows. At most one set-aside die per sequence; if the two totalled under 9, the second is lost as soon as the first is spent. Unspent dice are lost when the turning point ends.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.33"
+  },
+  {
+    "team": "warpcoven",
+    "cost": 1,
+    "id": "wc.p.brotherhood-of-sorcerers",
+    "name": "BROTHERHOOD OF SORCERERS",
+    "type": "strategy",
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "wcFlagPloy",
+      "params": {
+        "flag": "brotherhoodOfSorcerers"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "SORCERER"
+      }
+    },
+    "text": "This turning point, friendly Sorcerers' PSYCHIC weapons have Balanced, or Ceaseless instead while another friendly Sorcerer is within 9\" of the attacker.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.34"
+  },
+  {
+    "team": "warpcoven",
+    "cost": 1,
+    "id": "wc.p.savage-herd",
+    "name": "SAVAGE HERD",
+    "type": "strategy",
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "wcFlagPloy",
+      "params": {
+        "flag": "savageHerd"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "TZAANGOR"
+      }
+    },
+    "text": "This turning point, friendly Tzaangors' melee weapons have Accurate 1, and also Severe while the Tzaangor is assisted by a friendly Warpcoven operative or is fighting visible to and within 6\" of a friendly Sorcerer.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.35"
+  },
+  {
+    "team": "warpcoven",
+    "cost": 1,
+    "id": "wc.p.all-is-dust",
+    "name": "ALL IS DUST",
+    "type": "firefight",
+    "window": [
+      "shoot.defenceRolled",
+      "fight.rolled"
+    ],
+    "effect": {
+      "code": "allIsDust",
+      "scope": {
+        "side": "friendly",
+        "keyword": "RUBRIC MARINE"
+      }
+    },
+    "text": "When an attack die would inflict Normal Dmg on a friendly Rubric Marine, that die inflicts 1 damage instead. Committed once the dice are final; it applies to the first normal success that damages the Rubric Marine in that sequence.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.36"
+  },
+  {
+    "team": "warpcoven",
+    "cost": 1,
+    "id": "wc.p.capricious-plan",
+    "name": "CAPRICIOUS PLAN",
+    "type": "firefight",
+    "window": "firefight.activationEnded",
+    "effect": {
+      "code": "capriciousPlan",
+      "scope": {
+        "side": "friendly",
+        "keyword": "SORCERER"
+      }
+    },
+    "text": "At the end of a friendly Sorcerer's activation: it may take a free Dash even if an action it took (Charge) would bar Dash, and/or you may change its order. If a Temporal Flux is due for it at the same moment, you choose which happens first.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.37"
+  },
+  {
+    "team": "warpcoven",
+    "cost": 1,
+    "id": "wc.p.psychic-cabal",
+    "name": "PSYCHIC CABAL",
+    "type": "firefight",
+    "window": "firefight.activationStart",
+    "effect": {
+      "code": "psychicCabal",
+      "scope": {
+        "side": "friendly",
+        "keyword": "SORCERER"
+      }
+    },
+    "text": "As a friendly Sorcerer activates, it borrows one PSYCHIC ranged weapon or PSYCHIC unique action from another friendly Sorcerer it can see within 9\", and keeps it until this activation ends. A weapon the lender already used this turning point is off the table, and the lender cannot use a lent weapon again this turning point. Boons are never borrowed.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.38"
+  },
+  {
+    "team": "warpcoven",
+    "cost": 1,
+    "id": "wc.p.mutant-herd",
+    "name": "MUTANT HERD",
+    "type": "firefight",
+    "window": "firefight.activationStart",
+    "effect": {
+      "code": "mutantHerd",
+      "scope": {
+        "side": "friendly",
+        "keyword": "TZAANGOR"
+      }
+    },
+    "text": "As a friendly Tzaangor activates, another ready friendly Tzaangor it can see within 2\" activates alongside it; you alternate their actions one by one in whatever order you like.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.39"
+  }
+]

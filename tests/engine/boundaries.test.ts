@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 const ENGINE = 'src/engine'
 
@@ -22,5 +22,19 @@ describe('module boundaries', () => {
       }
     }
     expect(bad).toEqual([])
+  })
+
+  it('BOUND-002 ploy rules can be registered at module top level whichever engine module loads first (no import-cycle TDZ)', async () => {
+    for (const entry of ['@/engine/ploys', '@/engine/abilities', '@/engine/teams', '@/engine/firefight', '@/engine']) {
+      vi.resetModules()
+      await expect(import(/* @vite-ignore */ entry)).resolves.toBeDefined()
+      const leaf = await import('@/engine/ploy-rules')
+      const ploys = await import('@/engine/ploys')
+      expect(ploys.registerPloyRule).toBe(leaf.registerPloyRule)
+      const before = leaf.ployRules().length
+      expect(before).toBeGreaterThan(0) // Angels of Death registers at top level
+      ploys.registerPloyRule({})
+      expect(leaf.ployRules()).toHaveLength(before + 1)
+    }
   })
 })

@@ -3,6 +3,7 @@
 // live `data` object of that hook, as documented there. Declarative effects (grantWeaponRule,
 // removeWeaponRule, modifyStat) are interpreted generically; the rest belong to a named rule.
 import { inflict } from './attack-common'
+import { providerExtraCoverSaves, providerStealthy, registerTeamRules } from './team-rules'
 import { ruleName } from './bundle'
 import { bodyOf, targetVerdict } from './los'
 import { distanceBetween, enemiesInControlRange } from './measure'
@@ -204,6 +205,26 @@ function tiltingActive(c: HookContext, foe: Operative): boolean {
 }
 
 // ---------------------------------------------------------------------------
+// modifyStat move (M9 batch B shared fix): the declarative Move change, read by state.effectiveMove through the
+// provider moveDelta (the injured -2" and its 4" floor still apply there). `filter` is a weapon filter and does not
+// apply to Move; `when` is checked with the operative as the subject.
+// ---------------------------------------------------------------------------
+
+/** Net Move change in inches from declarative `modifyStat { stat: 'move' }` effects on the operative. */
+export function declarativeMoveDelta(state: GameState, op: Operative): number {
+  let d = 0
+  for (const s of sourcesFor(state, op)) {
+    const m = s.effect.modifyStat
+    if (!m || m.stat !== 'move') continue
+    if (s.when && !evalCondition(s.when, { state, seat: s.owner, subjectId: op.id, actorId: op.id, action: 'move' })) continue
+    d += m.value
+  }
+  return d
+}
+
+registerTeamRules({ id: 'core.modifyStat', moveDelta: declarativeMoveDelta })
+
+// ---------------------------------------------------------------------------
 // modifyAttackDice
 // ---------------------------------------------------------------------------
 
@@ -230,11 +251,10 @@ registerHook(
         } else if (m.stat === 'atk') data.atk += m.value
       }
     }
-    // And They Shall Know No Fear: the injured Hit penalty is ignored, weapons included
-    if (op.flags.ignoreInjured && isInjured(op)) {
-      data.hitDelta -= 1
-      markFired('ignoreInjuredChanges')
-    }
+    // And They Shall Know No Fear (and team equivalents such as Plague Bells): the injured Hit penalty is
+    // ignored, weapons included. attackStats already leaves the +1 out (hasInjuredPenalty), so ignoring the
+    // penalty only removes it; it never improves Hit past the printed value (core rules: injured worsens Hit by 1).
+    if (op.flags.ignoreInjured && isInjured(op)) markFired('ignoreInjuredChanges')
     // Ammo Cache: one attack die may be re-rolled when shooting with a datacard weapon (M-5.3)
     if (data.kind === 'shoot' && state.effects.some((e) => e.source === ID.ammo && e.operativeId === op.id)) {
       const card = state.data.datacards[op.datacardId]
@@ -298,7 +318,8 @@ interface DieLike {
 }
 
 function fails(dice: DieLike[]): DieLike[] {
-  return dice.filter((d) => d.kind === 'fail' && d.value !== null && !d.used)
+  // a tagged failure was set by a rule (an obscured discard, a team rule's locked fail) and is left alone
+  return dice.filter((d) => d.kind === 'fail' && d.value !== null && !d.used && !d.tag)
 }
 
 registerHook(
@@ -333,13 +354,25 @@ registerHook(
 // afterDefenceRoll: Hardy, Stealthy, Indomitus, Skulk About
 // ---------------------------------------------------------------------------
 
+/**
+ * M10 batch D shared: the operative is the target of the current Shoot and its player took the Vantage improved cover
+ * save (R-11.5b: two cover saves, or one as a crit). Every Stealthy-style improvement (Chapter Tactic, Camo Cloaks,
+ * provider `stealthyCover` / `extraCoverSaves`) is not cumulative with it; a player who retained a single cover save
+ * did not take the improvement, so those rules still apply.
+ */
+export function vantageImprovementTaken(state: GameState, op: Operative): boolean {
+  const seq = state.attack?.kind === 'shoot' ? state.attack.seq : null
+  return !!seq && seq.targetId === op.id && !!seq.improvedCover && (seq.coverMode === 'retainTwo' || seq.coverMode === 'retainCrit')
+}
+
 /** Number of Stealthy sources: the team tactic and Camo Cloak count separately (T-AOD.13). */
 export function stealthyLevel(state: GameState, op: Operative): number {
   const cfg = state.config[op.seat]
   const team = [cfg.choices['primary-tactic'], cfg.adaptive ?? cfg.choices['secondary-tactic'], ...(op.extraTactics ?? [])]
   const fromTeam = team.includes(ID.tactic('stealthy')) ? 1 : 0
   const camo = hasAbility(state, op, 'aod.a.camo-cloak') ? 1 : 0
-  return fromTeam + camo
+  // M9 prep: other teams' Stealthy-style rules (Wyrmblade Cult Agent) through team-rules.ts
+  return fromTeam + camo + providerStealthy(state, op)
 }
 
 registerHook(
@@ -363,7 +396,9 @@ registerHook(
       if (any) markFired('ctHardy')
     }
     // Stealthy: when a cover save was retained, retain one more, or retain one cover save as a crit (T-AOD.16).
-    const level = stealthyLevel(state, op)
+    // M10 batch D shared: nothing once the Vantage improvement was taken (T-AOD.16 #4, T-AOD.13)
+    const vantage = vantageImprovementTaken(state, op)
+    const level = vantage ? 0 : stealthyLevel(state, op)
     const cover = dice.filter((d) => d.tag === 'cover')
     if (level > 0 && cover.length > 0) {
       const extra = (): boolean => {
@@ -390,6 +425,17 @@ registerHook(
         used = extra() || crit()
       }
       if (used) markFired('ctStealthy')
+    }
+    // batch D prep (extraCoverSaves): retain more cover saves, never as crits (Camo Cloak, extra-only versions)
+    const moreCover = vantage ? 0 : providerExtraCoverSaves(state, op)
+    if (moreCover > 0 && dice.some((d) => d.tag === 'cover')) {
+      for (let i = 0; i < moreCover; i++) {
+        const f = fails(dice)[0]
+        if (!f) break
+        f.value = null
+        f.kind = 'normal'
+        f.tag = 'cover'
+      }
     }
     // Indomitus: with two or more failures discard one and retain another as a normal success
     if (hasKeyword(state, op, 'ANGEL OF DEATH') && state.effects.some((e) => e.source === ID.indomitus && e.seat === op.seat)) {

@@ -1,0 +1,476 @@
+[
+  {
+    "id": "nb.sergeant-at-arms",
+    "name": "Navis Sergeant-at-Arms",
+    "team": "imperial-navy-breachers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 9
+    },
+    "base": 25,
+    "keywords": [
+      "IMPERIAL NAVY BREACHER",
+      "IMPERIUM",
+      "LEADER",
+      "SERGEANT-AT-ARMS"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "shotgun-hatchet",
+              "name": "Navis shotgun and Navis hatchet",
+              "fixed": [
+                "nb.wg.navis-shotgun",
+                "nb.w.navis-hatchet"
+              ]
+            },
+            {
+              "id": "pistol-melee",
+              "name": "A pistol and a melee weapon",
+              "options": [
+                {
+                  "id": "pistol",
+                  "label": "Pistol",
+                  "from": [
+                    "nb.w.bolt-pistol",
+                    "nb.w.heirloom-autopistol"
+                  ]
+                },
+                {
+                  "id": "melee",
+                  "label": "Melee weapon",
+                  "from": [
+                    "nb.w.chainsword",
+                    "nb.w.power-weapon"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "nb.a.command-breach-orders",
+      "nb.a.command-breach-redirect"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "nb-sergeant-at-arms"
+    },
+    "text": "Directs the boarding party: its attack and defence orders cost nothing, and it can move or swap them on the fly.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17.2, 17.4"
+  },
+  {
+    "id": "nb.armsman",
+    "name": "Navis Armsman",
+    "team": "imperial-navy-breachers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "IMPERIAL NAVY BREACHER",
+      "IMPERIUM",
+      "ARMSMAN"
+    ],
+    "weapons": {
+      "fixed": [
+        "nb.wg.navis-shotgun",
+        "nb.w.navis-hatchet"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "nb.a.group-activation"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "nb-armsman"
+    },
+    "text": "Rank-and-file boarding trooper; armsmen like to move in pairs.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17.2, 17.4"
+  },
+  {
+    "id": "nb.axejack",
+    "name": "Navis Axejack",
+    "team": "imperial-navy-breachers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "IMPERIAL NAVY BREACHER",
+      "IMPERIUM",
+      "AXEJACK"
+    ],
+    "weapons": {
+      "fixed": [
+        "nb.w.autopistol",
+        "nb.w.power-weapon"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "nb.a.emboldened"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "nb-axejack"
+    },
+    "text": "A shipboard bruiser who shrugs off blows once the charge is under way.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17.2, 17.4"
+  },
+  {
+    "id": "nb.cat-unit",
+    "name": "Navis C.A.T. Unit",
+    "team": "imperial-navy-breachers",
+    "stats": {
+      "apl": 2,
+      "move": 8,
+      "save": "5+",
+      "wounds": 5
+    },
+    "base": 25,
+    "keywords": [
+      "IMPERIAL NAVY BREACHER",
+      "IMPERIUM",
+      "CAT UNIT"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": []
+    },
+    "abilities": [
+      "nb.a.machine-bar",
+      "nb.a.machine-actions",
+      "nb.a.machine-limits",
+      "nb.a.machine-control",
+      "nb.a.machine-cover",
+      "nb.a.wide-view",
+      "nb.a.expendable"
+    ],
+    "uniqueActions": [
+      "nb.a.spot"
+    ],
+    "figure": {
+      "archetype": "nb-cat-unit"
+    },
+    "expendable": true,
+    "text": "A scuttling servitor-drone that spots targets for the boarding party; it only works while its Surveyor lives.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17.2, 17.4"
+  },
+  {
+    "id": "nb.endurant",
+    "name": "Navis Endurant",
+    "team": "imperial-navy-breachers",
+    "stats": {
+      "apl": 2,
+      "move": 4,
+      "save": "2+",
+      "wounds": 11
+    },
+    "base": 28,
+    "keywords": [
+      "IMPERIAL NAVY BREACHER",
+      "IMPERIUM",
+      "ENDURANT"
+    ],
+    "weapons": {
+      "fixed": [
+        "nb.wg.navis-heavy-shotgun",
+        "nb.w.shield-bash"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "nb.a.breachwall",
+      "nb.a.disengage"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "nb-endurant"
+    },
+    "text": "A slow, armoured shield-bearer who plugs a doorway and shelters the squad behind him.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17.2, 17.4"
+  },
+  {
+    "id": "nb.gheistskull",
+    "name": "Navis Gheistskull",
+    "team": "imperial-navy-breachers",
+    "stats": {
+      "apl": 2,
+      "move": 8,
+      "save": "5+",
+      "wounds": 5
+    },
+    "base": 25,
+    "keywords": [
+      "IMPERIAL NAVY BREACHER",
+      "IMPERIUM",
+      "GHEISTSKULL"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": []
+    },
+    "abilities": [
+      "nb.a.machine-actions",
+      "nb.a.machine-limits",
+      "nb.a.machine-control",
+      "nb.a.machine-cover",
+      "nb.a.expendable"
+    ],
+    "uniqueActions": [
+      "nb.a.boost"
+    ],
+    "figure": {
+      "archetype": "nb-gheistskull"
+    },
+    "expendable": true,
+    "text": "A haunted drone-skull that jams enemy systems and, in the end, detonates on command.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17.2, 17.4"
+  },
+  {
+    "id": "nb.grenadier",
+    "name": "Navis Grenadier",
+    "team": "imperial-navy-breachers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "IMPERIAL NAVY BREACHER",
+      "IMPERIUM",
+      "GRENADIER"
+    ],
+    "weapons": {
+      "fixed": [
+        "nb.wg.navis-shotgun",
+        "nb.w.navis-hatchet",
+        "nb.w.demolition-charge"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "nb.a.grenadier"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "nb-grenadier"
+    },
+    "text": "Carries a demolition satchel and a belt of grenades.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17.2, 17.4"
+  },
+  {
+    "id": "nb.gunner-las-volley",
+    "name": "Navis Gunner (las-volley)",
+    "team": "imperial-navy-breachers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 9
+    },
+    "base": 28,
+    "keywords": [
+      "IMPERIAL NAVY BREACHER",
+      "IMPERIUM",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "nb.wg.navis-las-volley",
+        "nb.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "nb-gunner-las-volley"
+    },
+    "text": "Heavy trooper carrying a Navis las-volley.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17.2, 17.4"
+  },
+  {
+    "id": "nb.gunner-meltagun",
+    "name": "Navis Gunner (meltagun)",
+    "team": "imperial-navy-breachers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 9
+    },
+    "base": 28,
+    "keywords": [
+      "IMPERIAL NAVY BREACHER",
+      "IMPERIUM",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "nb.w.meltagun",
+        "nb.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "nb-gunner-meltagun"
+    },
+    "text": "Heavy trooper carrying a meltagun to burn through armour.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17.2, 17.4"
+  },
+  {
+    "id": "nb.gunner-plasma-gun",
+    "name": "Navis Gunner (plasma gun)",
+    "team": "imperial-navy-breachers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 9
+    },
+    "base": 28,
+    "keywords": [
+      "IMPERIAL NAVY BREACHER",
+      "IMPERIUM",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "nb.wg.plasma-gun",
+        "nb.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "nb-gunner-plasma-gun"
+    },
+    "text": "Heavy trooper carrying a plasma gun.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17.2, 17.4"
+  },
+  {
+    "id": "nb.hatchcutter",
+    "name": "Navis Hatchcutter",
+    "team": "imperial-navy-breachers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "IMPERIAL NAVY BREACHER",
+      "IMPERIUM",
+      "HATCHCUTTER"
+    ],
+    "weapons": {
+      "fixed": [
+        "nb.w.autopistol",
+        "nb.w.chainfist"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "nb.a.weld-shut",
+      "nb.a.breach-point"
+    ],
+    "figure": {
+      "archetype": "nb-hatchcutter"
+    },
+    "text": "A breaching specialist with a chain-toothed gauntlet who opens up walls and bulkheads.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17.2, 17.4"
+  },
+  {
+    "id": "nb.surveyor",
+    "name": "Navis Surveyor",
+    "team": "imperial-navy-breachers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "IMPERIAL NAVY BREACHER",
+      "IMPERIUM",
+      "SURVEYOR"
+    ],
+    "weapons": {
+      "fixed": [
+        "nb.wg.navis-shotgun",
+        "nb.w.navis-hatchet"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "nb.a.wayfind",
+      "nb.a.remote-control"
+    ],
+    "figure": {
+      "archetype": "nb-surveyor"
+    },
+    "text": "Reads the boarding action through its auspex and steers the squad and its C.A.T. Unit.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17.2, 17.4"
+  },
+  {
+    "id": "nb.void-jammer",
+    "name": "Navis Void-Jammer",
+    "team": "imperial-navy-breachers",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "IMPERIAL NAVY BREACHER",
+      "IMPERIUM",
+      "VOID-JAMMER"
+    ],
+    "weapons": {
+      "fixed": [
+        "nb.wg.navis-shotgun",
+        "nb.w.navis-hatchet",
+        "nb.w.gheistskull-detonator"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "nb.a.interference-pulse"
+    ],
+    "figure": {
+      "archetype": "nb-void-jammer"
+    },
+    "text": "Controls the Gheistskull, jamming enemy systems or setting it off.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17.2, 17.4"
+  }
+]

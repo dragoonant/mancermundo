@@ -10,10 +10,12 @@ const KEY = 'mancermundo.settings.v1'
 interface Persisted {
   animSpeed: AnimSpeed
   lowGraphics: boolean
+  /** the camera goes behind the shooter, then closes on the target, then back to the player's view */
+  cinematicShots: boolean
 }
 
 function load(): Persisted {
-  const base: Persisted = { animSpeed: 'normal', lowGraphics: false }
+  const base: Persisted = { animSpeed: 'normal', lowGraphics: false, cinematicShots: true }
   try {
     const raw = typeof localStorage !== 'undefined' ? localStorage.getItem(KEY) : null
     if (raw) Object.assign(base, JSON.parse(raw))
@@ -28,6 +30,7 @@ function load(): Persisted {
 interface SettingsState extends Persisted {
   setAnimSpeed(s: AnimSpeed): void
   setLowGraphics(v: boolean): void
+  setCinematicShots(v: boolean): void
 }
 
 export const useSettings = create<SettingsState>((set, get) => ({
@@ -40,11 +43,15 @@ export const useSettings = create<SettingsState>((set, get) => ({
     set({ lowGraphics })
     persist(get())
   },
+  setCinematicShots: (cinematicShots) => {
+    set({ cinematicShots })
+    persist(get())
+  },
 }))
 
 function persist(s: Persisted): void {
   try {
-    if (typeof localStorage !== 'undefined') localStorage.setItem(KEY, JSON.stringify({ animSpeed: s.animSpeed, lowGraphics: s.lowGraphics }))
+    if (typeof localStorage !== 'undefined') localStorage.setItem(KEY, JSON.stringify({ animSpeed: s.animSpeed, lowGraphics: s.lowGraphics, cinematicShots: s.cinematicShots }))
   } catch {
     /* ignore */
   }

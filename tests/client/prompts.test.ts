@@ -183,8 +183,11 @@ describe('every decision of real games renders words', () => {
         extra.gambitsOff += unavailablePloys(state, pending).length
       }
     }
-    for (const seed of ['prompt-1', 'prompt-2', 'prompt-3']) {
+    // a random bot meets a fight only now and then, so more seeds are played until every kind below has come up
+    const need = ['shoot.weapon', 'shoot.target', 'fight.target', 'strategy.gambit', 'firefight.action', 'firefight.activate', 'setup.deploy']
+    for (const seed of ['prompt-1', 'prompt-2', 'prompt-3', 'prompt-4', 'prompt-5', 'prompt-6', 'prompt-7', 'prompt-8']) {
       playGame({ seed, maxSteps: 2200 }, ({ state, pending }) => check(state, pending))
+      if (need.every((k) => kinds.has(k)) && extra.fightResolves > 0) break
     }
     const seen = [...kinds.keys()]
     for (const k of ['shoot.weapon', 'shoot.target', 'fight.target', 'strategy.gambit', 'firefight.action', 'firefight.activate', 'setup.deploy']) {

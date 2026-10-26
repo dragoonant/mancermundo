@@ -39,6 +39,22 @@
     "kom.p.shake-it-off"
   ],
   "equipment": ["kom.e.choppas", "kom.e.dynamite", "kom.e.harpoon", "kom.e.collapsible-stocks"],
+  "defaults": {
+    "roster": [
+      "kom.boss-nob",
+      "kom.bomb-squig",
+      "kom.grot",
+      "kom.boy",
+      "kom.breacha-boy",
+      "kom.burna-boy",
+      "kom.comms-boy",
+      "kom.dakka-boy",
+      "kom.rokkit-boy",
+      "kom.slasha-boy",
+      "kom.snipa-boy"
+    ],
+    "equipment": ["kom.e.choppas", "core.e.comms-device", "core.e.ladders", "core.e.utility-grenades"]
+  },
   "paint": { "major": { "h": 0.28, "s": 0.5, "l": 0.32 }, "minor": { "h": 0.07, "s": 0.6, "l": 0.35 } },
   "text": "A sneaky ork raiding mob: a Boss Nob and nine selections, built around creeping up under Conceal orders and charging out of the shadows.",
   "source": "team-kommandos.pdf; docs/spec/13-teams.md 2.1"

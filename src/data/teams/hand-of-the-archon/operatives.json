@@ -1,0 +1,397 @@
+[
+  {
+    "id": "ha.archsybarite",
+    "name": "Kabalite Archsybarite",
+    "team": "hand-of-the-archon",
+    "stats": {
+      "apl": 2,
+      "move": 7,
+      "save": "4+",
+      "wounds": 9
+    },
+    "base": 25,
+    "keywords": [
+      "HAND OF THE ARCHON",
+      "AELDARI",
+      "DRUKHARI",
+      "LEADER",
+      "ARCHSYBARITE"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "blast-pistol-venom-blade",
+              "name": "Blast pistol and venom blade",
+              "fixed": [
+                "ha.w.blast-pistol",
+                "ha.w.venom-blade"
+              ]
+            },
+            {
+              "id": "splinter-pistol-venom-blade",
+              "name": "Splinter pistol and venom blade",
+              "fixed": [
+                "ha.w.splinter-pistol",
+                "ha.w.venom-blade"
+              ]
+            },
+            {
+              "id": "splinter-pistol-agoniser",
+              "name": "Splinter pistol and agoniser",
+              "fixed": [
+                "ha.w.splinter-pistol",
+                "ha.w.agoniser"
+              ]
+            },
+            {
+              "id": "splinter-pistol-power-weapon",
+              "name": "Splinter pistol and power weapon",
+              "fixed": [
+                "ha.w.splinter-pistol",
+                "ha.w.power-weapon"
+              ]
+            },
+            {
+              "id": "splinter-rifle-array-of-blades",
+              "name": "Splinter rifle and array of blades",
+              "fixed": [
+                "ha.w.splinter-rifle",
+                "ha.w.array-of-blades"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "ha.a.cunning",
+      "ha.a.torturous-vision"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ha-archsybarite"
+    },
+    "text": "The kill team's leader: a cunning schemer who banks command points by holding back and feeds on the pain it is about to deal.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.agent",
+    "name": "Kabalite Agent",
+    "team": "hand-of-the-archon",
+    "stats": {
+      "apl": 2,
+      "move": 7,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "HAND OF THE ARCHON",
+      "AELDARI",
+      "DRUKHARI",
+      "AGENT"
+    ],
+    "weapons": {
+      "fixed": [
+        "ha.w.splinter-rifle",
+        "ha.w.array-of-blades"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ha.a.sadistic-competition"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ha-agent"
+    },
+    "text": "A well-armed enforcer with a rifle for the distance and a mess of blades for the close work; any number may be fielded.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.crimson-duellist",
+    "name": "Kabalite Crimson Duellist",
+    "team": "hand-of-the-archon",
+    "stats": {
+      "apl": 2,
+      "move": 7,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "HAND OF THE ARCHON",
+      "AELDARI",
+      "DRUKHARI",
+      "CRIMSON DUELLIST"
+    ],
+    "weapons": {
+      "fixed": [
+        "ha.w.splinter-pistol",
+        "ha.w.razorflail"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ha.a.brutal-display",
+      "ha.a.crimson-duellist"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ha-crimson-duellist"
+    },
+    "text": "A showy murder-artist who fights twice in one activation and cows a second enemy with every kill.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.disciple-of-yaelindra",
+    "name": "Kabalite Disciple of Yaelindra",
+    "team": "hand-of-the-archon",
+    "stats": {
+      "apl": 2,
+      "move": 7,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "HAND OF THE ARCHON",
+      "AELDARI",
+      "DRUKHARI",
+      "DISCIPLE OF YAELINDRA"
+    ],
+    "weapons": {
+      "fixed": [
+        "ha.w.stinger-pistol",
+        "ha.w.array-of-blades"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "ha.a.torment-grenade"
+    ],
+    "figure": {
+      "archetype": "ha-disciple-of-yaelindra"
+    },
+    "text": "A poisoner whose stinger pistol and torment grenades spread venom among friend and foe alike.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.elixicant",
+    "name": "Kabalite Elixicant",
+    "team": "hand-of-the-archon",
+    "stats": {
+      "apl": 2,
+      "move": 7,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "HAND OF THE ARCHON",
+      "AELDARI",
+      "DRUKHARI",
+      "ELIXICANT"
+    ],
+    "weapons": {
+      "fixed": [
+        "ha.w.splinter-rifle",
+        "ha.w.stim-needler",
+        "ha.w.array-of-blades"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ha.a.combat-drugs"
+    ],
+    "uniqueActions": [
+      "ha.a.administer-drug"
+    ],
+    "figure": {
+      "archetype": "ha-elixicant"
+    },
+    "text": "A drug-slinger who chooses the kill team's combat drug and can mend a comrade or change their dose.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.flayer",
+    "name": "Kabalite Flayer",
+    "team": "hand-of-the-archon",
+    "stats": {
+      "apl": 2,
+      "move": 7,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "HAND OF THE ARCHON",
+      "AELDARI",
+      "DRUKHARI",
+      "FLAYER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ha.w.pain-sculptors"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ha.a.insensible-to-pain"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ha-flayer"
+    },
+    "text": "A torturer who barely feels a hard blow and turns each bloody strike into more pain for the pack.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.gunner",
+    "name": "Kabalite Gunner",
+    "team": "hand-of-the-archon",
+    "stats": {
+      "apl": 2,
+      "move": 7,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "HAND OF THE ARCHON",
+      "AELDARI",
+      "DRUKHARI",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ha.w.array-of-blades"
+      ],
+      "options": [
+        {
+          "id": "special",
+          "label": "Special weapon",
+          "sets": [
+            {
+              "id": "blaster",
+              "name": "Blaster",
+              "fixed": [
+                "ha.w.blaster"
+              ]
+            },
+            {
+              "id": "shredder",
+              "name": "Shredder",
+              "fixed": [
+                "ha.w.shredder"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ha-gunner"
+    },
+    "text": "A specialist carrying a blaster or a shredder alongside a belt of blades.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.heavy-gunner",
+    "name": "Kabalite Heavy Gunner",
+    "team": "hand-of-the-archon",
+    "stats": {
+      "apl": 2,
+      "move": 7,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "HAND OF THE ARCHON",
+      "AELDARI",
+      "DRUKHARI",
+      "HEAVY GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ha.w.array-of-blades"
+      ],
+      "options": [
+        {
+          "id": "heavy",
+          "label": "Heavy weapon",
+          "sets": [
+            {
+              "id": "dark-lance",
+              "name": "Dark lance",
+              "fixed": [
+                "ha.w.dark-lance"
+              ]
+            },
+            {
+              "id": "splinter-cannon",
+              "name": "Splinter cannon",
+              "fixed": [
+                "ha.wg.splinter-cannon"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ha-heavy-gunner"
+    },
+    "text": "Carries a dark lance or a splinter cannon, firing only if it did not move beyond a Dash.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.skysplinter-assassin",
+    "name": "Kabalite Skysplinter Assassin",
+    "team": "hand-of-the-archon",
+    "stats": {
+      "apl": 2,
+      "move": 7,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "HAND OF THE ARCHON",
+      "AELDARI",
+      "DRUKHARI",
+      "SKYSPLINTER ASSASSIN"
+    ],
+    "weapons": {
+      "fixed": [
+        "ha.w.razorwing",
+        "ha.w.shardcarbine",
+        "ha.w.array-of-blades"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ha.a.merciless-hunter",
+      "ha.a.omen"
+    ],
+    "uniqueActions": [
+      "ha.a.mark"
+    ],
+    "figure": {
+      "archetype": "ha-skysplinter-assassin"
+    },
+    "text": "A lone scout whose razorwing and shardcarbine reach what others cannot, and whose omen curses one operative for the whole battle.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  }
+]

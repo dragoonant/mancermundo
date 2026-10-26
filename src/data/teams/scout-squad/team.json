@@ -1,0 +1,134 @@
+{
+  "id": "scout-squad",
+  "name": "Scout Squad",
+  "factionKeyword": "SCOUT SQUAD",
+  "archetypes": [
+    "infiltration",
+    "recon"
+  ],
+  "selection": {
+    "slots": [
+      {
+        "id": "leader",
+        "label": "Leader",
+        "count": 1,
+        "from": [
+          "ss.sergeant"
+        ]
+      },
+      {
+        "id": "main",
+        "label": "Selections",
+        "count": 8,
+        "from": [
+          "ss.heavy-gunner",
+          "ss.hunter",
+          "ss.sniper",
+          "ss.tracker",
+          "ss.warrior"
+        ],
+        "repeatable": [
+          "ss.warrior",
+          "ss.heavy-gunner"
+        ]
+      }
+    ],
+    "loadoutCaps": [
+      {
+        "label": "Heavy Gunner weapon",
+        "weapons": [
+          "ss.wg.heavy-bolter",
+          "ss.wg.missile-launcher"
+        ],
+        "max": 1,
+        "each": true
+      }
+    ]
+  },
+  "factionRules": [
+    "ss.a.forward-scouting"
+  ],
+  "ploys": [
+    "ss.p.guerrilla-engagement",
+    "ss.p.ambush",
+    "ss.p.adaptable-training",
+    "ss.p.stealth-relocation",
+    "ss.p.tactical-manoeuvre",
+    "ss.p.diversion",
+    "ss.p.astartes-training",
+    "ss.p.raw-physiology",
+    "ss.p.emboldened-aspirant",
+    "ss.p.covert-position"
+  ],
+  "equipment": [
+    "ss.e.camo-cloak",
+    "ss.e.targeting-oculars",
+    "ss.e.combat-blade",
+    "ss.e.tactical-vox-link"
+  ],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "ss.sergeant",
+      "ss.heavy-gunner",
+      "ss.heavy-gunner",
+      "ss.hunter",
+      "ss.sniper",
+      "ss.tracker",
+      "ss.warrior",
+      "ss.warrior",
+      "ss.warrior"
+    ],
+    "equipment": [
+      "ss.e.camo-cloak",
+      "ss.e.tactical-vox-link",
+      "core.e.ladders",
+      "core.e.utility-grenades"
+    ],
+    "loadouts": [
+      {},
+      {
+        "heavy": [
+          "ss.wg.heavy-bolter"
+        ]
+      },
+      {
+        "heavy": [
+          "ss.wg.missile-launcher"
+        ]
+      },
+      {},
+      {},
+      {},
+      {
+        "loadout": [
+          "boltgun-fists"
+        ]
+      },
+      {
+        "loadout": [
+          "boltgun-fists"
+        ]
+      },
+      {
+        "loadout": [
+          "astartes-shotgun-fists"
+        ]
+      }
+    ]
+  },
+  "paint": {
+    "major": {
+      "h": 0.25,
+      "s": 0.18,
+      "l": 0.32
+    },
+    "minor": {
+      "h": 0.6,
+      "s": 0.35,
+      "l": 0.4
+    }
+  },
+  "text": "Space Marine neophytes in light armour and camo cloaks who scout the ground before the battle, lay traps and alarms, and strike from cover under a veteran sergeant.",
+  "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md section 22"
+}

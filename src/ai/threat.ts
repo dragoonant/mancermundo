@@ -74,7 +74,7 @@ function computeThreat(ctx: AiCtx, view: GameState, me: Operative): Threat {
     const rw = e.ready ? 1 : e.flags.guard ? 0.7 : 0.3
     const gap = distanceBetween(bodyOf(e), bodyOf(me))
     const engaged = gap <= 1.05
-    const move = e.ready && !engaged ? effectiveMove(e) : 0
+    const move = e.ready && !engaged ? effectiveMove(e, view) : 0
     let best = 0
     for (const rg of prof.ranged) {
       if (rg.range !== null && gap > rg.range + move) continue

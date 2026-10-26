@@ -1,0 +1,55 @@
+[
+  {
+    "id": "ss.e.camo-cloak",
+    "name": "CAMO CLOAK",
+    "scope": "faction",
+    "team": "scout-squad",
+    "count": 1,
+    "effect": {
+      "code": "ssCamoCloak"
+    },
+    "text": "When an enemy shoots a friendly Scout Squad operative other than the Sniper and it can retain any cover saves, it retains one more (never as a crit; Saturate still works).",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.34"
+  },
+  {
+    "id": "ss.e.targeting-oculars",
+    "name": "TARGETING OCULARS",
+    "scope": "faction",
+    "team": "scout-squad",
+    "count": 1,
+    "effect": {
+      "code": "ssTargetingOculars"
+    },
+    "text": "Up to twice per turning point, when a friendly Scout Squad operative performs a Shoot and you are selecting its target: until the end of that action its ranged weapons have Lethal 5+ and Saturate.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.35"
+  },
+  {
+    "id": "ss.e.combat-blade",
+    "name": "COMBAT BLADE",
+    "scope": "faction",
+    "team": "scout-squad",
+    "count": 1,
+    "grants": {
+      "weapons": [
+        "ss.w.combat-blade-equipment"
+      ],
+      "to": {
+        "keyword": "SCOUT SQUAD"
+      }
+    },
+    "text": "Every friendly Scout Squad operative carries a combat blade (Atk 3, Hit 3+, Dmg 4/5) for the battle; one that already has the better datacard blade keeps its own.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.36"
+  },
+  {
+    "id": "ss.e.tactical-vox-link",
+    "name": "TACTICAL VOX-LINK",
+    "scope": "faction",
+    "team": "scout-squad",
+    "count": 1,
+    "effect": {
+      "code": "ssVoxLink"
+    },
+    "text": "Once per turning point, while a friendly Sergeant is in the killzone, Astartes Training or Emboldened Aspirant costs 0 CP.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.37"
+  }
+]

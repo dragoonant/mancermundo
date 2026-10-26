@@ -1,0 +1,210 @@
+[
+  {
+    "id": "ss.p.guerrilla-engagement",
+    "name": "GUERRILLA ENGAGEMENT",
+    "team": "scout-squad",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "ssFlagPloy",
+      "params": {
+        "flag": "guerrillaEngagement"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "SCOUT SQUAD"
+      }
+    },
+    "text": "This turning point, when an enemy shoots a friendly Scout Squad operative that is in cover and more than 6 inches from every enemy operative that can see it, you may re-roll one defence die.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.26"
+  },
+  {
+    "id": "ss.p.ambush",
+    "name": "AMBUSH",
+    "team": "scout-squad",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "ssFlagPloy",
+      "params": {
+        "flag": "ambush"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "SCOUT SQUAD"
+      }
+    },
+    "text": "This turning point, a friendly Scout Squad operative that shoots or fights in its own activation, and changed from Conceal to Engage at the start of it or could not be seen by any enemy then, has Balanced on its weapons (Ceaseless instead against an expended target).",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.27"
+  },
+  {
+    "id": "ss.p.adaptable-training",
+    "name": "ADAPTABLE TRAINING",
+    "team": "scout-squad",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "ssAdaptableTraining",
+      "scope": {
+        "side": "friendly",
+        "keyword": "SCOUT SQUAD"
+      }
+    },
+    "text": "Roll a D3: change the order of up to that many friendly Scout Squad operatives that are more than 4 inches from every enemy operative.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.28"
+  },
+  {
+    "id": "ss.p.stealth-relocation",
+    "name": "STEALTH RELOCATION",
+    "team": "scout-squad",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "when": {
+      "turningPoint": {
+        "min": 2
+      }
+    },
+    "effect": {
+      "code": "ssStealthRelocation",
+      "scope": {
+        "side": "friendly",
+        "keyword": "SCOUT SQUAD"
+      }
+    },
+    "text": "Not in turning point 1. Roll a D3: up to that many friendly Scout Squad operatives with a Conceal order that are more than 4 inches from every enemy operative may each take a free Dash, one at a time in the order you choose.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.29"
+  },
+  {
+    "id": "ss.p.tactical-manoeuvre",
+    "name": "TACTICAL MANOEUVRE",
+    "team": "scout-squad",
+    "type": "strategy",
+    "cost": 0,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "ssGambit",
+      "params": {
+        "gambit": "tactical-manoeuvre"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "SCOUT SQUAD"
+      }
+    },
+    "text": "Only after you picked it with Forward Scouting, twice per battle and never twice in one turning point, for no CP: pick one friendly operative; it has +1 APL until the end of its next activation.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.21"
+  },
+  {
+    "id": "ss.p.diversion",
+    "name": "DIVERSION",
+    "team": "scout-squad",
+    "type": "strategy",
+    "cost": 0,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "ssGambit",
+      "params": {
+        "gambit": "diversion"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "SCOUT SQUAD"
+      }
+    },
+    "text": "Only after you picked it with Forward Scouting, once per battle, for no CP: pick one enemy operative within 6 inches of a killzone edge; it has -1 APL until the end of its next activation.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.22"
+  },
+  {
+    "id": "ss.p.astartes-training",
+    "name": "ASTARTES TRAINING",
+    "team": "scout-squad",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "firefight.activationStart",
+      "firefight.actionEnded"
+    ],
+    "when": {
+      "notCounteracting": true
+    },
+    "effect": {
+      "code": "ssAstartesTraining",
+      "scope": {
+        "side": "friendly",
+        "keyword": "SCOUT SQUAD"
+      }
+    },
+    "text": "During a friendly Scout Squad operative's activation pick one for the rest of it: it may Fight twice; or Shoot twice if at least one uses a bolt weapon; or Shoot twice with heavy weapons only, the second costing 1 AP more.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.30"
+  },
+  {
+    "id": "ss.p.raw-physiology",
+    "name": "RAW PHYSIOLOGY",
+    "team": "scout-squad",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "firefight.activationStart",
+      "firefight.actionEnded"
+    ],
+    "when": {
+      "notCounteracting": true
+    },
+    "effect": {
+      "code": "ssRawPhysiology",
+      "scope": {
+        "side": "friendly",
+        "keyword": "SCOUT SQUAD"
+      }
+    },
+    "text": "During a friendly Scout Squad operative's activation, before or after an action: until the start of its next activation it has +1 inch of Move and ignores the Move and Hit penalties of being injured.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.31"
+  },
+  {
+    "id": "ss.p.emboldened-aspirant",
+    "name": "EMBOLDENED ASPIRANT",
+    "team": "scout-squad",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "shoot.attackRolled",
+      "fight.rolled"
+    ],
+    "effect": {
+      "code": "ssEmboldenedAspirant",
+      "scope": {
+        "side": "friendly",
+        "keyword": "SCOUT SQUAD"
+      }
+    },
+    "text": "When a friendly Scout Squad operative shoots or fights, after re-rolls: if it is the first friendly operative to Shoot or Fight this turning point, or its enemy has a higher Wounds stat than it, retain one normal success as a crit instead.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.32"
+  },
+  {
+    "id": "ss.p.covert-position",
+    "name": "COVERT POSITION",
+    "team": "scout-squad",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "firefight.activationStart",
+      "firefight.actionEnded"
+    ],
+    "when": {
+      "notCounteracting": true
+    },
+    "effect": {
+      "code": "ssCovertPosition",
+      "scope": {
+        "side": "friendly",
+        "keyword": "SCOUT SQUAD"
+      }
+    },
+    "text": "During a friendly Scout Squad operative's activation: until the start of its next activation, while it has a Conceal order and is in cover it cannot be selected as a valid target (whatever Seek or Vantage say) unless the shooter is within 2 inches.",
+    "source": "team-scout-squad.pdf (Apr '26); docs/spec/13-teams.md T-SS.33"
+  }
+]

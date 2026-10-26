@@ -12,8 +12,8 @@ export interface UrlParams {
   seats: [SeatMode, SeatMode]
   seed: string | null
   mission: string | null
+  /** a layout id or number (1-6), or 'auto' to roll one of the cards from the seed; the layout names its own map */
   layout: string | null
-  map: string | null
   teams: [string, string] | null
   speed: AnimSpeed | null
   scenario: string | null
@@ -40,7 +40,6 @@ export function parseParams(search: string): UrlParams {
     seed: q.get('seed'),
     mission: q.get('mission'),
     layout: q.get('layout'),
-    map: q.get('map'),
     teams: teams.length >= 2 ? [teams[0]!, teams[1]!] : null,
     speed: speed === 'normal' || speed === 'fast' || speed === 'instant' ? speed : null,
     scenario: q.get('scenario'),

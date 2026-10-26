@@ -1,0 +1,152 @@
+[
+  {
+    "id": "nv.p.ardent-vengeance",
+    "name": "ARDENT VENGEANCE",
+    "team": "novitiates",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "nvFlagPloy",
+      "params": {
+        "flag": "ardentVengeance"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "NOVITIATE"
+      }
+    },
+    "text": "This turning point a friendly Novitiate shooting, fighting or retaliating against an expended enemy has Punishing on its weapons, checked per target.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.6"
+  },
+  {
+    "id": "nv.p.defenders-of-the-faith",
+    "name": "DEFENDERS OF THE FAITH",
+    "team": "novitiates",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "nvFlagPloy",
+      "params": {
+        "flag": "defendersOfTheFaith"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "NOVITIATE"
+      }
+    },
+    "text": "This turning point, when an enemy attacks a friendly Novitiate that contests an objective marker (or one of your mission markers), the damage of one normal success in that sequence is halved (rounded up, never below 2).",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.6"
+  },
+  {
+    "id": "nv.p.blessed-rejuvenation",
+    "name": "BLESSED REJUVENATION",
+    "team": "novitiates",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "nvFlagPloy",
+      "params": {
+        "flag": "blessedRejuvenation"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "NOVITIATE"
+      }
+    },
+    "text": "This turning point, each time you spend Faith points on a Novitiate it can heal up to D3 lost wounds once that action is over, provided it is still standing; a free act (Auto-chastisers) spends nothing and heals nothing.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.6"
+  },
+  {
+    "id": "nv.p.righteous-advance",
+    "name": "RIGHTEOUS ADVANCE",
+    "team": "novitiates",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "when": {
+      "turningPoint": {
+        "min": 2
+      }
+    },
+    "effect": {
+      "code": "nvRighteousAdvance",
+      "scope": {
+        "side": "friendly",
+        "keyword": "NOVITIATE"
+      }
+    },
+    "text": "Not in the first turning point. Up to a third of your Novitiates in the killzone (at least one) each take a free Dash, one at a time. Each that Dashes must end closer to its closest enemy, its closest objective marker or the enemy drop zone.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.6"
+  },
+  {
+    "id": "nv.p.glorious-martyrdom",
+    "name": "GLORIOUS MARTYRDOM",
+    "team": "novitiates",
+    "type": "firefight",
+    "cost": 1,
+    "window": "operative.incapacitated",
+    "effect": {
+      "code": "nvGloriousMartyrdom",
+      "scope": {
+        "side": "friendly",
+        "keyword": "NOVITIATE"
+      }
+    },
+    "text": "A friendly Novitiate going down takes enemies with it: before it is removed, every enemy it can see within 2 inches suffers D3 damage, and you gain 1 Faith point for each.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.6"
+  },
+  {
+    "id": "nv.p.blazing-inferno",
+    "name": "BLAZING INFERNO",
+    "team": "novitiates",
+    "type": "firefight",
+    "cost": 1,
+    "window": "shoot.resolved",
+    "effect": {
+      "code": "nvBlazingInferno",
+      "scope": {
+        "side": "friendly",
+        "keyword": "NOVITIATE"
+      }
+    },
+    "text": "After a friendly Novitiate shooting with a Ministorum flamer dealt damage with a critical success, one such target gains your Blaze token. Whenever an operative with a Blaze token is activated it takes D3 damage, then its player may give it -1 APL until the end of that activation to remove the token.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.6"
+  },
+  {
+    "id": "nv.p.blinding-aura",
+    "name": "BLINDING AURA",
+    "team": "novitiates",
+    "type": "firefight",
+    "cost": 1,
+    "window": "shoot.targetSelected",
+    "effect": {
+      "code": "nvBlindingAura",
+      "scope": {
+        "side": "friendly",
+        "keyword": "NOVITIATE"
+      }
+    },
+    "text": "When an enemy selects a friendly Novitiate as the primary target of a Shoot: until that enemy's activation or counteraction ends, it cannot select that Novitiate while the Novitiate is more than 2 inches away. The enemy picks another target, or the Shoot ends if none is left.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.6"
+  },
+  {
+    "id": "nv.p.guided-by-faith",
+    "name": "GUIDED BY FAITH",
+    "team": "novitiates",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.actionDeclared",
+    "effect": {
+      "code": "nvGuidedByFaith",
+      "scope": {
+        "side": "friendly",
+        "keyword": "NOVITIATE"
+      }
+    },
+    "text": "As a friendly Novitiate declares a Shoot: until the action ends, its ranged weapon has Seek Light against targets within 6 inches.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.6"
+  }
+]

@@ -6,15 +6,17 @@
 import { act, validate, type Action, type Activation, type GameState, type Operative, type Vec2, type Vec3, type Waypoint } from '@/engine'
 import { actionAvailability, actionCost } from '@/engine/firefight'
 import { abilityOffers, allowedOrders } from '@/engine/abilities'
-import { moveLimit, planMove, type MoveKind } from '@/engine/movement'
+import { moveLimit, planFly, planMove, type MoveKind } from '@/engine/movement'
+import { providerCanFly } from '@/engine/team-rules'
 import { enemiesInControlRange, distanceBetween } from '@/engine/measure'
 import { bodyOf } from '@/engine/los'
 import { enemiesOf, effectiveApl, seatOps } from '@/engine/state'
-import { round3 } from '@/engine/geometry'
+import { bearing, round3 } from '@/engine/geometry'
 import { distanceField, gridFor, routeTo, type Field } from './nav'
 import { terrainOf } from '@/engine/terrain'
 import { approachTerm, bestShot, exactShot, memo, missionActionValue, objectiveTargets, objectiveValue, overlay, posKey, shotsFrom, withOrder, type ShotEst } from './eval'
 import { bestFight } from './fight'
+import { teamActionCandidates } from './teamActions'
 import { passAction, randomMove } from './random'
 import { threatAt, threatPenalty } from './threat'
 import { exhausted, spend, type ActivationPlan, type AiCtx, type PlanStep } from './tiers'
@@ -24,6 +26,8 @@ import { exhausted, spend, type ActivationPlan, type AiCtx, type PlanStep } from
 // ---------------------------------------------------------------------------
 
 export interface Endpoint {
+  /** a FLY set-up (Jump Pack): answered with `act.fly`, one waypoint */
+  fly?: boolean
   wps: Waypoint[]
   end: Vec3
   tag: string
@@ -44,7 +48,7 @@ export function endpointsFor(ctx: AiCtx, view: GameState, op: Operative, kind: M
 }
 
 function buildEndpoints(ctx: AiCtx, view: GameState, op: Operative, kind: MoveKind, counteract: boolean, targets: Operative[], want: number): Endpoint[] {
-  const max = moveLimit(op, kind, counteract)
+  const max = moveLimit(op, kind, counteract, view)
   if (max <= 0) return []
   const r = op.baseRadius
   const here = op.pos
@@ -144,6 +148,18 @@ function buildEndpoints(ctx: AiCtx, view: GameState, op: Operative, kind: MoveKi
     out.push({ wps, end: plan.end, tag, pre: preFor(plan.end) })
     return true
   }
+  // FLY (Jump Pack): set up again within the move, terrain between ignored; tried when the walk is blocked
+  const flies = providerCanFly(view, op, kind)
+  const acceptFly = (wp: Waypoint, tag: string): boolean => {
+    if (!flies) return false
+    const plan = planFly(view, op, kind, [wp], counteract)
+    if (!plan.ok) return false
+    const k = keyOf(plan.end)
+    if (taken.has(k)) return true
+    taken.add(k)
+    out.push({ fly: true, wps: [wp], end: plan.end, tag: `${tag}-fly`, pre: preFor(plan.end) })
+    return true
+  }
   // routed attempts need a distance field; build it once, only for ground moves
   const avoid = enemiesOf(view, op).map((e) => ({ x: e.pos.x, z: e.pos.z, r: e.baseRadius }))
   let field: Field | null = null
@@ -163,6 +179,7 @@ function buildEndpoints(ctx: AiCtx, view: GameState, op: Operative, kind: MoveKi
       attempts++
       const wp: Waypoint = { x: round3(rw.x), z: round3(rw.z), ...(y !== undefined ? { y } : {}) }
       if (accept([wp], rw.tag)) continue
+      if (acceptFly(wp, rw.tag)) continue
       // blocked straight line: try a route around the walls
       if (routed < 28 && y === undefined && kind !== 'dash') {
         const route = routeFor(wp)
@@ -239,7 +256,7 @@ function moved(ctx: AiCtx, from: Node, kind: MoveKind, e: Endpoint, cost: number
     performed: [...from.performed, kind],
     weaponsUsed: from.weaponsUsed,
     ap: from.ap + cost,
-    steps: [...from.steps, { action: kind, wps: e.wps, ...(targetId ? { targetId } : {}) }],
+    steps: [...from.steps, { action: kind, wps: e.wps, ...(e.fly ? { fly: true } : {}), ...(targetId ? { targetId } : {}) }],
     acc: from.acc,
   })
 }
@@ -293,7 +310,7 @@ function expandMoves(ctx: AiCtx, n: Node, apl: number, counteract: boolean, dept
   // charge: aim at the enemies that could be reached; the fight follows when the AP allows
   const cost = actionCost(n.v, n.op, 'charge', hyp)
   if (engaged.length === 0 && n.ap + cost <= apl && !actionAvailability(n.v, n.op, 'charge', hyp)) {
-    const reach = moveLimit(n.op, 'charge', counteract) + 1.5
+    const reach = moveLimit(n.op, 'charge', counteract, n.v) + 1.5
     const foes = enemiesOf(n.v, n.op)
       .filter((e) => distanceBetween(bodyOf(n.op), bodyOf(e)) <= reach)
       .sort((a, b) => distanceBetween(bodyOf(n.op), bodyOf(a)) - distanceBetween(bodyOf(n.op), bodyOf(b)))
@@ -328,18 +345,34 @@ function expandMoves(ctx: AiCtx, n: Node, apl: number, counteract: boolean, dept
   }
 }
 
-/** Mission and equipment actions available at a node near an objective. */
-function expandAbilities(ctx: AiCtx, n: Node, apl: number, counteract: boolean, out: Node[]): void {
-  if (!ctx.params.tacAware && ctx.view.turningPoint < 2) return
+function missionNearby(ctx: AiCtx, n: Node): boolean {
   const near = objectiveTargets(ctx, n.v).some((t) => Math.hypot(t.x - n.op.pos.x, t.z - n.op.pos.z) <= 3.6)
   const hasAmmo = n.v.markers.some((m) => m.equipmentId === 'core.e.ammo-cache' && m.owner === ctx.seat && Math.hypot(m.pos.x - n.op.pos.x, m.pos.z - n.op.pos.z) <= 3.6)
-  if (!near && !hasAmmo) return
+  return near || hasAmmo
+}
+
+/** Mission and equipment actions available at a node near an objective, plus the team's own unique actions. */
+function expandAbilities(ctx: AiCtx, n: Node, apl: number, counteract: boolean, out: Node[]): void {
+  const mission = (ctx.params.tacAware || ctx.view.turningPoint >= 2) && missionNearby(ctx, n)
   let offers
   try {
     offers = abilityOffers(n.v, n.op, hypAct(ctx, n, counteract))
   } catch {
     return
   }
+  // team unique actions (Markerlight, Signal, Medikit, Reanimate, Flail...): the few worth an AP, then the attack they enable
+  for (const c of teamActionCandidates(ctx, n.v, n.op, offers, n.performed)) {
+    const o = c.offer
+    if (n.ap + o.cost > apl) continue
+    const performed = [...n.performed, o.action]
+    const m = node(ctx, { ...n, performed, ap: n.ap + o.cost, steps: [...n.steps, { action: o.id }], acc: n.acc + c.value })
+    out.push(m)
+    if (ctx.params.depth >= 2) {
+      const a = withAttack(ctx, m, apl, counteract)
+      if (a) out.push(a)
+    }
+  }
+  if (!mission) return
   for (const o of offers) {
     if (n.ap + o.cost > apl) continue
     const id = o.abilityId
@@ -455,7 +488,7 @@ function refine(ctx: AiCtx, pool: Node[], counteract: boolean, start: Start): No
         const top = [...ests].sort((a, b) => b.score - a.score).slice(0, 3)
         let bestExact: ShotEst | null = null
         for (const e of top) {
-          const ex = exactShot(ctx, n.v, n.op.id, e.weaponId, e.targetId)
+          const ex = e.fixed ? e : exactShot(ctx, n.v, n.op.id, e.weaponId, e.targetId)
           if (!bestExact || ex.score > bestExact.score) bestExact = ex
         }
         if (bestExact) {
@@ -498,11 +531,17 @@ function verify(ctx: AiCtx, n: Node, counteract: boolean, start: Start): boolean
         performed = [...performed, s.action.split(':').slice(0, 2).join(':')]
         continue
       }
+      // a marker action option (`marker:place:<markerId>`) is performed as `marker:place`; the offer already checked it
+      if (s.action.startsWith('marker:')) {
+        ap += 1
+        performed = [...performed, markerActionOf(s.action)]
+        continue
+      }
       if (actionAvailability(cur, op, s.action, hyp)) return false
       ap += actionCost(cur, op, s.action, hyp)
       performed = [...performed, s.action]
       if (s.wps) {
-        const plan = planMove(cur, op, s.action as MoveKind, s.wps, counteract)
+        const plan = s.fly ? planFly(cur, op, s.action as MoveKind, s.wps, counteract) : planMove(cur, op, s.action as MoveKind, s.wps, counteract)
         if (!plan.ok) return false
         cur = overlay(cur, opId, plan.end)
         op = cur.operatives[opId]!
@@ -522,6 +561,11 @@ function stepIndex(plan: ActivationPlan, performed: string[]): number {
   return performed.length - plan.base
 }
 
+/** The action a marker option id names: `marker:place:<markerId>` is performed as `marker:place`. */
+function markerActionOf(optionId: string): string {
+  return optionId.split(':').slice(0, 2).join(':')
+}
+
 /** Does the activation so far follow the plan? (the actions performed match the plan's first steps) */
 function onPlan(plan: ActivationPlan, performed: string[]): boolean {
   const idx = stepIndex(plan, performed)
@@ -531,6 +575,8 @@ function onPlan(plan: ActivationPlan, performed: string[]): boolean {
     const got = performed[plan.base + i]
     if (want.startsWith('ability:')) {
       if (!got || !got.startsWith('ability:')) return false
+    } else if (want.startsWith('marker:')) {
+      if (got !== markerActionOf(want)) return false
     } else if (got !== want) return false
   }
   return true
@@ -569,10 +615,32 @@ function bestOrderPlan(ctx: AiCtx, opId: string, share: number, o: PlanOpts = {}
 /** firefight.activate: the ready operative whose best plan gains the most; a counteraction only when it is worth it. */
 export function activate(ctx: AiCtx): Action | null {
   const { pending, view } = ctx
-  const ready = (pending.context.ready as string[]) ?? []
+  let ready = [...((pending.context.ready as string[]) ?? [])]
   const counter = (pending.context.counteract as string[]) ?? []
   const opt = (id: string): Action | null => pending.options?.find((o) => o.id === id)?.action ?? null
   if (ready.length > 0) {
+    // operatives out of the killzone (Wyrmblade HIDING) cannot be planned from a position: they emerge before the
+    // end of turning point 2 (or they are lost), and otherwise wait until nothing else is ready
+    const hidden = ready.filter((id) => view.operatives[id]?.status === 'reserve')
+    // Tempestus Aquilons above land at once: an operative that lands gets to act this turning point, and the rules end the
+    // wait (fewer than half above after turning point 1, none after turning point 2)
+    const dropping = hidden.filter((id) => view.data.datacards[view.operatives[id]!.datacardId]?.keywords.includes('TEMPESTUS AQUILON'))
+    if (dropping.length > 0) {
+      const pick = dropping[0]!
+      resetActivation(ctx, pick)
+      ctx.memory.plan = null
+      return opt(pick)
+    }
+    if (hidden.length > 0) {
+      const onBoard = ready.filter((id) => !hidden.includes(id))
+      if (onBoard.length === 0 || view.turningPoint >= 2) {
+        const pick = hidden[0]!
+        resetActivation(ctx, pick)
+        ctx.memory.plan = null
+        return opt(pick)
+      }
+      ready = onBoard
+    }
     let ids = ready
     if (ready.length === 1) {
       const a = opt(ready[0]!)
@@ -631,6 +699,11 @@ export function order(ctx: AiCtx): Action | null {
   const { pending, view } = ctx
   const opId = String(pending.context.operativeId)
   const opts = pending.options ?? []
+  // a hiding operative has no position to plan from: Engage, so that emerging and attacking both stay open
+  if (view.operatives[opId]?.status === 'reserve') {
+    resetActivation(ctx, opId)
+    return opts.find((o) => o.id === 'engage')?.action ?? opts[0]?.action ?? null
+  }
   const plan = ctx.memory.plan
   let want: 'engage' | 'conceal' | null = null
   if (plan && plan.operativeId === opId && plan.turningPoint === view.turningPoint) want = plan.order
@@ -651,12 +724,28 @@ export function action(ctx: AiCtx): Action | null {
   const opts = pending.options ?? []
   const endOpt = opts.find((o) => o.id === 'end')?.action ?? null
   if (!a || a.operativeId !== opId) return null
-  resetActivation(ctx, opId)
+  // a free-action frame (Remote Pilot, Interstitial Command) is part of its controller's activation: keep the controller's memory
+  if (!a.frame) resetActivation(ctx, opId)
   const mem = ctx.memory
+  // out of the killzone (HIDING): the only thing to do is the emerge action the engine offers
+  if (view.operatives[opId]?.status === 'reserve') {
+    const emerge = opts.find((o) => /^ability:/.test(o.id) && /emerge|\.land/i.test(o.id))
+    return emerge?.action ?? endOpt
+  }
   mem.activationDecisions++
   if (mem.activationDecisions > 24) return endOpt
   if (a.frame) {
-    // a free action granted by a ploy: take the best attack or move on
+    // a free action granted by a ploy or a rule (Remote Pilot, Support): take the best attack in it, else move on
+    const self = view.operatives[opId]
+    if (self && self.status === 'active') {
+      const shoot = opts.find((o) => o.id === 'shoot')
+      if (shoot && !a.performed.includes('shoot')) {
+        const s = bestShot(shotsFrom(ctx, view, self, a.performed))
+        if (s && s.score > 0.05) return shoot.action
+      }
+      const fightOpt = opts.find((o) => o.id === 'fight')
+      if (fightOpt && !a.performed.includes('fight') && enemiesInControlRange(view, self, self.seat).length > 0) return fightOpt.action
+    }
     return endOpt ?? opts[0]?.action ?? null
   }
   const performed = a.performed
@@ -671,7 +760,11 @@ export function action(ctx: AiCtx): Action | null {
   if (plan && plan.operativeId === opId && plan.turningPoint === view.turningPoint && onPlan(plan, performed)) {
     if (stepIndex(plan, performed) >= plan.steps.length) return endOpt
     const next = optionFor(plan)
-    if (next) return next.option
+    if (next) {
+      // a unique action is taken at most once per activation, whether or not the engine counts it as performed
+      if (next.step.action.startsWith('ability:')) mem.banned.push(next.step.action)
+      return next.option
+    }
   }
   // re-plan from here
   const op = view.operatives[opId]!
@@ -679,8 +772,53 @@ export function action(ctx: AiCtx): Action | null {
   mem.plan = plan = p
   if (p.steps.length === 0) return endOpt
   const next = optionFor(p)
-  if (next) return next.option
+  if (next) {
+    if (next.step.action.startsWith('ability:')) mem.banned.push(next.step.action)
+    return next.option
+  }
   return endOpt
+}
+
+/**
+ * M9 batch B: an oval base (Hunter Clade arquebus Gunner) keeps its orientation while it moves and may turn at the end,
+ * paying the arc from the move. Prefer the front (+Z, the long axis) toward the nearest enemy, else along the last leg of
+ * the move. When the turn does not fit, the last leg may give up a whole inch or two for it, but only if the shorter end
+ * point scores no worse; otherwise (or when the base already points within 15 degrees) the path is kept unturned.
+ */
+export function withEndFacing(ctx: AiCtx, view: GameState, pending: AiCtx['pending'], op: Operative, wps: Waypoint[], plain: Action): Action {
+  if (!op.ovalHalfAxis || wps.length === 0) return plain
+  const end = wps[wps.length - 1]!
+  const from: Waypoint = wps.length > 1 ? wps[wps.length - 2]! : { x: op.pos.x, z: op.pos.z, y: op.pos.y }
+  const near = enemiesOf(view, op)
+    .filter((e) => e.pos)
+    .sort((x, y) => Math.hypot(x.pos.x - end.x, x.pos.z - end.z) - Math.hypot(y.pos.x - end.x, y.pos.z - end.z))[0]
+  const leg = Math.hypot(end.x - from.x, end.z - from.z)
+  const wants: number[] = []
+  if (near) wants.push(bearing(end, near.pos))
+  if (leg > 0.25) wants.push(bearing(from, end))
+  const flat = (end.y ?? op.pos.y) === (from.y ?? op.pos.y) && !end.jump
+  const scoreAt = (w: Waypoint) => {
+    const v2 = overlay(view, op.id, { x: w.x, y: w.y ?? op.pos.y, z: w.z })
+    return endScore(ctx, v2, v2.operatives[op.id]!)
+  }
+  for (const f of wants) {
+    const d = Math.abs(Math.atan2(Math.sin(f - op.facing), Math.cos(f - op.facing)))
+    if (d < Math.PI / 12) return plain
+    const facing = round3(f)
+    const turned = act.pathFacing(pending, wps, facing)
+    if (!validate(view, turned)) return turned
+    if (!flat) continue
+    const base = scoreAt(end)
+    for (const cut of [1, 2]) {
+      if (leg - cut < 0.5) break
+      const t = (leg - cut) / leg
+      const short: Waypoint = { ...end, x: round3(from.x + (end.x - from.x) * t), z: round3(from.z + (end.z - from.z) * t) }
+      const path = [...wps.slice(0, -1), short]
+      const trimmed = act.pathFacing(pending, path, facing)
+      if (!validate(view, trimmed) && scoreAt(short) >= base - 1e-9) return trimmed
+    }
+  }
+  return plain
 }
 
 /** move.path: the planned end point when still valid, else the best fresh end point, else any legal move. */
@@ -696,15 +834,15 @@ export function movePath(ctx: AiCtx): Action | null {
   if (plan && plan.operativeId === op.id && a && onPlan(plan, a.performed)) {
     const step = plan.steps[stepIndex(plan, a.performed)]
     if (step?.wps && step.action === kind) {
-      const act1 = act.path(pending, step.wps)
-      if (!validate(view, act1)) return act1
+      const act1 = step.fly ? act.fly(pending, step.wps[0]!) : act.path(pending, step.wps)
+      if (!validate(view, act1)) return step.fly ? act1 : withEndFacing(ctx, view, pending, op, step.wps, act1)
     }
   }
   // fresh: rate every end point with the full evaluation
   const counteract = a?.counteract === true
   let targets: Operative[] = []
   if (kind === 'charge') {
-    const reach = moveLimit(op, 'charge', counteract) + 1.5
+    const reach = moveLimit(op, 'charge', counteract, view) + 1.5
     targets = enemiesOf(view, op).filter((e) => distanceBetween(bodyOf(op), bodyOf(e)) <= reach)
     const hint = plan?.steps.find((s) => s.action === 'charge')?.targetId
     if (hint) targets = targets.sort((x, y) => (x.id === hint ? -1 : y.id === hint ? 1 : 0))
@@ -728,8 +866,8 @@ export function movePath(ctx: AiCtx): Action | null {
     if (!spend(ctx)) break
   }
   if (best) {
-    const act1 = act.path(pending, best.e.wps)
-    if (!validate(view, act1)) return act1
+    const act1 = best.e.fly ? act.fly(pending, best.e.wps[0]!) : act.path(pending, best.e.wps)
+    if (!validate(view, act1)) return best.e.fly ? act1 : withEndFacing(ctx, view, pending, op, best.e.wps, act1)
   }
   const r = randomMove(ctx)
   if (r.type === 'pass' && a) mem.banned.push(a.declared?.action ?? kind)

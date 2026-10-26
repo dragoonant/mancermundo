@@ -1,0 +1,674 @@
+[
+  {
+    "id": "hc.sicarian-ruststalker-princeps",
+    "name": "Sicarian Ruststalker Princeps",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 11
+    },
+    "base": 40,
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "LEADER",
+      "SICARIAN",
+      "RUSTSTALKER",
+      "PRINCEPS"
+    ],
+    "weapons": {
+      "fixed": [
+        "hc.w.chordclaw-transonic-blades"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "hc.a.canticle-of-destruction",
+      "hc.a.control-protocol",
+      "hc.a.wasteland-stalker"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hc-sicarian-ruststalker-princeps"
+    },
+    "text": "The assassin-lord of the clade: a blur of blades whose killing songs spur nearby Ruststalkers to crueller strokes.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  },
+  {
+    "id": "hc.sicarian-infiltrator-princeps",
+    "name": "Sicarian Infiltrator Princeps",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 11
+    },
+    "base": 40,
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "LEADER",
+      "SICARIAN",
+      "INFILTRATOR",
+      "PRINCEPS"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "ranged",
+          "label": "Ranged weapon",
+          "from": [
+            "hc.w.flechette-blaster",
+            "hc.w.stubcarbine"
+          ]
+        },
+        {
+          "id": "melee",
+          "label": "Melee weapon",
+          "from": [
+            "hc.w.power-weapon-sicarian",
+            "hc.w.taser-goad-sicarian"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "hc.a.canticle-of-shroudpsalm",
+      "hc.a.control-protocol"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hc-sicarian-infiltrator-princeps"
+    },
+    "text": "A cold infiltration commander whose static shroud hides its fellow Infiltrators from distant guns.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  },
+  {
+    "id": "hc.skitarii-ranger-alpha",
+    "name": "Skitarii Ranger Alpha",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "LEADER",
+      "SKITARII",
+      "RANGER",
+      "ALPHA"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "rifle",
+              "name": "Galvanic rifle and gun butt",
+              "fixed": [
+                "hc.w.galvanic-rifle",
+                "hc.w.gun-butt"
+              ]
+            },
+            {
+              "id": "master-crafted",
+              "name": "Master-crafted radium pistol and power weapon",
+              "fixed": [
+                "hc.w.master-crafted-radium-pistol",
+                "hc.w.power-weapon-skitarii"
+              ]
+            },
+            {
+              "id": "pistol-and-melee",
+              "name": "Pistol and melee weapon",
+              "options": [
+                {
+                  "id": "pistol",
+                  "label": "Pistol",
+                  "from": [
+                    "hc.w.arc-pistol",
+                    "hc.w.phosphor-blast-pistol"
+                  ]
+                },
+                {
+                  "id": "melee",
+                  "label": "Melee weapon",
+                  "from": [
+                    "hc.w.arc-maul",
+                    "hc.w.taser-goad-skitarii"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "hc.a.canticle-of-elimination",
+      "hc.a.targeting-protocol",
+      "hc.a.control-protocol"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hc-skitarii-ranger-alpha"
+    },
+    "text": "The scout-hunter who leads the clade: a long-barrelled rifle or a sidearm and blade, sharpening the aim of the Rangers around it.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  },
+  {
+    "id": "hc.skitarii-vanguard-alpha",
+    "name": "Skitarii Vanguard Alpha",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "LEADER",
+      "SKITARII",
+      "VANGUARD",
+      "ALPHA"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "rifle",
+              "name": "Radium carbine and gun butt",
+              "fixed": [
+                "hc.w.radium-carbine",
+                "hc.w.gun-butt"
+              ]
+            },
+            {
+              "id": "master-crafted",
+              "name": "Master-crafted radium pistol and power weapon",
+              "fixed": [
+                "hc.w.master-crafted-radium-pistol",
+                "hc.w.power-weapon-skitarii"
+              ]
+            },
+            {
+              "id": "pistol-and-melee",
+              "name": "Pistol and melee weapon",
+              "options": [
+                {
+                  "id": "pistol",
+                  "label": "Pistol",
+                  "from": [
+                    "hc.w.arc-pistol",
+                    "hc.w.phosphor-blast-pistol"
+                  ]
+                },
+                {
+                  "id": "melee",
+                  "label": "Melee weapon",
+                  "from": [
+                    "hc.w.arc-maul",
+                    "hc.w.taser-goad-skitarii"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "hc.a.canticle-of-the-glow",
+      "hc.a.rad-saturation",
+      "hc.a.control-protocol"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hc-skitarii-vanguard-alpha"
+    },
+    "text": "A near-machine overseer wreathed in radiation, whose glow saps the strength and aim of any enemy that comes close.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  },
+  {
+    "id": "hc.sicarian-infiltrator-warrior",
+    "name": "Sicarian Infiltrator Warrior",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 10
+    },
+    "base": 40,
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "SICARIAN",
+      "INFILTRATOR",
+      "WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "ranged",
+          "label": "Ranged weapon",
+          "from": [
+            "hc.w.flechette-blaster",
+            "hc.w.stubcarbine"
+          ]
+        },
+        {
+          "id": "melee",
+          "label": "Melee weapon",
+          "from": [
+            "hc.w.power-weapon-sicarian",
+            "hc.w.taser-goad-sicarian"
+          ]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hc-sicarian-infiltrator-warrior"
+    },
+    "text": "A stalking killer that scrambles enemy senses with a painful wash of static.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  },
+  {
+    "id": "hc.sicarian-ruststalker-warrior",
+    "name": "Sicarian Ruststalker Warrior",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 10
+    },
+    "base": 40,
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "SICARIAN",
+      "RUSTSTALKER",
+      "WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "blades",
+          "label": "Blades",
+          "from": [
+            "hc.w.chordclaw-transonic-razor",
+            "hc.w.transonic-blades"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "hc.a.wasteland-stalker"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hc-sicarian-ruststalker-warrior"
+    },
+    "text": "A frenzied blade-dancer that slips through cover and cuts down anything within reach.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  },
+  {
+    "id": "hc.skitarii-ranger-diktat",
+    "name": "Skitarii Ranger Diktat",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "SKITARII",
+      "RANGER",
+      "DIKTAT"
+    ],
+    "weapons": {
+      "fixed": [
+        "hc.w.galvanic-rifle",
+        "hc.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "hc.a.targeting-protocol"
+    ],
+    "uniqueActions": [
+      "hc.a.signal"
+    ],
+    "figure": {
+      "archetype": "hc-skitarii-ranger-diktat"
+    },
+    "text": "The mouthpiece of the Tech-Priests: its data-tether lets it push a nearby comrade harder.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  },
+  {
+    "id": "hc.skitarii-ranger-gunner",
+    "name": "Skitarii Ranger Gunner",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 25,
+    "ovalBase": {
+      "long": 60,
+      "short": 35,
+      "weapons": [
+        "hc.w.transuranic-arquebus-mobile",
+        "hc.w.transuranic-arquebus-stationary"
+      ]
+    },
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "SKITARII",
+      "RANGER",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "hc.w.gun-butt"
+      ],
+      "options": [
+        {
+          "id": "weapon",
+          "label": "Special weapon",
+          "from": [
+            "hc.w.arc-rifle",
+            "hc.wg.plasma-caliver",
+            "hc.wg.transuranic-arquebus"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "hc.a.targeting-protocol"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hc-skitarii-ranger-gunner"
+    },
+    "text": "A Ranger trusted with a dangerous special weapon; the arquebus version stands on a long oval base.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  },
+  {
+    "id": "hc.skitarii-ranger-surveyor",
+    "name": "Skitarii Ranger Surveyor",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "SKITARII",
+      "RANGER",
+      "SURVEYOR"
+    ],
+    "weapons": {
+      "fixed": [
+        "hc.w.galvanic-rifle",
+        "hc.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "hc.a.targeting-protocol"
+    ],
+    "uniqueActions": [
+      "hc.a.spot"
+    ],
+    "figure": {
+      "archetype": "hc-skitarii-ranger-surveyor"
+    },
+    "text": "Carries an omnispex that reads the killzone and marks a victim for the clade's guns.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  },
+  {
+    "id": "hc.skitarii-ranger-warrior",
+    "name": "Skitarii Ranger Warrior",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "SKITARII",
+      "RANGER",
+      "WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [
+        "hc.w.galvanic-rifle",
+        "hc.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "hc.a.targeting-protocol"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hc-skitarii-ranger-warrior"
+    },
+    "text": "A patient hunter that tracks its quarry and takes the killing shot with a long rifle.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  },
+  {
+    "id": "hc.skitarii-vanguard-diktat",
+    "name": "Skitarii Vanguard Diktat",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "SKITARII",
+      "VANGUARD",
+      "DIKTAT"
+    ],
+    "weapons": {
+      "fixed": [
+        "hc.w.radium-carbine",
+        "hc.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "hc.a.rad-saturation"
+    ],
+    "uniqueActions": [
+      "hc.a.signal"
+    ],
+    "figure": {
+      "archetype": "hc-skitarii-vanguard-diktat"
+    },
+    "text": "A radiation-soaked Diktat that relays the Tech-Priests' orders to its comrades.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  },
+  {
+    "id": "hc.skitarii-vanguard-gunner",
+    "name": "Skitarii Vanguard Gunner",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 25,
+    "ovalBase": {
+      "long": 60,
+      "short": 35,
+      "weapons": [
+        "hc.w.transuranic-arquebus-mobile",
+        "hc.w.transuranic-arquebus-stationary"
+      ]
+    },
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "SKITARII",
+      "VANGUARD",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "hc.w.gun-butt"
+      ],
+      "options": [
+        {
+          "id": "weapon",
+          "label": "Special weapon",
+          "from": [
+            "hc.w.arc-rifle",
+            "hc.wg.plasma-caliver",
+            "hc.wg.transuranic-arquebus"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "hc.a.rad-saturation"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hc-skitarii-vanguard-gunner"
+    },
+    "text": "A Vanguard carrying a dangerous special weapon; the arquebus version stands on a long oval base.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  },
+  {
+    "id": "hc.skitarii-vanguard-surveyor",
+    "name": "Skitarii Vanguard Surveyor",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "SKITARII",
+      "VANGUARD",
+      "SURVEYOR"
+    ],
+    "weapons": {
+      "fixed": [
+        "hc.w.radium-carbine",
+        "hc.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "hc.a.rad-saturation"
+    ],
+    "uniqueActions": [
+      "hc.a.spot"
+    ],
+    "figure": {
+      "archetype": "hc-skitarii-vanguard-surveyor"
+    },
+    "text": "A Vanguard with an omnispex that picks out an enemy for the clade to focus on.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  },
+  {
+    "id": "hc.skitarii-vanguard-warrior",
+    "name": "Skitarii Vanguard Warrior",
+    "team": "hunter-clade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "HUNTER CLADE",
+      "IMPERIUM",
+      "ADEPTUS MECHANICUS",
+      "SKITARII",
+      "VANGUARD",
+      "WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [
+        "hc.w.radium-carbine",
+        "hc.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "hc.a.rad-saturation"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hc-skitarii-vanguard-warrior"
+    },
+    "text": "A tough, irradiated advance guard that holds ground and poisons the air around it.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.2"
+  }
+]

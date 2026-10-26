@@ -1,0 +1,487 @@
+[
+  {
+    "id": "hc.w.flechette-blaster",
+    "name": "Flechette blaster",
+    "team": "hunter-clade",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 2
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.saturate"
+      },
+      {
+        "rule": "core.wr.silent"
+      }
+    ],
+    "text": "A short-barrelled spray of needle darts that ignores cover and makes no noise.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.stubcarbine",
+    "name": "Stubcarbine",
+    "team": "hunter-clade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.ceaseless"
+      }
+    ],
+    "text": "A compact automatic carbine for steady, repeated bursts.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.power-weapon-sicarian",
+    "name": "Power weapon",
+    "team": "hunter-clade",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "A blade sheathed in a disruptive field, wielded by a Sicarian with precise skill.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.taser-goad-sicarian",
+    "name": "Taser goad",
+    "team": "hunter-clade",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "A goad that dumps a crippling charge into whatever it strikes.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.chordclaw-transonic-blades",
+    "name": "Chordclaw & transonic blades",
+    "team": "hunter-clade",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.balanced"
+      },
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "A whirl of vibrating claws and blades that finds every gap in armour.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.chordclaw-transonic-razor",
+    "name": "Chordclaw & transonic razor",
+    "team": "hunter-clade",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.balanced"
+      }
+    ],
+    "text": "A whip-like chordclaw paired with a single humming razor.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.transonic-blades",
+    "name": "Transonic blades",
+    "team": "hunter-clade",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "Twin blades that vibrate at a pitch that parts plate like cloth.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.arc-pistol",
+    "name": "Arc pistol",
+    "team": "hunter-clade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      },
+      {
+        "rule": "core.wr.stun"
+      }
+    ],
+    "text": "A crackling sidearm that leaves its target's systems jolted.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.master-crafted-radium-pistol",
+    "name": "Master-crafted radium pistol",
+    "team": "hunter-clade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.balanced"
+      },
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "A finely tuned pistol firing irradiated slugs.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.phosphor-blast-pistol",
+    "name": "Phosphor blast pistol",
+    "team": "hunter-clade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.blast",
+        "inches": 1
+      },
+      {
+        "rule": "core.wr.severe"
+      }
+    ],
+    "text": "Lobs a burning phosphor charge that splashes onto anyone close to the target.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.galvanic-rifle",
+    "name": "Galvanic rifle",
+    "team": "hunter-clade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.heavy",
+        "only": "reposition"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1,
+        "crits": true
+      }
+    ],
+    "text": "A long hunting rifle whose rounds overload the victim's nerves on a clean hit.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.radium-carbine",
+    "name": "Radium carbine",
+    "team": "hunter-clade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "A carbine loaded with irradiated rounds that eat through armour joins.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.arc-rifle",
+    "name": "Arc rifle",
+    "team": "hunter-clade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      },
+      {
+        "rule": "core.wr.stun"
+      }
+    ],
+    "text": "A heavy rifle that hurls arcs of lightning and leaves targets staggering.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.plasma-caliver-standard",
+    "name": "Plasma caliver",
+    "profile": "standard",
+    "team": "hunter-clade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "hc.wg.plasma-caliver",
+    "text": "A compact plasma gun on its safe setting.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3 (plasma caliver, standard)"
+  },
+  {
+    "id": "hc.w.plasma-caliver-supercharge",
+    "name": "Plasma caliver",
+    "profile": "supercharge",
+    "team": "hunter-clade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 5,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.hot"
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "hc.wg.plasma-caliver",
+    "text": "The same gun overcharged, hotter and deadlier, at risk to the bearer.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3 (plasma caliver, supercharge)"
+  },
+  {
+    "id": "hc.w.transuranic-arquebus-mobile",
+    "name": "Transuranic arquebus",
+    "profile": "mobile",
+    "team": "hunter-clade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.devastating",
+        "x": 2
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "dash"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "hc.wg.transuranic-arquebus",
+    "text": "A huge slug-thrower fired on the move; the crit damage is printed lower than the normal damage and is kept as written.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3 (transuranic arquebus, mobile; Dmg 4/3 as printed)"
+  },
+  {
+    "id": "hc.w.transuranic-arquebus-stationary",
+    "name": "Transuranic arquebus",
+    "profile": "stationary",
+    "team": "hunter-clade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 4,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.devastating",
+        "x": 3
+      },
+      {
+        "rule": "core.wr.heavy"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      },
+      {
+        "rule": "core.wr.severe"
+      }
+    ],
+    "profileGroup": "hc.wg.transuranic-arquebus",
+    "text": "The same gun braced and aimed, hitting far more often and with more punishing crits.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3 (transuranic arquebus, stationary; Dmg 4/3 as printed)"
+  },
+  {
+    "id": "hc.w.arc-maul",
+    "name": "Arc maul",
+    "team": "hunter-clade",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "A charged club that staggers whoever it strikes.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.power-weapon-skitarii",
+    "name": "Power weapon",
+    "team": "hunter-clade",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "A blade sheathed in a disruptive energy field.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.taser-goad-skitarii",
+    "name": "Taser goad",
+    "team": "hunter-clade",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "A prod that dumps a heavy electrical charge into its victim.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  },
+  {
+    "id": "hc.w.gun-butt",
+    "name": "Gun butt",
+    "team": "hunter-clade",
+    "type": "melee",
+    "atk": 3,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "The stock of a rifle, swung when the enemy gets too close.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9.3"
+  }
+]

@@ -1,0 +1,179 @@
+{
+  "id": "hunter-clade",
+  "name": "Hunter Clade",
+  "factionKeyword": "HUNTER CLADE",
+  "archetypes": [
+    "recon",
+    "seek-and-destroy"
+  ],
+  "selection": {
+    "caps": [
+      {
+        "label": "Sicarian operatives",
+        "keyword": "SICARIAN",
+        "max": 5
+      }
+    ],
+    "loadoutCaps": [
+      {
+        "label": "Special weapon",
+        "weapons": [
+          "hc.w.arc-rifle",
+          "hc.wg.plasma-caliver",
+          "hc.wg.transuranic-arquebus"
+        ],
+        "max": 1,
+        "each": true
+      }
+    ],
+    "slots": [
+      {
+        "id": "leader",
+        "label": "Leader",
+        "count": 1,
+        "from": [
+          "hc.sicarian-infiltrator-princeps",
+          "hc.sicarian-ruststalker-princeps",
+          "hc.skitarii-ranger-alpha",
+          "hc.skitarii-vanguard-alpha"
+        ]
+      },
+      {
+        "id": "main",
+        "label": "Operatives",
+        "count": 9,
+        "from": [
+          "hc.sicarian-infiltrator-warrior",
+          "hc.sicarian-ruststalker-warrior",
+          "hc.skitarii-ranger-diktat",
+          "hc.skitarii-ranger-gunner",
+          "hc.skitarii-ranger-surveyor",
+          "hc.skitarii-ranger-warrior",
+          "hc.skitarii-vanguard-diktat",
+          "hc.skitarii-vanguard-gunner",
+          "hc.skitarii-vanguard-surveyor",
+          "hc.skitarii-vanguard-warrior"
+        ],
+        "repeatable": [
+          "hc.sicarian-infiltrator-warrior",
+          "hc.sicarian-ruststalker-warrior",
+          "hc.skitarii-ranger-gunner",
+          "hc.skitarii-ranger-warrior",
+          "hc.skitarii-vanguard-gunner",
+          "hc.skitarii-vanguard-warrior"
+        ],
+        "caps": [
+          {
+            "label": "Diktat",
+            "from": [
+              "hc.skitarii-ranger-diktat",
+              "hc.skitarii-vanguard-diktat"
+            ],
+            "max": 1
+          },
+          {
+            "label": "Surveyor",
+            "from": [
+              "hc.skitarii-ranger-surveyor",
+              "hc.skitarii-vanguard-surveyor"
+            ],
+            "max": 1
+          },
+          {
+            "label": "Sicarian Warriors and Gunners",
+            "from": [
+              "hc.sicarian-infiltrator-warrior",
+              "hc.sicarian-ruststalker-warrior",
+              "hc.skitarii-ranger-gunner",
+              "hc.skitarii-vanguard-gunner"
+            ],
+            "max": 7
+          }
+        ]
+      }
+    ]
+  },
+  "teamChoices": [
+    {
+      "id": "primary-mode",
+      "label": "Primary Mode",
+      "group": "doctrina"
+    }
+  ],
+  "factionRules": [
+    "hc.a.doctrina-imperatives"
+  ],
+  "ploys": [
+    "hc.p.doctrina",
+    "hc.p.debilitating-irradiation",
+    "hc.p.neurostatic-interference",
+    "hc.p.scouting-protocol",
+    "hc.p.accelerant-agents",
+    "hc.p.control-edict",
+    "hc.p.scrapcode-overload",
+    "hc.p.command-override",
+    "hc.p.omnissiahs-imperative"
+  ],
+  "equipment": [
+    "hc.e.rad-bombardment",
+    "hc.e.redundancy-systems",
+    "hc.e.refractor-field",
+    "hc.e.extremis-mind-link"
+  ],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "hc.skitarii-ranger-alpha",
+      "hc.sicarian-infiltrator-warrior",
+      "hc.sicarian-ruststalker-warrior",
+      "hc.skitarii-ranger-diktat",
+      "hc.skitarii-ranger-gunner",
+      "hc.skitarii-ranger-surveyor",
+      "hc.skitarii-ranger-warrior",
+      "hc.skitarii-vanguard-gunner",
+      "hc.skitarii-vanguard-warrior",
+      "hc.skitarii-vanguard-warrior"
+    ],
+    "equipment": [
+      "hc.e.redundancy-systems",
+      "hc.e.refractor-field",
+      "core.e.ladders",
+      "core.e.utility-grenades"
+    ],
+    "teamChoices": {
+      "primary-mode": "hc.a.imp-protector"
+    },
+    "loadouts": [
+      {},
+      {},
+      {},
+      {},
+      {
+        "weapon": [
+          "hc.w.arc-rifle"
+        ]
+      },
+      {},
+      {},
+      {
+        "weapon": [
+          "hc.wg.plasma-caliver"
+        ]
+      }
+    ]
+  },
+  "paint": {
+    "major": {
+      "h": 0,
+      "s": 0.6,
+      "l": 0.33
+    },
+    "minor": {
+      "h": 0.1,
+      "s": 0.55,
+      "l": 0.45
+    }
+  },
+  "text": "Ten cyborg hunters of the Machine God: Skitarii marksmen and irradiated vanguard, Sicarian killers, steered by battlefield doctrines that trade one strength for another.",
+  "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md section 9"
+}

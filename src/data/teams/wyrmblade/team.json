@@ -1,0 +1,137 @@
+{
+  "id": "wyrmblade",
+  "name": "Wyrmblade",
+  "factionKeyword": "WYRMBLADE",
+  "archetypes": [
+    "seek-and-destroy",
+    "infiltration"
+  ],
+  "selection": {
+    "slots": [
+      {
+        "id": "leader",
+        "label": "Leader",
+        "count": 1,
+        "from": [
+          "wyr.neophyte-leader"
+        ]
+      },
+      {
+        "id": "main",
+        "label": "Selections",
+        "count": 13,
+        "from": [
+          "wyr.kelermorph",
+          "wyr.locus",
+          "wyr.gunner-flamer",
+          "wyr.gunner-grenade-launcher",
+          "wyr.gunner-webber",
+          "wyr.heavy-gunner-heavy-stubber",
+          "wyr.heavy-gunner-mining-laser",
+          "wyr.heavy-gunner-seismic-cannon",
+          "wyr.icon-bearer",
+          "wyr.sanctus-sniper",
+          "wyr.sanctus-talon",
+          "wyr.warrior"
+        ],
+        "repeatable": [
+          "wyr.warrior"
+        ],
+        "weights": {
+          "wyr.kelermorph": 2,
+          "wyr.locus": 2,
+          "wyr.sanctus-sniper": 2,
+          "wyr.sanctus-talon": 2
+        },
+        "caps": [
+          {
+            "label": "Gunners",
+            "from": [
+              "wyr.gunner-flamer",
+              "wyr.gunner-grenade-launcher",
+              "wyr.gunner-webber"
+            ],
+            "max": 2
+          },
+          {
+            "label": "Heavy Gunners",
+            "from": [
+              "wyr.heavy-gunner-heavy-stubber",
+              "wyr.heavy-gunner-mining-laser",
+              "wyr.heavy-gunner-seismic-cannon"
+            ],
+            "max": 2
+          },
+          {
+            "label": "Cult Agents",
+            "from": [
+              "wyr.kelermorph",
+              "wyr.locus",
+              "wyr.sanctus-sniper",
+              "wyr.sanctus-talon"
+            ],
+            "max": 2
+          }
+        ]
+      }
+    ]
+  },
+  "factionRules": [
+    "wyr.a.familiar-territory",
+    "wyr.a.cult-agent",
+    "wyr.a.cult-ambush"
+  ],
+  "ploys": [
+    "wyr.p.the-day-is-at-hand",
+    "wyr.p.crossfire",
+    "wyr.p.one-with-the-shadows",
+    "wyr.p.divert-and-disappear",
+    "wyr.p.slink-into-darkness",
+    "wyr.p.coiled-serpent",
+    "wyr.p.unquestioning-loyalty",
+    "wyr.p.a-plan-generations-in-the-making"
+  ],
+  "equipment": [
+    "wyr.e.blasting-charges",
+    "wyr.e.cult-knives",
+    "wyr.e.explosive-traps",
+    "wyr.e.spotlights"
+  ],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "wyr.neophyte-leader",
+      "wyr.kelermorph",
+      "wyr.locus",
+      "wyr.gunner-flamer",
+      "wyr.gunner-webber",
+      "wyr.heavy-gunner-heavy-stubber",
+      "wyr.heavy-gunner-mining-laser",
+      "wyr.icon-bearer",
+      "wyr.warrior",
+      "wyr.warrior",
+      "wyr.warrior",
+      "wyr.warrior"
+    ],
+    "equipment": [
+      "wyr.e.explosive-traps",
+      "wyr.e.cult-knives",
+      "wyr.e.spotlights",
+      "core.e.comms-device"
+    ]
+  },
+  "paint": {
+    "major": {
+      "h": 0.78,
+      "s": 0.35,
+      "l": 0.35
+    },
+    "minor": {
+      "h": 0.1,
+      "s": 0.5,
+      "l": 0.45
+    }
+  },
+  "text": "A cult strike cell: a Neophyte Leader, a crowd of Neophytes who hide and ambush, and a few deadly cult agents.",
+  "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.1"
+}

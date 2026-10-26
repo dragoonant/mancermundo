@@ -1,14 +1,10 @@
 // Visibility, intervening terrain, cover and obscured (R-5.3 to R-5.5, R-8.8, R-11).
-// An operative is a cylinder (base radius, height) with a head point at 90% of its height.
-import {
-  baseGap2D,
-  distToPolygon,
-  ringPoints,
-  segmentBBoxOverlaps,
-  segmentCircleInterval,
-  segmentPolygonIntervals,
-} from './geometry'
+// An operative is a cylinder (base radius, height) with a head point at 90% of its height; an oval base
+// (footprint.ts) is three such cylinders on its long axis, with the head over the centre.
+import { distToPolygonBoundary, pointInPolygon, segmentBBoxOverlaps, segmentPolygonIntervals } from './geometry'
+import { discCentres, footprintDistToPolygon, footprintGap2D, footprintRing, ovalAxis, segmentFootprintIntervals } from './footprint'
 import { activeOps } from './state'
+import { providerViewpointBodies } from './team-rules'
 import { sameLevel, standingSolid, terrainOf, type Solid, type TerrainIndex } from './terrain'
 import type { GameState, Order, Vec2, Vec3 } from './types'
 
@@ -17,10 +13,13 @@ export interface Body {
   pos: Vec3
   baseRadius: number
   height: number
+  /** M9 batch B: oval bases only, the centre-to-end-disc vector (footprint.ts) */
+  axis?: Vec2
 }
 
-export function bodyOf(o: { id: string; pos: Vec3; baseRadius: number; height: number }): Body {
-  return { id: o.id, pos: o.pos, baseRadius: o.baseRadius, height: o.height }
+export function bodyOf(o: { id: string; pos: Vec3; baseRadius: number; height: number; ovalHalfAxis?: number; facing?: number; axis?: Vec2 }): Body {
+  const axis = o.axis ?? ovalAxis(o.ovalHalfAxis, o.facing ?? 0)
+  return axis ? { id: o.id, pos: o.pos, baseRadius: o.baseRadius, height: o.height, axis } : { id: o.id, pos: o.pos, baseRadius: o.baseRadius, height: o.height }
 }
 
 export interface LosOptions {
@@ -38,7 +37,7 @@ export function headPoint(b: Body): Vec3 {
 export function targetSamples(viewer: Body, target: Body): Vec3[] {
   const a0 = Math.atan2(viewer.pos.x - target.pos.x, viewer.pos.z - target.pos.z)
   const mid = target.pos.y + target.height * 0.5
-  const out: Vec3[] = ringPoints(target.pos, target.baseRadius, 5, a0).map((p) => ({ x: p.x, y: mid, z: p.z }))
+  const out: Vec3[] = footprintRing(target, 5, a0).map((p) => ({ x: p.x, y: mid, z: p.z }))
   out.push({ x: target.pos.x, y: target.pos.y + target.height * 0.95, z: target.pos.z })
   return out
 }
@@ -58,26 +57,38 @@ export function segmentHitsSolid(a: Vec3, b: Vec3, s: Solid): boolean {
 }
 
 function nearBarred(b: Body, s: Solid): boolean {
-  return distToPolygon(b.pos, s.polygon) - b.baseRadius <= 1 + 1e-6
+  return footprintDistToPolygon(b, s.polygon) <= 1 + 1e-6
 }
 
-function blockedByOperative(a: Vec3, b: Vec3, o: { pos: Vec3; baseRadius: number; height: number }): boolean {
-  const iv = segmentCircleInterval(a, b, o.pos, o.baseRadius)
-  if (!iv) return false
-  const y0 = a.y + (b.y - a.y) * iv[0]
-  const y1 = a.y + (b.y - a.y) * iv[1]
-  const lo = Math.min(y0, y1)
-  const hi = Math.max(y0, y1)
-  return lo < o.pos.y + o.height && hi > o.pos.y
+function blockedByOperative(a: Vec3, b: Vec3, o: Body): boolean {
+  for (const iv of segmentFootprintIntervals(a, b, o)) {
+    const y0 = a.y + (b.y - a.y) * iv[0]
+    const y1 = a.y + (b.y - a.y) * iv[1]
+    const lo = Math.min(y0, y1)
+    const hi = Math.max(y0, y1)
+    if (lo < o.pos.y + o.height && hi > o.pos.y) return true
+  }
+  return false
 }
 
-/** Visible: an unobstructed straight line from the viewer's head to any part of the target (bases excluded). */
+/**
+ * Visible: an unobstructed straight line from the viewer's head to any part of the target (bases excluded).
+ * batch C shared: an operative with extra viewpoints (team-rules `viewpoints`: wide view) also sees from those.
+ */
 export function visible(state: GameState, viewer: Body, target: Body, opts: LosOptions = {}): boolean {
+  if (visibleFromHead(state, viewer, target, opts)) return true
+  const op = state.operatives[viewer.id]
+  if (!op) return false
+  for (const eye of providerViewpointBodies(state, op, viewer)) if (visibleFromHead(state, eye, target, opts)) return true
+  return false
+}
+
+function visibleFromHead(state: GameState, viewer: Body, target: Body, opts: LosOptions): boolean {
   if (viewer.id === target.id) return true
   const idx = terrainOf(state.map)
   const head = headPoint(viewer)
   const opsBlock = opts.operativesBlock ?? state.rules.operativesBlockVisibility
-  const blockers = opsBlock ? activeOps(state).filter((o) => o.id !== viewer.id && o.id !== target.id) : []
+  const blockers = opsBlock ? activeOps(state).filter((o) => o.id !== viewer.id && o.id !== target.id).map(bodyOf) : []
   for (const s of targetSamples(viewer, target)) {
     if (!rayBlocked(idx, head, s, viewer, target, blockers, opts)) return true
   }
@@ -90,7 +101,7 @@ function rayBlocked(
   b: Vec3,
   viewer: Body,
   target: Body,
-  blockers: { pos: Vec3; baseRadius: number; height: number }[],
+  blockers: Body[],
   opts: LosOptions,
 ): boolean {
   for (const s of idx.solids) {
@@ -126,6 +137,8 @@ export interface TargetVerdict {
   obscuringParts: string[]
   /** part ids crossed by every targeting line of the chosen origin */
   whollyInterveningParts: string[]
+  /** M9 batch B: every part crossed by any targeting line of the chosen origin (R-8.8 intervening), not only cover parts */
+  interveningParts: string[]
   /** one feature would give both cover and obscured: the defender chooses (R-5.5) */
   forcedChoice: boolean
   sharedFeatures: string[]
@@ -143,7 +156,7 @@ export interface TargetVerdict {
 }
 
 export function baseDistance3D(a: Body, b: Body): number {
-  const h = baseGap2D(a.pos, a.baseRadius, b.pos, b.baseRadius)
+  const h = footprintGap2D(a, b)
   const dy = Math.abs(a.pos.y - b.pos.y)
   return Math.hypot(h, dy)
 }
@@ -157,8 +170,14 @@ function evalOrigin(idx: TerrainIndex, att: Body, tgt: Body, origin: Vec2, exclu
   const flat = sameLevel(att.pos.y, tgt.pos.y)
   const a0 = Math.atan2(origin.x - tgt.pos.x, origin.z - tgt.pos.z)
   const facing: Vec2[] = []
-  for (const off of [-Math.PI / 2, -Math.PI / 4, 0, Math.PI / 4, Math.PI / 2]) {
-    facing.push({ x: tgt.pos.x + Math.sin(a0 + off) * tgt.baseRadius, z: tgt.pos.z + Math.cos(a0 + off) * tgt.baseRadius })
+  const centres = discCentres(tgt)
+  for (const c of centres) {
+    for (const off of [-Math.PI / 2, -Math.PI / 4, 0, Math.PI / 4, Math.PI / 2]) {
+      const p = { x: c.x + Math.sin(a0 + off) * tgt.baseRadius, z: c.z + Math.cos(a0 + off) * tgt.baseRadius }
+      // oval bases: keep only outline points (not inside another of the base's discs)
+      if (centres.length > 1 && centres.some((o) => o !== c && Math.hypot(p.x - o.x, p.z - o.z) < tgt.baseRadius - 1e-6)) continue
+      facing.push(p)
+    }
   }
   const intervening = new Map<string, number>()
   const level = att.pos.y
@@ -197,8 +216,8 @@ export function targetVerdict(
   if (standT) excluded.add(standT.partId)
 
   const origins: Vec2[] = [
-    { x: attacker.pos.x, z: attacker.pos.z },
-    ...ringPoints(attacker.pos, attacker.baseRadius, 8, 0),
+    ...discCentres(attacker),
+    ...footprintRing(attacker, 8, 0),
   ]
 
   let best: {
@@ -206,6 +225,7 @@ export function targetVerdict(
     obscuringParts: Solid[]
     wholly: string[]
     shared: string[]
+    crossed: string[]
     rank: number
   } | null = null
 
@@ -219,12 +239,12 @@ export function targetVerdict(
     const coverParts = within2
       ? []
       : crossed.filter(
-          (s) => !s.crTransparent && distToPolygon(target.pos, s.polygon) - target.baseRadius <= 1 + 1e-6,
+          (s) => !s.crTransparent && footprintDistToPolygon(target, s.polygon) <= 1 + 1e-6,
         )
     const obscuringParts = crossed.filter((s) => {
       if (!s.heavy) return false
-      if (distToPolygon(attacker.pos, s.polygon) - attacker.baseRadius <= 1 + 1e-6) return false
-      if (distToPolygon(target.pos, s.polygon) - target.baseRadius <= 1 + 1e-6) return false
+      if (footprintDistToPolygon(attacker, s.polygon) <= 1 + 1e-6) return false
+      if (footprintDistToPolygon(target, s.polygon) <= 1 + 1e-6) return false
       if (standA?.vantage && s.featureId === standA.featureId) return false
       if (standT?.vantage && s.featureId === standT.featureId) return false
       return true
@@ -233,7 +253,7 @@ export function targetVerdict(
     const shared = [...new Set(obscuringParts.map((s) => s.featureId))].filter((f) => coverFeatures.has(f))
     const wholly = [...ev.intervening.entries()].filter(([, n]) => n === ev.lines).map(([id]) => id)
     const rank = (obscuringParts.length > 0 ? 2 : 0) + (coverParts.length > 0 ? 1 : 0)
-    if (!best || rank < best.rank) best = { coverParts, obscuringParts, wholly, shared, rank }
+    if (!best || rank < best.rank) best = { coverParts, obscuringParts, wholly, shared, crossed: crossed.map((c) => c.partId), rank }
   }
 
   const b = best!
@@ -261,6 +281,7 @@ export function targetVerdict(
     coverParts: b.coverParts.map((s) => s.partId),
     obscuringParts: b.obscuringParts.map((s) => s.partId),
     whollyInterveningParts: b.wholly,
+    interveningParts: b.crossed,
     forcedChoice,
     sharedFeatures: b.shared,
     ifCover,
@@ -274,3 +295,34 @@ export function targetVerdict(
   }
 }
 
+
+// ---------------------------------------------------------------------------
+// M9 batch B: terrain questions team rules ask (Denizens of Night, Rad Bombardment)
+// ---------------------------------------------------------------------------
+
+/** Kinds of terrain intervening between shooter and target (any part a targeting line crosses, R-8.8). */
+export function interveningTraits(state: GameState, shooter: Body, target: Body & { order?: Order }): { light: boolean; heavy: boolean; parts: string[] } {
+  const idx = terrainOf(state.map)
+  const parts = targetVerdict(state, shooter, target).interveningParts
+  let light = false
+  let heavy = false
+  for (const id of parts) {
+    const sd = idx.byPart.get(id)
+    if (!sd) continue
+    if (sd.heavy) heavy = true
+    if (sd.light) light = true
+  }
+  return { light, heavy, parts }
+}
+
+/** Is any part of the operative's base under a Vantage floor higher than it stands (R-11.5 terrain above it)? */
+export function baseUnderVantage(state: GameState, b: Body): boolean {
+  const idx = terrainOf(state.map)
+  for (const sd of idx.solids) {
+    if (!sd.vantage || !sd.floors.some((f) => f > b.pos.y + 0.5)) continue
+    for (const c of discCentres(b)) {
+      if (pointInPolygon(c, sd.polygon) || distToPolygonBoundary(c, sd.polygon) < b.baseRadius - 1e-6) return true
+    }
+  }
+  return false
+}

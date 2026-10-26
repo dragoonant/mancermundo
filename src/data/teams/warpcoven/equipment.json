@@ -1,0 +1,60 @@
+[
+  {
+    "scope": "faction",
+    "team": "warpcoven",
+    "count": 1,
+    "id": "wc.e.ensorcelled-rounds",
+    "name": "ENSORCELLED ROUNDS",
+    "effect": {
+      "grantWeaponRule": {
+        "rule": "core.wr.devastating",
+        "x": 1,
+        "filter": {
+          "weaponIds": [
+            "wc.w.inferno-boltgun",
+            "wc.w.inferno-bolt-pistol",
+            "wc.w.autopistol"
+          ]
+        }
+      }
+    },
+    "text": "Friendly Warpcoven operatives' inferno boltguns, inferno bolt pistols and autopistols have Devastating 1.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.40"
+  },
+  {
+    "scope": "faction",
+    "team": "warpcoven",
+    "count": 1,
+    "id": "wc.e.daemonmaw-weapons",
+    "name": "DAEMONMAW WEAPONS",
+    "effect": {
+      "code": "daemonmawWeapons"
+    },
+    "text": "Friendly Rubric Marines' melee weapons get +1 Atk, and Accurate 1 while the Rubric Marine is retaliating.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.41"
+  },
+  {
+    "scope": "faction",
+    "team": "warpcoven",
+    "count": 1,
+    "id": "wc.e.arcane-robes",
+    "name": "ARCANE ROBES",
+    "effect": {
+      "code": "arcaneRobes"
+    },
+    "text": "Once per turning point, when an attack die would inflict Critical Dmg on a friendly Sorcerer, it inflicts that weapon's Normal Dmg instead.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.42"
+  },
+  {
+    "scope": "faction",
+    "team": "warpcoven",
+    "count": 1,
+    "id": "wc.e.sorcerous-scrolls",
+    "name": "SORCEROUS SCROLLS",
+    "effect": {
+      "code": "sorcerousScrolls"
+    },
+    "text": "Once per battle, when a friendly Sorcerer is activated or counteracts, give it a different Boon of Tzeentch for the rest of the battle (it loses its old one). It cannot be a boon another friendly operative has.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.43"
+  }
+]

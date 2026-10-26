@@ -1,0 +1,38 @@
+[
+  {
+    "id": "fk.e.piercing-shot",
+    "name": "PIERCING SHOT",
+    "scope": "faction",
+    "team": "farstalker-kinband",
+    "count": 1,
+    "text": "Once per turning point, when a friendly Farstalker operative shoots with a Kroot rifle, Kroot scattergun or the focused dual Kroot pistols, that weapon has Piercing 1 until the action ends. Not in the same action as Toxin Shot.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md T-FK.37"
+  },
+  {
+    "id": "fk.e.toxin-shot",
+    "name": "TOXIN SHOT",
+    "scope": "faction",
+    "team": "farstalker-kinband",
+    "count": 1,
+    "text": "Once per turning point, when a friendly Farstalker operative shoots with a Kroot rifle, Kroot scattergun or the focused dual Kroot pistols, that weapon has Lethal 5+ and Stun until the action ends. Not in the same action as Piercing Shot.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md T-FK.38"
+  },
+  {
+    "id": "fk.e.meat",
+    "name": "MEAT",
+    "scope": "faction",
+    "team": "farstalker-kinband",
+    "count": 1,
+    "text": "A strip of raw meat: once per turning point, as a friendly Farstalker operative that is not a Hound starts its activation clear of enemy control ranges, it heals up to D3+1 lost wounds.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md T-FK.39"
+  },
+  {
+    "id": "fk.e.trophy",
+    "name": "TROPHY",
+    "scope": "faction",
+    "team": "farstalker-kinband",
+    "count": 1,
+    "text": "Once per battle a friendly Farstalker operative (not a Hound) that is clear of enemy control ranges can claim a trophy before or after one of its actions: +1 APL for the rest of that activation.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md T-FK.40"
+  }
+]

@@ -1,0 +1,526 @@
+[
+  {
+    "id": "wyr.neophyte-leader",
+    "name": "Neophyte Leader",
+    "team": "wyrmblade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "WYRMBLADE",
+      "TYRANIDS",
+      "GENESTEALER CULTS",
+      "NEOPHYTE",
+      "LEADER"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "kit",
+          "label": "Leader kit",
+          "sets": [
+            {
+              "id": "autogun",
+              "name": "Autogun and gun butt",
+              "fixed": [
+                "wyr.w.autogun-leader",
+                "wyr.w.gun-butt"
+              ]
+            },
+            {
+              "id": "shotgun",
+              "name": "Shotgun and gun butt",
+              "fixed": [
+                "wyr.w.shotgun-leader",
+                "wyr.w.gun-butt"
+              ]
+            },
+            {
+              "id": "pistol-and-melee",
+              "name": "Pistol and melee weapon",
+              "options": [
+                {
+                  "id": "pistol",
+                  "label": "Pistol",
+                  "from": [
+                    "wyr.w.bolt-pistol",
+                    "wyr.w.master-crafted-autopistol",
+                    "wyr.w.web-pistol"
+                  ]
+                },
+                {
+                  "id": "melee",
+                  "label": "Melee weapon",
+                  "from": [
+                    "wyr.w.chainsword",
+                    "wyr.w.power-maul",
+                    "wyr.w.power-pick"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "wyr.a.shadow-vector"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "wb-neophyte-leader"
+    },
+    "text": "The cell leader, a veteran guerrilla who keeps the Neophytes working together; takes one of three weapon kits.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.2"
+  },
+  {
+    "id": "wyr.kelermorph",
+    "name": "Kelermorph",
+    "team": "wyrmblade",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "4+",
+      "wounds": 9
+    },
+    "base": 32,
+    "keywords": [
+      "WYRMBLADE",
+      "TYRANIDS",
+      "GENESTEALER CULTS",
+      "CULT AGENT",
+      "KELERMORPH"
+    ],
+    "weapons": {
+      "fixed": [
+        "wyr.wg.liberator-autostubs",
+        "wyr.w.kelermorph-knife"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "wyr.a.expert-gunslinger",
+      "wyr.a.heroic-inspiration"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "wb-kelermorph"
+    },
+    "text": "A gunslinging folk hero who fires twice in an activation and inspires the Neophytes around it.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.2"
+  },
+  {
+    "id": "wyr.locus",
+    "name": "Locus",
+    "team": "wyrmblade",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "4+",
+      "wounds": 9
+    },
+    "base": 32,
+    "keywords": [
+      "WYRMBLADE",
+      "TYRANIDS",
+      "GENESTEALER CULTS",
+      "CULT AGENT",
+      "LOCUS"
+    ],
+    "weapons": {
+      "fixed": [
+        "wyr.w.barbed-tail",
+        "wyr.w.locus-blades"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "wyr.a.expert-swordsman",
+      "wyr.a.bladed-stance",
+      "wyr.a.quicksilver-strike"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "wb-locus"
+    },
+    "text": "A four-armed bodyguard that fights twice, blocks first and lunges at anything that moves close to it.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.2"
+  },
+  {
+    "id": "wyr.gunner-flamer",
+    "name": "Neophyte Gunner (flamer)",
+    "team": "wyrmblade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "WYRMBLADE",
+      "TYRANIDS",
+      "GENESTEALER CULTS",
+      "NEOPHYTE",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "wyr.w.flamer",
+        "wyr.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "wb-neophyte-gunner",
+      "variant": "flamer"
+    },
+    "text": "A Neophyte with a fuel-tank flamer.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.2"
+  },
+  {
+    "id": "wyr.gunner-grenade-launcher",
+    "name": "Neophyte Gunner (grenade launcher)",
+    "team": "wyrmblade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "WYRMBLADE",
+      "TYRANIDS",
+      "GENESTEALER CULTS",
+      "NEOPHYTE",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "wyr.wg.grenade-launcher",
+        "wyr.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "wb-neophyte-gunner",
+      "variant": "grenade-launcher"
+    },
+    "text": "A Neophyte with a launcher for frag and krak grenades.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.2"
+  },
+  {
+    "id": "wyr.gunner-webber",
+    "name": "Neophyte Gunner (webber)",
+    "team": "wyrmblade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "WYRMBLADE",
+      "TYRANIDS",
+      "GENESTEALER CULTS",
+      "NEOPHYTE",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "wyr.w.webber",
+        "wyr.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "wb-neophyte-gunner",
+      "variant": "webber"
+    },
+    "text": "A Neophyte with a webbing launcher that binds and stuns.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.2"
+  },
+  {
+    "id": "wyr.heavy-gunner-heavy-stubber",
+    "name": "Neophyte Heavy Gunner (heavy stubber)",
+    "team": "wyrmblade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 32,
+    "keywords": [
+      "WYRMBLADE",
+      "TYRANIDS",
+      "GENESTEALER CULTS",
+      "NEOPHYTE",
+      "HEAVY GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "wyr.wg.heavy-stubber",
+        "wyr.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "wyr.a.heavy-weapon-bipod"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "wb-neophyte-heavy-gunner",
+      "variant": "heavy-stubber"
+    },
+    "text": "A broad Neophyte who braces a heavy stubber on a bipod.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.2"
+  },
+  {
+    "id": "wyr.heavy-gunner-mining-laser",
+    "name": "Neophyte Heavy Gunner (mining laser)",
+    "team": "wyrmblade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 32,
+    "keywords": [
+      "WYRMBLADE",
+      "TYRANIDS",
+      "GENESTEALER CULTS",
+      "NEOPHYTE",
+      "HEAVY GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "wyr.w.mining-laser",
+        "wyr.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "wyr.a.heavy-weapon-bipod"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "wb-neophyte-heavy-gunner",
+      "variant": "mining-laser"
+    },
+    "text": "A broad Neophyte who carries a mining laser.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.2"
+  },
+  {
+    "id": "wyr.heavy-gunner-seismic-cannon",
+    "name": "Neophyte Heavy Gunner (seismic cannon)",
+    "team": "wyrmblade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 32,
+    "keywords": [
+      "WYRMBLADE",
+      "TYRANIDS",
+      "GENESTEALER CULTS",
+      "NEOPHYTE",
+      "HEAVY GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "wyr.wg.seismic-cannon",
+        "wyr.w.gun-butt"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "wyr.a.heavy-weapon-bipod"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "wb-neophyte-heavy-gunner",
+      "variant": "seismic-cannon"
+    },
+    "text": "A broad Neophyte who hauls a quarry seismic cannon.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.2"
+  },
+  {
+    "id": "wyr.icon-bearer",
+    "name": "Neophyte Icon Bearer",
+    "team": "wyrmblade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "WYRMBLADE",
+      "TYRANIDS",
+      "GENESTEALER CULTS",
+      "NEOPHYTE",
+      "ICON BEARER"
+    ],
+    "weapons": {
+      "fixed": [
+        "wyr.w.gun-butt"
+      ],
+      "options": [
+        {
+          "id": "rifle",
+          "label": "Rifle",
+          "from": [
+            "wyr.w.autogun",
+            "wyr.w.shotgun"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "wyr.a.icon-bearer",
+      "wyr.a.overthrow-the-oppressors"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "wb-neophyte-icon-bearer"
+    },
+    "text": "Bearer of the brood's holy icon; it counts for more at objectives and avenges fallen comrades.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.2"
+  },
+  {
+    "id": "wyr.sanctus-sniper",
+    "name": "Sanctus Sniper",
+    "team": "wyrmblade",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "4+",
+      "wounds": 9
+    },
+    "base": 32,
+    "keywords": [
+      "WYRMBLADE",
+      "TYRANIDS",
+      "GENESTEALER CULTS",
+      "CULT AGENT",
+      "SANCTUS",
+      "SNIPER"
+    ],
+    "weapons": {
+      "fixed": [
+        "wyr.wg.sanctus-sniper-rifle",
+        "wyr.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "wyr.a.target-vulnerability",
+      "wyr.a.familiars-soulsight-sniper"
+    ],
+    "figure": {
+      "archetype": "wb-sanctus-sniper"
+    },
+    "text": "A cult assassin whose rifle is guided by its familiar.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.2"
+  },
+  {
+    "id": "wyr.sanctus-talon",
+    "name": "Sanctus Talon",
+    "team": "wyrmblade",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "4+",
+      "wounds": 9
+    },
+    "base": 32,
+    "keywords": [
+      "WYRMBLADE",
+      "TYRANIDS",
+      "GENESTEALER CULTS",
+      "CULT AGENT",
+      "SANCTUS",
+      "TALON"
+    ],
+    "weapons": {
+      "fixed": [
+        "wyr.w.sanctus-bio-dagger"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "wyr.a.creeping-shadow"
+    ],
+    "uniqueActions": [
+      "wyr.a.familiars-soulsight-talon",
+      "wyr.a.assassinate"
+    ],
+    "figure": {
+      "archetype": "wb-sanctus-talon"
+    },
+    "text": "A cult assassin that stalks its victim, charges from Conceal and strikes from behind.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.2"
+  },
+  {
+    "id": "wyr.warrior",
+    "name": "Neophyte Warrior",
+    "team": "wyrmblade",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "WYRMBLADE",
+      "TYRANIDS",
+      "GENESTEALER CULTS",
+      "NEOPHYTE",
+      "WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [
+        "wyr.w.gun-butt"
+      ],
+      "options": [
+        {
+          "id": "rifle",
+          "label": "Rifle",
+          "from": [
+            "wyr.w.autogun",
+            "wyr.w.shotgun"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "wyr.a.group-activation"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "wb-neophyte-warrior"
+    },
+    "text": "A veteran agitator; Warriors can be taken in any number and activate in pairs.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.2"
+  }
+]

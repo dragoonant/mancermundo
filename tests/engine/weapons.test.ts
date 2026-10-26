@@ -758,7 +758,7 @@ describe('WIN ploy windows in the attack sequences', () => {
     try {
       const { w, s } = flat([])
       shootWith(s, new ScriptedRng([4, 1, 1, 1, 1, 1, 1]), w.id, s.e)
-      expect(seen).toEqual(['shoot:shoot.targetSelected', 'shoot:shoot.attackRolled', 'shoot:shoot.defenceRolled', 'shoot:shoot.resolved'])
+      expect(seen).toEqual(['shoot:shoot.targetSelected', 'shoot:shoot.beforeAttackRerolls', 'shoot:shoot.defenderAttackRolled', 'shoot:shoot.attackRolled', 'shoot:shoot.beforeDefenceRoll', 'shoot:shoot.beforeDefenceRerolls', 'shoot:shoot.defenderBeforeRerolls', 'shoot:shoot.defenceRolled', 'shoot:shoot.attackerDefenceRolled', 'shoot:shoot.beforeResolve', 'shoot:shoot.resolved'])
       seen.length = 0
       const a = melee('a', { atk: 1 })
       const b = melee('b', { atk: 1 })
@@ -767,7 +767,7 @@ describe('WIN ploy windows in the attack sequences', () => {
       const rng = new ScriptedRng([4, 4])
       const first = step(st, pick(st.pending!, f.e), rng)
       play(first.state, rng, { 'fight.resolve': (pd) => pd.options!.find((o) => o.id.startsWith('strike'))!.action })
-      expect(seen).toEqual(['fight:fight.weaponsSelected', 'fight:fight.rolled', 'fight:fight.resolved'])
+      expect(seen).toEqual(['fight:fight.weaponsSelected', 'fight:fight.beforeRerolls', 'fight:fight.rolled', 'fight:fight.resolved'])
     } finally {
       registerWindowOpener(previous)
     }

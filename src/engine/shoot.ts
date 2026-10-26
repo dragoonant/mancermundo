@@ -16,6 +16,7 @@ import {
   kindsOf,
   newSide,
   openWindow,
+  runDiceRolled,
   parseReroll,
   pushRetained,
   pushRolled,
@@ -30,10 +31,14 @@ import {
   torrentCandidates,
   valuesOf,
   validTargets,
+  weaponDamage,
   weaponOf,
+  parseRules,
   weaponUnusable,
   type TargetInfo,
 } from './attack-common'
+import { providerAny, providerExtraTargets, providerFixedTargets, providerViewpoints, type FixedTargets } from './team-rules'
+import { enemiesInControlRange } from './measure'
 import { cancelAction, finishAction } from './firefight'
 import { runHook, type ChoiceRequest } from './hooks'
 import { distanceBetween } from './measure'
@@ -72,8 +77,24 @@ export function usableRangedWeapons(state: GameState, op: Operative, performed: 
 export function shootableWeapons(state: GameState, op: Operative, performed: string[], ctx?: Ctx): { weaponId: string; targets: TargetInfo[] }[] {
   const out: { weaponId: string; targets: TargetInfo[] }[] = []
   for (const w of usableRangedWeapons(state, op, performed)) {
-    const targets = validTargets(state, op, w, ctx)
+    const targets = weaponTargets(state, op, w, ctx)
     if (targets.length > 0) out.push({ weaponId: w, targets })
+  }
+  return out
+}
+
+/**
+ * M9 batch C: the targets a weapon would shoot: its own fixed targets when a team rule names them (Detonate), else the
+ * valid targets. Fixed targets need no visibility; their statuses are forced when the sequence starts.
+ */
+export function weaponTargets(state: GameState, op: Operative, weaponId: string, ctx?: Ctx, viewpoint?: Operative): TargetInfo[] {
+  const fixed = providerFixedTargets(state, op, weaponId)
+  if (!fixed) return validTargets(state, op, weaponId, ctx, viewpoint)
+  const out: TargetInfo[] = []
+  for (const id of fixed.targets) {
+    const t = state.operatives[id]
+    if (!t || t.status !== 'active' || t.wounds <= 0) continue
+    out.push(targetInfo(state, op, t, ruleSetFor(state, op, weaponId, 'shoot', id, ctx)))
   }
   return out
 }
@@ -87,7 +108,14 @@ export function shootAvailability(state: GameState, op: Operative, activation: A
     return { code: 'E_ACTION_RESTRICTED', reason: anyRanged ? 'no ranged weapon can be used now' : 'the operative has no ranged weapon' }
   }
   for (const w of usable) {
-    if (validTargets(state, op, w).length > 0) return null
+    if (weaponTargets(state, op, w).length > 0) return null
+  }
+  // a viewpoint a team rule offers (team-rules shootViewpoints: Magnify proxies) counts too, as in raiseWeapon
+  for (const w of usable) {
+    for (const vpId of providerViewpoints(state, op, w)) {
+      const vp = state.operatives[vpId]
+      if (vp && vp.status === 'active' && validTargets(state, op, w, undefined, vp).length > 0) return null
+    }
   }
   return { code: 'E_INVALID_TARGET', reason: 'no valid target for any usable weapon' }
 }
@@ -140,7 +168,10 @@ function raiseWeapon(ctx: Ctx): void {
   const act = s.firefight.activation!
   const op = getOp(s, a.operativeId)
   const options: OptionInput[] = []
+  // M9 prep: a shooter that fails the core Shoot conditions itself (Conceal without Silent, in an enemy control
+  // range) may still shoot through a viewpoint a team rule offers (Magnify); then only those options exist
   for (const { weaponId, targets } of shootableWeapons(s, op, act.performed, ctx)) {
+    if (!baseShootConditions(s, op, weaponId)) continue
     // ASTARTES: repeating a bolt sniper rifle / heavy bolter costs 1 more AP, so it is only offered when affordable
     if (!surchargeAffordable(s, op, act, weaponId)) continue
     const w = weaponOf(s, weaponId)
@@ -151,6 +182,23 @@ function raiseWeapon(ctx: Ctx): void {
       payload: { weaponId },
       data: { ...weaponSummary(w), profileGroup: w.profileGroup ?? null, targets: targets.length },
     })
+  }
+  for (const weaponId of usableRangedWeapons(s, op, act.performed)) {
+    if (!surchargeAffordable(s, op, act, weaponId)) continue
+    for (const vpId of providerViewpoints(s, op, weaponId)) {
+      const vp = s.operatives[vpId]
+      if (!vp || vp.status !== 'active') continue
+      const targets = validTargets(s, op, weaponId, ctx, vp)
+      if (targets.length === 0) continue
+      const w = weaponOf(s, weaponId)
+      options.push({
+        id: `${weaponId}@${vpId}`,
+        labelKey: 'shoot.weaponVia',
+        type: 'shoot.weapon',
+        payload: { weaponId, viewpointId: vpId },
+        data: { ...weaponSummary(w), profileGroup: w.profileGroup ?? null, targets: targets.length, viewpointId: vpId },
+      })
+    }
   }
   if (options.length === 0) {
     abort(ctx)
@@ -178,8 +226,24 @@ function surchargeAffordable(state: GameState, op: Operative, act: Activation, w
   return extra === 0 || act.apSpent + (act.declared?.cost ?? 1) + extra <= effectiveApl(op)
 }
 
-function selectWeapon(ctx: Ctx, weaponId: string): void {
+/** Core Shoot conditions on the shooter itself: Conceal needs a Silent weapon, no enemy in control range (R-3.4, R-4.7). */
+function baseShootConditions(state: GameState, op: Operative, weaponId: string): boolean {
+  const inCr = enemiesInControlRange(state, op, op.seat).length > 0
+  const explosive = op.weapons.some((w) => state.data.weapons[w]?.rules.some((r) => r.rule === 'explosive'))
+  if (inCr && !explosive && !state.attack?.pointBlank && !providerAny(state, op, 'shootInControlRange')) return false
+  if (op.order === 'conceal') return parseRules(state.data.weapons[weaponId]?.rules ?? []).silent
+  return true
+}
+
+/** The operative whose position decides valid targets, cover and obscured for this Shoot (Magnify), or undefined. */
+function viewpointOf(state: GameState, a: AttackState): Operative | undefined {
+  return a.viewpointId ? state.operatives[a.viewpointId] : undefined
+}
+
+function selectWeapon(ctx: Ctx, weaponId: string, viewpointId?: string): void {
   const a = attackOf(ctx)
+  if (viewpointId) a.viewpointId = viewpointId
+  else delete a.viewpointId
   const act = ctx.state.firefight.activation!
   const extra = surchargeFor(ctx.state, getOp(ctx.state, a.operativeId), act, weaponId)
   if (extra > 0) act.surcharge = extra
@@ -208,7 +272,13 @@ function raiseTargets(ctx: Ctx): void {
   const a = attackOf(ctx)
   const op = getOp(s, a.operativeId)
   const weaponId = a.weaponId!
-  const targets = validTargets(s, op, weaponId, ctx)
+  // M9 batch C: a weapon that picks its own targets (Detonate) raises no target decision
+  const fixed = providerFixedTargets(s, op, weaponId)
+  if (fixed) {
+    chooseFixed(ctx, fixed)
+    return
+  }
+  const targets = validTargets(s, op, weaponId, ctx, viewpointOf(s, a))
   if (targets.length === 0) {
     abort(ctx)
     return
@@ -230,6 +300,31 @@ function raiseTargets(ctx: Ctx): void {
   })
 }
 
+/** M9 batch C: shoot the targets a team rule fixed for the weapon (primary first, Blast secondaries around it). */
+function chooseFixed(ctx: Ctx, fixed: FixedTargets): void {
+  const s = ctx.state
+  const a = attackOf(ctx)
+  const op = getOp(s, a.operativeId)
+  const ids = fixed.targets.filter((id) => {
+    const t = s.operatives[id]
+    return !!t && t.status === 'active' && t.wounds > 0
+  })
+  if (ids.length === 0) {
+    abort(ctx)
+    return
+  }
+  a.targets = ids.slice()
+  a.index = 0
+  a.inherit = null
+  a.candidates = []
+  a.fixed = { ...(fixed.noCover ? { noCover: true } : {}), ...(fixed.noObscured ? { noObscured: true } : {}) }
+  const rules = ruleSetFor(s, op, a.weaponId!, 'shoot', ids[0], ctx)
+  if (fixed.blast !== false && rules.blast !== null) {
+    for (const id of blastSecondaries(s, op, getOp(s, ids[0]!), rules.blast)) if (!a.targets.includes(id)) a.targets.push(id)
+  }
+  startTarget(ctx)
+}
+
 function chooseTarget(ctx: Ctx, targetId: string): void {
   const s = ctx.state
   const a = attackOf(ctx)
@@ -240,7 +335,16 @@ function chooseTarget(ctx: Ctx, targetId: string): void {
   a.index = 0
   a.inherit = null
   if (rules.blast !== null) a.targets.push(...blastSecondaries(s, op, target, rules.blast))
-  a.candidates = rules.torrent !== null ? torrentCandidates(s, op, a.weaponId!, targetId, rules.torrent, ctx) : []
+  a.candidates = rules.torrent !== null ? torrentCandidates(s, op, a.weaponId!, targetId, rules.torrent, ctx, viewpointOf(s, a)) : []
+  // M9 batch C: extra primary targets a team rule allows (Salvo), chosen like Torrent targets, up to its maximum
+  delete a.extraMax
+  if (a.candidates.length === 0) {
+    const extra = providerExtraTargets(s, op, a.weaponId!, targetId)
+    if (extra) {
+      a.candidates = extra.candidates.slice()
+      a.extraMax = extra.max
+    }
+  }
   if (a.candidates.length > 0) {
     raiseSecondary(ctx)
     return
@@ -310,7 +414,13 @@ function startTarget(ctx: Ctx): void {
   const op = getOp(s, a.operativeId)
   const target = getOp(s, a.targets[a.index]!)
   const rules = ruleSetFor(s, op, a.weaponId!, 'shoot', target.id, ctx)
-  const info = targetInfo(s, op, target, rules)
+  const info = targetInfo(s, op, target, rules, viewpointOf(s, a))
+  // M9 batch C: fixed targets (Detonate) may be barred from cover and obscuring outright
+  if (a.fixed) {
+    const noCover = a.fixed.noCover === true
+    beginRoll(ctx, noCover ? false : info.inCover, a.fixed.noObscured ? false : info.obscured, noCover ? false : info.improvedCover)
+    return
+  }
   if (a.index > 0 && a.inherit) {
     beginRoll(ctx, a.inherit.cover, a.inherit.obscured, a.inherit.improvedCover)
     return
@@ -411,8 +521,15 @@ function rollAttack(ctx: Ctx, cover: boolean, obscured: boolean, improvedCover: 
     },
     op.seat,
   )
-  advanceWindow(ctx, 'atk')
+  // M9 batch B: rules acting on the fresh roll (Omen), then the attacker's window before any re-roll (Engage to Acquire)
+  runDiceRolled(ctx, 'shoot', 'attack', side, target.id)
+  proceed(ctx, 'attackDefenderWindow', 'shoot.beforeAttackRerolls')
 }
+
+// batch C shared: the defender on the fresh attack roll, before any attack re-roll (Fate Itself is My Weapon)
+STEPS.attackDefenderWindow = (ctx) => proceed(ctx, 'attackRerolls', 'shoot.defenderAttackRolled')
+
+STEPS.attackRerolls = (ctx) => advanceWindow(ctx, 'atk')
 
 // --- re-roll windows --------------------------------------------------------
 
@@ -482,6 +599,7 @@ function runAfterRoll(ctx: Ctx, which: 'atk' | 'def', resumeStep: string): boole
     dice: side.dice,
     requests: [] as ChoiceRequest[],
     choices: seq.choices,
+    obscured: seq.obscured,
   }
   runHook(which === 'atk' ? 'afterAttackRoll' : 'afterDefenceRoll', {
     seat: side.seat,
@@ -545,11 +663,14 @@ STEPS.retain = (ctx) => {
     }
     for (const v of victims) {
       for (let i = 0; i < c.crit; i++) {
-        inflict(ctx, { targetId: v, attackerId: op.id, weaponId: weapon.id, amount: rules.devastating.x, source: 'devastating' })
+        inflict(ctx, { targetId: v, attackerId: op.id, weaponId: weapon.id, amount: rules.devastating.x, source: 'devastating', ...(v !== target.id ? { splash: true } : {}) })
       }
     }
   }
-  STEPS.defence!(ctx)
+  // M9 batch B: the defender's window once the attack dice are final, before defence dice are collected (Refractor Field)
+  const t = s.operatives[seq.targetId]
+  if (t && t.status === 'active' && t.wounds > 0) proceed(ctx, 'defence', 'shoot.beforeDefenceRoll')
+  else STEPS.defence!(ctx)
 }
 
 function visibleEither(s: GameState, a: ReturnType<typeof bodyOf>, b: ReturnType<typeof bodyOf>): boolean {
@@ -616,14 +737,24 @@ function rollDefence(ctx: Ctx, mode: string): void {
     side.seat,
   )
   void s
-  void a
-  advanceWindow(ctx, 'def')
+  // M9 batch B: rules acting on the fresh defence roll (Omen)
+  runDiceRolled(ctx, 'shoot', 'defence', side, a.operativeId)
+  // M9 shared: the attacker's window on the fresh defence roll, before any re-roll (Curse of Rot)
+  proceed(ctx, 'defenceOwnWindow', 'shoot.beforeDefenceRerolls')
 }
+
+// M9 batch B: the defender's own window on its fresh defence roll, before any re-roll (Stimulated Senses)
+STEPS.defenceOwnWindow = (ctx) => proceed(ctx, 'defenceRerolls', 'shoot.defenderBeforeRerolls')
+
+STEPS.defenceRerolls = (ctx) => advanceWindow(ctx, 'def')
 
 STEPS.afterDefenceWindow = (ctx) => {
   if (!runAfterRoll(ctx, 'def', 'afterDefenceWindow')) return
-  proceed(ctx, 'block', 'shoot.defenceRolled')
+  proceed(ctx, 'attackerDefenceWindow', 'shoot.defenceRolled')
 }
+
+// M9 batch B shared: the attacker's window once the defence dice are final, before blocking (Siphon Life)
+STEPS.attackerDefenceWindow = (ctx) => proceed(ctx, 'block', 'shoot.attackerDefenceRolled')
 
 // --- blocking and damage ----------------------------------------------------
 
@@ -636,7 +767,8 @@ STEPS.block = (ctx) => {
   const weapon = weaponOf(s, a.weaponId!)
   const at = countKinds(seq.atk.dice)
   const df = seq.def ? countKinds(seq.def.dice) : { normal: 0, crit: 0, fail: 0 }
-  const plans = blockPlans(at.normal, at.crit, df.normal, df.crit, weapon.dmg, rules.brutal)
+  const dmg = weaponDamage(s, a.operativeId, weapon.id, seq.targetId, 'shoot', ctx)
+  const plans = blockPlans(at.normal, at.crit, df.normal, df.crit, dmg, rules.brutal)
   if (plans.length <= 1) {
     applyBlock(ctx, plans[0]!)
     return
@@ -670,7 +802,7 @@ STEPS.block = (ctx) => {
       targetId: seq.targetId,
       attack: { normal: at.normal, crit: at.crit },
       defence: { normal: df.normal, crit: df.crit },
-      dmg: weapon.dmg,
+      dmg,
       brutal: rules.brutal,
     },
     options,
@@ -681,7 +813,6 @@ function applyBlock(ctx: Ctx, plan: { unblockedNormal: number; unblockedCrit: nu
   const s = ctx.state
   const a = attackOf(ctx)
   const seq = seqOf(ctx)
-  const weapon = weaponOf(s, a.weaponId!)
   ctx.emit(
     {
       type: 'DiceBlocked',
@@ -693,11 +824,23 @@ function applyBlock(ctx: Ctx, plan: { unblockedNormal: number; unblockedCrit: nu
     },
     seq.def?.seat ?? null,
   )
-  for (let i = 0; i < plan.unblockedCrit; i++) {
-    inflict(ctx, { targetId: seq.targetId, attackerId: a.operativeId, weaponId: weapon.id, amount: weapon.dmg.crit, source: 'crit' })
+  // batch D prep: a window after blocks and before any damage (Drag); ploys there may lower seq.unblocked
+  seq.unblocked = { normal: plan.unblockedNormal, crit: plan.unblockedCrit }
+  proceed(ctx, 'resolve', 'shoot.beforeResolve')
+}
+
+STEPS.resolve = (ctx) => {
+  const s = ctx.state
+  const a = attackOf(ctx)
+  const seq = seqOf(ctx)
+  const weapon = weaponOf(s, a.weaponId!)
+  const dmg = weaponDamage(s, a.operativeId, weapon.id, seq.targetId, 'shoot', ctx)
+  const left = seq.unblocked ?? { normal: 0, crit: 0 }
+  for (let i = 0; i < left.crit; i++) {
+    inflict(ctx, { targetId: seq.targetId, attackerId: a.operativeId, weaponId: weapon.id, amount: dmg.crit, source: 'crit' })
   }
-  for (let i = 0; i < plan.unblockedNormal; i++) {
-    inflict(ctx, { targetId: seq.targetId, attackerId: a.operativeId, weaponId: weapon.id, amount: weapon.dmg.normal, source: 'normal' })
+  for (let i = 0; i < left.normal; i++) {
+    inflict(ctx, { targetId: seq.targetId, attackerId: a.operativeId, weaponId: weapon.id, amount: dmg.normal, source: 'normal' })
   }
   a.seq = null
   a.index++
@@ -742,7 +885,9 @@ STEPS.finish = (ctx) => {
   ctx.emit({ type: 'ShootEnded', operativeId: op.id, weaponId }, op.seat)
   const gone = a.incapacitated.slice()
   s.attack = null
-  if (!beginRemovals(ctx, gone)) return
+  // M9 batch B: who incapacitated whom, for the killer's operative.killed window
+  const killers = Object.fromEntries(gone.filter((id) => id !== op.id).map((id) => [id, op.id]))
+  if (!beginRemovals(ctx, gone, killers)) return
   finishAction(ctx)
 }
 
@@ -754,7 +899,8 @@ function handleWeapon(_state: GameState, action: Action): Handled {
   if (action.type === 'pass') return { run: (ctx) => abort(ctx) }
   if (action.type !== 'shoot.weapon') return reject('E_WRONG_DECISION', 'expected a weapon')
   const weaponId = String(action.payload.weaponId)
-  return { run: (ctx) => selectWeapon(ctx, weaponId) }
+  const vp = (action.payload as { viewpointId?: unknown }).viewpointId
+  return { run: (ctx) => selectWeapon(ctx, weaponId, typeof vp === 'string' ? vp : undefined) }
 }
 
 function handleTarget(_state: GameState, action: Action): Handled {
@@ -769,7 +915,9 @@ function handleTarget(_state: GameState, action: Action): Handled {
         const a = attackOf(ctx)
         a.targets.push(targetId)
         a.candidates = a.candidates.filter((c) => c !== targetId)
-        if (a.candidates.length > 0) raiseSecondary(ctx)
+        // M9 batch C: Salvo-style extra targets stop at their maximum
+        const full = a.extraMax !== undefined && a.targets.length - 1 >= a.extraMax
+        if (a.candidates.length > 0 && !full) raiseSecondary(ctx)
         else startTarget(ctx)
       },
     }
@@ -795,7 +943,7 @@ function handleBlock(state: GameState, action: Action): Handled {
       const weapon = weaponOf(ctx.state, a.weaponId!)
       const at = countKinds(seq.atk.dice)
       const df = seq.def ? countKinds(seq.def.dice) : { normal: 0, crit: 0, fail: 0 }
-      const plans = blockPlans(at.normal, at.crit, df.normal, df.crit, weapon.dmg, rules.brutal)
+      const plans = blockPlans(at.normal, at.crit, df.normal, df.crit, weaponDamage(ctx.state, a.operativeId, weapon.id, seq.targetId, 'shoot', ctx), rules.brutal)
       let plan = plans[0]!
       if (p.mode !== 'auto' && Array.isArray(p.unblocked)) {
         const [rn, rc] = p.unblocked as number[]

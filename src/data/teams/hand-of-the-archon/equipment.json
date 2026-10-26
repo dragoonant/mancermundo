@@ -1,0 +1,39 @@
+[
+  {
+    "id": "ha.e.chain-snare",
+    "name": "CHAIN SNARE",
+    "scope": "faction",
+    "team": "hand-of-the-archon",
+    "count": 1,
+    "text": "When an enemy would Fall Back from a Hand of the Archon operative that has no other enemy in its control range, roll 2D6 (one die if the enemy has more Wounds than that operative): on any 4+ the Fall Back is cancelled with no AP spent and Chain Snare is used up for the turning point. A miss costs nothing and it stays ready.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.40"
+  },
+  {
+    "id": "ha.e.wicked-blades",
+    "name": "WICKED BLADES",
+    "scope": "faction",
+    "team": "hand-of-the-archon",
+    "count": 1,
+    "effect": { "modifyStat": { "stat": "atk", "value": 1, "filter": { "weaponIds": ["ha.w.array-of-blades"] } } },
+    "text": "Every array of blades of your Hand of the Archon operatives has Atk 4.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.41"
+  },
+  {
+    "id": "ha.e.toxin-coating",
+    "name": "TOXIN COATING",
+    "scope": "faction",
+    "team": "hand-of-the-archon",
+    "count": 1,
+    "text": "Twice per turning point, once a Hand of the Archon operative fighting or retaliating has chosen its melee weapon, the blade can be venomed: Lethal 5+ until the end of that fight. No CP needed.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.42"
+  },
+  {
+    "id": "ha.e.refined-poison",
+    "name": "REFINED POISON",
+    "scope": "faction",
+    "team": "hand-of-the-archon",
+    "count": 1,
+    "text": "Twice per turning point, a Hand of the Archon operative firing a shardcarbine, splinter cannon, splinter pistol, splinter rifle or stinger pistol in a Shoot may load refined toxins: +1 Normal Dmg for the rest of the action. No CP needed.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md T-HA.43"
+  }
+]

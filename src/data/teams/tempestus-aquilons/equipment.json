@@ -1,0 +1,55 @@
+[
+  {
+    "id": "ta.e.tempestus-daggers",
+    "name": "TEMPESTUS DAGGERS",
+    "scope": "faction",
+    "team": "tempestus-aquilons",
+    "count": 1,
+    "grants": {
+      "weapons": [
+        "ta.w.tempestus-dagger"
+      ],
+      "to": {
+        "keyword": "TEMPESTUS AQUILON"
+      }
+    },
+    "text": "Every friendly Tempestus Aquilon except the Servo-Sentry carries a Tempestus dagger (Atk 3, Hit 4+, Dmg 3/4) for the battle. The Precursor keeps its own dagger as well.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.38"
+  },
+  {
+    "id": "ta.e.combat-stimms",
+    "name": "COMBAT STIMMS",
+    "scope": "faction",
+    "team": "tempestus-aquilons",
+    "count": 1,
+    "effect": {
+      "code": "taCombatStimms"
+    },
+    "text": "The Move loss from being injured does not apply to friendly Tempestus Aquilons; the Hit penalty still does.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.39"
+  },
+  {
+    "id": "ta.e.drop-augury",
+    "name": "DROP AUGURY",
+    "scope": "faction",
+    "team": "tempestus-aquilons",
+    "count": 1,
+    "effect": {
+      "code": "taDropAugury"
+    },
+    "text": "Once per battle, when a friendly operative set up above is activated, before it lands or stays: move one of your Drop markers up to 4 inches horizontally, but not closer to your opponent's drop zone.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.40"
+  },
+  {
+    "id": "ta.e.remote-overseer",
+    "name": "REMOTE OVERSEER",
+    "scope": "faction",
+    "team": "tempestus-aquilons",
+    "count": 1,
+    "effect": {
+      "code": "taRemoteOverseer"
+    },
+    "text": "Once per battle, after the initiative roll-off of a turning point, you may re-roll your own die.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.41"
+  }
+]

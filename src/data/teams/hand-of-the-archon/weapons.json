@@ -1,0 +1,236 @@
+[
+  {
+    "id": "ha.w.blast-pistol",
+    "name": "Blast pistol",
+    "team": "hand-of-the-archon",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 4 },
+    "rules": [
+      { "rule": "core.wr.range", "inches": 8 },
+      { "rule": "core.wr.piercing", "x": 2 }
+    ],
+    "text": "A sidearm that spits a short beam of darklight.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.splinter-pistol",
+    "name": "Splinter pistol",
+    "team": "hand-of-the-archon",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 2, "crit": 4 },
+    "rules": [
+      { "rule": "core.wr.range", "inches": 8 },
+      { "rule": "core.wr.lethal", "target": "5+" }
+    ],
+    "text": "A light pistol firing slivers soaked in venom.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.splinter-rifle",
+    "name": "Splinter rifle",
+    "team": "hand-of-the-archon",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 2, "crit": 4 },
+    "rules": [{ "rule": "core.wr.lethal", "target": "5+" }],
+    "text": "A long, slender rifle whose toxic shards need only a scratch.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.agoniser",
+    "name": "Agoniser",
+    "team": "hand-of-the-archon",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 5 },
+    "rules": [{ "rule": "core.wr.brutal" }, { "rule": "core.wr.lethal", "target": "5+" }, { "rule": "core.wr.shock" }],
+    "text": "A barbed lash that floods the victim's nerves with agony.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.power-weapon",
+    "name": "Power weapon",
+    "team": "hand-of-the-archon",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 4, "crit": 6 },
+    "rules": [{ "rule": "core.wr.lethal", "target": "5+" }],
+    "text": "A blade sheathed in a field that parts armour like cloth.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.venom-blade",
+    "name": "Venom blade",
+    "team": "hand-of-the-archon",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [{ "rule": "core.wr.lethal", "target": "4+" }],
+    "text": "A slim knife that injects a killing toxin with every cut.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.array-of-blades",
+    "name": "Array of blades",
+    "team": "hand-of-the-archon",
+    "type": "melee",
+    "atk": 3,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 4 },
+    "rules": [],
+    "text": "An assortment of hooked knives and spurs kept within easy reach.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.razorflail",
+    "name": "Razorflail",
+    "team": "hand-of-the-archon",
+    "type": "melee",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [{ "rule": "core.wr.brutal" }, { "rule": "ha.a.wr-tangle" }],
+    "text": "A whirling coil of bladed wire that fouls the weapons of anyone it fights.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.stinger-pistol",
+    "name": "Stinger pistol",
+    "team": "hand-of-the-archon",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 5 },
+    "rules": [
+      { "rule": "core.wr.range", "inches": 8 },
+      { "rule": "core.wr.lethal", "target": "5+" },
+      { "rule": "ha.a.wr-stinger" }
+    ],
+    "text": "A pistol of hollow slivers that burst inside the victim and spray poison on everyone nearby.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.stim-needler",
+    "name": "Stim-needler",
+    "team": "hand-of-the-archon",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 0, "crit": 0 },
+    "rules": [
+      { "rule": "core.wr.range", "inches": 3 },
+      { "rule": "core.wr.lethal", "target": "3+" },
+      { "rule": "core.wr.stun" }
+    ],
+    "text": "A needle gun that does no harm of its own but leaves the target reeling.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.pain-sculptors",
+    "name": "Pain sculptors",
+    "team": "hand-of-the-archon",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [{ "rule": "core.wr.ceaseless" }, { "rule": "ha.a.wr-flay" }],
+    "text": "A harness of cruel blades and hooks built to draw out screams.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.blaster",
+    "name": "Blaster",
+    "team": "hand-of-the-archon",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [{ "rule": "core.wr.piercing", "x": 2 }],
+    "text": "A darklight carbine that burns through armour.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.shredder",
+    "name": "Shredder",
+    "team": "hand-of-the-archon",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [{ "rule": "core.wr.rending" }, { "rule": "core.wr.torrent", "inches": 2 }],
+    "text": "A launcher of monofilament barbs that flays a whole huddle at once.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.dark-lance",
+    "name": "Dark lance",
+    "team": "hand-of-the-archon",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 6, "crit": 7 },
+    "rules": [{ "rule": "core.wr.heavy", "only": "dash" }, { "rule": "core.wr.piercing", "x": 2 }],
+    "text": "A heavy darklight lance that fires a midnight beam.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.splinter-cannon-focused",
+    "name": "Splinter cannon",
+    "team": "hand-of-the-archon",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 5 },
+    "rules": [{ "rule": "core.wr.heavy", "only": "dash" }, { "rule": "core.wr.lethal", "target": "5+" }],
+    "profileGroup": "ha.wg.splinter-cannon",
+    "profile": "focused",
+    "text": "A rotary gun of poisoned shards, fired in a tight stream. This is the focused profile.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.splinter-cannon-sweeping",
+    "name": "Splinter cannon",
+    "team": "hand-of-the-archon",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 5 },
+    "rules": [{ "rule": "core.wr.heavy", "only": "dash" }, { "rule": "core.wr.lethal", "target": "5+" }, { "rule": "core.wr.torrent", "inches": 1 }],
+    "profileGroup": "ha.wg.splinter-cannon",
+    "profile": "sweeping",
+    "text": "The same rotary gun swept across a small group. This is the sweeping profile.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.razorwing",
+    "name": "Razorwing",
+    "team": "hand-of-the-archon",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": { "normal": 1, "crit": 2 },
+    "rules": [{ "rule": "core.wr.saturate" }, { "rule": "core.wr.seek" }, { "rule": "core.wr.silent" }],
+    "text": "A flock of razor-edged pods that hunt their prey without a sound.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  },
+  {
+    "id": "ha.w.shardcarbine",
+    "name": "Shardcarbine",
+    "team": "hand-of-the-archon",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": { "normal": 2, "crit": 2 },
+    "rules": [{ "rule": "core.wr.devastating", "x": 2 }, { "rule": "core.wr.lethal", "target": "5+" }],
+    "text": "A precise carbine whose shards split on impact.",
+    "source": "team-hand-of-the-archon.pdf (January '26); docs/spec/13-teams.md section 8"
+  }
+]

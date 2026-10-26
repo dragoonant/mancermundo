@@ -1,0 +1,73 @@
+{
+  "id": "hearthkyn-salvagers",
+  "name": "Hearthkyn Salvagers",
+  "factionKeyword": "HEARTHKYN SALVAGER",
+  "archetypes": ["recon", "security"],
+  "selection": {
+    "slots": [
+      { "id": "leader", "label": "Leader", "count": 1, "from": ["hk.theyn"] },
+      {
+        "id": "main",
+        "label": "Selections",
+        "count": 9,
+        "from": [
+          "hk.dozr",
+          "hk.field-medic",
+          "hk.grenadier",
+          "hk.gunner-plasma-beamer",
+          "hk.gunner-auto-rifle",
+          "hk.gunner-rotary-cannon",
+          "hk.gunner-missile-launcher",
+          "hk.gunner-rail-rifle",
+          "hk.jump-pack-warrior",
+          "hk.kinlynk",
+          "hk.kognitaar",
+          "hk.lokatr",
+          "hk.lugger",
+          "hk.warrior"
+        ],
+        "repeatable": ["hk.warrior"],
+        "caps": [
+          {
+            "label": "Gunners",
+            "from": ["hk.gunner-plasma-beamer", "hk.gunner-auto-rifle", "hk.gunner-rotary-cannon", "hk.gunner-missile-launcher", "hk.gunner-rail-rifle"],
+            "max": 3
+          }
+        ]
+      }
+    ]
+  },
+  "factionRules": ["hk.a.grudge"],
+  "ploys": [
+    "hk.p.eye-of-the-ancestors",
+    "hk.p.tactician",
+    "hk.p.need-keeps",
+    "hk.p.toil-earns",
+    "hk.p.wrought-defence",
+    "hk.p.proximate-firepower",
+    "hk.p.the-ancestors-are-watching",
+    "hk.p.worth-it",
+    "hk.p.sturdy",
+    "hk.p.engage-to-acquire"
+  ],
+  "equipment": ["hk.e.plasma-knives", "hk.e.climbing-rigs", "hk.e.excavation-tools", "hk.e.writ-of-claim"],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "hk.theyn",
+      "hk.dozr",
+      "hk.field-medic",
+      "hk.grenadier",
+      "hk.gunner-auto-rifle",
+      "hk.gunner-plasma-beamer",
+      "hk.kinlynk",
+      "hk.lokatr",
+      "hk.lugger",
+      "hk.warrior"
+    ],
+    "equipment": ["hk.e.plasma-knives", "hk.e.climbing-rigs", "core.e.comms-device", "core.e.ladders"]
+  },
+  "paint": { "major": { "h": 0.08, "s": 0.62, "l": 0.45 }, "minor": { "h": 0.58, "s": 0.12, "l": 0.34 } },
+  "text": "Ten stocky void-salvagers who stake claims on objectives and hold a grudge against whoever kills one of their kin.",
+  "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+}

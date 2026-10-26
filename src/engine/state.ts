@@ -1,5 +1,6 @@
 // State helpers: operatives, seats, markers, immutable updates, canonical hashing.
 import { fnv1a } from './rng'
+import { providerAny, providerMoveDelta } from './team-rules'
 import type { GameState, Marker, Operative, Seat, Vec3 } from './types'
 
 export class EngineInvariantError extends Error {
@@ -34,8 +35,9 @@ export function seatOps(state: GameState, seat: Seat): Operative[] {
   return allOps(state).filter((o) => o.seat === seat && o.status === 'active')
 }
 
+/** Ready operatives of a seat: in the killzone, or out of it but still activating (HIDING, reserve.ts). */
 export function readyOps(state: GameState, seat: Seat): Operative[] {
-  return seatOps(state, seat).filter((o) => o.ready)
+  return allOps(state).filter((o) => o.seat === seat && o.ready && (o.status === 'active' || (o.status === 'reserve' && o.offboard !== undefined)))
 }
 
 export function enemiesOf(state: GameState, op: { seat: Seat }): Operative[] {
@@ -54,7 +56,28 @@ export function isInjured(op: Operative): boolean {
 export function effectiveApl(op: Operative): number {
   // M2b-game: Resolute and Shake It Off make an operative ignore every APL change.
   if (op.flags.ignoreApl) return Math.max(0, op.apl)
-  return Math.max(0, op.apl + Math.max(-1, Math.min(1, op.aplMods)))
+  // batch D prep: only the increases count while APL decreases are ignored
+  const mods = op.flags.ignoreAplDecreases ? increasesOf(op) : op.aplMods
+  const value = op.apl + Math.max(-1, Math.min(1, mods))
+  // batch C shared (aplCeiling): an increase "to a maximum of N" cannot bring the APL above N, though other changes may
+  const capped = op.aplFx?.filter((f) => f.ceiling !== undefined && f.delta > 0)
+  if (!capped || capped.length === 0) return Math.max(0, value)
+  const rest = mods - capped.reduce((n, f) => n + f.delta, 0)
+  const without = op.apl + Math.max(-1, Math.min(1, rest))
+  const ceiling = Math.min(...capped.map((f) => f.ceiling!))
+  return Math.max(0, Math.min(value, Math.max(ceiling, without)))
+}
+
+/** batch D prep: the APL increases on an operative (its recorded changes above 0; all of aplMods when none are recorded). */
+function increasesOf(op: Operative): number {
+  if (!op.aplFx || op.aplFx.length === 0) return Math.max(0, op.aplMods)
+  return op.aplFx.reduce((n, f) => n + Math.max(0, f.delta), 0)
+}
+
+/** batch C shared: the APL an increase "to a maximum of `ceiling`" would leave the operative at now (aplCeiling odds). */
+export function aplWithCeiling(op: Operative, delta: number, ceiling: number): number {
+  const probe = { ...op, aplMods: op.aplMods + delta, aplFx: [...(op.aplFx ?? []), { delta, source: 'probe', ceiling }] }
+  return effectiveApl(probe)
 }
 
 /** Injured stat penalties apply (injured and not ignoring them, e.g. And They Shall Know No Fear). */
@@ -62,9 +85,14 @@ export function hasInjuredPenalty(op: Operative): boolean {
   return isInjured(op) && !op.flags.ignoreInjured
 }
 
-/** Current Move: injured operatives lose 2" with a 4" floor (R-7.3, R-9.6). */
-export function effectiveMove(op: Operative): number {
-  return hasInjuredPenalty(op) ? Math.max(4, op.move - 2) : op.move
+/**
+ * Current Move: injured operatives lose 2" with a 4" floor (R-7.3, R-9.6). With `state`, team rule
+ * providers also apply (team-rules.ts moveDelta and injuredEquivalent: Mont'ka, Nanomine, Contagion).
+ */
+export function effectiveMove(op: Operative, state?: GameState): number {
+  const injured = hasInjuredPenalty(op) || (state !== undefined && providerAny(state, op, 'injuredEquivalent'))
+  const move = op.move + (state ? providerMoveDelta(state, op) : 0) - (injured ? 2 : 0)
+  return move < op.move ? Math.max(4, move) : move
 }
 
 export function markerRadius(marker: Pick<Marker, 'kind'>): number {

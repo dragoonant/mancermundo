@@ -12,6 +12,8 @@
     "team": { "$ref": "common.schema.json#/$defs/Id" },
     "count": { "type": "integer", "minimum": 1, "description": "Copies of the marker or terrain feature the option provides." },
     "enabled": { "type": "boolean", "description": "False when the option exists in the sources but v1 does not offer it." },
+    "hidden": { "type": "boolean", "description": "Its markers stay hidden from the opponent until they trigger, as Mines (view.ts)." },
+    "excludes": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" }, "description": "Equipment ids this option cannot be taken together with." },
     "setup": {
       "type": "object",
       "additionalProperties": false,
@@ -35,7 +37,13 @@
                 "minItems": 1,
                 "items": { "enum": ["otherMarkers", "accessPoints", "accessibleTerrain", "equipmentTerrain", "doors"] }
               },
-              "moreThan": { "$ref": "common.schema.json#/$defs/Inches" }
+              "moreThan": { "$ref": "common.schema.json#/$defs/Inches" },
+              "except": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string", "minLength": 1 },
+                "description": "Markers this clearance ignores: an equipment id, a marker kind or a marker id (Gory Totem and Bloody Cadaver)."
+              }
             }
           }
         }
@@ -68,7 +76,16 @@
       "properties": {
         "weapons": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
         "abilities": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
-        "actions": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } }
+        "actions": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
+        "to": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Which friendly operatives receive the granted weapons. Absent: every operative that is not Expendable.",
+          "properties": {
+            "keyword": { "$ref": "common.schema.json#/$defs/Keyword" },
+            "notKeywords": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Keyword" } }
+          }
+        }
       }
     },
     "actions": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },

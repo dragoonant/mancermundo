@@ -1,0 +1,84 @@
+[
+  {
+    "id": "wyr.e.blasting-charges",
+    "name": "Blasting Charges",
+    "scope": "faction",
+    "team": "wyrmblade",
+    "count": 1,
+    "grants": {
+      "weapons": [
+        "wyr.w.blasting-charge"
+      ],
+      "to": {
+        "keyword": "NEOPHYTE"
+      }
+    },
+    "limits": {
+      "uses": 1,
+      "per": "turningPoint",
+      "scope": "team"
+    },
+    "text": "Once per turning point, one friendly Neophyte can shoot with a blasting charge: 4 attack dice, Hit 4+, damage 3 and 5, Range 4 inches, Blast 1 inch, Saturate.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.6"
+  },
+  {
+    "id": "wyr.e.cult-knives",
+    "name": "Cult Knives",
+    "scope": "faction",
+    "team": "wyrmblade",
+    "count": 1,
+    "grants": {
+      "weapons": [
+        "wyr.w.cult-knife"
+      ],
+      "to": {
+        "keyword": "NEOPHYTE"
+      }
+    },
+    "text": "Every friendly Neophyte gains a cult knife: 3 attack dice, Hit 4+, damage 3 and 4.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.6"
+  },
+  {
+    "id": "wyr.e.explosive-traps",
+    "name": "Explosive Traps",
+    "scope": "faction",
+    "team": "wyrmblade",
+    "count": 2,
+    "hidden": true,
+    "excludes": [
+      "core.e.mines"
+    ],
+    "setup": {
+      "type": "marker",
+      "markerMm": 20,
+      "whollyWithinTerritory": true,
+      "clearances": [
+        {
+          "from": [
+            "otherMarkers",
+            "accessPoints",
+            "accessibleTerrain"
+          ],
+          "moreThan": 2
+        }
+      ]
+    },
+    "effect": {
+      "code": "mines",
+      "params": {
+        "damage": "D3+3"
+      }
+    },
+    "text": "Two Mines markers in one pick (the universal Mines cannot be added for a third). Your own Wyrmblade operatives cross them safely: they neither set them off nor take their damage.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.6"
+  },
+  {
+    "id": "wyr.e.spotlights",
+    "name": "Spotlights",
+    "scope": "faction",
+    "team": "wyrmblade",
+    "count": 1,
+    "text": "Lit targets cannot hide: when a Wyrmblade shoots, its target loses obscured if a friendly Neophyte with no enemy in its control range can see that target within 6 inches.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.6"
+  }
+]

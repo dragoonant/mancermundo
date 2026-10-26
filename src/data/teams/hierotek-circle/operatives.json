@@ -1,0 +1,358 @@
+[
+  {
+    "id": "hie.chronomancer",
+    "name": "Chronomancer",
+    "team": "hierotek-circle",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 14
+    },
+    "base": 40,
+    "keywords": [
+      "HIEROTEK CIRCLE",
+      "NECRON",
+      "LEADER",
+      "CRYPTEK",
+      "CHRONOMANCER"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "weapon",
+          "label": "Weapon",
+          "sets": [
+            {
+              "id": "aeonstave",
+              "name": "Aeonstave",
+              "fixed": [
+                "hie.wg.aeonstave"
+              ]
+            },
+            {
+              "id": "entropic-lance",
+              "name": "Entropic lance",
+              "fixed": [
+                "hie.wg.entropic-lance"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "hie.a.interstitial-command",
+      "hie.a.timesplinter",
+      "hie.a.nanomine",
+      "hie.a.chronometron"
+    ],
+    "figure": {
+      "archetype": "ht-chronomancer"
+    },
+    "text": "The leader who bends time: it pulls fallen servants back into the fight, slows the enemy and dulls attacks aimed at its allies.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.psychomancer",
+    "name": "Psychomancer",
+    "team": "hierotek-circle",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 14
+    },
+    "base": 40,
+    "keywords": [
+      "HIEROTEK CIRCLE",
+      "NECRON",
+      "LEADER",
+      "CRYPTEK",
+      "PSYCHOMANCER"
+    ],
+    "weapons": {
+      "fixed": [
+        "hie.wg.abyssal-lance"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "hie.a.interstitial-command",
+      "hie.a.harbinger-of-despair",
+      "hie.a.nightmare-shroud",
+      "hie.a.vision-of-madness"
+    ],
+    "figure": {
+      "archetype": "ht-psychomancer"
+    },
+    "text": "The leader who preys on minds: it saps the will to hold objectives, denies rerolls and can freeze an enemy in place.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.technomancer",
+    "name": "Technomancer",
+    "team": "hierotek-circle",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 14
+    },
+    "base": 50,
+    "keywords": [
+      "HIEROTEK CIRCLE",
+      "NECRON",
+      "LEADER",
+      "CRYPTEK",
+      "TECHNOMANCER"
+    ],
+    "weapons": {
+      "fixed": [
+        "hie.wg.staff-of-light"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "hie.a.interstitial-command",
+      "hie.a.canoptek-repair",
+      "hie.a.augment-weapon",
+      "hie.a.reinforce-metal"
+    ],
+    "figure": {
+      "archetype": "ht-technomancer"
+    },
+    "text": "The leader who mends and arms: it repairs wounds, enhances a weapon and hardens a friend against heavy blows.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.plasmacyte-accelerator",
+    "name": "Plasmacyte Accelerator",
+    "team": "hierotek-circle",
+    "stats": {
+      "apl": 2,
+      "move": 7,
+      "save": "5+",
+      "wounds": 5
+    },
+    "base": 25,
+    "keywords": [
+      "HIEROTEK CIRCLE",
+      "NECRON",
+      "PLASMACYTE",
+      "ACCELERATOR"
+    ],
+    "weapons": {
+      "fixed": [
+        "hie.w.spark",
+        "hie.w.claws"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "hie.a.scuttler"
+    ],
+    "uniqueActions": [
+      "hie.a.accelerate"
+    ],
+    "figure": {
+      "archetype": "ht-plasmacyte-accelerator"
+    },
+    "text": "A small hovering servant that speeds up Deathmarks and Immortals.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.plasmacyte-reanimator",
+    "name": "Plasmacyte Reanimator",
+    "team": "hierotek-circle",
+    "stats": {
+      "apl": 2,
+      "move": 7,
+      "save": "5+",
+      "wounds": 5
+    },
+    "base": 25,
+    "keywords": [
+      "HIEROTEK CIRCLE",
+      "NECRON",
+      "MEDIC",
+      "PLASMACYTE",
+      "REANIMATOR"
+    ],
+    "weapons": {
+      "fixed": [
+        "hie.w.atomiser-beam",
+        "hie.w.claws"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "hie.a.scuttler"
+    ],
+    "uniqueActions": [
+      "hie.a.reanimate"
+    ],
+    "figure": {
+      "archetype": "ht-plasmacyte-reanimator"
+    },
+    "text": "A small hovering servant that can wake a fallen Necron at once.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.apprentek",
+    "name": "Apprentek",
+    "team": "hierotek-circle",
+    "stats": {
+      "apl": 3,
+      "move": 6,
+      "save": "3+",
+      "wounds": 11
+    },
+    "base": 32,
+    "keywords": [
+      "HIEROTEK CIRCLE",
+      "NECRON",
+      "APPRENTEK"
+    ],
+    "weapons": {
+      "fixed": [
+        "hie.wg.arcane-conduit"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "hie.a.apprentek-assistance"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ht-apprentek"
+    },
+    "text": "A junior Cryptek that copies one of its master's tricks each turning point.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.deathmark",
+    "name": "Deathmark",
+    "team": "hierotek-circle",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 10
+    },
+    "base": 32,
+    "keywords": [
+      "HIEROTEK CIRCLE",
+      "NECRON",
+      "DEATHMARK"
+    ],
+    "weapons": {
+      "fixed": [
+        "hie.w.synaptic-disintegrator",
+        "hie.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "hie.a.deathmarked"
+    ],
+    "uniqueActions": [
+      "hie.a.multi-dimensional-vision"
+    ],
+    "figure": {
+      "archetype": "ht-deathmark"
+    },
+    "text": "A dimension-stepping sharpshooter who marks every target it shoots.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.immortal-despotek",
+    "name": "Immortal Despotek",
+    "team": "hierotek-circle",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 11
+    },
+    "base": 32,
+    "keywords": [
+      "HIEROTEK CIRCLE",
+      "NECRON",
+      "IMMORTAL",
+      "DESPOTEK"
+    ],
+    "weapons": {
+      "fixed": [
+        "hie.w.bayonet"
+      ],
+      "options": [
+        {
+          "id": "rifle",
+          "label": "Ranged weapon",
+          "from": [
+            "hie.w.gauss-blaster",
+            "hie.w.tesla-carbine"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "hie.a.steadfast"
+    ],
+    "uniqueActions": [
+      "hie.a.interstitial-command-despotek"
+    ],
+    "figure": {
+      "archetype": "ht-immortal-despotek"
+    },
+    "text": "An Immortal officer that relays orders to the rest of the circle.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.immortal-guardian",
+    "name": "Immortal Guardian",
+    "team": "hierotek-circle",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 10
+    },
+    "base": 32,
+    "keywords": [
+      "HIEROTEK CIRCLE",
+      "NECRON",
+      "IMMORTAL",
+      "GUARDIAN"
+    ],
+    "weapons": {
+      "fixed": [
+        "hie.w.bayonet"
+      ],
+      "options": [
+        {
+          "id": "rifle",
+          "label": "Ranged weapon",
+          "from": [
+            "hie.w.gauss-blaster",
+            "hie.w.tesla-carbine"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "hie.a.steadfast"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ht-immortal-guardian"
+    },
+    "text": "A stubborn Immortal rifleman who holds objectives like a much larger force.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  }
+]

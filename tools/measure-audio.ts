@@ -1,5 +1,5 @@
 // Decodes public/audio/<prefix>*.mp3 in headless Chromium (Playwright), prints RMS, peak and crest
-// factor (peak / RMS) per file, flags gunshots with crest < 6, and writes:
+// factor (peak / RMS) per file, flags gunshots with crest < 8, and writes:
 //   public/audio/trims.json        flat map id -> playback gain (loud files land near the target RMS)
 //   tools/audio-src/measure.json   id -> { rms, peak, crest, seconds, gain } for docs/audio.md
 // Run with:  npx tsx tools/measure-audio.ts [prefix]
@@ -16,13 +16,13 @@ const dir = join(root, 'public', 'audio')
 const prefix = process.argv[2] ?? ''
 const TARGET_RMS = 0.16
 const BED_RMS = 0.1
-const CREST_MIN_GUN = 6
+const CREST_MIN_GUN = 8
 
 /** Ids that are firearm shots (the crest check applies to these). */
 const GUNSHOTS = new Set([
   'wpn-bolt-rifle', 'wpn-auto-bolt-rifle', 'wpn-stalker-bolt-rifle', 'wpn-heavy-bolt-pistol', 'wpn-bolt-pistol',
   'wpn-plasma-pistol', 'wpn-plasma-pistol-supercharge', 'wpn-heavy-bolter', 'wpn-bolt-sniper-rifle', 'wpn-grenade-launcher',
-  'wpn-slugga', 'wpn-dakka-shoota', 'wpn-rokkit-launcha', 'wpn-shokka-pistol', 'wpn-scoped-big-shoota',
+  'wpn-slugga', 'wpn-dakka-shoota', 'wpn-rokkit-launcha', 'wpn-shokka-pistol', 'wpn-scoped-big-shoota', 'esc-whip-crack',
 ])
 const isBed = (id: string) => id.startsWith('music-') || id.startsWith('amb-')
 

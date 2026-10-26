@@ -46,7 +46,7 @@ describe('adapter', () => {
     expect(setup.rosters.A.length).toBe(6)
     expect(setup.rosters.B.length).toBe(11)
     expect(setup.mission?.missionId).toBe(o.missionId)
-    expect(setup.mission?.mapId).toBeUndefined()
+    expect(setup.mission?.mapId).toBe('prelim-1') // an official card names its own map (Map 1 is drawn for map prelim-1)
     expect(Object.keys(setup.teamChoices!.A)).toContain('primary-tactic')
   })
 })

@@ -2,7 +2,7 @@
 import { useEffect, useRef, type CSSProperties } from 'react'
 import { killGradeThresholds } from '@/data'
 import { dataBundle, flattenRoster } from '../game/adapter'
-import { buildProblems } from '../game/defaults'
+import { buildProblems, effectiveLayout } from '../game/defaults'
 import { humanize } from '../game/labels'
 import { useSession } from '../store/session'
 import { colors, fontStack, panel } from './theme'
@@ -26,7 +26,7 @@ export function Briefing() {
   const s = useSession()
   const b = dataBundle()
   const mission = b.missions[s.missionId]!
-  const layout = b.layouts[s.layoutId]!
+  const layout = effectiveLayout(b, s.layoutId, s.seed)
   const controlsRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (s.howTo) controlsRef.current?.scrollIntoView({ block: 'start' })
@@ -84,9 +84,9 @@ export function Briefing() {
           <div style={{ fontWeight: 800, marginBottom: 4 }}>Controls</div>
           <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12 }}>
             <li>Left click: choose, deploy, add a move step, or pick an operative.</li>
-            <li>Right-drag: orbit. Middle-drag or W A S D: pan. Wheel: zoom. Two fingers on touch.</li>
+            <li>Right-drag: orbit. Middle-drag or W A S D: pan. Wheel: zoom.</li>
             <li>Move: click the board for each straight step; each step is rounded up to a whole inch. Enter confirms, Esc cancels.</li>
-            <li>Touch: tap to choose, drag to look around, pinch to zoom; the drawers along the edge open the feed, log, mission and settings.</li>
+            <li>Touch: tap to choose; one finger pans; two fingers pinch to zoom, twist to turn and drag up or down to tilt. Glowing operatives can activate: tap one, then confirm. Every box has a fold button to hide it.</li>
             <li>Every prompt says what it decides; hover (or long-press) a button for its rule.</li>
             <li>
               <KeywordText text="Each activation has 2 AP (APL): the action bar lists what you can do and what each action costs (hover or long-press for the rule). End the activation when you are done." />
@@ -105,11 +105,31 @@ export function Briefing() {
           <Btn data-testid="briefing-back" onClick={() => s.setScreen(s.howTo ? 'start' : 'builder')}>
             Back
           </Btn>
-          <Btn data-testid="briefing-start" variant="primary" style={{ padding: '10px 22px', fontSize: 15 }} disabled={problems.length > 0} onClick={() => s.launch()}>
+          <Btn data-testid="briefing-start" variant="primary" style={{ padding: '10px 22px', fontSize: 15 }} disabled={problems.length > 0} onClick={() => s.requestLaunch()}>
             Deploy
           </Btn>
         </div>
       </div>
+      {s.confirmReplace && (
+        <div role="alertdialog" aria-modal="true" aria-labelledby="replace-title" data-testid="replace-save-dialog" style={{ position: 'fixed', inset: 0, background: 'rgba(5,5,10,0.78)', display: 'grid', placeItems: 'center', zIndex: 100, padding: 16 }}>
+          <div style={{ ...panel, width: 'min(420px, 100%)', padding: 18 }}>
+            <div id="replace-title" style={{ fontWeight: 800, fontSize: 17, marginBottom: 6 }}>
+              Replace your saved game?
+            </div>
+            <Muted style={{ marginBottom: 14, fontSize: 13 }}>
+              Only one game is kept on this device. Starting a new battle deletes the one you have in progress{s.savedGame ? ` (${s.savedGame.teamA} vs ${s.savedGame.teamB}, ${s.savedGame.progress.toLowerCase()})` : ''}.
+            </Muted>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <Btn data-testid="replace-save-confirm" variant="danger" style={{ minHeight: 44 }} onClick={() => s.confirmLaunch()}>
+                Replace it and deploy
+              </Btn>
+              <Btn data-testid="replace-save-cancel" variant="primary" style={{ minHeight: 44 }} onClick={() => s.cancelLaunch()}>
+                Keep my game
+              </Btn>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

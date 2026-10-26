@@ -1,0 +1,187 @@
+[
+  {
+    "id": "lg.p.blood-for-the-blood-god",
+    "name": "BLOOD FOR THE BLOOD GOD",
+    "team": "legionaries",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "lgFlagPloy",
+      "params": {
+        "flag": "bloodForTheBloodGod"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "LEGIONARY"
+      }
+    },
+    "text": "This turning point, the first strike of a non-KHORNE Legionary that is fighting (not retaliating) does 1 extra damage (7 at most), and KHORNE Legionaries' melee weapons get +1 to both Dmg values (7 at most) whenever they fight or retaliate.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.28"
+  },
+  {
+    "id": "lg.p.implacable",
+    "name": "IMPLACABLE",
+    "team": "legionaries",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "lgFlagPloy",
+      "params": {
+        "flag": "implacable"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "LEGIONARY"
+      }
+    },
+    "text": "This turning point, weapons with Piercing 1 that shoot a friendly Legionary have Piercing Crits 1 instead, and NURGLE Legionaries ignore injured stat changes.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.29"
+  },
+  {
+    "id": "lg.p.quicksilver-speed",
+    "name": "QUICKSILVER SPEED",
+    "team": "legionaries",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "lgFlagPloy",
+      "params": {
+        "flag": "quicksilverSpeed"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "LEGIONARY"
+      }
+    },
+    "text": "This turning point, the melee weapons of an enemy fighting a friendly Legionary that has moved in an action have Hit worsened by 1, and an enemy more than 6 inches away shooting a SLAANESH Legionary that has moved has Hit worsened by 1. Never on top of the enemy being injured.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.30"
+  },
+  {
+    "id": "lg.p.fickle-fates",
+    "name": "FICKLE FATES",
+    "team": "legionaries",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "lgFlagPloy",
+      "params": {
+        "flag": "fickleFates"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "LEGIONARY"
+      }
+    },
+    "text": "This turning point, a friendly Legionary shooting a ready enemy has Balanced (Relentless instead if it already has Balanced), and a ready TZEENTCH Legionary being shot may retain one fail as a normal success whenever it retains any crit.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.31"
+  },
+  {
+    "id": "lg.p.unending-bloodshed",
+    "name": "UNENDING BLOODSHED",
+    "team": "legionaries",
+    "type": "firefight",
+    "cost": 1,
+    "window": "fight.resolved",
+    "effect": {
+      "code": "unendingBloodshed",
+      "scope": {
+        "side": "friendly",
+        "keyword": "KHORNE"
+      }
+    },
+    "text": "When a friendly KHORNE Legionary is incapacitated in a fight, before it is removed, it strikes the enemy fighter once with one of its unresolved successes (normal or crit, your choice).",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.32"
+  },
+  {
+    "id": "lg.p.mutability-and-change",
+    "name": "MUTABILITY AND CHANGE",
+    "team": "legionaries",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.activationStart",
+    "effect": {
+      "code": "mutabilityAndChange",
+      "scope": {
+        "side": "friendly",
+        "keyword": "TZEENTCH"
+      }
+    },
+    "text": "As a friendly TZEENTCH Legionary activates: +1 APL for this activation, but it may not repeat any action in it (no double Shoot or Fight). If it is a Warrior, Infernal Pact cannot change its mark this turning point.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.33"
+  },
+  {
+    "id": "lg.p.malignant-aura",
+    "name": "MALIGNANT AURA",
+    "team": "legionaries",
+    "type": "firefight",
+    "cost": 1,
+    "window": "shoot.targetSelected",
+    "effect": {
+      "code": "malignantAura",
+      "scope": {
+        "side": "friendly",
+        "keyword": "NURGLE"
+      }
+    },
+    "text": "As a friendly NURGLE Legionary picks the target of a Shoot: for the rest of the action, any enemy within 3 inches of it (secondary targets included) is shot with Piercing 1.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.34"
+  },
+  {
+    "id": "lg.p.sickening-captivation",
+    "name": "SICKENING CAPTIVATION",
+    "team": "legionaries",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "firefight.activationStart",
+      "firefight.actionEnded"
+    ],
+    "effect": {
+      "code": "sickeningCaptivation",
+      "scope": {
+        "side": "friendly",
+        "keyword": "SLAANESH"
+      }
+    },
+    "text": "During a friendly SLAANESH Legionary's activation, before or after one of its actions: an enemy it can see within 4 inches is entranced and has 1 less APL until its next activation is over.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.35"
+  },
+  {
+    "id": "lg.p.warded-armour",
+    "name": "WARDED ARMOUR",
+    "team": "legionaries",
+    "type": "strategy",
+    "cost": 0,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "wardedArmour",
+      "scope": {
+        "side": "friendly",
+        "keyword": "LEGIONARY"
+      }
+    },
+    "text": "Warded Armour equipment, played as a strategic gambit each turning point: one friendly Legionary has a 2+ Save until the next Strategy phase's Ready step.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.36"
+  },
+  {
+    "id": "lg.p.chaos-talismans",
+    "name": "CHAOS TALISMANS",
+    "team": "legionaries",
+    "type": "strategy",
+    "cost": 0,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "chaosTalismans",
+      "scope": {
+        "side": "friendly",
+        "keyword": "LEGIONARY"
+      }
+    },
+    "text": "Chaos Talismans equipment, played as a strategic gambit each turning point: name a Mark of Chaos. For the rest of the turning point, once per activation, a Legionary of that mark left with two or more failed attack dice may take D3 damage to throw one fail away and count another as a normal success.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.38"
+  }
+]

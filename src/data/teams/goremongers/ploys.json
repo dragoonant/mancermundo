@@ -1,0 +1,138 @@
+[
+  {
+    "id": "gm.p.enhanced-violence",
+    "name": "ENHANCED VIOLENCE",
+    "team": "goremongers",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "gmStrategyFlag",
+      "scope": {
+        "side": "friendly",
+        "keyword": "GOREMONGER"
+      }
+    },
+    "text": "This turning point a friendly Goremonger with a half gore tank has Balanced on its melee weapons, and one with a full tank has Relentless. The tank is read live, after any Sanguavitae lowering. Thrown weapons from Wrist Chains keep these rules.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.30"
+  },
+  {
+    "id": "gm.p.augmented-endurance",
+    "name": "AUGMENTED ENDURANCE",
+    "team": "goremongers",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "gmStrategyFlag",
+      "scope": {
+        "side": "friendly",
+        "keyword": "GOREMONGER"
+      }
+    },
+    "text": "This turning point, when an operative shoots a friendly Goremonger, the defender may re-roll one defence die if its tank is half, or any of them if it is full.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.31"
+  },
+  {
+    "id": "gm.p.gory-tenacity",
+    "name": "GORY TENACITY",
+    "team": "goremongers",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "gmStrategyFlag",
+      "scope": {
+        "side": "friendly",
+        "keyword": "GOREMONGER"
+      }
+    },
+    "text": "This turning point, when a friendly Goremonger fights or retaliates, the first time the opponent strikes it in that sequence the damage is halved, rounding up, but never below 2 (and never raised).",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.32"
+  },
+  {
+    "id": "gm.p.hunt-for-blood",
+    "name": "HUNT FOR BLOOD",
+    "team": "goremongers",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "gmHuntForBlood",
+      "scope": {
+        "side": "friendly",
+        "keyword": "GOREMONGER"
+      }
+    },
+    "text": "Pick one friendly Goremonger. A Conceal order becomes Engage. It may then take a free Charge of at most 3 inches.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.33"
+  },
+  {
+    "id": "gm.p.unbridled-aggression",
+    "name": "UNBRIDLED AGGRESSION",
+    "team": "goremongers",
+    "type": "firefight",
+    "cost": 1,
+    "window": "fight.rolled",
+    "effect": {
+      "code": "gmUnbridledAggression",
+      "scope": {
+        "side": "friendly",
+        "keyword": "GOREMONGER"
+      }
+    },
+    "text": "When a friendly Goremonger fights in an activation in which it Charged, at the end of the Roll Attack Dice step its melee weapons have Severe until the end of the sequence.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.34"
+  },
+  {
+    "id": "gm.p.gorethirst",
+    "name": "GORETHIRST",
+    "team": "goremongers",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.activationStart",
+    "effect": {
+      "code": "gmGorethirst",
+      "scope": {
+        "side": "friendly",
+        "keyword": "GOREMONGER"
+      }
+    },
+    "text": "When you would counteract, you may do so with a friendly Goremonger that has a Conceal order. It changes to Engage first and may only Charge, Shoot or Fight in that counteraction.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.35"
+  },
+  {
+    "id": "gm.p.destructive-demise",
+    "name": "DESTRUCTIVE DEMISE",
+    "team": "goremongers",
+    "type": "firefight",
+    "cost": 1,
+    "window": "operative.incapacitated",
+    "effect": {
+      "code": "gmDestructiveDemise",
+      "scope": {
+        "side": "friendly",
+        "keyword": "GOREMONGER"
+      }
+    },
+    "text": "When a friendly Goremonger is incapacitated, before it is removed, it deals damage to one enemy in its control range: D3 if its tank is empty, D3+1 if half, D3+2 if full.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.36"
+  },
+  {
+    "id": "gm.p.lacerate-flesh",
+    "name": "LACERATE FLESH",
+    "team": "goremongers",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.activationStart",
+    "effect": {
+      "code": "gmLacerateFlesh",
+      "scope": {
+        "side": "friendly",
+        "keyword": "GOREMONGER"
+      }
+    },
+    "text": "When a friendly Goremonger with an empty tank activates or counteracts, raise its tank one level. When the activation or counteraction ends, lower it one level (not a Sanguavitae use); if it cannot be lowered, the operative takes D3 damage.",
+    "source": "team-goremongers.pdf (Aug '26); docs/spec/13-teams.md T-GM.37"
+  }
+]

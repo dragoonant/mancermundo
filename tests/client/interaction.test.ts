@@ -5,7 +5,7 @@ import { act, legalActions, type GameState, type PendingDecision } from '@/engin
 import { RandomBot } from '@/client/bot/randomBot'
 import { dataBundle } from '@/client/game/adapter'
 import { defaultBuild, resolveLayout, resolveMission, resolveTeam } from '@/client/game/defaults'
-import { deployAction, deployChoice, previewMove } from '@/client/interaction/controller'
+import { deployAction, deployChoice, moveReach, previewMove, snapStep } from '@/client/interaction/controller'
 import { useSettings } from '@/client/presentation/settings'
 import { useGame } from '@/client/store/game'
 
@@ -34,6 +34,11 @@ function driveUntil(done: (p: PendingDecision, s: GameState) => boolean, seed: s
     expect(useGame.getState().dispatch(a)).toBeNull()
   }
   throw new Error('decision not reached')
+}
+
+/** A ploy window (Adjust Doctrine and the like) may open after an action is declared: decline it to reach the action's own decision. */
+function declinePloys(): void {
+  for (let i = 0; i < 5 && useGame.getState().pending?.kind === 'ploy.firefight'; i++) expect(useGame.getState().pass()).toBeNull()
 }
 
 describe('interaction', () => {
@@ -70,6 +75,7 @@ describe('interaction', () => {
     }, 'ix-3')
     const reposition = pending.options!.find((o) => o.action.type === 'firefight.action' && o.action.payload.action === 'reposition')!
     expect(useGame.getState().dispatch(reposition.action)).toBeNull()
+    declinePloys()
     const move = useGame.getState().pending!
     expect(move.kind).toBe('move.path')
     expect(move.canPass).toBe(true)
@@ -86,5 +92,72 @@ describe('interaction', () => {
     const before = state.firefight.activation!.apSpent
     expect(useGame.getState().dispatch(act.pass(move))).toBeNull()
     expect(useGame.getState().state!.firefight.activation?.apSpent ?? before).toBe(before)
+  })
+
+  /** Start a reposition and return the move.path decision with its operative. */
+  function startMovePath(seed: string) {
+    start(seed)
+    const { pending } = driveUntil((p, s) => {
+      if (p.kind !== 'firefight.action') return false
+      const op = s.operatives[String(p.context.operativeId)]!
+      return !!p.options?.some((o) => o.action.type === 'firefight.action' && o.action.payload.action === 'reposition') && op.status === 'active'
+    }, seed)
+    const reposition = pending.options!.find((o) => o.action.type === 'firefight.action' && o.action.payload.action === 'reposition')!
+    expect(useGame.getState().dispatch(reposition.action)).toBeNull()
+    declinePloys()
+    const move = useGame.getState().pending!
+    const state = useGame.getState().state!
+    return { state, move, op: state.operatives[move.constraints!.operativeId!]! }
+  }
+
+  it('moveReach with no waypoints is a full circle of the move around the operative, terrain ignored', () => {
+    const { state, move, op } = startMovePath('ix-3')
+    const reach = moveReach(state, move, [])
+    expect(reach).not.toBeNull()
+    expect(reach!.centre).toEqual({ x: op.pos.x, y: op.pos.y, z: op.pos.z })
+    expect(reach!.left).toBe(move.constraints!.maxInches ?? Number(move.context.maxInches))
+    for (const p of reach!.points) expect(Math.hypot(p.x - op.pos.x, p.z - op.pos.z)).toBeCloseTo(reach!.left, 6)
+  })
+
+  it('moveReach after a waypoint centres on the plan end with the inches left', () => {
+    const { state, move, op } = startMovePath('ix-3')
+    const wp = [0, 1, 2, 3, 4, 5, 6, 7]
+      .map((k) => ({ x: op.pos.x + Math.sin(k * 0.8) * 1.5, z: op.pos.z + Math.cos(k * 0.8) * 1.5, y: op.pos.y }))
+      .find((w) => previewMove(state, move, [w]).ok)!
+    expect(wp).toBeDefined()
+    const plan = previewMove(state, move, [wp]).plan!
+    const reach = moveReach(state, move, [wp])!
+    expect(reach.centre).toEqual({ x: plan.end.x, y: plan.end.y, z: plan.end.z })
+    expect(reach.left).toBe(plan.maxInches - plan.cost)
+    for (const p of reach.points) expect(Math.hypot(p.x - reach.centre.x, p.z - reach.centre.z)).toBeCloseTo(reach.left, 6)
+  })
+
+  it('a flat click past the range snaps to its edge and the engine accepts the full move', () => {
+    const { state, move, op } = startMovePath('ix-3')
+    const max = move.constraints!.maxInches!
+    // the open bearing where a straight full-length step is legal
+    const dir = Array.from({ length: 48 }, (_, i) => (i / 48) * Math.PI * 2).find((b) => {
+      const snapped = snapStep(state, move, [], { x: op.pos.x + Math.sin(b) * 20, z: op.pos.z + Math.cos(b) * 20, y: op.pos.y })
+      return previewMove(state, move, [snapped]).ok
+    })
+    expect(dir).toBeDefined()
+    const snapped = snapStep(state, move, [], { x: op.pos.x + Math.sin(dir!) * 20, z: op.pos.z + Math.cos(dir!) * 20, y: op.pos.y })
+    expect(Math.hypot(snapped.x - op.pos.x, snapped.z - op.pos.z)).toBeCloseTo(max, 2)
+    expect(previewMove(state, move, [snapped]).plan!.cost).toBe(max)
+    // a click inside the range is left where it is
+    const inside = { x: op.pos.x + Math.sin(dir!) * 1.2, z: op.pos.z + Math.cos(dir!) * 1.2, y: op.pos.y }
+    expect(snapStep(state, move, [], inside)).toEqual(inside)
+  })
+
+  it('moveReach returns to the original range when the path is undone', () => {
+    const { state, move } = startMovePath('ix-3')
+    const op = state.operatives[move.constraints!.operativeId!]!
+    const first = moveReach(state, move, [])
+    const wp = [0, 1, 2, 3, 4, 5, 6, 7]
+      .map((k) => ({ x: op.pos.x + Math.sin(k * 0.8) * 1.5, z: op.pos.z + Math.cos(k * 0.8) * 1.5, y: op.pos.y }))
+      .find((w) => previewMove(state, move, [w]).ok)!
+    const moved = moveReach(state, move, [wp])!
+    expect(moved.left).toBeLessThan(first!.left)
+    expect(moveReach(state, move, [])).toEqual(first)
   })
 })

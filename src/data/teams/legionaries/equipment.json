@@ -1,0 +1,52 @@
+[
+  {
+    "id": "lg.e.warded-armour",
+    "name": "WARDED ARMOUR",
+    "scope": "faction",
+    "team": "legionaries",
+    "count": 1,
+    "text": "Each turning point, as a strategic gambit, a friendly Legionary's Save becomes 2+ until the Ready step of the next Strategy phase.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.36"
+  },
+  {
+    "id": "lg.e.malefic-blades",
+    "name": "MALEFIC BLADES",
+    "scope": "faction",
+    "team": "legionaries",
+    "count": 1,
+    "grants": {
+      "weapons": [
+        "lg.w.malefic-blade"
+      ],
+      "to": {
+        "keyword": "LEGIONARY"
+      }
+    },
+    "text": "Every friendly Legionary carries a malefic blade (Atk 5, Hit 3+, Dmg 3/4) for the battle.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.39"
+  },
+  {
+    "id": "lg.e.tainted-rounds",
+    "name": "TAINTED ROUNDS",
+    "scope": "faction",
+    "team": "legionaries",
+    "count": 1,
+    "effect": {
+      "code": "taintedRounds",
+      "params": {
+        "oncePer": "turningPoint"
+      }
+    },
+    "text": "One Shoot per turning point, a Legionary firing a plain bolt pistol or boltgun may load cursed rounds: that gun gains Rending for the rest of the action. The tainted bolt pistol does not qualify.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.37"
+  },
+  {
+    "id": "lg.e.chaos-talismans",
+    "name": "CHAOS TALISMANS",
+    "scope": "faction",
+    "team": "legionaries",
+    "count": 1,
+    "text": "A strategic gambit each turning point: name a Mark of Chaos. A Legionary of that mark with at least two failed attack dice may, once per activation, take D3 damage to throw one fail away and count another as a normal success.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.38"
+  }
+]

@@ -128,7 +128,22 @@ export function registeredCodeHooks(): string[] {
 
 /** Passive hooks (attack-sequence handlers, stat rules) call this when their rule actually applies. */
 export function markFired(name: string): void {
+  if (quiet > 0) return
   fired.set(name, (fired.get(name) ?? 0) + 1)
+}
+
+let quiet = 0
+/**
+ * M9 batch B shared: run `fn` without counting fires (query.* runs attack hooks on hypothetical dice for the odds; a
+ * rule applying there is not the rule firing in a game).
+ */
+export function withoutFireCounts<T>(fn: () => T): T {
+  quiet++
+  try {
+    return fn()
+  } finally {
+    quiet--
+  }
 }
 
 export function hookFireCount(name: string): number {

@@ -1,0 +1,353 @@
+[
+  {
+    "team": "warpcoven",
+    "id": "wc.a.wr-psychic",
+    "kind": "weaponRule",
+    "name": "PSYCHIC",
+    "weaponRule": {
+      "param": "none"
+    },
+    "text": "A tag with no effect of its own. Rules of other teams read it (the Null Rod switches PSYCHIC weapons off nearby).",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.6"
+  },
+  {
+    "team": "warpcoven",
+    "id": "wc.a.wr-mindburn",
+    "kind": "weaponRule",
+    "name": "Mindburn",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "wcMindburn"
+    },
+    "text": "When a crit from this weapon deals damage while dice resolve, the target takes a Mindburn token (one at most): the Hit of its weapons is 1 worse. The token goes at the end of its next activation, when it is incapacitated, or when a friendly operative uses this weapon again. It does not stack with being injured.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.11"
+  },
+  {
+    "team": "warpcoven",
+    "id": "wc.a.wr-shield",
+    "kind": "weaponRule",
+    "name": "Shield",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "wcShield"
+    },
+    "text": "An operative with this weapon has a 4+ Save. Fighting or retaliating with it, each of its blocks may cancel two unresolved enemy successes instead of one.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.20"
+  },
+  {
+    "team": "warpcoven",
+    "id": "wc.a.astartes",
+    "kind": "factionRule",
+    "name": "ASTARTES",
+    "scope": {
+      "side": "friendly",
+      "keyword": "HERETIC ASTARTES"
+    },
+    "effect": {
+      "code": "astartes",
+      "params": {
+        "doubleActions": [
+          "shoot",
+          "fight"
+        ],
+        "repeatSurcharge": {
+          "nameContains": [
+            "soulreaper cannon",
+            "warpflamer"
+          ],
+          "ap": 1
+        },
+        "counteractAnyOrder": true
+      }
+    },
+    "text": "In one activation a Sorcerer or Rubric Marine may take two Shoot actions or two Fight actions. If both Shoots use a soulreaper cannon, or both use a warpflamer, the second costs 1 more AP. The same PSYCHIC ranged weapon cannot be picked twice. Whatever their order, they can counteract.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.31"
+  },
+  {
+    "team": "warpcoven",
+    "id": "wc.a.boons-of-tzeentch",
+    "kind": "factionRule",
+    "name": "BOONS OF TZEENTCH",
+    "effect": {
+      "code": "boonsOfTzeentch"
+    },
+    "text": "When the team is chosen, every Sorcerer takes a different Boon of Tzeentch for the battle. Boons are public tags, not keywords. Only Sorcerous Scrolls changes one.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.21"
+  },
+  {
+    "team": "warpcoven",
+    "id": "wc.a.boon-incorporeal-sight",
+    "kind": "ability",
+    "name": "Incorporeal Sight",
+    "text": "Its ranged weapons have Saturate, and enemies cannot be obscured while it shoots.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.22"
+  },
+  {
+    "team": "warpcoven",
+    "id": "wc.a.boon-time-walk",
+    "kind": "ability",
+    "name": "Time-Walk",
+    "text": "Add 1\" to its Move.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.23"
+  },
+  {
+    "team": "warpcoven",
+    "id": "wc.a.boon-echoes-from-the-warp",
+    "kind": "ability",
+    "name": "Echoes from the Warp",
+    "text": "Once per battle, as it counteracts: you may switch its order, and it gets a second free 1 AP action in that counteraction, different from the first.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.24"
+  },
+  {
+    "team": "warpcoven",
+    "id": "wc.a.boon-warp-swell",
+    "kind": "ability",
+    "name": "Warp Swell",
+    "text": "Add 1 to the Normal Dmg of its melee weapons.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.25"
+  },
+  {
+    "team": "warpcoven",
+    "id": "wc.a.boon-mutant-appendage",
+    "kind": "ability",
+    "name": "Mutant Appendage",
+    "text": "An enemy in its control range does not stop it picking up markers or taking mission actions, and once per activation one of Pick Up Marker, Place Marker or a mission action costs it 1 less AP.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.26"
+  },
+  {
+    "team": "warpcoven",
+    "id": "wc.a.boon-immaterial-flight",
+    "kind": "ability",
+    "name": "Immaterial Flight",
+    "text": "Once per turning point, when it Charges or Repositions in its activation, it may FLY: it is set up again within its Move of where it started, outside enemy control ranges unless it is a Charge.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.27"
+  },
+  {
+    "team": "warpcoven",
+    "id": "wc.a.boon-twist-of-fate",
+    "kind": "ability",
+    "name": "Twist of Fate",
+    "text": "Its PSYCHIC ranged weapons have Piercing Crits 1.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.28"
+  },
+  {
+    "team": "warpcoven",
+    "id": "wc.a.boon-astral-bombardment",
+    "kind": "ability",
+    "name": "Astral Bombardment",
+    "text": "One of its PSYCHIC ranged weapons gains Devastating 1. The doombolt gets 2\" Devastating 2 instead of Devastating 2; the firestorm and mindburn trade Seek Light for Devastating 1 each Shoot, never both.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.29"
+  },
+  {
+    "team": "warpcoven",
+    "id": "wc.a.boon-master-of-the-immaterium",
+    "kind": "ability",
+    "name": "Master of the Immaterium",
+    "text": "Add 3\" to every distance requirement of its PSYCHIC actions (not to the return check of Temporal Flux).",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.30"
+  },
+  {
+    "team": "warpcoven",
+    "kind": "ability",
+    "id": "wc.a.sorcerous-automata",
+    "name": "Sorcerous Automata",
+    "effect": {
+      "code": "wcSorcerousAutomata",
+      "params": {
+        "within": 9,
+        "aplDelta": -1
+      }
+    },
+    "text": "When a Rubric Marine is activated with no friendly Sorcerer within 9\", it has 1 less APL until that activation ends. Counteracting never triggers it.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.13"
+  },
+  {
+    "team": "warpcoven",
+    "kind": "ability",
+    "id": "wc.a.icon-bearer",
+    "name": "Icon Bearer",
+    "effect": {
+      "code": "wcIconBearer",
+      "params": {
+        "controlAplBonus": 1
+      }
+    },
+    "text": "Adds 1 to its APL in the marker-control count only; its real APL is unchanged.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.14"
+  },
+  {
+    "team": "warpcoven",
+    "kind": "ability",
+    "id": "wc.a.slow-and-purposeful",
+    "name": "Slow and Purposeful",
+    "effect": {
+      "code": "slowAndPurposeful"
+    },
+    "text": "Its ranged weapons have Ceaseless while it shoots, unless it has Charged or Repositioned earlier in the activation. Always on when it counteracts.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.15"
+  },
+  {
+    "team": "warpcoven",
+    "kind": "ability",
+    "id": "wc.a.savage-brutality",
+    "name": "Savage Brutality",
+    "effect": {
+      "code": "savageBrutality"
+    },
+    "text": "The first time it Fights in each of its activations, it may at once make a free Fight against any enemy in its control range.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.16"
+  },
+  {
+    "team": "warpcoven",
+    "kind": "ability",
+    "id": "wc.a.herd-banner",
+    "name": "Herd Banner",
+    "effect": {
+      "code": "herdBanner",
+      "params": {
+        "within": 3,
+        "threshold": 3
+      }
+    },
+    "text": "A friendly Tzaangor visible to and within 3\" of the Icon Bearer (itself included) takes 1 less damage from each attack die of Normal Dmg 3 or more.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.18"
+  },
+  {
+    "team": "warpcoven",
+    "kind": "ability",
+    "id": "wc.a.relic-hunters",
+    "name": "Relic Hunters",
+    "effect": {
+      "code": "relicHunters"
+    },
+    "text": "Once per battle for the kill team, a Tzaangor Warrior in the opponent's territory performs Pick Up Marker, Place Marker or a mission action for 1 less AP.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.19"
+  },
+  {
+    "team": "warpcoven",
+    "kind": "uniqueAction",
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "id": "wc.a.protected-by-fate",
+    "name": "PROTECTED BY FATE",
+    "ap": 1,
+    "keywords": [
+      "PSYCHIC"
+    ],
+    "effect": {
+      "code": "protectedByFate"
+    },
+    "text": "PSYCHIC. Pick a friendly operative this Sorcerer can see (itself included). Until the Sorcerer's next activation starts, it is incapacitated or a friendly operative performs this again, the picked operative may re-roll any of its defence dice when shot.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.7"
+  },
+  {
+    "team": "warpcoven",
+    "kind": "uniqueAction",
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "id": "wc.a.ravage-destiny",
+    "name": "RAVAGE DESTINY",
+    "ap": 1,
+    "keywords": [
+      "PSYCHIC"
+    ],
+    "effect": {
+      "code": "ravageDestiny",
+      "params": {
+        "within": 9
+      }
+    },
+    "text": "PSYCHIC. Pick an enemy operative visible to and within 9\". Until the Sorcerer's next activation starts, it is incapacitated or a friendly operative performs this again, that enemy must re-roll its attack dice showing 6, and counts 1 less APL when marker control is worked out.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.8"
+  },
+  {
+    "team": "warpcoven",
+    "kind": "uniqueAction",
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "id": "wc.a.reconstitution-ritual",
+    "name": "RECONSTITUTION RITUAL",
+    "ap": 1,
+    "keywords": [
+      "PSYCHIC"
+    ],
+    "effect": {
+      "code": "reconstitutionRitual",
+      "params": {
+        "within": 6,
+        "dice": "2D3"
+      }
+    },
+    "text": "PSYCHIC. A friendly operative visible to and within 6\" (itself included) regains up to 2D3 lost wounds. Not if any friendly operative already did this in this turning point.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.9"
+  },
+  {
+    "team": "warpcoven",
+    "kind": "uniqueAction",
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "id": "wc.a.temporal-flux",
+    "name": "TEMPORAL FLUX",
+    "ap": 1,
+    "keywords": [
+      "PSYCHIC"
+    ],
+    "effect": {
+      "code": "temporalFlux",
+      "params": {
+        "within": 6
+      }
+    },
+    "text": "PSYCHIC. Pick a friendly operative visible to and within 6\" and place your Temporal Flux marker in its control range. At the end of its next activation, if it is standing and wholly within 6\" of the marker, it is set up again beside the marker; either way the marker is then removed. Not while your marker is already in the killzone.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.10"
+  },
+  {
+    "team": "warpcoven",
+    "kind": "uniqueAction",
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "id": "wc.a.alight",
+    "name": "ALIGHT",
+    "ap": 1,
+    "keywords": [
+      "PSYCHIC"
+    ],
+    "effect": {
+      "code": "alight"
+    },
+    "text": "PSYCHIC. Pick an enemy operative visible to this Sorcerer. Until the Sorcerer's next activation starts, it is incapacitated or a friendly operative performs this again, the enemy gains an Alight token, and friendly Warpcoven operatives' weapons have Ceaseless when shooting, fighting or retaliating against it.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.12"
+  },
+  {
+    "team": "warpcoven",
+    "kind": "uniqueAction",
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "id": "wc.a.brayhorn",
+    "name": "BRAYHORN",
+    "ap": 0,
+    "effect": {
+      "code": "brayhorn"
+    },
+    "text": "Until the Ready step of the next Strategy phase, friendly Warpcoven Tzaangors have +1\" Move.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.17"
+  },
+  {
+    "team": "warpcoven",
+    "kind": "ability",
+    "id": "wc.a.fate-reserve",
+    "name": "Fate Itself is My Weapon: reserved die",
+    "text": "Spend one of the two reserved dice to replace an attack die rolled in this sequence.",
+    "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.33"
+  }
+]

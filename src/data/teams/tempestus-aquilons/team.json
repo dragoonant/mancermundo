@@ -1,0 +1,140 @@
+{
+  "id": "tempestus-aquilons",
+  "name": "Tempestus Aquilons",
+  "factionKeyword": "TEMPESTUS AQUILON",
+  "archetypes": [
+    "recon",
+    "seek-and-destroy"
+  ],
+  "selection": {
+    "slots": [
+      {
+        "id": "leader",
+        "label": "Leader",
+        "count": 1,
+        "from": [
+          "ta.tempestor"
+        ]
+      },
+      {
+        "id": "servo",
+        "label": "Servo-Sentry",
+        "count": 1,
+        "from": [
+          "ta.servo-sentry"
+        ]
+      },
+      {
+        "id": "main",
+        "label": "Selections",
+        "count": 9,
+        "from": [
+          "ta.grenadier",
+          "ta.gunfighter",
+          "ta.gunner",
+          "ta.marksman",
+          "ta.precursor",
+          "ta.trooper"
+        ],
+        "repeatable": [
+          "ta.trooper",
+          "ta.gunner"
+        ]
+      }
+    ],
+    "loadoutCaps": [
+      {
+        "label": "Gunner carbine",
+        "weapons": [
+          "ta.w.melta-carbine",
+          "ta.wg.plasma-carbine"
+        ],
+        "max": 1,
+        "each": true
+      }
+    ]
+  },
+  "factionRules": [
+    "ta.a.drop-insertion",
+    "ta.a.grav-chute"
+  ],
+  "ploys": [
+    "ta.p.rapid-insertion",
+    "ta.p.drop-insertion",
+    "ta.p.sudden-offensive",
+    "ta.p.maintain-momentum",
+    "ta.p.eye-above",
+    "ta.p.drop-and-secure",
+    "ta.p.hot-drop",
+    "ta.p.adjust-coordinates",
+    "ta.p.tempestus-exemplars",
+    "ta.p.progena"
+  ],
+  "equipment": [
+    "ta.e.tempestus-daggers",
+    "ta.e.combat-stimms",
+    "ta.e.drop-augury",
+    "ta.e.remote-overseer"
+  ],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "ta.tempestor",
+      "ta.servo-sentry",
+      "ta.grenadier",
+      "ta.gunfighter",
+      "ta.gunner",
+      "ta.gunner",
+      "ta.marksman",
+      "ta.precursor",
+      "ta.trooper",
+      "ta.trooper",
+      "ta.trooper"
+    ],
+    "equipment": [
+      "ta.e.tempestus-daggers",
+      "ta.e.combat-stimms",
+      "ta.e.drop-augury",
+      "core.e.ladders"
+    ],
+    "loadouts": [
+      {},
+      {
+        "weapon": [
+          "ta.wg.hot-shot-volley-gun"
+        ]
+      },
+      {},
+      {},
+      {
+        "carbine": [
+          "ta.w.melta-carbine"
+        ]
+      },
+      {
+        "carbine": [
+          "ta.wg.plasma-carbine"
+        ]
+      },
+      {},
+      {},
+      {},
+      {},
+      {}
+    ]
+  },
+  "paint": {
+    "major": {
+      "h": 0.6,
+      "s": 0.12,
+      "l": 0.22
+    },
+    "minor": {
+      "h": 0.1,
+      "s": 0.3,
+      "l": 0.5
+    }
+  },
+  "text": "Grav-chute storm troopers who hold most of the squad in the sky and drop it onto the enemy's flanks once the shooting starts.",
+  "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md section 23"
+}

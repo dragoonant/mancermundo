@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mancermundo.dev/schemas/team.schema.json",
+  "title": "Kill team",
+  "description": "selection.slots describe the roster shape; teamChoices describe picks made once per team at selection (for example Chapter Tactics).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "factionKeyword", "archetypes", "selection", "factionRules", "ploys", "equipment", "paint", "text", "source"],
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/Id" },
+    "name": { "type": "string", "minLength": 1 },
+    "factionKeyword": { "$ref": "common.schema.json#/$defs/Keyword" },
+    "archetypes": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/Slug" } },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slots"],
+      "properties": {
+        "caps": {
+          "type": "array",
+          "description": "M9 batch B: caps counted over every slot: at most `max` operatives that have `keyword` or are one of `from` (at most five SICARIAN operatives, the leader included). M9 batch C: or at least `min` of them (at least one SORCERER).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "allOf": [
+              { "anyOf": [{ "required": ["keyword"] }, { "required": ["from"] }] },
+              { "anyOf": [{ "required": ["max"] }, { "required": ["min"] }] }
+            ],
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "keyword": { "$ref": "common.schema.json#/$defs/Keyword" },
+              "from": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/Id" } },
+              "max": { "type": "integer", "minimum": 0 },
+              "min": { "type": "integer", "minimum": 1 }
+            }
+          }
+        },
+        "requires": {
+          "type": "array",
+          "description": "M9 batch C: the roster may include `id` only if it also includes one of `needs` (a GHEISTSKULL needs a VOID-JAMMER, a C.A.T. UNIT a SURVEYOR).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "needs"],
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "id": { "$ref": "common.schema.json#/$defs/Id" },
+              "needs": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/Id" } }
+            }
+          }
+        },
+        "loadoutCaps": {
+          "type": "array",
+          "description": "M9 batch B: weapon caps across the roster's chosen loadouts (fixed weapons count): at most `max` operatives carry any of `weapons` (profile or profileGroup ids), or with `each` at most `max` carry each one.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["weapons", "max"],
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "weapons": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Id" } },
+              "max": { "type": "integer", "minimum": 0 },
+              "each": { "type": "boolean" }
+            }
+          }
+        },
+        "slots": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "count", "from"],
+            "properties": {
+              "id": { "$ref": "common.schema.json#/$defs/Slug" },
+              "label": { "type": "string", "minLength": 1 },
+              "count": { "type": "integer", "minimum": 1, "description": "Selections to fill exactly." },
+              "from": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Id" } },
+              "repeatable": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": { "$ref": "common.schema.json#/$defs/Id" },
+                "description": "Datacards that may be taken more than once; every other datacard at most once."
+              },
+              "halfSelections": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": { "$ref": "common.schema.json#/$defs/Id" },
+                "description": "Datacards that each count as half a selection; the halves present cost ceil(n / 2) selections together."
+              },
+              "weights": {
+                "type": "object",
+                "additionalProperties": { "type": "integer", "minimum": 2 },
+                "description": "Datacard id to the number of selections it counts as (MB3 Recon Drone, Wyrmblade cult agents: 2)."
+              },
+              "caps": {
+                "type": "array",
+                "description": "At most `max` operatives from `from` together (at most two GUNNER operatives).",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["from", "max"],
+                  "properties": {
+                    "label": { "type": "string", "minLength": 1 },
+                    "from": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/Id" } },
+                    "max": { "type": "integer", "minimum": 0 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "teamChoices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "group"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/Slug" },
+          "label": { "type": "string", "minLength": 1 },
+          "group": { "$ref": "common.schema.json#/$defs/Slug", "description": "choiceGroup of the abilities offered." },
+          "distinctFrom": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Slug" }, "description": "Other teamChoices ids this pick must differ from." }
+        }
+      }
+    },
+    "operativeChoices": {
+      "type": "array",
+      "description": "M9 batch B: a keyword every eligible operative takes at selection (Legionaries Marks of Chaos); public, read by every keyword test, changed only by team rules.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "keywords"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/Slug" },
+          "label": { "type": "string", "minLength": 1 },
+          "keywords": { "type": "array", "minItems": 2, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Keyword" } },
+          "forKeyword": { "$ref": "common.schema.json#/$defs/Keyword", "description": "Only operatives with this keyword take the pick (default: every operative of the team)." },
+          "unique": { "type": "boolean", "description": "M9 batch C: no two operatives of the roster take the same pick (Boons of Tzeentch)." },
+          "distinctFrom": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Slug" }, "description": "M9 batch C: other operativeChoices ids the same operative's pick must differ from (two different Custom weapon rules)." },
+          "keyword": { "type": "boolean", "description": "M9 batch C: false makes the pick a tag read by team code, not a keyword (keyword tests ignore it). Default true." },
+          "labels": {
+            "type": "object",
+            "description": "batch C shared: display label per pick, keyed by one of `keywords` (a label may contain '+' and lower case).",
+            "propertyNames": { "$ref": "common.schema.json#/$defs/Keyword" },
+            "additionalProperties": { "type": "string", "minLength": 1 }
+          },
+          "exclude": {
+            "type": "array",
+            "description": "Keywords these datacards can never take (a BALEFIRE ACOLYTE is never KHORNE).",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["datacards", "keywords"],
+              "properties": {
+                "datacards": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/Id" } },
+                "keywords": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/Keyword" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "factionRules": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
+    "ploys": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
+    "equipment": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
+    "playable": {
+      "type": "boolean",
+      "description": "False while the team is scaffolded but not complete: it is validated and loaded, but the team picker, the sims and the AI bench leave it out. Implementers flip it to true (or delete it) when the team is done."
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The default roster, equipment and team picks used by realSetup (sims, quick start, tests).",
+      "properties": {
+        "roster": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" }, "description": "Datacard ids; each takes its first legal loadout." },
+        "equipment": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
+        "teamChoices": { "type": "object", "additionalProperties": { "$ref": "common.schema.json#/$defs/Id" }, "description": "teamChoices id to the ability picked." },
+        "operativePicks": {
+          "type": "array",
+          "description": "M9 batch B: operativeChoices picks per default roster entry, in the same order (choice id to keyword); a missing pick takes the first allowed keyword.",
+          "items": { "type": "object", "additionalProperties": { "$ref": "common.schema.json#/$defs/Keyword" } }
+        },
+        "loadouts": {
+          "type": "array",
+          "description": "M9 batch B: loadout answers (slot id to picked ids) per default roster entry, in the same order; an empty object takes the first legal loadout. Needed when loadout caps rule out the first loadout twice.",
+          "items": { "type": "object", "additionalProperties": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } } }
+        }
+      }
+    },
+    "paint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["major", "minor"],
+      "properties": { "major": { "$ref": "common.schema.json#/$defs/Hsl" }, "minor": { "$ref": "common.schema.json#/$defs/Hsl" } }
+    },
+    "text": { "$ref": "common.schema.json#/$defs/Text" },
+    "source": { "$ref": "common.schema.json#/$defs/Source" }
+  }
+}

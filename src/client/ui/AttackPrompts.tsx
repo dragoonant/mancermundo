@@ -147,7 +147,7 @@ export function ShootTargetBody({ pending, state }: { pending: PendingDecision; 
     <>
       <PromptHeader
         pending={pending}
-        hint={`${opName(state, String(pending.context.operativeId))} shoots with ${w?.name ?? 'a weapon'}${w ? ` (Atk ${w.atk}, Hit ${w.hit}+, Dmg ${w.dmg.normal}/${w.dmg.crit})` : ''}. Click a target here or on the board.`}
+        hint={`${opName(state, String(pending.context.operativeId))} shoots with ${w?.name ?? 'a weapon'}${w ? ` (Atk ${w.atk}, Hit ${w.hit}+, Dmg ${w.dmg.normal}/${w.dmg.crit})` : ''}. Click a target here or on the board.${typeof pending.context.barredId === 'string' ? ` Blinding Aura bars ${opName(state, pending.context.barredId)}: pick another target.` : ''}`}
       />
       <div style={{ display: 'grid', gap: 6 }} data-testid="target-cards">
         {(pending.options ?? []).map((o) => {

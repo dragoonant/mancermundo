@@ -2,6 +2,7 @@
 // the pools never exceed their caps however much is fired, tracers are one per attack die, flame burns for two to
 // three seconds, and the director plays effects at its beats (muzzle flash with the weapon sound, numbers on damage,
 // the death style from the weapon that did it).
+import { ALL_WEAPON_IDS, isPresented } from '../fixtures/presentation'
 import { describe, expect, it, beforeEach } from 'vitest'
 import type { GameEvent, GameState } from '@/engine'
 import { dataBundle } from '@/client/game/adapter'
@@ -24,7 +25,7 @@ interface W {
   id: string
   type: 'ranged' | 'melee'
 }
-const weapons = Object.values(dataBundle().byId).filter((r) => 'atk' in r && 'dmg' in r) as unknown as W[]
+const weapons = Object.values(dataBundle().byId).filter((r) => 'atk' in r && 'dmg' in r && isPresented(r)) as unknown as W[]
 
 // ---------------------------------------------------------------- mapping
 
@@ -42,7 +43,7 @@ describe('weapon -> effect family', () => {
   })
 
   it('has no stale entries', () => {
-    const ids = new Set(weapons.map((w) => w.id))
+    const ids = ALL_WEAPON_IDS
     expect(Object.keys(WEAPON_VFX).filter((id) => !ids.has(id))).toEqual([])
   })
 

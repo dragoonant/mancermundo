@@ -105,6 +105,7 @@ function editor(state: GameState): ScenarioEditor {
 const INTERCESSOR = 'aod.intercessor-gunner'
 const ASSAULT = 'aod.assault-intercessor-warrior'
 const BOY = 'kom.boy'
+const GROT = 'kom.grot'
 
 export const SCENARIOS: Record<string, Scenario> = {
   'shoot-cover': {
@@ -112,13 +113,14 @@ export const SCENARIOS: Record<string, Scenario> = {
     summary: 'An Intercessor Gunner (auto bolt rifle) with three Kommandos in view: an Engaged Boy in light cover, an Engaged Boy in the open, and a Concealed Boy in cover that cannot be targeted.',
     arrange(e) {
       const shooter = e.op('A', INTERCESSOR)
-      e.place(shooter, -8, 5.2)
+      e.place(shooter, -2.5, 3.8)
       const cover = e.op('B', BOY)
       const open = e.op('B', 'kom.grot')
       const hidden = e.op('B', 'kom.breacha-boy')
-      e.place(cover, 1.6, 5.2)
-      e.place(open, -4, 9.5)
-      e.place(hidden, -2.5, 7)
+      // the cover pair stand behind the light rubble heap on the centreline, the Grot in the open beside the heavy rubble
+      e.place(cover, 1.2, -1.8)
+      e.place(open, -1.8, 8.5)
+      e.place(hidden, -1.3, -1.8)
       e.order(cover, 'engage')
       e.order(open, 'engage')
       e.order(hidden, 'conceal')
@@ -137,22 +139,25 @@ export const SCENARIOS: Record<string, Scenario> = {
   },
   vantage: {
     name: 'vantage',
-    summary: 'An Intercessor Gunner on the upper floor of the large ruin shooting a Boy on the ground 3 inches below: Vantage grants Accurate 1.',
+    summary: 'An Intercessor Gunner on the upper floor of the large ruin shooting a Boy on the ground 3 inches below: Vantage grants Accurate 1 against the Engaged Boy, not against the Concealed Grot beside him.',
     arrange(e) {
       const shooter = e.op('A', INTERCESSOR)
-      e.place(shooter, -4.75, -4.75, 3)
+      e.place(shooter, 6.4, -4.2, 3)
       const target = e.op('B', BOY)
-      e.place(target, -4, -9)
+      e.place(target, 2.6, -4.4)
       e.order(target, 'engage')
+      const concealed = e.op('B', GROT)
+      e.place(concealed, 2.6, -2.9)
+      e.order(concealed, 'conceal')
     },
   },
   'objective-contest': {
     name: 'objective-contest',
-    summary: 'The centre objective with two Angels of Death and one Kommando inside its control range: seat A holds it 2 to 1 on contesting operatives.',
+    summary: 'The centre objective (inside the stronghold on the centreline) with two Angels of Death and one Kommando inside its control range: seat A holds it 2 to 1 on contesting operatives.',
     arrange(e) {
-      e.place(e.op('A', INTERCESSOR), -0.9, 0.2)
-      e.place(e.op('A', ASSAULT), -0.5, -1.2)
-      e.place(e.op('B', BOY), 1, 0.2)
+      e.place(e.op('A', INTERCESSOR), -0.6, -4.4)
+      e.place(e.op('A', ASSAULT), 0.4, -6)
+      e.place(e.op('B', BOY), 0.9, -4.4)
     },
   },
 }

@@ -1,2 +1,6 @@
+# Text files are stored and checked out with LF; git detects binaries (GLB, mp3, png) on its own.
+* text=auto eol=lf
+# Windows batch scripts keep CRLF (cmd.exe misparses LF-only labels and gotos).
+*.bat text eol=crlf
 # Workflow scripts must stay LF: the Workflow tool rejects scripts containing CR characters.
 tools/workflows/*.js text eol=lf

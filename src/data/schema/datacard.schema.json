@@ -22,6 +22,18 @@
       }
     },
     "base": { "type": "integer", "minimum": 20, "description": "Base diameter in mm." },
+    "extraEquipment": { "type": "integer", "minimum": 1, "description": "M9 batch B: extra equipment options the team may take while this operative is on the roster (Hearthkyn Lugger: 1)." },
+    "ovalBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["long", "short"],
+      "description": "M9 batch B: an oval base in mm (long axis along the operative's facing). With `weapons`, only loadouts carrying one of those weapon ids use it; the others keep the round `base`.",
+      "properties": {
+        "long": { "type": "integer", "minimum": 20 },
+        "short": { "type": "integer", "minimum": 20 },
+        "weapons": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Id" } }
+      }
+    },
     "keywords": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Keyword" } },
     "weapons": {
       "type": "object",
@@ -45,6 +57,7 @@
     },
     "expendable": { "type": "boolean", "description": "Ignored for the opponent's kill op, both as a casualty and in the starting count." },
     "nonOperativeForSelection": { "type": "boolean" },
+    "selectable": { "type": "boolean", "description": "batch D: false = never picked for a roster; the operative exists only by changing into it mid-battle (Chaos Cult Mutant, Torment). Snapshotted into every game with the team." },
     "text": { "$ref": "common.schema.json#/$defs/Text" },
     "source": { "$ref": "common.schema.json#/$defs/Source" }
   },

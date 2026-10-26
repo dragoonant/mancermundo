@@ -1,5 +1,7 @@
 // Figure manifest: every datacard archetype has a measured body entry whose GLB exists, sockets are sane,
 // every hold class has a HOLDS mount, and the rigid cues behave.
+import { isPresented } from '../fixtures/presentation'
+import { STAND_INS } from '@/client/teams'
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -10,15 +12,25 @@ import type { HoldClass, ModelManifest } from '@/client/figures/manifest'
 
 const modelsDir = resolve(__dirname, '../../public/assets/models')
 const manifest = JSON.parse(readFileSync(resolve(modelsDir, 'manifest.json'), 'utf8')) as ModelManifest
-const cards = Object.values(dataBundle().byId).filter((r) => 'figure' in r) as unknown as { id: string; figure: { archetype: string } }[]
+const cards = Object.values(dataBundle().byId).filter((r) => 'figure' in r && isPresented(r)) as unknown as { id: string; figure: { archetype: string } }[]
 
 describe('figure manifest', () => {
   it('has datacards to check', () => {
     expect(cards.length).toBeGreaterThanOrEqual(20)
   })
 
+  it('pose variants point at listed bodies with weapons baked', () => {
+    for (const [slug, b] of Object.entries(manifest.bodies)) {
+      for (const v of b.variants ?? []) {
+        expect(manifest.bodies[v], `${slug} variant ${v}`).toBeTruthy()
+        expect(manifest.bodies[v]!.weaponsBaked, `${slug} variant ${v} baked`).toBe(true)
+      }
+    }
+  })
+
   it('every datacard archetype has a manifest entry', () => {
-    const missing = cards.filter((c) => !manifest.bodies[c.figure.archetype]).map((c) => `${c.id} -> ${c.figure.archetype}`)
+    // archetypes a team draws as procedural stand-ins on purpose (src/client/teams standIns) need no body yet
+    const missing = cards.filter((c) => !manifest.bodies[c.figure.archetype] && !STAND_INS.has(c.figure.archetype)).map((c) => `${c.id} -> ${c.figure.archetype}`)
     expect(missing).toEqual([])
   })
 
@@ -43,9 +55,8 @@ describe('figure manifest', () => {
       expect(b.baseMm, slug).toBeGreaterThan(20)
       const s = b.sockets!
       for (const k of ['back', 'beltR', 'beltL', 'shoulderR', 'shoulderL', 'head'] as const) expect(s[k], `${slug}.${k}`).toBeTruthy()
-      if (slug === 'kom-bomb-squig') {
-        expect(s.handR).toBeUndefined()
-        expect(s.handL).toBeUndefined()
+      if (slug === 'kom-bomb-squig' || b.weaponsBaked) {
+        // no hand sockets on the squig; v2 bodies carry their weapons in the mesh, hands are not used
       } else {
         expect(s.handR![0], `${slug} handR is on the figure's right (-x)`).toBeLessThan(0)
         expect(s.handL![0], `${slug} handL is on the figure's left (+x)`).toBeGreaterThan(0)

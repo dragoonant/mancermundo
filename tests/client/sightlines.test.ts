@@ -4,14 +4,14 @@ import { describe, expect, it } from 'vitest'
 import { createGame, type GameState } from '@/engine'
 import { buildScenario } from '@/client/dev/scenarios'
 import { buildGameSetup, dataBundle, engineBundle } from '@/client/game/adapter'
-import { defaultBuild, resolveLayout, resolveMission, resolveTeam } from '@/client/game/defaults'
+import { fullBuild, resolveLayout, resolveMission, resolveTeam } from '@/client/game/defaults'
 import { evaluateSight, evaluateThreat, hypothetical, measure, sightFor, threatFor } from '@/client/interaction/sightlines'
 import { sightView } from '@/client/interaction/sightData'
 import { expectedDamage } from '@/engine/query'
 
 function base(name: string): GameState {
   const b = dataBundle()
-  const setup = buildGameSetup(b, defaultBuild(b, resolveTeam(b, 'aod')), defaultBuild(b, resolveTeam(b, 'kom')), {
+  const setup = buildGameSetup(b, fullBuild(b, resolveTeam(b, 'aod')), fullBuild(b, resolveTeam(b, 'kom')), {
     layoutId: resolveLayout(b, '01').id,
     missionId: resolveMission(b, 'secure').id,
     mapId: 'prelim-1',
@@ -89,9 +89,9 @@ describe('sightlines: the threat view', () => {
   const s = base('shoot-cover')
 
   it('Conceal in cover shuts out shooters that Engage cannot; Conceal never adds one', () => {
-    // the rubble the Breacha Boy hid behind: on Conceal there only shooters that ignore the cover can fire
-    const at = { x: -2.5, y: 0, z: 7 }
-    const moved = hypothetical(hypothetical(s, 'B3', { x: -8, y: 0, z: 5.2 }), 'A6', at)
+    // north of the light rubble heap on the centreline, with the Boys that shoot from the south side of it: on Conceal only shooters that ignore the cover can fire
+    const at = { x: 0, y: 0, z: 3.5 }
+    const moved = hypothetical(s, 'A6', at)
     const t = evaluateThreat(moved, subject(moved, 'A6', at))
     const ce = new Set(t.conceal.entries.map((e) => e.id))
     for (const id of ce) expect(t.engage.entries.some((e) => e.id === id)).toBe(true)

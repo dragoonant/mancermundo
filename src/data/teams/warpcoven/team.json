@@ -1,0 +1,160 @@
+{
+  "id": "warpcoven",
+  "name": "Warpcoven",
+  "factionKeyword": "WARPCOVEN",
+  "archetypes": [
+    "security",
+    "recon"
+  ],
+  "selection": {
+    "caps": [
+      {
+        "label": "Sorcerers",
+        "from": [
+          "wc.sorcerer-of-destiny",
+          "wc.sorcerer-of-tempyrion",
+          "wc.sorcerer-of-warpfire"
+        ],
+        "min": 1
+      }
+    ],
+    "loadoutCaps": [
+      {
+        "label": "Warpflame pistol",
+        "weapons": [
+          "wc.w.warpflame-pistol"
+        ],
+        "max": 1
+      },
+      {
+        "label": "Soulreaper cannon",
+        "weapons": [
+          "wc.wg.soulreaper-cannon"
+        ],
+        "max": 1
+      }
+    ],
+    "slots": [
+      {
+        "id": "main",
+        "label": "Selections",
+        "count": 5,
+        "from": [
+          "wc.sorcerer-of-destiny",
+          "wc.sorcerer-of-tempyrion",
+          "wc.sorcerer-of-warpfire",
+          "wc.rubric-marine-gunner",
+          "wc.rubric-marine-icon-bearer",
+          "wc.rubric-marine-warrior",
+          "wc.tzaangor-champion",
+          "wc.tzaangor-horn-bearer",
+          "wc.tzaangor-icon-bearer",
+          "wc.tzaangor-warrior"
+        ],
+        "repeatable": [
+          "wc.rubric-marine-warrior",
+          "wc.tzaangor-warrior"
+        ],
+        "halfSelections": [
+          "wc.tzaangor-champion",
+          "wc.tzaangor-horn-bearer",
+          "wc.tzaangor-icon-bearer",
+          "wc.tzaangor-warrior"
+        ]
+      }
+    ]
+  },
+  "operativeChoices": [
+    {
+      "id": "boon",
+      "label": "Boon of Tzeentch",
+      "forKeyword": "SORCERER",
+      "unique": true,
+      "keyword": false,
+      "keywords": [
+        "INCORPOREAL SIGHT",
+        "TIME-WALK",
+        "ECHOES FROM THE WARP",
+        "WARP SWELL",
+        "MUTANT APPENDAGE",
+        "IMMATERIAL FLIGHT",
+        "TWIST OF FATE",
+        "ASTRAL BOMBARDMENT",
+        "MASTER OF THE IMMATERIUM"
+      ]
+    },
+    {
+      "id": "bombard",
+      "label": "Astral Bombardment weapon",
+      "forKeyword": "WARPFIRE",
+      "keyword": false,
+      "keywords": [
+        "FIRESTORM",
+        "MINDBURN"
+      ]
+    }
+  ],
+  "factionRules": [
+    "wc.a.astartes",
+    "wc.a.boons-of-tzeentch"
+  ],
+  "ploys": [
+    "wc.p.aetherial-warding",
+    "wc.p.fate-itself-is-my-weapon",
+    "wc.p.brotherhood-of-sorcerers",
+    "wc.p.savage-herd",
+    "wc.p.all-is-dust",
+    "wc.p.capricious-plan",
+    "wc.p.psychic-cabal",
+    "wc.p.mutant-herd"
+  ],
+  "equipment": [
+    "wc.e.ensorcelled-rounds",
+    "wc.e.daemonmaw-weapons",
+    "wc.e.arcane-robes",
+    "wc.e.sorcerous-scrolls"
+  ],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "wc.sorcerer-of-destiny",
+      "wc.sorcerer-of-tempyrion",
+      "wc.rubric-marine-gunner",
+      "wc.rubric-marine-warrior",
+      "wc.tzaangor-champion",
+      "wc.tzaangor-warrior"
+    ],
+    "equipment": [
+      "wc.e.ensorcelled-rounds",
+      "wc.e.arcane-robes",
+      "core.e.ladders",
+      "core.e.utility-grenades"
+    ],
+    "operativePicks": [
+      {
+        "boon": "TWIST OF FATE"
+      },
+      {
+        "boon": "IMMATERIAL FLIGHT"
+      },
+      {},
+      {},
+      {},
+      {}
+    ]
+  },
+  "paint": {
+    "major": {
+      "h": 0.55,
+      "s": 0.6,
+      "l": 0.3
+    },
+    "minor": {
+      "h": 0.13,
+      "s": 0.7,
+      "l": 0.5
+    }
+  },
+  "text": "Sorcerers of a cursed legion with their soulless armoured automata and beastly bird-headed warriors, each sorcerer blessed with its own boon.",
+  "source": "team-warpcoven.pdf (Apr '26); docs/spec/13-teams.md T-WC.1"
+}

@@ -276,8 +276,8 @@ export class FxRenderer implements FxWriter {
     this.addBill = new BillBatch(CAPS.add + CAPS.dynBill, material(BILL_VERT, T, AdditiveBlending, 0.3, false, 1.4, 1.3), 25)
     for (const b of [this.flatNorm, this.normBeam, this.normBill, this.flatAdd, this.addBeam, this.addBill]) this.group.add(b.mesh)
     for (let i = 0; i < CAPS.lights; i++) {
+      // always visible (see sync): a constant light count keeps every lit material on one program
       const l = new PointLight('#ff9a40', 0, LIGHT_RANGE, 2)
-      l.visible = false
       this.lights.push(l)
       this.group.add(l)
     }
@@ -313,13 +313,14 @@ export class FxRenderer implements FxWriter {
         k = e.hold ? e.peak : e.peak * u * u
         if (e.flicker) k *= 0.78 + 0.22 * Math.sin(now * 61 + i * 7) * Math.sin(now * 23 + i) + 0.1 * Math.sin(now * 113)
       }
-      L.visible = k > 0.02
-      if (L.visible) {
+      // the lights stay visible (dark at intensity 0): three.js builds one shader program per point-light count for
+      // every lit material, so switching lights on and off compiled a new set mid-shot on the first few volleys
+      if (k > 0.02) {
         L.position.set(e.x, e.y, e.z)
         this.col.setRGB(e.r, e.g, e.b)
         L.color.copy(this.col)
         L.intensity = k * LIGHT_GAIN
-      }
+      } else L.intensity = 0
     }
   }
 

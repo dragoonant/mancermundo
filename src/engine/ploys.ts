@@ -3,7 +3,9 @@
 // when the seat can actually use one (docs/spec/00-architecture.md section 3). Command Re-roll and the
 // re-roll windows belong to the attack modules (`dice.*` is routed to them). CP accounting is shared
 // through effects.ts.
-import { resumeAttack } from './attack-common'
+// first import on purpose: the leaf module is evaluated before anything that can cycle back into this file
+import { ployRules, registerPloyRule, type PloyOffer, type PloyRule } from './ploy-rules'
+import { continueRemovals, registerKillWindow, registerRemovalPauseCheck, registerRemovalWindow, resumeAttack } from './attack-common'
 import { getCodeHook, type PloyOfferSeed, type PloyWindowInfo } from './code-hooks'
 import { effectList } from './conditions'
 import { evalCondition, hasKeyword, inScope } from './conditions'
@@ -34,33 +36,8 @@ function codeName(p: RuntimePloy): string | undefined {
   return effectList(p.effect).find((e) => e.code)?.code
 }
 
-export interface PloyOffer {
-  /** option id */
-  id: string
-  ployId: string
-  name: string
-  param?: string
-  operativeId?: string
-  cost: number
-  /** which allowance paid (heroicLeader, doctrineWarfare:assault, ...) */
-  via?: string
-  seed: PloyOfferSeed
-}
-
-/** Team-level adjustments to ploys (Heroic Leader, Doctrine Warfare) registered by the team modules. */
-export interface PloyRule {
-  extraOffers?(state: GameState, seat: Seat, window: string, info: PloyWindowInfo): PloyOffer[]
-  /** replace the cost of an offer; return null to leave it */
-  costAdjust?(state: GameState, seat: Seat, ploy: RuntimePloy, seed: PloyOfferSeed, info: PloyWindowInfo): { cost: number; via: string } | null
-  /** an offer that carried `via` was used */
-  onUsed?(ctx: Ctx, seat: Seat, offer: PloyOffer, info: PloyWindowInfo): void
-}
-
-const rules: PloyRule[] = []
-
-export function registerPloyRule(rule: PloyRule): void {
-  rules.push(rule)
-}
+// PloyOffer, PloyRule and the rule registry live in the leaf module ploy-rules.ts (import-cycle safe)
+export { registerPloyRule, type PloyOffer, type PloyRule }
 
 /** Declarative cost changes: equipment `ployCost` effects such as Chapter Reliquaries. */
 function declarativeCost(state: GameState, seat: Seat, ploy: RuntimePloy, info: PloyWindowInfo): number | null {
@@ -76,10 +53,18 @@ function declarativeCost(state: GameState, seat: Seat, ploy: RuntimePloy, info: 
 }
 
 function priceOf(state: GameState, seat: Seat, ploy: RuntimePloy, seed: PloyOfferSeed, info: PloyWindowInfo): { cost: number; via?: string } {
+  const base = basePriceOf(state, seat, ploy, seed, info)
+  // M9 batch B: surcharges after every reduction (Devious Scheme)
+  let extra = 0
+  for (const r of ployRules()) extra += r.costSurcharge?.(state, seat, ploy, seed, info) ?? 0
+  return extra > 0 ? { ...base, cost: base.cost + extra } : base
+}
+
+function basePriceOf(state: GameState, seat: Seat, ploy: RuntimePloy, seed: PloyOfferSeed, info: PloyWindowInfo): { cost: number; via?: string } {
   let cost = seed.cost ?? ploy.cost
   const decl = declarativeCost(state, seat, ploy, info)
   if (decl !== null && decl < cost) return { cost: decl, via: 'equipment' }
-  for (const r of rules) {
+  for (const r of ployRules()) {
     const adj = r.costAdjust?.(state, seat, ploy, seed, info)
     if (adj && adj.cost < cost) {
       cost = adj.cost
@@ -94,7 +79,20 @@ function ployUsable(state: GameState, seat: Seat, ploy: RuntimePloy, window: str
   if (ploy.team && ploy.team !== state.players[seat].teamId) return false
   if (!windowsOf(ploy).includes(window)) return false
   if (ploy.limit !== 'unlimited' && usedThisTp(state, seat, ploy.id)) return false
+  if (window === 'firefight.actionDeclared' && beforeIsAfter(state, ploy, info)) return false
   return true
+}
+
+/**
+ * M10 batch D shared: a "before or after an action" ploy (both firefight.actionDeclared and firefight.actionEnded,
+ * Adjust Doctrine) is offered at a declaration only before the activation's first action: once an action is done,
+ * "before the next action" is the same moment as the firefight.actionEnded offer it already had. Never in a
+ * free-action frame (its activation's own windows cover it).
+ */
+function beforeIsAfter(state: GameState, ploy: RuntimePloy, info: PloyWindowInfo): boolean {
+  if (!windowsOf(ploy).includes('firefight.actionEnded')) return false
+  if (info.free === true) return true
+  return (state.firefight.activation?.performed.length ?? 0) > 0
 }
 
 /** Operatives of the seat that the ploy's scope covers. */
@@ -169,17 +167,25 @@ function applyRetain(state: GameState, opId: string, r: NonNullable<Effect['reta
 }
 
 /** Every usable (ploy, variant) the seat can pick at this timing. */
+/** M9 batch B: firefight windows that name no subject operative (scope and `when` are checked over the seat's operatives). */
+const SUBJECTLESS = ['firefight.opponentActionDeclared', 'firefight.beforeActivation', 'ploy.opponentUsed']
+
 export function offersFor(state: GameState, seat: Seat, window: string, info: PloyWindowInfo): PloyOffer[] {
   const out: PloyOffer[] = []
   const want = window === 'strategy.gambit' ? 'strategy' : 'firefight'
+  // M9 shared: the Firefight phase start is a phase-level timing: strategy and firefight ploys may both name it, and
+  // they are offered like gambits (no window subject; scope and `when` checked over the seat's operatives)
+  // M9 batch B: windows with no subject operative are offered the same way (firefight ploys only)
+  const subjectless = SUBJECTLESS.includes(window)
+  const phaseLevel = window === 'firefight.start' || subjectless
   for (const ploy of Object.values(state.data.ploys ?? {})) {
-    if (ploy.type !== want || !ployUsable(state, seat, ploy, window, info)) continue
+    if ((phaseLevel ? (subjectless ? ploy.type !== 'firefight' : ploy.type !== 'strategy' && ploy.type !== 'firefight') : ploy.type !== want) || !ployUsable(state, seat, ploy, window, info)) continue
     const subject = info.subjectId ? state.operatives[info.subjectId] : undefined
     const when = ploy.when as Condition | undefined
     // free-action ploys (KRUMP 'EM!) name any one operative of their scope; every other firefight ploy names the window subject
     const freeAction = effectList(ploy.effect).find((e) => e.extraAction && e.extraAction.action !== 'any')?.extraAction
     let subjects: (Operative | undefined)[]
-    if (want === 'firefight') {
+    if (want === 'firefight' && !phaseLevel) {
       if (subject) subjects = [subject]
       else if (freeAction) {
         subjects = scopedOps(state, seat, ploy).filter((o) => canStartFreeAction(state, { operativeId: o.id, action: freeAction.action as 'fight' | 'shoot' | 'dash', resume: '' }))
@@ -200,6 +206,9 @@ export function offersFor(state: GameState, seat: Seat, window: string, info: Pl
     }
     const code = codeName(ploy)
     const hook = code ? getCodeHook(code) : undefined
+    // the incapacitation window is newer than the teams' own before-removal choices: a code ploy is offered there
+    // only when its hook says how (ploy.offers / apply), so a team that asks from its own hook is not asked twice
+    if (window === 'operative.incapacitated' && code && !hook?.ploy) continue
     for (const sub of subjects) {
       const winfo = sub && !info.subjectId ? { ...info, subjectId: sub.id } : info
       const seeds: PloyOfferSeed[] = hook?.ploy ? hook.ploy.offers(state, seat, ploy, winfo) : [{}]
@@ -221,7 +230,7 @@ export function offersFor(state: GameState, seat: Seat, window: string, info: Pl
       }
     }
   }
-  for (const r of rules) {
+  for (const r of ployRules()) {
     for (const o of r.extraOffers?.(state, seat, window, info) ?? []) {
       if (o.cost <= state.players[seat].cp && !out.some((x) => x.id === o.id)) out.push(o)
     }
@@ -253,12 +262,12 @@ export function usePloy(ctx: Ctx, seat: Seat, offer: PloyOffer, info: PloyWindow
     spendCp(ctx, seat, offer.cost, offer.ployId)
     if (ploy.limit !== 'unlimited') markUsedTp(s, seat, ploy.id)
     ctx.emit({ type: 'PloyUsed', ployId: ploy.id }, seat)
-    for (const r of rules) r.onUsed?.(ctx, seat, offer, info)
+    for (const r of ployRules()) r.onUsed?.(ctx, seat, offer, info)
     for (const eff of effectList(ploy.effect)) applyEffect(ctx, seat, ploy, eff, offer, info)
   } else {
     // a plain gambit with no ploy record (synthetic fixtures) or an equipment option: only the CP is spent
     spendCp(ctx, seat, offer.cost, offer.ployId)
-    for (const r of rules) r.onUsed?.(ctx, seat, offer, info)
+    for (const r of ployRules()) r.onUsed?.(ctx, seat, offer, info)
   }
   refreshFlags(ctx.state)
 }
@@ -340,10 +349,16 @@ export function findGambit(state: GameState, seat: Seat, gambitId: string, param
 // Firefight windows
 // ---------------------------------------------------------------------------
 
-const ATTACKER_ONLY: string[] = ['shoot.attackRolled']
-const DEFENDER_ONLY: string[] = ['shoot.defenceRolled']
+const ATTACKER_ONLY: string[] = ['shoot.attackRolled', 'shoot.beforeDefenceRerolls', 'shoot.beforeAttackRerolls', 'shoot.attackerDefenceRolled']
+const DEFENDER_ONLY: string[] = ['shoot.defenceRolled', 'shoot.beforeDefenceRoll', 'shoot.defenderBeforeRerolls', 'shoot.defenderAttackRolled']
 
 function infoForSeat(state: GameState, window: string, base: PloyWindowInfo, seat: Seat): PloyWindowInfo | null {
+  // M9 batch B: an action was declared; only the declaring operative's opponent is asked (actorId = that enemy)
+  if (window === 'firefight.opponentActionDeclared') {
+    const actor = base.actorId ? state.operatives[base.actorId] : undefined
+    if (!actor || actor.seat === seat) return null
+    return { ...base }
+  }
   if (base.attackerId && base.targetId) {
     const a = state.operatives[base.attackerId]
     const t = state.operatives[base.targetId]
@@ -370,6 +385,24 @@ export function openPloyWindow(ctx: Ctx, window: TimingWindowId, info: PloyWindo
   ctx.state.window = { id: window, seats: [...seats], info: info as Record<string, unknown>, resume, used: [] }
   return advanceWindow(ctx)
 }
+
+/**
+ * M9 batch B: `usedBy` has just used `ployId` (a firefight ploy in a window, or a gambit): the other seat gets the
+ * `ploy.opponentUsed` window (Devious Scheme) before play goes on. An open window waits on `windowStack` and is
+ * resumed afterwards. Never nested twice; true when a decision was raised.
+ */
+export function openOpponentUsedWindow(ctx: Ctx, usedBy: Seat, ployId: string, resume: string): boolean {
+  const s = ctx.state
+  if (s.window?.id === 'ploy.opponentUsed' || (s.windowStack ?? []).some((w) => w.id === 'ploy.opponentUsed')) return false
+  const info: PloyWindowInfo = { window: 'ploy.opponentUsed', ployId, usedBy }
+  const other = otherSeat(usedBy)
+  if (offersFor(s, other, 'ploy.opponentUsed', info).length === 0) return false
+  const parent = s.window
+  if (parent) (s.windowStack ??= []).push(parent)
+  return openPloyWindow(ctx, 'ploy.opponentUsed', info, [other], parent ? NESTED_RESUME : resume)
+}
+
+const NESTED_RESUME = 'nested'
 
 function advanceWindow(ctx: Ctx): boolean {
   const s = ctx.state
@@ -406,9 +439,58 @@ function advanceWindow(ctx: Ctx): boolean {
 
 /** The window is exhausted: hand control back to whoever opened it. */
 function closeWindow(ctx: Ctx, resume: string): void {
-  if (resume === 'attack') resumeAttack(ctx)
+  if (resume === NESTED_RESUME) {
+    // M9 batch B: back to the window the nested ploy.opponentUsed window interrupted
+    const s = ctx.state
+    const parent = (s.windowStack ?? []).pop() ?? null
+    if (s.windowStack && s.windowStack.length === 0) delete s.windowStack
+    s.window = parent
+    if (parent && !advanceWindow(ctx)) closeWindow(ctx, parent.resume)
+    return
+  }
+  if (resume === 'gambit') resumeGambit(ctx)
+  else if (resume === 'attack') resumeAttack(ctx)
+  else if (resume === REMOVAL_RESUME) continueRemovals(ctx)
   else firefightResume(ctx, resume)
 }
+
+// M9 shared: an operative incapacitated by an attack offers its owner the `operative.incapacitated` window before
+// it is removed (the removal queue waits; R-5.18). Mines and direct damage remove at once (effects.removeNow) and
+// open none. Not while another ploy timing is open (a ploy's own damage).
+const REMOVAL_RESUME = 'removal'
+registerRemovalWindow((ctx, op) => {
+  if (ctx.state.window) return false
+  return openPloyWindow(ctx, 'operative.incapacitated', { window: 'operative.incapacitated', subjectId: op.id }, [op.seat], REMOVAL_RESUME)
+})
+
+// M9 batch B: once an attack's victim is removed, the seat whose operative incapacitated it gets `operative.killed`
+// (Vitalised Surge, Brutal Display): the shooter, or the other fighter. Not for self-inflicted removals (Hot).
+registerKillWindow((ctx, op) => {
+  const s = ctx.state
+  if (s.window) return false
+  const killerId = s.removal?.killers?.[op.id]
+  const killer = killerId ? s.operatives[killerId] : undefined
+  if (!killer || killer.seat === op.seat || killer.status !== 'active') return false
+  const info: PloyWindowInfo = { window: 'operative.killed', subjectId: killer.id, removedId: op.id, removedPos: { ...op.pos }, cause: killCause(op) }
+  return openPloyWindow(ctx, 'operative.killed', info, [killer.seat], REMOVAL_RESUME)
+})
+
+/** M10 batch D shared: `attack` for an attack's dice, `direct` for rule damage (mines, Explosive Demise). */
+function killCause(op: Operative): 'attack' | 'direct' {
+  return op.incapacitatedBy?.source === 'direct' ? 'direct' : 'attack'
+}
+
+// M10 batch D shared: a removal outside an attack (effects.removeNow) waits for the end-of-step removal queue when a
+// ploy window there would offer something: the owner's operative.incapacitated, or (a rule kill, any activation) the
+// killer's operative.killed (Reward Earned).
+registerRemovalPauseCheck((state, op) => {
+  if (offersFor(state, op.seat, 'operative.incapacitated', { window: 'operative.incapacitated', subjectId: op.id }).length > 0) return true
+  const by = op.incapacitatedBy
+  const killer = by ? state.operatives[by.id] : undefined
+  if (!killer || killer.seat === op.seat || killer.status !== 'active') return false
+  const info: PloyWindowInfo = { window: 'operative.killed', subjectId: killer.id, removedId: op.id, removedPos: { ...op.pos }, cause: killCause(op) }
+  return offersFor(state, killer.seat, 'operative.killed', info).length > 0
+})
 
 // The attack sequences open windows through this registered opener (hooks.ts).
 registerWindowOpener((ctx, window, a) => {
@@ -466,6 +548,8 @@ function handlePloy(state: GameState, action: { type: string; seat: Seat; payloa
       usePloy(ctx, seat, offer, info!)
       // a ploy may have started a free action or a decision of its own; otherwise keep offering
       if (ctx.state.pending) return
+      // M9 batch B: the other seat may answer the ploy (Devious Scheme); this window resumes afterwards
+      if (openOpponentUsedWindow(ctx, seat, offer.ployId, win.resume)) return
       if (!advanceWindow(ctx)) closeWindow(ctx, win.resume)
     },
   }

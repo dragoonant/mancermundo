@@ -1,0 +1,46 @@
+[
+  {
+    "id": "pf.e.target-analysis-optic",
+    "name": "Target Analysis Optic",
+    "scope": "faction",
+    "team": "pathfinders",
+    "count": 1,
+    "limits": { "uses": 1, "per": "turningPoint", "scope": "team" },
+    "effect": { "code": "targetAnalysisOptic", "params": { "extraTokens": 1, "primaryOnly": true } },
+    "text": "Once per turning point, as a non-drone Pathfinder picks its target for a Shoot, switch on the optic: for that action any target already carrying one of your Markerlight tokens is read as carrying one extra (four becomes five, which grants Seek). With Blast or Torrent only the primary benefits.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md T-PF.39"
+  },
+  {
+    "id": "pf.e.high-intensity-markerlight",
+    "name": "High-intensity Markerlight",
+    "scope": "faction",
+    "team": "pathfinders",
+    "count": 1,
+    "limits": { "uses": 2, "per": "turningPoint", "scope": "team" },
+    "effect": { "code": "highIntensityMarkerlight", "params": { "tokens": 2, "perTurningPoint": 2 } },
+    "text": "A stronger beam, usable two times each turning point: when any Pathfinder except the MV7 Marker Drone makes a Markerlight, its chosen enemy is given a pair of tokens rather than a single one (still capped at 4).",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md T-PF.40"
+  },
+  {
+    "id": "pf.e.photon-grenade",
+    "name": "Photon Grenade",
+    "scope": "faction",
+    "team": "pathfinders",
+    "count": 1,
+    "limits": { "uses": 1, "per": "turningPoint", "scope": "team" },
+    "actions": ["pf.a.photon-grenade"],
+    "text": "Once per turning point, a Pathfinder with Markerlight on its datacard (not a drone) can use the PHOTON GRENADE action: pick an enemy it can see and roll a D6; on 3+ that enemy loses 2 inches of Move (never below 4) and cannot Dash until the end of its next activation.",
+    "source": "team-pathfinders.pdf (August '26 errata); docs/spec/13-teams.md T-PF.41"
+  },
+  {
+    "id": "pf.e.orbital-survey-uplink",
+    "name": "Orbital Survey Uplink",
+    "scope": "faction",
+    "team": "pathfinders",
+    "count": 1,
+    "limits": { "uses": 1, "per": "turningPoint", "scope": "team" },
+    "effect": { "code": "orbitalSurveyUplink", "params": { "tokens": 1, "anyEnemyInKillzone": true } },
+    "text": "Once per turning point a Markerlight can be routed through orbit: the single token may go to any enemy anywhere in the killzone, even one out of sight. That Markerlight then places exactly one token, with no High-intensity Markerlight or Analyse extras.",
+    "source": "team-pathfinders.pdf; docs/spec/13-teams.md T-PF.42"
+  }
+]

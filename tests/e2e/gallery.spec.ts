@@ -91,6 +91,15 @@ test('gallery attachment pages show every real attachment GLB in hand', async ({
     }
   }
 
+  // the M9 teams' pages: the bodies gallery only draws the attachments of each body's default loadout, so the
+  // manifest's full set loads once every team page has been shown
+  for (const team of ['pf', 'ht', 'pm', 'wb', 'lg', 'ha', 'hc', 'hk']) {
+    await page.getByTestId(`att-${team}`).click()
+    await page.getByTestId('att-page-all').click()
+  }
+  await settle(attachmentCount)
+  await screenshotRendered(page, 'e2e-out/gallery-attach-03-m9.png')
+
   const stats = await page.evaluate(() => (window.__ms as unknown as { glbStats(p?: string): { loaded: number; failed: number; maxMs: number } }).glbStats('attachments/'))
   console.log(`gallery attachments: ${JSON.stringify(stats)} of ${attachmentCount} listed`)
   expect(await loaded()).toBe(attachmentCount)

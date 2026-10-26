@@ -1,0 +1,140 @@
+{
+  "id": "phobos-strike-team",
+  "name": "Phobos Strike Team",
+  "factionKeyword": "PHOBOS STRIKE TEAM",
+  "archetypes": [
+    "infiltration",
+    "recon"
+  ],
+  "selection": {
+    "slots": [
+      {
+        "id": "leader",
+        "label": "Leader",
+        "count": 1,
+        "from": [
+          "ph.infiltrator-sergeant",
+          "ph.incursor-sergeant",
+          "ph.reiver-sergeant"
+        ]
+      },
+      {
+        "id": "main",
+        "label": "Selections",
+        "count": 5,
+        "from": [
+          "ph.infiltrator-commsman",
+          "ph.infiltrator-helix-adept",
+          "ph.infiltrator-saboteur",
+          "ph.infiltrator-veteran",
+          "ph.infiltrator-voxbreaker",
+          "ph.infiltrator-warrior",
+          "ph.incursor-marksman",
+          "ph.incursor-minelayer",
+          "ph.incursor-warrior",
+          "ph.reiver-warrior"
+        ],
+        "repeatable": [
+          "ph.infiltrator-warrior",
+          "ph.incursor-warrior",
+          "ph.reiver-warrior"
+        ]
+      }
+    ]
+  },
+  "operativeChoices": [
+    {
+      "id": "custom-1",
+      "label": "Custom weapon rule 1",
+      "keywords": [
+        "BALANCED",
+        "LETHAL 5",
+        "PIERCING CRITS 1",
+        "RENDING",
+        "SATURATE"
+      ],
+      "forKeyword": "VETERAN",
+      "keyword": false
+    },
+    {
+      "id": "custom-2",
+      "label": "Custom weapon rule 2",
+      "keywords": [
+        "BALANCED",
+        "LETHAL 5",
+        "PIERCING CRITS 1",
+        "RENDING",
+        "SATURATE"
+      ],
+      "forKeyword": "VETERAN",
+      "keyword": false,
+      "distinctFrom": [
+        "custom-1"
+      ]
+    }
+  ],
+  "factionRules": [
+    "ph.a.astartes",
+    "ph.a.multi-spectrum-array",
+    "ph.a.terror"
+  ],
+  "ploys": [
+    "ph.p.guerrilla-warfare",
+    "ph.p.and-they-shall-know-no-fear",
+    "ph.p.deadly-shots",
+    "ph.p.lethal-assaults",
+    "ph.p.patient-ambush",
+    "ph.p.critical-shot",
+    "ph.p.transhuman-physiology",
+    "ph.p.stealth-assault",
+    "ph.p.omni-scrambler"
+  ],
+  "equipment": [
+    "ph.e.purity-seals",
+    "ph.e.additional-utility-grenades",
+    "ph.e.combat-blades",
+    "ph.e.special-issue-ammunition"
+  ],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "ph.infiltrator-sergeant",
+      "ph.infiltrator-commsman",
+      "ph.infiltrator-helix-adept",
+      "ph.infiltrator-saboteur",
+      "ph.infiltrator-veteran",
+      "ph.incursor-marksman"
+    ],
+    "equipment": [
+      "ph.e.special-issue-ammunition",
+      "ph.e.purity-seals",
+      "ph.e.combat-blades",
+      "core.e.utility-grenades"
+    ],
+    "operativePicks": [
+      {},
+      {},
+      {},
+      {},
+      {
+        "custom-1": "RENDING",
+        "custom-2": "LETHAL 5"
+      },
+      {}
+    ]
+  },
+  "paint": {
+    "major": {
+      "h": 0.58,
+      "s": 0.45,
+      "l": 0.3
+    },
+    "minor": {
+      "h": 0.12,
+      "s": 0.15,
+      "l": 0.35
+    }
+  },
+  "text": "Space Marine infiltrators, incursors and reivers: stealthy, scrambling enemy communications and striking from cover.",
+  "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md section 13"
+}

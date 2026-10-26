@@ -54,6 +54,20 @@ export function PloyBody({ pending, state }: { pending: PendingDecision; state: 
                 <KeywordText text={c.text} />
               </div>
             )}
+            {c.replaces && (
+              <div style={{ fontSize: 12, marginTop: 4 }} data-testid={`ploy-swap-${o.id}`}>
+                <span style={{ color: colors.muted }}>Lose </span>
+                <b>{c.replaces.name}</b>
+                <span style={{ color: colors.muted }}>: <KeywordText text={c.replaces.text} /></span>
+              </div>
+            )}
+            {c.paramText && (
+              <div style={{ fontSize: 12, marginTop: c.replaces ? 2 : 4 }} data-testid={`ploy-param-${o.id}`}>
+                <span style={{ color: colors.muted }}>{c.replaces ? 'Gain ' : ''}</span>
+                <b>{c.param}</b>
+                <span style={{ color: colors.muted }}>: <KeywordText text={c.paramText} /></span>
+              </div>
+            )}
           </button>
         ))}
         {off.map((u) => (

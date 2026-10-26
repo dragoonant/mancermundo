@@ -23,7 +23,7 @@
     "name": "CHAPTER TACTICS",
     "team": "angels-of-death",
     "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" },
-    "text": "When the team is chosen, pick a primary and a secondary Chapter Tactic from the eight below. Both apply to every Angel of Death operative; picking the same one twice adds nothing, so the builder asks for two different ones.",
+    "text": "When the team is chosen, pick a primary and a secondary Chapter Tactic from the eight options (Aggressive, Dueller, Resolute, Stealthy, Mobile, Hardy, Sharpshooter, Siege Specialist). Both apply to every Angel of Death operative; picking the same one twice adds nothing, so the builder asks for two different ones.",
     "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.16"
   },
   {

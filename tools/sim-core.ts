@@ -5,6 +5,7 @@ import { act } from '@/engine/actions'
 import { effectiveApl } from '@/engine/state'
 import { chargeUnderConceal, maxRepeats } from '@/engine/abilities'
 import { enemiesInControlRange } from '@/engine/measure'
+import { providerAny } from '@/engine/team-rules'
 import { placementProblem, terrainOf } from '@/engine/terrain'
 import {
   createGame,
@@ -24,7 +25,7 @@ import {
   type Waypoint,
 } from '@/engine'
 import { polygonBBox, round3 } from '@/engine/geometry'
-import { realSetup } from '@/engine/bundle'
+import { playableTeams, realSetup } from '@/engine/bundle'
 import { flatMap, terrainMap } from '../tests/fixtures/maps'
 import { makeSetup } from '../tests/fixtures/team'
 import { createAiDecider } from '../src/ai/decider'
@@ -100,7 +101,10 @@ export class RandomBot {
   private place(state: GameState, pending: PendingDecision): Action {
     const op = state.operatives[String(pending.context.operativeId)]
     if (!op || this.float() < 0.3) return act.pass(pending)
-    return { type: 'marker.place', seat: pending.seat, decisionId: pending.id, payload: { x: op.pos.x, z: op.pos.z } }
+    // batch C shared: a team spot filter lists the spots it accepts
+    const spots = pending.context.spots as { x: number; z: number }[] | undefined
+    const at = spots && spots.length > 0 ? spots[Math.floor(this.float() * spots.length)]! : { x: op.pos.x, z: op.pos.z }
+    return { type: 'marker.place', seat: pending.seat, decisionId: pending.id, payload: at }
   }
 
   private deploy(state: GameState, pending: PendingDecision): Action {
@@ -208,6 +212,9 @@ function finiteState(s: GameState): string | null {
   return null
 }
 
+/** OperativeMoved actions another rule places the operative by (movement.applyForcedMove, Timesplinter): exempt from MOVE. */
+export const FORCED_MOVES: ReadonlySet<string> = new Set(['forced', 'timesplinter'])
+
 export function checkInvariants(prev: GameState, next: GameState, action: Action, events: GameEvent[]): string[] {
   const out: string[] = []
   const add = (rule: string, msg: string) => out.push(`${rule}: ${msg}`)
@@ -228,8 +235,13 @@ export function checkInvariants(prev: GameState, next: GameState, action: Action
   const act_ = next.firefight.activation
   if (act_) {
     const op = next.operatives[act_.operativeId]!
-    const cap = act_.counteract ? 0 : effectiveApl(op)
-    if (!act_.counteract && act_.apSpent > cap) add('SIM-005', `${op.id} spent ${act_.apSpent} AP with APL ${cap}`)
+    // AP must be within the APL when it is spent: an APL that drops later in the activation (Medic!'s -1 on the saved
+    // operative) does not make earlier spending illegal, so only a step that spends AP is checked, against the
+    // higher of the APL before and after the step
+    const before = prev.operatives[op.id]
+    const cap = act_.counteract ? 0 : Math.max(effectiveApl(op), before ? effectiveApl(before) : 0)
+    const spent = events.some((e) => e.type === 'ApSpent' && e.operativeId === op.id)
+    if (!act_.counteract && spent && act_.apSpent > cap) add('SIM-005', `${op.id} spent ${act_.apSpent} AP with APL ${cap}`)
     // an action repeats only where a team rule allows it (ASTARTES, Krumpin' Time) or after a free action
     if (!act_.counteract && !act_.frame) {
       for (const a of new Set(act_.performed)) {
@@ -239,12 +251,23 @@ export function checkInvariants(prev: GameState, next: GameState, action: Action
     }
     if (op.order === 'conceal' && !act_.counteract) {
       if (act_.performed.includes('charge') && !chargeUnderConceal(next, op)) add('ORD-002', `${op.id} charged under Conceal`)
-      const silent = op.weapons.some((w) => next.data.weapons[w]?.rules.some((r) => /silent$/i.test(r.rule)))
-      if (act_.performed.includes('shoot') && !silent) add('ORD-002', `${op.id} shot under Conceal`)
     }
   }
 
   for (const ev of events) {
+    // ORD-002: a Conceal operative shoots only with a Silent weapon, or through a viewpoint / team rule that lets it
+    // (Magnify). Checked once, on the step the weapon is picked, against the weapon actually used: the old check
+    // (any Silent weapon carried, on every later step of the activation) both missed a non-Silent profile fired next
+    // to a Silent one and flagged Magnify shots after the proxy had moved on.
+    if (ev.type === 'ShootStarted') {
+      const op = next.operatives[ev.operativeId]
+      const silent = !!next.data.weapons[ev.weaponId]?.rules.some((r) => /silent$/i.test(r.rule))
+      const viewpoint = (action.type === 'shoot.weapon' && action.payload.viewpointId) || next.attack?.viewpointId
+      const counteract = next.firefight.activation?.counteract && next.firefight.activation.operativeId === op?.id
+      if (op && op.order === 'conceal' && !silent && !counteract && !viewpoint && !providerAny(next, op, 'shootUnderConceal')) {
+        add('ORD-002', `${op.id} shot ${ev.weaponId} under Conceal`)
+      }
+    }
     if (ev.type === 'DiceRolled') {
       for (const d of ev.dice) if (!Number.isInteger(d) || d < 1 || d > 6) add('dice', `die ${d} out of range`)
     }
@@ -252,13 +275,22 @@ export function checkInvariants(prev: GameState, next: GameState, action: Action
       const op = next.operatives[ev.operativeId]!
       const inCr = enemiesInControlRange(next, op, op.seat).length > 0
       if (ev.action === 'charge' && !inCr) add('MOVE-006', `${op.id} charged but is not in an enemy control range`)
-      if (ev.action !== 'charge' && inCr) add('MOVE', `${op.id} finished a ${ev.action} in an enemy control range`)
+      // a forced move (Knux Smash pushes, Timesplinter's swap) is placed by another operative's rule: the mover's own
+      // control range restrictions do not apply to it, so it may end in an enemy control range
+      if (ev.action !== 'charge' && !FORCED_MOVES.has(ev.action) && inCr) add('MOVE', `${op.id} finished a ${ev.action} in an enemy control range`)
     }
   }
 
   for (const seat of ['A', 'B'] as const) {
     if (next.players[seat].cp < 0) add('SIM-005', `${seat} has ${next.players[seat].cp} CP`)
-    if (next.players[seat].vp < prev.players[seat].vp) add('vp', `${seat} lost VP`)
+    // VP only falls when an incapacitated operative returns (Reanimation Protocols, reserve returns): the kill
+    // grade drops and missions.onOperativeReturned takes the kill op VP back with a negative VpScored. Any other
+    // loss, or a loss bigger than those events, is a bug.
+    const returned = events.some((e) => e.type === 'OperativeReturned')
+    const takenBack = returned
+      ? events.reduce((n, e) => (e.type === 'VpScored' && e.seat === seat && e.amount < 0 ? n - e.amount : n), 0)
+      : 0
+    if (next.players[seat].vp < prev.players[seat].vp - takenBack) add('vp', `${seat} lost VP (${prev.players[seat].vp} -> ${next.players[seat].vp}${returned ? `, ${takenBack} taken back by a return` : ''})`)
     if (next.players[seat].vp > 99) add('vp', `${seat} has implausible VP`)
   }
   if (next.seq !== prev.seq + 1) add('seq', `seq jumped from ${prev.seq} to ${next.seq}`)
@@ -286,7 +318,6 @@ export function checkInvariants(prev: GameState, next: GameState, action: Action
       }
     }
   }
-  void action
   return out
 }
 
@@ -415,17 +446,40 @@ export function setupFor(game: number): GameSetup {
 }
 
 /**
- * M2b-game: Angels of Death against Kommandos with the default rosters, built through the data adapter.
- * Seats and killzone layouts rotate; the engine rolls the map and the crit op, and the bots place the
- * objective markers and the equipment themselves.
+ * M2b-game: every pairing of the playable teams (team.json `playable` not false) with their default rosters,
+ * built through the data adapter. With only Angels of Death and Kommandos playable this is exactly the
+ * original AoD-vs-Kommandos rotation. Seats swap every game, the pairing changes every two games, and the
+ * killzone layouts rotate; each official card plays its own map, the engine rolls the crit op, and the bots place the objective
+ * markers and the equipment themselves.
  */
 export function realSetupFor(bundle: EngineBundle): (game: number) => GameSetup {
   const layouts = Object.keys(bundle.layouts ?? {}).sort()
+  const teams = playableTeams(bundle)
+  const n = teams.length
+  // M10 batch D shared: game g fills seat slots 2g and 2g + 1 of a sequence that lists every playable team once per
+  // cycle of n slots (cycle c orders them j * m_c + c mod n, m_c a multiplier coprime with n), so over G games every
+  // team plays at least floor(2G / n) times (40 games, 24 teams: 3 each) and the opponents change with m_c; the lower
+  // team index takes seat A in even games, seat B in odd ones (two teams: the original AoD-vs-Kommandos rotation).
+  const mults: number[] = []
+  for (let m = 1; m <= n - 2; m++) if (gcd(m, n) === 1) mults.push(m)
+  if (mults.length === 0) mults.push(1)
+  const slotTeam = (k: number): number => {
+    const c = Math.floor(k / n)
+    return ((k % n) * mults[c % mults.length]! + c) % n
+  }
   return (game) => {
     const swap = game % 2 === 1
+    const i = slotTeam(2 * game)
+    const j = n > 1 ? slotTeam(2 * game + 1) : i
+    const a = teams[Math.min(i, j)]!
+    const b = teams[Math.max(i, j)]!
     return realSetup(bundle, {
-      teams: swap ? ['kommandos', 'angels-of-death'] : ['angels-of-death', 'kommandos'],
+      teams: swap ? [b, a] : [a, b],
       layoutId: layouts[game % layouts.length]!,
     })
   }
+}
+
+function gcd(a: number, b: number): number {
+  return b === 0 ? a : gcd(b, a % b)
 }

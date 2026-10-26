@@ -1,0 +1,162 @@
+[
+  {
+    "id": "fk.p.call-the-kill",
+    "name": "CALL THE KILL",
+    "team": "farstalker-kinband",
+    "type": "strategy",
+    "cost": 0,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "fkCallTheKill",
+      "scope": {
+        "side": "friendly",
+        "keyword": "KILL-BROKER"
+      }
+    },
+    "text": "The Kill-Broker's strategic gambit, free of command points while it is in the killzone. Pick any enemy operative in the killzone as the mark until the end of the turning point.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md T-FK.7"
+  },
+  {
+    "id": "fk.p.cut-throats",
+    "name": "CUT-THROATS",
+    "team": "farstalker-kinband",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "fkFlagPloy",
+      "scope": {
+        "side": "friendly",
+        "keyword": "FARSTALKER KINBAND"
+      }
+    },
+    "text": "This turning point, friendly Farstalker melee weapons get +1 Atk, to at most 5.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md T-FK.29"
+  },
+  {
+    "id": "fk.p.rogue",
+    "name": "ROGUE",
+    "team": "farstalker-kinband",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "fkFlagPloy",
+      "scope": {
+        "side": "friendly",
+        "keyword": "FARSTALKER KINBAND"
+      }
+    },
+    "text": "This turning point, whenever any operative shoots a friendly Farstalker operative the shooter's weapon loses Saturate, and a defender that can retain cover saves may retain one more, or retain one as a critical success. It does not stack with the improvement from Vantage terrain.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md T-FK.30"
+  },
+  {
+    "id": "fk.p.prey",
+    "name": "PREY",
+    "team": "farstalker-kinband",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "fkFlagPloy",
+      "scope": {
+        "side": "friendly",
+        "keyword": "FARSTALKER KINBAND"
+      }
+    },
+    "text": "This turning point, a friendly Farstalker operative that shoots in an activation in which it has not Charged, Fallen Back or Repositioned has Balanced and Severe on its ranged weapons; a weapon that already has Balanced gets Ceaseless and Severe instead.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md T-FK.31"
+  },
+  {
+    "id": "fk.p.bound",
+    "name": "BOUND",
+    "team": "farstalker-kinband",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "fkFlagPloy",
+      "scope": {
+        "side": "friendly",
+        "keyword": "FARSTALKER KINBAND"
+      }
+    },
+    "text": "This turning point, in each friendly Farstalker operative's activation, the first 2 inches of vertical distance of one climb up is ignored.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md T-FK.32"
+  },
+  {
+    "id": "fk.p.savage-ambush",
+    "name": "SAVAGE AMBUSH",
+    "team": "farstalker-kinband",
+    "type": "firefight",
+    "cost": 1,
+    "window": "fight.weaponsSelected",
+    "effect": {
+      "code": "fkSavageAmbush",
+      "scope": {
+        "side": "friendly",
+        "keyword": "FARSTALKER KINBAND"
+      }
+    },
+    "text": "When an enemy takes the Fight action against a ready friendly Farstalker operative that has Light or Heavy terrain in its control range, the defender resolves first in that sequence.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md T-FK.33"
+  },
+  {
+    "id": "fk.p.slip-away",
+    "name": "SLIP AWAY",
+    "team": "farstalker-kinband",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "firefight.activationStart",
+      "firefight.actionEnded"
+    ],
+    "effect": {
+      "code": "fkSlipAway",
+      "scope": {
+        "side": "friendly",
+        "keyword": "FARSTALKER KINBAND"
+      }
+    },
+    "text": "During a friendly Farstalker operative's activation, before or after an action: for the rest of the activation, Fall Back costs it 1 less AP.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md T-FK.34"
+  },
+  {
+    "id": "fk.p.poach",
+    "name": "POACH",
+    "team": "farstalker-kinband",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "firefight.activationStart",
+      "firefight.actionEnded"
+    ],
+    "effect": {
+      "code": "fkPoach",
+      "scope": {
+        "side": "friendly",
+        "keyword": "FARSTALKER KINBAND"
+      }
+    },
+    "text": "During a friendly Farstalker operative's activation: until it ends, Pick Up Marker and mission actions that need control of a marker need only contest it.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md T-FK.35"
+  },
+  {
+    "id": "fk.p.vengeance-for-the-kinband",
+    "name": "VENGEANCE FOR THE KINBAND",
+    "team": "farstalker-kinband",
+    "type": "firefight",
+    "cost": 1,
+    "window": "operative.incapacitated",
+    "effect": {
+      "code": "fkVengeance",
+      "scope": {
+        "side": "friendly",
+        "keyword": "FARSTALKER KINBAND"
+      }
+    },
+    "text": "When a friendly Farstalker operative is incapacitated by an enemy operative: for the rest of the battle other friendly Farstalker weapons have Relentless against that enemy. It cannot be used again until that enemy has been incapacitated.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md T-FK.36",
+    "limit": "unlimited"
+  }
+]

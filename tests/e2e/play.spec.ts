@@ -2,7 +2,7 @@
 // board, get through the strategy phase, then at least two activations that each move (play-01..04.png). A second
 // test plays on until the human has resolved a Shoot and a Fight through the dedicated prompts (play-05..08.png).
 import { expect, test, type Page } from '@playwright/test'
-import { approachPoints, aroundPoints, boardPixel, deployOne, eventTypes, nearestEnemy, nextHumanDecision, screenshotRendered, snapshot, startBattle, tryMovePoints, type E2eOp, type Pending } from './helpers'
+import { approachPoints, aroundPoints, boardPixel, deployOne, detourRoutes, dispatchMove, eventTypes, nearestEnemy, nextHumanDecision, screenshotRendered, snapshot, startBattle, tryMovePoints, type E2eOp, type Pending } from './helpers'
 
 interface Op {
   id: string
@@ -18,17 +18,18 @@ const state = (page: Page) =>
     return { ops: Object.values(s.operatives), moves: s.log.filter((a) => a.type === 'move.path' && a.seat === 'A').length, phase: s.phase, tp: s.turningPoint }
   })
 
-/** Click a short step toward the board centre; confirm if the engine accepts it, else try another direction. */
-async function moveOne(page: Page, p: Pending): Promise<void> {
+/** Click a step toward the board centre; confirm if the engine accepts it, else try another direction or length. */
+async function moveOne(page: Page, p: Pending): Promise<boolean> {
   const opId = p.constraints!.operativeId!
   const { ops } = await state(page)
   const op = ops.find((o) => o.id === opId)!
   const dirs = [0, 1, 2, 3, 4, 5, 6, 7].map((i) => (i * Math.PI) / 4)
   const toCentre = Math.atan2(-op.pos.x, -op.pos.z)
   const points: { x: number; z: number }[] = []
-  for (const d of [toCentre, ...dirs]) for (const len of [2.5, 1.5]) points.push({ x: op.pos.x + Math.sin(d) * len, z: op.pos.z + Math.cos(d) * len })
+  // longer steps first reach past friendly bases packed in a drop zone corner
+  for (const len of [4, 2.5, 1.5]) for (const d of [toCentre, ...dirs]) points.push({ x: op.pos.x + Math.sin(d) * len, z: op.pos.z + Math.cos(d) * len })
   // a click can land on a figure or a prompt edge, so unregistered clicks are skipped; with no legal step the action is cancelled (no AP spent)
-  await tryMovePoints(page, op.pos.y, points)
+  return tryMovePoints(page, op.pos.y, points)
 }
 
 test('deploy, strategy phase and two moving activations on the real engine', async ({ page }) => {
@@ -47,6 +48,7 @@ test('deploy, strategy phase and two moving activations on the real engine', asy
   let shot3 = false
   let activationsWithMove = 0
   let movesBefore = 0
+  let failedMoves = 0
   for (let step = 0; step < 400; step++) {
     const p = await nextHumanDecision(page, last)
     if (!p) break
@@ -63,17 +65,19 @@ test('deploy, strategy phase and two moving activations on the real engine', asy
         await deployOne(page)
         break
       case 'firefight.activate':
+        failedMoves = 0
         await page.getByTestId(`activate-${(p.context.ready as string[])[0]}`).click()
         break
       case 'firefight.order':
         await page.getByTestId('order-engage').click()
         break
       case 'firefight.action': {
-        const want = s.moves - movesBefore < 1 ? ['reposition', 'dash'] : []
+        // an operative with no legal step (boxed in) ends its activation instead of retrying the move for ever
+        const want = s.moves - movesBefore < 1 && failedMoves < 2 ? ['reposition', 'dash'] : []
         let clicked = false
         for (const a of want) {
           const btn = page.getByTestId(`act-${a}`)
-          if (await btn.isEnabled()) {
+          if ((await btn.count()) > 0 && (await btn.isEnabled())) {
             await btn.click()
             clicked = true
             break
@@ -96,7 +100,7 @@ test('deploy, strategy phase and two moving activations on the real engine', asy
           if (px) await page.mouse.move(px.x, px.y)
           await screenshotRendered(page, 'e2e-out/play-03.png')
         }
-        await moveOne(page, p)
+        if (!(await moveOne(page, p))) failedMoves++
         break
       case 'strategy.gambit':
         await page.getByTestId('opt-pass').click()
@@ -132,8 +136,10 @@ async function moveToward(page: Page, p: Pending, intent: 'charge' | 'approach')
     return false
   }
   const max = p.constraints?.maxInches ?? 6
-  const points = intent === 'charge' ? aroundPoints(me, near.op, 0.3) : approachPoints(me, near.op, 4, max - 0.4)
-  return tryMovePoints(page, me.pos.y, points)
+  const points = intent === 'charge' ? aroundPoints(me, near.op, 0.3) : approachPoints(me, near.op, 2.5, max - 0.4)
+  // the official cards are dense: a straight line to the enemy is often blocked, so detours are tried too; the moves
+  // are dispatched because a ground point beside a building can sit behind its wall on screen (the first test clicks)
+  return dispatchMove(page, detourRoutes(me, points))
 }
 
 test('a Shoot and a Fight resolved through the prompts, with the dice tray showing both pools', async ({ page }) => {
@@ -151,6 +157,7 @@ test('a Shoot and a Fight resolved through the prompts, with the dice tray showi
   let pairsSeen = false
   let chargeTries = 0
   let failedMoves = 0
+  let failedCharges = 0
   for (let step = 0; step < 1500 && !(shotDone && fightDone); step++) {
     const p = await nextHumanDecision(page, last, 30_000)
     if (!p) break
@@ -177,6 +184,7 @@ test('a Shoot and a Fight resolved through the prompts, with the dice tray showi
       case 'firefight.activate': {
         const { ops } = await snapshot(page)
         failedMoves = 0
+        failedCharges = 0
         const ready = (p.context.ready as string[]).map((id) => ops.find((o) => o.id === id)!).filter(Boolean)
         ready.sort((a, b) => (nearestEnemy(ops, a)?.dist ?? 99) - (nearestEnemy(ops, b)?.dist ?? 99))
         // nothing ready: the only answer is to skip the counteraction
@@ -194,16 +202,20 @@ test('a Shoot and a Fight resolved through the prompts, with the dice tray showi
         const gap = me ? (nearestEnemy(ops, me)?.dist ?? 99) : 99
         if (!fightDone && (await enabled('fight'))) await page.getByTestId('act-fight').click()
         else if (!shotDone && (await enabled('shoot'))) await page.getByTestId('act-shoot').click()
-        else if (!fightDone && failedMoves < 2 && gap <= 8.5 && (await enabled('charge'))) {
+        // a Charge whenever an enemy may be in reach (the engine says whether a route exists; a failed one costs no AP),
+        // else close in so a later activation can charge
+        else if (!fightDone && failedCharges === 0 && gap <= 10 && (await enabled('charge'))) {
           chargeTries++
           await page.getByTestId('act-charge').click()
-        } else if (!fightDone && failedMoves < 2 && gap > 8.5 && (await enabled('reposition'))) await page.getByTestId('act-reposition').click()
-        else if (!fightDone && failedMoves < 2 && gap > 8.5 && (await enabled('dash'))) await page.getByTestId('act-dash').click()
+        } else if (!fightDone && failedMoves < 2 && (await enabled('reposition'))) await page.getByTestId('act-reposition').click()
+        else if (!fightDone && failedMoves < 2 && (await enabled('dash'))) await page.getByTestId('act-dash').click()
         else await page.getByTestId('act-end').click()
         break
       }
       case 'move.path':
-        if (!(await moveToward(page, p, p.constraints?.kind === 'charge' ? 'charge' : 'approach'))) failedMoves++
+        if (p.constraints?.kind === 'charge') {
+          if (!(await moveToward(page, p, 'charge'))) failedCharges++
+        } else if (!(await moveToward(page, p, 'approach'))) failedMoves++
         break
       case 'shoot.weapon': {
         await expect(page.getByTestId('weapon-cards')).toBeVisible()

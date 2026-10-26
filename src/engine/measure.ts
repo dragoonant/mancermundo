@@ -1,6 +1,7 @@
 // Distances and control range (R-8.2, R-8.3). Operative distances are measured between the closest
 // parts of bases (3D straight line between nearest base points); areas are horizontal only.
-import { baseGap2D, circleInsidePolygon, withinDistance } from './geometry'
+import { withinDistance } from './geometry'
+import { footprintGap2D, footprintInsidePolygon } from './footprint'
 import { baseDistance3D, bodyOf, visible, type Body } from './los'
 import { activeOps, markerRadius } from './state'
 import type { GameState, Marker, Operative, Polygon, Seat } from './types'
@@ -19,12 +20,12 @@ export function isWithin(a: Body, b: Body, inches: number): boolean {
 
 /** A body is "wholly within" a region (drop zone, territory) when its whole base lies inside it. */
 export function whollyWithinRegion(b: Body, region: Polygon): boolean {
-  return circleInsidePolygon(b.pos, b.baseRadius, region)
+  return footprintInsidePolygon(b, region)
 }
 
 /** Horizontal base-edge gap from a body to a marker disc (areas are horizontal only). */
 export function gapToMarker(b: Body, marker: Pick<Marker, 'kind' | 'pos'>): number {
-  return baseGap2D(b.pos, b.baseRadius, marker.pos, markerRadius(marker))
+  return footprintGap2D(b, { pos: marker.pos, baseRadius: markerRadius(marker) })
 }
 
 export function markerBody(marker: Marker): Body {

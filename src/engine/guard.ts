@@ -9,6 +9,7 @@ import { bodyOf } from './los'
 import { reject, type Ctx, type Handled, type OptionInput } from './registry'
 import { shootAvailability, usableRangedWeapons } from './shoot'
 import { activeOps, getOp, otherSeat } from './state'
+import { providerAny } from './team-rules'
 import type { Action, GameState, Operative } from './types'
 
 type InterruptAction = 'shoot' | 'fight'
@@ -57,7 +58,7 @@ export function offerInterrupt(ctx: Ctx): boolean {
         labelKey: `guard.${a}`,
         type: 'guard.interrupt',
         payload: { operativeId: g.id, action: a },
-        data: { pointBlank: a === 'shoot' && enemiesInControlRange(s, g, g.seat).length > 0 },
+        data: { pointBlank: a === 'shoot' && pointBlankGuard(s, g) },
       })
     }
   }
@@ -95,7 +96,7 @@ export function handleInterrupt(state: GameState, action: Action): Handled {
       const s = ctx.state
       const act = s.firefight.activation!
       const g = getOp(s, operativeId)
-      const pointBlank = what === 'shoot' && enemiesInControlRange(s, g, g.seat).length > 0
+      const pointBlank = what === 'shoot' && pointBlankGuard(s, g)
       act.used = [...(act.used ?? []), 'interrupt']
       ctx.emit({ type: 'GuardInterrupt', operativeId: g.id }, g.seat)
       // the interrupting operative cannot counteract for the rest of the turning point (R-4.10)
@@ -121,3 +122,8 @@ export function handleInterrupt(state: GameState, action: Action): Handled {
 registerFrameResume('guard.interrupt', (ctx) => {
   continueActivation(ctx)
 })
+
+/** batch C shared: a guard's Shoot in an enemy control range is point-blank unless freeShootInControlRange says otherwise. */
+function pointBlankGuard(state: GameState, g: Operative): boolean {
+  return enemiesInControlRange(state, g, g.seat).length > 0 && !providerAny(state, g, 'freeShootInControlRange')
+}

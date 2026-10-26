@@ -1,0 +1,126 @@
+{
+  "id": "novitiates",
+  "name": "Novitiates",
+  "factionKeyword": "NOVITIATE",
+  "archetypes": [
+    "security",
+    "recon"
+  ],
+  "selection": {
+    "slots": [
+      {
+        "id": "leader",
+        "label": "Leader",
+        "count": 1,
+        "from": [
+          "nv.superior"
+        ]
+      },
+      {
+        "id": "main",
+        "label": "Operatives",
+        "count": 9,
+        "from": [
+          "nv.condemnor",
+          "nv.dialogus",
+          "nv.duellist",
+          "nv.exactor",
+          "nv.hospitaller",
+          "nv.militant",
+          "nv.penitent",
+          "nv.preceptor",
+          "nv.pronatus",
+          "nv.purgatus",
+          "nv.reliquarius"
+        ],
+        "repeatable": [
+          "nv.militant",
+          "nv.purgatus"
+        ],
+        "caps": [
+          {
+            "label": "Purgatus",
+            "from": [
+              "nv.purgatus"
+            ],
+            "max": 2
+          }
+        ]
+      }
+    ]
+  },
+  "factionRules": [
+    "nv.a.acts-of-faith"
+  ],
+  "ploys": [
+    "nv.p.ardent-vengeance",
+    "nv.p.defenders-of-the-faith",
+    "nv.p.blessed-rejuvenation",
+    "nv.p.righteous-advance",
+    "nv.p.glorious-martyrdom",
+    "nv.p.blazing-inferno",
+    "nv.p.blinding-aura",
+    "nv.p.guided-by-faith"
+  ],
+  "equipment": [
+    "nv.e.icon-of-faith",
+    "nv.e.sanctified-rounds",
+    "nv.e.auto-chastisers",
+    "nv.e.holy-embrocations"
+  ],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "nv.superior",
+      "nv.condemnor",
+      "nv.dialogus",
+      "nv.duellist",
+      "nv.exactor",
+      "nv.hospitaller",
+      "nv.penitent",
+      "nv.preceptor",
+      "nv.purgatus",
+      "nv.militant"
+    ],
+    "equipment": [
+      "nv.e.icon-of-faith",
+      "nv.e.sanctified-rounds",
+      "core.e.ladders",
+      "core.e.utility-grenades"
+    ],
+    "loadouts": [
+      {
+        "loadout": [
+          "plasma-pistol-power-weapon"
+        ]
+      },
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {
+        "loadout": [
+          "autogun-gun-butt"
+        ]
+      }
+    ]
+  },
+  "paint": {
+    "major": {
+      "h": 0,
+      "s": 0.6,
+      "l": 0.3
+    },
+    "minor": {
+      "h": 0,
+      "s": 0,
+      "l": 0.85
+    }
+  },
+  "text": "Young sisters of battle in training: zealots whose faith, gathered as points through the battle, bends dice to their will.",
+  "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12"
+}

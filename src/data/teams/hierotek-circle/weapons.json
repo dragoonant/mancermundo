@@ -1,0 +1,413 @@
+[
+  {
+    "id": "hie.w.aeonstave-ranged",
+    "name": "Aeonstave",
+    "profile": "ranged",
+    "profileGroup": "hie.wg.aeonstave",
+    "team": "hierotek-circle",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.blast",
+        "inches": 2
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.stun"
+      },
+      {
+        "rule": "hie.a.wr-magnify"
+      }
+    ],
+    "text": "A staff that flings a stunning burst of time-warped energy. Magnify lets a nearby Cryptek or Apprentek lend its line of sight.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.aeonstave-melee",
+    "name": "Aeonstave",
+    "profile": "melee",
+    "profileGroup": "hie.wg.aeonstave",
+    "team": "hierotek-circle",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "The same staff swung to stagger an opponent.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.entropic-lance-ranged",
+    "name": "Entropic lance",
+    "profile": "ranged",
+    "profileGroup": "hie.wg.entropic-lance",
+    "team": "hierotek-circle",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 5,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.devastating",
+        "x": 3
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      },
+      {
+        "rule": "hie.a.wr-magnify"
+      }
+    ],
+    "text": "A lance that unravels matter; its critical hits matter more than its ordinary ones.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.entropic-lance-melee",
+    "name": "Entropic lance",
+    "profile": "melee",
+    "profileGroup": "hie.wg.entropic-lance",
+    "team": "hierotek-circle",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 6
+    },
+    "rules": [],
+    "text": "The lance used as a heavy blade.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.abyssal-lance-ranged",
+    "name": "Abyssal lance",
+    "profile": "ranged",
+    "profileGroup": "hie.wg.abyssal-lance",
+    "team": "hierotek-circle",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 2
+    },
+    "rules": [
+      {
+        "rule": "core.wr.blast",
+        "inches": 2
+      },
+      {
+        "rule": "core.wr.devastating",
+        "x": 1,
+        "inches": 2
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 2
+      },
+      {
+        "rule": "hie.a.wr-magnify"
+      }
+    ],
+    "text": "A lance that opens a rift in the target, hurting those next to it.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.abyssal-lance-melee",
+    "name": "Abyssal lance",
+    "profile": "melee",
+    "profileGroup": "hie.wg.abyssal-lance",
+    "team": "hierotek-circle",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.devastating",
+        "x": 1
+      }
+    ],
+    "text": "The lance used in close combat.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.staff-of-light-ranged",
+    "name": "Staff of light",
+    "profile": "ranged",
+    "profileGroup": "hie.wg.staff-of-light",
+    "team": "hierotek-circle",
+    "type": "ranged",
+    "atk": 6,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.rending"
+      },
+      {
+        "rule": "hie.a.wr-magnify"
+      }
+    ],
+    "text": "A staff that throws arcs of searing light.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.staff-of-light-melee",
+    "name": "Staff of light",
+    "profile": "melee",
+    "profileGroup": "hie.wg.staff-of-light",
+    "team": "hierotek-circle",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "The same staff swung at close quarters.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.arcane-conduit-ranged",
+    "name": "Arcane conduit",
+    "profile": "ranged",
+    "profileGroup": "hie.wg.arcane-conduit",
+    "team": "hierotek-circle",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      },
+      {
+        "rule": "hie.a.wr-magnify"
+      }
+    ],
+    "text": "A channelling rod that fires a narrow beam.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.arcane-conduit-melee",
+    "name": "Arcane conduit",
+    "profile": "melee",
+    "profileGroup": "hie.wg.arcane-conduit",
+    "team": "hierotek-circle",
+    "type": "melee",
+    "atk": 3,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [],
+    "text": "The rod used as a club.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.spark",
+    "name": "Spark",
+    "team": "hierotek-circle",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 4
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "text": "A short arc of energy from a Plasmacyte.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.atomiser-beam",
+    "name": "Atomiser beam",
+    "team": "hierotek-circle",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "A short beam that tears matter apart.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.claws",
+    "name": "Claws",
+    "team": "hierotek-circle",
+    "type": "melee",
+    "atk": 3,
+    "hit": "5+",
+    "dmg": {
+      "normal": 1,
+      "crit": 2
+    },
+    "rules": [],
+    "text": "The scrabbling claws of a Plasmacyte.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.synaptic-disintegrator",
+    "name": "Synaptic disintegrator",
+    "team": "hierotek-circle",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 4,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.devastating",
+        "x": 2
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "dash"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      },
+      {
+        "rule": "core.wr.severe"
+      }
+    ],
+    "text": "A long gun that kills the mind along with the body.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.fists",
+    "name": "Fists",
+    "team": "hierotek-circle",
+    "type": "melee",
+    "atk": 3,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [],
+    "text": "Metal fists.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.gauss-blaster",
+    "name": "Gauss blaster",
+    "team": "hierotek-circle",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "text": "A rifle that flays matter layer by layer.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.tesla-carbine",
+    "name": "Tesla carbine",
+    "team": "hierotek-circle",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.devastating",
+        "x": 1,
+        "inches": 2
+      }
+    ],
+    "text": "A carbine that throws lightning, arcing to those near the target.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  },
+  {
+    "id": "hie.w.bayonet",
+    "name": "Bayonet",
+    "team": "hierotek-circle",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [],
+    "text": "A blade fixed under the barrel.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md section 4"
+  }
+]

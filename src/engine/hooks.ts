@@ -26,7 +26,78 @@ export const HOOK_NAMES = [
   'operative.incapacitated',
   // M2b-game: the cover/obscured status of a shooter-target pair (OPTICS, Auspex, Smoke); see TargetStatusData
   'target.status',
+  // M9 prep: after any action of any operative has resolved (Tesla Weave, Markerlight decay); see ActionEndedData
+  'action.ended',
+  // M9 batch B: an action was just declared, before it resolves; a handler may cancel it (Daemonic Aura); see ActionDeclaredData
+  'action.declared',
+  // M9 batch B: a seat passed in the Gambit step (explicitly or with nothing usable); see GambitPassedData (Cunning)
+  'gambit.passed',
+  // batch D prep: an operative left the killzone for good, any cause (killLog); see OperativeRemovedData
+  'operative.removed',
+  // M10 batch D shared: a counteraction ended, before its expiry and the end-of-counteraction reaction point
+  'counteraction.end',
 ] as const
+
+/**
+ * operative.removed (batch D prep): `operativeId` was removed from the killzone (attack, direct damage, mines, a
+ * deadline out of the killzone) or scored as incapacitated while still in it (kills.scoreAsIncapacitated, Frenzy).
+ * Runs once per operative and removal, after the step's action, with `engine` (no decisions: a rule that needs a
+ * choice offers it at the next reaction point, reading kills.killsSince). `targetId` is the killer when known.
+ */
+export interface OperativeRemovedData {
+  killerId: string | null
+  cause: 'attack' | 'direct' | 'offboard' | 'scored'
+}
+
+/**
+ * gambit.passed (M9 batch B): `seat` passed in the Gambit step. `explicit` is false for the implicit pass of a seat
+ * with nothing usable; `usedThisStep` lists the gambit ids both seats used in this step so far, in order, with the
+ * seat that used each. Runs with `engine` (CP may change; no decisions).
+ */
+export interface GambitPassedData {
+  explicit: boolean
+  usedThisStep: { seat: Seat; gambitId: string }[]
+  passes: number
+}
+
+/*
+ * M9 prep: lifecycle hook points that now run with `engine` (the step Ctx) so team files can act on them.
+ * Handlers may change state through `engine`, roll dice, inflict damage (effects.directDamage) and emit
+ * events, but must not raise decisions (a lifecycle point has no resume): rules that need a choice pick
+ * the best option themselves (record a RULING) or open a ploy window elsewhere.
+ *  - 'turningPoint.start': the Ready step of the Strategy phase, after the initiative roll-off and before CP
+ *    are gained and operatives readied (Living Metal, Reanimation Protocols, Tesseract Cube). data: { turningPoint }
+ *  - 'activation.start': an operative was activated and its order chosen, before its first action
+ *    (Poison damage, Cult Ambush). operativeId = the activated operative; data: { previousOrder, order }.
+ *    Not run for counteractions or free-action frames. If a handler incapacitates the operative its
+ *    activation ends.
+ *  - 'activation.end': the operative's activation ends, before "until the end of its activation" effects
+ *    expire. operativeId; data: { counteract }
+ *  - 'turningPoint.end': after the end-of-Firefight ploy window, before the TP's crit op scoring
+ *    (Wyrmblade HIDING deadline). data: { turningPoint }
+ *  - 'damage.inflicted': after wounds were lost (any source); operativeId = the operative that lost them,
+ *    targetId = the attacker or rule source. data: DamageInflictedData
+ *  - 'action.ended': see ActionEndedData
+ */
+
+/** damage.inflicted (M9 prep): the wounds actually lost, after onDamageInflicted reductions. */
+export interface DamageInflictedData {
+  source: string
+  attackerId: string
+  weaponId: string | null
+  amount: number
+  woundsBefore: number
+  woundsAfter: number
+}
+
+/** action.ended (M9 prep): `operativeId` performed `action` (universal id or ability:<id>); the step Ctx is `engine`. */
+export interface ActionEndedData {
+  action: string
+  counteract: boolean
+  free: boolean
+  /** seat of the activation the action belongs to (the frame's owner for free actions) */
+  activeSeat: Seat
+}
 
 /**
  * target.status (M2b-game): `operativeId` is the shooter, `targetId` the target. Handlers may set
@@ -36,6 +107,23 @@ export const HOOK_NAMES = [
 export interface TargetStatusData {
   obscured: boolean
   inCover: boolean
+}
+
+/**
+ * action.declared (M9 batch B): `operativeId` has just declared `action` (universal id or ability:<id>), normal or
+ * free, before any ploy window and before it resolves; the step Ctx is `engine` (dice may be rolled, no decisions).
+ * A handler may set `cancel` (the action is cancelled as R-3.8: no AP spent) with a `reason`, and `bar` to stop the
+ * operative taking that action again for the rest of its activation or counteraction (Daemonic Aura, Chain Snare).
+ */
+export interface ActionDeclaredData {
+  action: string
+  counteract: boolean
+  free: boolean
+  /** seat of the activation the action belongs to */
+  activeSeat: Seat
+  cancel: boolean
+  bar: boolean
+  reason?: string
 }
 
 export type HookName = (typeof HOOK_NAMES)[number]
@@ -90,7 +178,62 @@ export const ATTACK_HOOKS = [
   'beforeStrike',
   'onFightResolved',
   'afterShootResolved',
+  // M9 prep
+  'modifyDamage',
+  'beforeIncapacitated',
+  // M9 batch B: a side has just been rolled, before any re-roll (Omen: the opponent must re-roll 6s); see DiceRolledData
+  'diceRolled',
+  // M9 batch C: a fighter has just blocked in the Resolve step (Riposte: a crit block also deals Critical Dmg); see AfterBlockData
+  'afterBlock',
 ] as const
+
+/**
+ * afterBlock (M9 batch C): `operativeId` has just blocked with one of its dice in a fight (strike-or-block step);
+ * `targetId` is its opponent. Runs with `engine`: a handler may inflict damage (attack-common.inflict with a
+ * `strike-*` source, so per-die reductions apply) but must not raise decisions. When the opponent is incapacitated
+ * the fight ends as after a strike.
+ */
+export interface AfterBlockData {
+  /** the blocking die */
+  die: DieKind
+  /** the dice it cancelled (one, or two with a double block) */
+  against: DieKind[]
+  weaponId: string | null
+}
+
+/**
+ * diceRolled (M9 batch B): `operativeId` has just rolled `dice` (shoot attack, shoot defence, or one fighter's dice),
+ * before any re-roll window or grant. Runs with `engine`; a handler may re-roll dice at once with
+ * attack-common.forcedReroll (which marks them re-rolled, R-9.2). `targetId` is its opponent in the sequence.
+ */
+export interface DiceRolledData {
+  kind: 'shoot' | 'fight'
+  side: 'attack' | 'defence'
+  /** the live side (attack-common DiceSide) */
+  diceSide: unknown
+}
+
+/**
+ * modifyDamage (M9 prep): the Normal and Critical Dmg a weapon deals in this sequence (Toxic +1/+1).
+ * `operativeId` is the attacker, `targetId` the operative the dice resolve against. Mutate `dmg`.
+ */
+export interface ModifyDamageData {
+  kind: 'shoot' | 'fight'
+  weaponId: string
+  dmg: { normal: number; crit: number }
+}
+
+/**
+ * beforeIncapacitated (M9 prep): damage has just taken `operativeId` to 0 wounds, before
+ * OperativeIncapacitated is emitted. A handler may set `wounds` above 0 to stop the incapacitation
+ * (Medic!); it must not raise a decision.
+ */
+export interface BeforeIncapacitatedData {
+  source: string
+  attackerId: string
+  weaponId: string | null
+  wounds: number
+}
 
 export type AttackHookName = (typeof ATTACK_HOOKS)[number]
 
@@ -144,6 +287,13 @@ export interface AfterRollData {
   /** push { id, seat, labelKey, options } to ask a player something; the answer arrives in `choices[id]` */
   requests: ChoiceRequest[]
   choices: Record<string, string>
+  /** M9 batch B shared: the shoot target is obscured in this sequence (read this, not state.attack, so the odds agree) */
+  obscured?: boolean
+  /**
+   * M9 batch B shared: query.* is running the hook on hypothetical dice for the odds (no `engine`): convert dice only,
+   * never touch state, ask nothing
+   */
+  query?: boolean
 }
 
 export interface ChoiceRequest {
@@ -171,6 +321,11 @@ export interface OnDamageInflictedData {
   attackerId: string
   weaponId: string | null
   amount: number
+  /**
+   * M9 batch C: x" Devastating damage on an operative other than the target of the sequence (Void Armour, Blast
+   * Padding, Diuturnal Mantles ignore it); absent otherwise
+   */
+  splash?: boolean
 }
 
 /** beforeStrike: a fight die is about to strike. Mutate `amount` or set `cancel` to waste the strike. */

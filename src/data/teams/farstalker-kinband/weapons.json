@@ -1,0 +1,412 @@
+[
+  {
+    "id": "fk.w.kroot-rifle-elite",
+    "name": "Kroot rifle",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [],
+    "text": "The steady Kroot long gun in the hands of a leader or a cold-blooded hunter, aimed with a sharper eye.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.kroot-rifle",
+    "name": "Kroot rifle",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [],
+    "text": "The common Kroot long gun carried by trackers and warriors.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.pulse-weapon",
+    "name": "Pulse weapon",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [],
+    "text": "A borrowed pulse weapon that hits harder than the Kroot rifle.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.ritual-blade",
+    "name": "Ritual blade",
+    "team": "farstalker-kinband",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [],
+    "text": "The Kill-Broker's ceremonial blade, kept sharp for the finishing cut.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.accelerator-bow-fused",
+    "name": "Accelerator bow",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "fk.wg.accelerator-bow",
+    "profile": "fused arrow",
+    "text": "A fused arrow that bites through armour.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.accelerator-bow-glide",
+    "name": "Accelerator bow",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.silent"
+      }
+    ],
+    "profileGroup": "fk.wg.accelerator-bow",
+    "profile": "glide arrow",
+    "text": "A glide arrow that makes no sound in flight.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.accelerator-bow-voltaic",
+    "name": "Accelerator bow",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.blast",
+        "inches": 1
+      }
+    ],
+    "profileGroup": "fk.wg.accelerator-bow",
+    "profile": "voltaic arrow",
+    "text": "A voltaic arrow that bursts and sears everything near its mark.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.blade",
+    "name": "Blade",
+    "team": "farstalker-kinband",
+    "type": "melee",
+    "atk": 3,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [],
+    "text": "A plain Kroot blade kept for close work.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.cut-skins-blades",
+    "name": "Cut-skin's blades",
+    "team": "farstalker-kinband",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.ceaseless"
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "A pair of whirling blades that never stop cutting.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.dvorgite-skinner",
+    "name": "Dvorgite skinner",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "2+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "reposition"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 2
+      },
+      {
+        "rule": "core.wr.torrent",
+        "inches": 2
+      }
+    ],
+    "text": "A short-ranged skinning weapon that rakes a whole cluster of targets.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.londaxi-tribalest",
+    "name": "Londaxi tribalest",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.heavy",
+        "only": "reposition"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      },
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "A heavy tribal gun that wrecks whatever it hits.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.ripping-fangs",
+    "name": "Ripping fangs",
+    "team": "farstalker-kinband",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "The hound's teeth, tearing as they go.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.kroot-hunting-rifle-concealed",
+    "name": "Kroot hunting rifle",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.heavy"
+      },
+      {
+        "rule": "core.wr.devastating",
+        "x": 3
+      },
+      {
+        "rule": "core.wr.silent"
+      },
+      {
+        "rule": "fk.a.wr-concealed-position"
+      }
+    ],
+    "profileGroup": "fk.wg.kroot-hunting-rifle",
+    "profile": "concealed",
+    "text": "A hide shot from cover: usable only the first time the Long-Sight ever shoots.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.kroot-hunting-rifle-mobile",
+    "name": "Kroot hunting rifle",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [],
+    "profileGroup": "fk.wg.kroot-hunting-rifle",
+    "profile": "mobile",
+    "text": "The hunting rifle carried on the move.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.kroot-hunting-rifle-stationary",
+    "name": "Kroot hunting rifle",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.heavy"
+      },
+      {
+        "rule": "core.wr.devastating",
+        "x": 3
+      }
+    ],
+    "profileGroup": "fk.wg.kroot-hunting-rifle",
+    "profile": "stationary",
+    "text": "The hunting rifle braced for a careful shot.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.dual-kroot-pistols-focused",
+    "name": "Dual Kroot pistols",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.ceaseless"
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "profileGroup": "fk.wg.dual-kroot-pistols",
+    "profile": "focused",
+    "text": "Both pistols trained on one mark.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.dual-kroot-pistols-salvo",
+    "name": "Dual Kroot pistols",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "fk.a.wr-salvo"
+      }
+    ],
+    "profileGroup": "fk.wg.dual-kroot-pistols",
+    "profile": "salvo",
+    "text": "One pistol for each of two marks.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.kroot-scattergun",
+    "name": "Kroot scattergun",
+    "team": "farstalker-kinband",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      }
+    ],
+    "text": "A short-barrelled spread gun for ambushes.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  },
+  {
+    "id": "fk.w.stalkers-blade",
+    "name": "Stalker's blade",
+    "team": "farstalker-kinband",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.balanced"
+      },
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "A long knife made for an ambusher's first strike.",
+    "source": "team-farstalker-kinband.pdf (Jun '26); docs/spec/13-teams.md section 16.3"
+  }
+]

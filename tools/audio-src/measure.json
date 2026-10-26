@@ -20,6 +20,20 @@
     "seconds": 1.52,
     "gain": 1
   },
+  "death-cultist": {
+    "rms": 0.1356,
+    "peak": 0.835,
+    "crest": 6.2,
+    "seconds": 2.09,
+    "gain": 1.18
+  },
+  "death-drone": {
+    "rms": 0.1872,
+    "peak": 0.869,
+    "crest": 4.6,
+    "seconds": 2.09,
+    "gain": 0.85
+  },
   "death-generic": {
     "rms": 0.148,
     "peak": 0.966,
@@ -48,6 +62,13 @@
     "seconds": 3,
     "gain": 0.58
   },
+  "death-necron": {
+    "rms": 0.2142,
+    "peak": 0.839,
+    "crest": 3.9,
+    "seconds": 3,
+    "gain": 0.75
+  },
   "death-ork": {
     "rms": 0.3662,
     "peak": 1,
@@ -62,12 +83,54 @@
     "seconds": 3.58,
     "gain": 1.14
   },
+  "death-plague": {
+    "rms": 0.2895,
+    "peak": 0.856,
+    "crest": 3,
+    "seconds": 3.11,
+    "gain": 0.55
+  },
   "death-squig": {
     "rms": 0.1638,
     "peak": 0.981,
     "crest": 6,
     "seconds": 1.25,
     "gain": 0.98
+  },
+  "death-tau": {
+    "rms": 0.1522,
+    "peak": 1,
+    "crest": 6.6,
+    "seconds": 1.99,
+    "gain": 1
+  },
+  "fx-ambush-emerge": {
+    "rms": 0.0603,
+    "peak": 0.891,
+    "crest": 14.8,
+    "seconds": 1.02,
+    "gain": 1.12
+  },
+  "fx-flies-swarm": {
+    "rms": 0.1796,
+    "peak": 0.868,
+    "crest": 4.8,
+    "seconds": 3,
+    "gain": 0.89
+  },
+  "fx-plague-bell": {
+    "rms": 0.0799,
+    "peak": 0.934,
+    "crest": 11.7,
+    "seconds": 3.53,
+    "gain": 1.07
+  },
+  "fx-reanimate": {
+    "rms": 0.2164,
+    "peak": 0.842,
+    "crest": 3.9,
+    "seconds": 3,
+    "gain": 0.74
   },
   "hit-armour": {
     "rms": 0.0827,
@@ -188,12 +251,40 @@
     "seconds": 1.99,
     "gain": 0.9
   },
+  "narr-initiative-ht": {
+    "rms": 0.1081,
+    "peak": 0.844,
+    "crest": 7.8,
+    "seconds": 2.53,
+    "gain": 1.18
+  },
   "narr-initiative-kom": {
     "rms": 0.174,
     "peak": 0.847,
     "crest": 4.9,
     "seconds": 1.91,
     "gain": 0.92
+  },
+  "narr-initiative-pf": {
+    "rms": 0.1753,
+    "peak": 0.841,
+    "crest": 4.8,
+    "seconds": 1.88,
+    "gain": 0.91
+  },
+  "narr-initiative-pm": {
+    "rms": 0.1813,
+    "peak": 0.844,
+    "crest": 4.7,
+    "seconds": 1.96,
+    "gain": 0.88
+  },
+  "narr-initiative-wb": {
+    "rms": 0.1616,
+    "peak": 0.846,
+    "crest": 5.2,
+    "seconds": 1.65,
+    "gain": 0.99
   },
   "narr-objective-secured": {
     "rms": 0.1142,
@@ -228,6 +319,13 @@
     "peak": 0.847,
     "crest": 12.8,
     "seconds": 1.38,
+    "gain": 1.18
+  },
+  "shout-brood-hiss": {
+    "rms": 0.087,
+    "peak": 0.846,
+    "crest": 9.7,
+    "seconds": 1.8,
     "gain": 1.18
   },
   "shout-marine": {
@@ -293,6 +391,13 @@
     "seconds": 0.29,
     "gain": 1.19
   },
+  "ui-markerlight": {
+    "rms": 0.2469,
+    "peak": 0.846,
+    "crest": 3.4,
+    "seconds": 1.07,
+    "gain": 0.65
+  },
   "ui-order-conceal": {
     "rms": 0.1361,
     "peak": 0.846,
@@ -334,6 +439,13 @@
     "crest": 7.8,
     "seconds": 1.96,
     "gain": 1.05
+  },
+  "wpn-autogun": {
+    "rms": 0.1872,
+    "peak": 1,
+    "crest": 5.3,
+    "seconds": 0.84,
+    "gain": 0.85
   },
   "wpn-big-choppa": {
     "rms": 0.2816,
@@ -377,6 +489,13 @@
     "seconds": 1.76,
     "gain": 0.36
   },
+  "wpn-burst-cannon": {
+    "rms": 0.2354,
+    "peak": 0.856,
+    "crest": 3.6,
+    "seconds": 2.09,
+    "gain": 0.68
+  },
   "wpn-chainsword-hit": {
     "rms": 0.1541,
     "peak": 0.876,
@@ -398,6 +517,13 @@
     "seconds": 0.8,
     "gain": 0.8
   },
+  "wpn-claws-rend": {
+    "rms": 0.1428,
+    "peak": 0.813,
+    "crest": 5.7,
+    "seconds": 0.76,
+    "gain": 1.12
+  },
   "wpn-dakka-shoota": {
     "rms": 0.3106,
     "peak": 1,
@@ -418,6 +544,20 @@
     "crest": 4.6,
     "seconds": 2.95,
     "gain": 0.84
+  },
+  "wpn-flail-corruption": {
+    "rms": 0.1366,
+    "peak": 1,
+    "crest": 7.3,
+    "seconds": 1.8,
+    "gain": 1
+  },
+  "wpn-gauss-blaster": {
+    "rms": 0.054,
+    "peak": 0.794,
+    "crest": 14.7,
+    "seconds": 1.52,
+    "gain": 1.26
   },
   "wpn-grenade-frag": {
     "rms": 0.1426,
@@ -475,6 +615,34 @@
     "seconds": 1.48,
     "gain": 0.34
   },
+  "wpn-ion-rifle": {
+    "rms": 0.1975,
+    "peak": 0.778,
+    "crest": 3.9,
+    "seconds": 2.09,
+    "gain": 0.81
+  },
+  "wpn-mining-laser": {
+    "rms": 0.2094,
+    "peak": 0.871,
+    "crest": 4.2,
+    "seconds": 2.53,
+    "gain": 0.76
+  },
+  "wpn-plague-blade": {
+    "rms": 0.1633,
+    "peak": 0.986,
+    "crest": 6,
+    "seconds": 1.07,
+    "gain": 0.98
+  },
+  "wpn-plague-spewer": {
+    "rms": 0.2435,
+    "peak": 0.84,
+    "crest": 3.5,
+    "seconds": 2.09,
+    "gain": 0.66
+  },
   "wpn-plasma-pistol": {
     "rms": 0.2587,
     "peak": 1,
@@ -510,6 +678,27 @@
     "seconds": 0.88,
     "gain": 1
   },
+  "wpn-pulse-burst": {
+    "rms": 0.046,
+    "peak": 0.849,
+    "crest": 18.5,
+    "seconds": 1.8,
+    "gain": 1.18
+  },
+  "wpn-pulse-carbine": {
+    "rms": 0.0436,
+    "peak": 0.842,
+    "crest": 19.3,
+    "seconds": 1.25,
+    "gain": 1.19
+  },
+  "wpn-rail-rifle": {
+    "rms": 0.0376,
+    "peak": 0.844,
+    "crest": 22.5,
+    "seconds": 1.25,
+    "gain": 1.19
+  },
   "wpn-rokkit-launcha": {
     "rms": 0.3858,
     "peak": 1,
@@ -517,12 +706,26 @@
     "seconds": 1.76,
     "gain": 0.41
   },
+  "wpn-scarab-skitter": {
+    "rms": 0.1029,
+    "peak": 0.833,
+    "crest": 8.1,
+    "seconds": 2.09,
+    "gain": 1.2
+  },
   "wpn-scoped-big-shoota": {
     "rms": 0.1695,
     "peak": 0.845,
     "crest": 5,
     "seconds": 2.09,
     "gain": 0.94
+  },
+  "wpn-seismic-cannon": {
+    "rms": 0.3394,
+    "peak": 0.845,
+    "crest": 2.5,
+    "seconds": 2.82,
+    "gain": 0.47
   },
   "wpn-shokka-pistol": {
     "rms": 0.0497,
@@ -545,12 +748,33 @@
     "seconds": 1.23,
     "gain": 0.96
   },
+  "wpn-staff-beam": {
+    "rms": 0.1789,
+    "peak": 0.845,
+    "crest": 4.7,
+    "seconds": 2.27,
+    "gain": 0.89
+  },
+  "wpn-staff-strike": {
+    "rms": 0.133,
+    "peak": 1,
+    "crest": 7.5,
+    "seconds": 1.52,
+    "gain": 1
+  },
   "wpn-stalker-bolt-rifle": {
     "rms": 0.1058,
     "peak": 0.915,
     "crest": 8.7,
     "seconds": 2.06,
     "gain": 1.09
+  },
+  "wpn-tesla-carbine": {
+    "rms": 0.1048,
+    "peak": 0.962,
+    "crest": 9.2,
+    "seconds": 1.8,
+    "gain": 1.04
   },
   "wpn-throwing-knives": {
     "rms": 0.1203,
@@ -572,5 +796,12 @@
     "crest": 5.7,
     "seconds": 2.09,
     "gain": 0.98
+  },
+  "wpn-webber": {
+    "rms": 0.0614,
+    "peak": 0.849,
+    "crest": 13.8,
+    "seconds": 1.8,
+    "gain": 1.18
   }
 }

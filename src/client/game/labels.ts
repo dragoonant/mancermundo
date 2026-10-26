@@ -1,6 +1,8 @@
 // Label building: every sentence the UI shows about a decision, option, event or rejection. Own wording
 // only (no Games Workshop text). Unknown decision kinds and label keys degrade to a readable generic form,
 // never a crash, so decision kinds added by the engine later still render as an option list.
+import { tokenDef } from '../ui/tokenDefs'
+import { poolLabel, setAsideWording } from '../teams'
 import type { DecisionKind, DecisionOption, GameEvent, GameState, PendingDecision, Rejection, Seat } from '@/engine'
 
 export const SEAT_NAME: Record<Seat, string> = { A: 'Seat A', B: 'Seat B' }
@@ -150,6 +152,8 @@ export function optionLabel(opt: DecisionOption, state: GameState | null, pendin
   switch (opt.action.type) {
     case 'firefight.activate': {
       const who = opName(state, String(payload.operativeId ?? opt.id))
+      // M9 batch C: a team's alternative to counteracting (Farstalker order change)
+      if (payload.alternative !== undefined) return `Instead of counteracting: ${who}${typeof data.option === 'string' ? ` (${humanize(data.option)})` : ''}`
       return payload.counteract ? `Counteract with ${who}` : `Activate ${who}`
     }
     case 'setup.dropZone':
@@ -401,8 +405,52 @@ export function describeEvent(ev: GameEvent, state: GameState | null): string | 
       return `${ev.seat ? SEAT_NAME[ev.seat] : 'A seat'} scores ${ev.amount} VP (${humanize(ev.ruleId)}); now ${ev.vp}.`
     case 'MineTriggered':
       return `A mine hits ${who(ev.operativeId)} for ${ev.damage}.`
-    case 'AbilityUsed':
-      return `${ev.operativeId ? `${who(ev.operativeId)}: ` : ''}${humanize(ev.abilityId)}${ev.detail ? ` (${ev.detail})` : ''}.`
+    case 'AbilityUsed': {
+      // Covert Guises: the cult's D3, rolled at set-up and shown to both players
+      const roll = /^D3: (\d)$/.exec(ev.detail ?? '')
+      if (roll && /covert-guises$/.test(ev.abilityId)) return `Covert Guises: the cult rolled a D3 and got ${roll[1]}. In the first turning point that many Devotees in its drop zone may take a free Reposition.`
+      // the record's own name when the data has one, and a "mutant:chitinous" style detail read as words
+      const named = state?.data.abilities?.[ev.abilityId]?.name ?? state?.data.ploys?.[ev.abilityId]?.name ?? state?.data.equipment?.[ev.abilityId]?.name
+      const title = named ? named.charAt(0) + named.slice(1).toLowerCase() : humanize(ev.abilityId)
+      const detail = ev.detail && /^[a-z-]+(:[a-z-]+)+$/.test(ev.detail) ? ev.detail.split(':').map((x) => x.replace(/-/g, ' ')).join(', ') : ev.detail
+      return `${ev.operativeId ? `${who(ev.operativeId)}: ` : ''}${title}${detail ? ` (${detail})` : ''}.`
+    }
+    case 'PloyUsed': {
+      const ploy = state?.data.ploys?.[ev.ployId]?.name
+      return `${ploy ? ploy.charAt(0) + ploy.slice(1).toLowerCase() : humanize(ev.ployId)} is used.`
+    }
+    case 'TokenChanged': {
+      if (ev.delta === 0) return null
+      const d = tokenDef(ev.kind)
+      const n = Math.abs(ev.delta)
+      const noun = `${d.label} token${n === 1 ? '' : 's'}`
+      return ev.delta > 0
+        ? `${who(ev.operativeId)} gains ${n === 1 ? 'a' : n} ${noun} (${SEAT_NAME[ev.owner]}), now ${ev.count}.`
+        : `${who(ev.operativeId)} loses ${n === 1 ? 'a' : n} ${noun} (${SEAT_NAME[ev.owner]}), ${ev.count} left.`
+    }
+    case 'WoundsRegained':
+      return `${who(ev.operativeId)} regains ${ev.amount} wound${ev.amount === 1 ? '' : 's'} (${ev.wounds} now).`
+    case 'OperativeSetAside':
+      return `${who(ev.operativeId)} is set aside, out of the killzone.`
+    case 'OperativeTransformed': {
+      // batch D prep: an operative changed datacard (Mutation)
+      const card = (n: string) => state?.data.datacards[n]?.name ?? humanize(n)
+      return `${who(ev.operativeId)} changes: ${card(ev.from)} becomes ${card(ev.to)}.`
+    }
+    case 'OperativePickChanged':
+      return `${who(ev.operativeId)} is now ${humanize(ev.to.toLowerCase())}${ev.from ? ` (was ${humanize(ev.from.toLowerCase())})` : ''}.`
+    case 'PoolChanged': {
+      if (ev.delta === 0) return null
+      const name = poolLabel(ev.kind)
+      const side = ev.seat ? SEAT_NAME[ev.seat] : 'A seat'
+      return ev.delta > 0 ? `${side} gains ${ev.delta} ${name} (${humanize(ev.reason)}), now ${ev.value}.` : `${side} spends ${-ev.delta} ${name} (${humanize(ev.reason)}), ${ev.value} left.`
+    }
+    case 'OperativeReturned':
+      return `${who(ev.operativeId)} ${ev.kind === 'emerge' || ev.kind === 'land' ? setAsideWording(state?.players[state.operatives[ev.operativeId]?.seat ?? 'A']?.teamId).returned : ev.kind === 'reanimated' ? 'is reanimated' : 'returns to the killzone'}.`
+    case 'ActivationChained':
+      return `${who(ev.fromId)} hands the next activation on (${ev.operativeIds.map(who).join(', ')}).`
+    case 'ActivationGated':
+      return `${who(ev.operativeId)} cannot activate this time (${humanize(ev.by)}).`
     case 'EffectStarted':
     case 'EffectEnded':
     case 'ConfigChanged':

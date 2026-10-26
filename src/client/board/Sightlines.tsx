@@ -13,6 +13,7 @@ import { AdditiveBlending, Color } from 'three'
 import type { SightEntry, SightStatus, ThreatEntry } from '../interaction/sightlines'
 import { useSightData } from '../interaction/sightData'
 import { useUi } from '../ui/uiStore'
+import { BaseRing } from '../figures/OvalBase'
 
 export const SIGHT_COLOR: Record<SightStatus, string> = {
   valid: '#6dff9a',
@@ -185,10 +186,9 @@ export function SightlineLayer() {
         return (
           <group key={id}>
             {lines}
-            <mesh position={[op.pos.x, op.pos.y + 0.09, op.pos.z]} rotation={[-Math.PI / 2, 0, 0]}>
-              <ringGeometry args={[op.baseRadius + 0.1, op.baseRadius + (hot ? 0.4 : 0.24), 36]} />
-              <meshBasicMaterial color={color} transparent opacity={hot ? 1 : 0.75} />
-            </mesh>
+            <group position={[op.pos.x, op.pos.y, op.pos.z]} rotation={[0, op.facing, 0]}>
+              <BaseRing baseRadius={op.baseRadius} ovalHalfAxis={op.ovalHalfAxis} inner={0.1} outer={hot ? 0.4 : 0.24} color={color} opacity={hot ? 1 : 0.75} y={0.09} />
+            </group>
             <Html position={[op.pos.x, op.pos.y + op.height + 1.7, op.pos.z]} center zIndexRange={[10, 0]} distanceFactor={16} style={{ pointerEvents: 'none' }}>
               <div
                 data-testid={`sight-badge-${id}`}

@@ -1,0 +1,355 @@
+[
+  {
+    "id": "nv.a.wr-anti-psyker",
+    "kind": "weaponRule",
+    "name": "Anti-PSYKER",
+    "team": "novitiates",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "nvAntiPsyker"
+    },
+    "text": "Against an operative with the PSYKER keyword this weapon deals 1 more normal and 1 more critical damage (Devastating is unchanged) and gains Lethal 5+.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.wr-riposte",
+    "kind": "weaponRule",
+    "name": "Riposte",
+    "team": "novitiates",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "nvRiposte"
+    },
+    "text": "Whenever the wielder blocks with a critical success while fighting or retaliating with this weapon, it also deals the weapon's critical damage to the enemy in that fight, as damage from an attack die.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.wr-zealous-rage",
+    "kind": "weaponRule",
+    "name": "Zealous Rage",
+    "team": "novitiates",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "nvZealousRage"
+    },
+    "text": "While its wielder is fighting (not retaliating) with this weapon, the weapon has Ceaseless.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.acts-of-faith",
+    "kind": "factionRule",
+    "name": "ACTS OF FAITH",
+    "team": "novitiates",
+    "scope": {
+      "side": "friendly",
+      "keyword": "NOVITIATE"
+    },
+    "effect": {
+      "code": "nvActsOfFaith",
+      "params": {
+        "gainDivisor": 2,
+        "guidance": 1,
+        "blessing": 2,
+        "intervention": 3
+      }
+    },
+    "text": "The Novitiate player keeps a pool of Faith points. Each Ready step they gain half the number of living Novitiates, rounded up. When a Novitiate rolls attack dice (shooting, fighting or retaliating) or defence dice (being shot), the player may spend Faith on one act for that sequence: Guidance, Blessing or Intervention. Acts only change your own dice.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.guidance",
+    "kind": "ability",
+    "name": "Guidance",
+    "team": "novitiates",
+    "text": "ACT OF FAITH, 1 Faith point: re-roll one of your dice. A die that was already re-rolled, or kept without rolling, cannot be re-rolled.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.blessing",
+    "kind": "ability",
+    "name": "Blessing",
+    "team": "novitiates",
+    "text": "ACT OF FAITH, 2 Faith points: keep one of your normal successes as a critical success instead. It does nothing against an obscured target and never changes a cover save.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.intervention",
+    "kind": "ability",
+    "name": "Intervention",
+    "team": "novitiates",
+    "text": "ACT OF FAITH, 3 Faith points: keep one of your failed dice as a normal success instead of discarding it, on attack or defence dice.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.inspirational-example",
+    "kind": "ability",
+    "name": "Inspirational Example",
+    "team": "novitiates",
+    "effect": {
+      "code": "nvKillFaith",
+      "params": {
+        "requires": "any",
+        "ready": false,
+        "closeRange": false,
+        "martyrdom": false
+      }
+    },
+    "text": "Each enemy the Superior takes out is worth 1 Faith point to you, 2 if its Wounds stat is 12 or more. Kills made through Glorious Martyrdom do not count.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.unflinching-example",
+    "kind": "ability",
+    "name": "Unflinching Example",
+    "team": "novitiates",
+    "effect": {
+      "code": "nvKillFaith",
+      "params": {
+        "requires": "ready",
+        "ready": true,
+        "closeRange": true,
+        "martyrdom": true
+      }
+    },
+    "text": "Each ready enemy the Preceptor takes out in its own control range is worth 1 Faith point to you, 2 if its Wounds stat is 12 or more.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.null-rod",
+    "kind": "ability",
+    "name": "Null Rod",
+    "team": "novitiates",
+    "effect": {
+      "code": "nvNullRod",
+      "params": {
+        "inches": 6,
+        "meleeCap": [
+          3,
+          4
+        ]
+      }
+    },
+    "text": "PSYCHIC ranged weapons cannot hurt the Condemnor, and PSYCHIC actions cannot pick it. Within 6 inches of the Condemnor no operative can use PSYCHIC actions, PSYCHIC ranged weapons or PSYCHIC additional rules, none can be picked by a PSYCHIC rule, and PSYCHIC melee weapons lose all weapon rules and cannot go above Dmg 3/4.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.stirring-rhetoric",
+    "kind": "uniqueAction",
+    "name": "STIRRING RHETORIC",
+    "team": "novitiates",
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "nvStirringRhetoric",
+      "params": {
+        "inches": 6,
+        "aplDelta": 1,
+        "aplMax": 3
+      }
+    },
+    "text": "SUPPORT. Another friendly Novitiate that the Dialogus can see within 6 inches, or that stands within 6 inches of your Auto-broadcaster marker, gets +1 APL (never above 3) until its next activation is over.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.auto-broadcaster",
+    "kind": "uniqueAction",
+    "name": "AUTO-BROADCASTER",
+    "team": "novitiates",
+    "ap": 0,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "nvAutoBroadcaster",
+      "params": {
+        "inches": 8,
+        "banInches": 3
+      }
+    },
+    "text": "Costs no AP. Place your Auto-broadcaster marker within 8 inches (horizontally) of the Dialogus, or move it up to 8 inches if it is already in the killzone. Enemies within 3 inches of the marker cannot re-roll attack dice when shooting, fighting or retaliating. The marker goes if the Dialogus does.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.whip-into-frenzy",
+    "kind": "uniqueAction",
+    "name": "WHIP INTO FRENZY",
+    "team": "novitiates",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "nvWhipIntoFrenzy",
+      "params": {
+        "inches": 3,
+        "aplDelta": 1,
+        "moveDelta": 1,
+        "fights": 2
+      }
+    },
+    "text": "Pick another friendly Novitiate (not the Superior) that is visible and within 3 inches of the Exactor and not already whipped. Until the end of its next activation it has +1 APL, +1 inch of Move and may Fight twice, the first of those Fights costing no AP.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.medic",
+    "kind": "ability",
+    "name": "Medic!",
+    "team": "novitiates",
+    "effect": {
+      "code": "nvMedic",
+      "params": {
+        "inches": 3,
+        "leaveWounds": 1
+      }
+    },
+    "text": "Once per turning point the Hospitaller can stop another friendly Novitiate from going down if it is visible and within 3 inches and neither of them is in an enemy control range (not while the Hospitaller is itself a target of that Shoot). The casualty stays on 1 wound and cannot go down for the rest of that action; afterwards it may Dash for free, ending in the Hospitaller's control range. Both take -1 APL until the end of their next activations, and a casualty saved in its own activation ends that activation.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.chirurgeons-tools",
+    "kind": "uniqueAction",
+    "name": "CHIRURGEON'S TOOLS",
+    "team": "novitiates",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "nvChirurgeonsTools",
+      "params": {
+        "dice": "2D3"
+      }
+    },
+    "text": "Pick a friendly Novitiate in the Hospitaller's control range (itself included): it regains up to 2D3 lost wounds. It cannot be the operative Medic! saved this turning point.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.militant-faith",
+    "kind": "ability",
+    "name": "Militant Faith",
+    "team": "novitiates",
+    "effect": {
+      "code": "nvMilitantFaith"
+    },
+    "text": "When the Militant is shooting, fighting or retaliating and you used an ACT OF FAITH in that sequence, the Faith spent on it comes back if an enemy operative is incapacitated in the sequence (only one act's Faith if Icon of Faith gave two).",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.absolution-through-destruction",
+    "kind": "ability",
+    "name": "Absolution Through Destruction",
+    "team": "novitiates",
+    "effect": {
+      "code": "nvAbsolution"
+    },
+    "text": "After the Penitent performs a Fight action and is still standing, it may at once perform a free Fight action. The free Fight does not trigger it again.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.glorious-hymnal",
+    "kind": "ability",
+    "name": "Glorious Hymnal",
+    "team": "novitiates",
+    "keywords": [
+      "SUPPORT"
+    ],
+    "effect": {
+      "code": "nvGloriousHymnal",
+      "params": {
+        "inches": 3
+      }
+    },
+    "text": "SUPPORT. Friendly Novitiates within 3 inches of the Preceptor (itself included) have Severe on their weapons.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.relic-seeker",
+    "kind": "ability",
+    "name": "Relic Seeker",
+    "team": "novitiates",
+    "limit": "oncePerActivation",
+    "effect": {
+      "costDelta": {
+        "actions": [
+          "pick-up-marker",
+          "place-marker",
+          "mission-action"
+        ],
+        "delta": -1
+      }
+    },
+    "text": "Once in each of its activations the Pronatus may do Pick Up Marker, Place Marker or a mission action for 1 less AP (never below 0).",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.divine-acquisition",
+    "kind": "ability",
+    "name": "Divine Acquisition",
+    "team": "novitiates",
+    "effect": {
+      "code": "nvDivineAcquisition"
+    },
+    "text": "Once per turning point: a mission action by the Pronatus that needs it to hold a marker pays out Faith points equal to the current turning point number.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.purge-with-flame",
+    "kind": "ability",
+    "name": "Purge with Flame",
+    "team": "novitiates",
+    "effect": {
+      "code": "nvPurgeWithFlame"
+    },
+    "text": "Once per turning point for each Purgatus, the Blazing Inferno ploy costs 0 CP when that Purgatus is the operative using it. The ploy is still limited to one use per turning point.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.icon-bearer",
+    "kind": "ability",
+    "name": "Icon Bearer",
+    "team": "novitiates",
+    "effect": {
+      "code": "nvIconBearer",
+      "params": {
+        "controlAplBonus": 1
+      }
+    },
+    "text": "The Reliquarius counts as 1 APL higher when marker control is worked out. This is not an APL change, so it ignores the APL cap.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.blaze-token",
+    "kind": "ability",
+    "name": "Blaze token",
+    "team": "novitiates",
+    "text": "Put on an enemy by Blazing Inferno. Whenever the holder is activated it takes D3 damage, then its player may give it -1 APL until the end of that activation to remove the token. Only one Blaze token can be on an operative.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  },
+  {
+    "id": "nv.a.raise-icon",
+    "kind": "uniqueAction",
+    "name": "RAISE ICON",
+    "team": "novitiates",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "limit": "oncePerTurningPoint",
+    "effect": {
+      "code": "nvRaiseIcon"
+    },
+    "text": "Once per turning point: you gain 1 Faith point, plus Faith points equal to the turning point number if the Reliquarius controls an objective marker.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.4"
+  }
+]

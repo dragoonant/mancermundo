@@ -1,0 +1,135 @@
+{
+  "id": "imperial-navy-breachers",
+  "name": "Imperial Navy Breachers",
+  "factionKeyword": "IMPERIAL NAVY BREACHER",
+  "archetypes": [
+    "security",
+    "seek-and-destroy"
+  ],
+  "selection": {
+    "requires": [
+      {
+        "label": "Gheistskull needs a Void-Jammer",
+        "id": "nb.gheistskull",
+        "needs": [
+          "nb.void-jammer"
+        ]
+      },
+      {
+        "label": "C.A.T. Unit needs a Surveyor",
+        "id": "nb.cat-unit",
+        "needs": [
+          "nb.surveyor"
+        ]
+      }
+    ],
+    "slots": [
+      {
+        "id": "leader",
+        "label": "Leader",
+        "count": 1,
+        "from": [
+          "nb.sergeant-at-arms"
+        ]
+      },
+      {
+        "id": "main",
+        "label": "Selections",
+        "count": 10,
+        "from": [
+          "nb.armsman",
+          "nb.axejack",
+          "nb.cat-unit",
+          "nb.endurant",
+          "nb.gheistskull",
+          "nb.grenadier",
+          "nb.gunner-las-volley",
+          "nb.gunner-meltagun",
+          "nb.gunner-plasma-gun",
+          "nb.hatchcutter",
+          "nb.surveyor",
+          "nb.void-jammer"
+        ],
+        "repeatable": [
+          "nb.armsman",
+          "nb.gunner-las-volley",
+          "nb.gunner-meltagun",
+          "nb.gunner-plasma-gun"
+        ],
+        "halfSelections": [
+          "nb.cat-unit",
+          "nb.gheistskull"
+        ],
+        "caps": [
+          {
+            "label": "Gunners",
+            "from": [
+              "nb.gunner-las-volley",
+              "nb.gunner-meltagun",
+              "nb.gunner-plasma-gun"
+            ],
+            "max": 2
+          }
+        ]
+      }
+    ]
+  },
+  "factionRules": [
+    "nb.a.void-armour",
+    "nb.a.void-armour-shrapnel",
+    "nb.a.breach-and-clear"
+  ],
+  "ploys": [
+    "nb.p.attack-order",
+    "nb.p.defence-order",
+    "nb.p.close-assault",
+    "nb.p.brace-for-counterattack",
+    "nb.p.overwhelm-target",
+    "nb.p.blitz",
+    "nb.p.lock-it-down",
+    "nb.p.deck-hand"
+  ],
+  "equipment": [
+    "nb.e.rebreathers",
+    "nb.e.slugs",
+    "nb.e.combat-stimms",
+    "nb.e.system-override-device"
+  ],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "nb.sergeant-at-arms",
+      "nb.armsman",
+      "nb.axejack",
+      "nb.endurant",
+      "nb.grenadier",
+      "nb.gunner-meltagun",
+      "nb.gunner-las-volley",
+      "nb.hatchcutter",
+      "nb.surveyor",
+      "nb.void-jammer",
+      "nb.cat-unit",
+      "nb.gheistskull"
+    ],
+    "equipment": [
+      "nb.e.slugs",
+      "nb.e.combat-stimms",
+      "core.e.ladders",
+      "core.e.utility-grenades"
+    ]
+  },
+  "paint": {
+    "major": {
+      "h": 0.62,
+      "s": 0.35,
+      "l": 0.25
+    },
+    "minor": {
+      "h": 0.12,
+      "s": 0.6,
+      "l": 0.5
+    }
+  },
+  "text": "Voidship armsmen with shotguns, shields and servo-gadgets, trained to storm a position as a drilled pair and hold it.",
+  "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md section 17"
+}

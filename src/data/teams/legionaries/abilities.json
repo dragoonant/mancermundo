@@ -1,0 +1,310 @@
+[
+  {
+    "id": "lg.a.wr-psychic",
+    "kind": "weaponRule",
+    "name": "PSYCHIC",
+    "team": "legionaries",
+    "weaponRule": {
+      "param": "none"
+    },
+    "text": "A tag with no effect of its own. Other teams' rules may read it; it does not satisfy Astartes for Legionaries.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.7"
+  },
+  {
+    "id": "lg.a.wr-siphon-life",
+    "kind": "weaponRule",
+    "name": "Siphon Life",
+    "team": "legionaries",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "siphonLife",
+      "params": {
+        "range": 6,
+        "oncePer": "turningPoint"
+      }
+    },
+    "text": "The Balefire Acolyte may name a friendly Legionary it can see within 6 inches before dice resolve; every attack die it resolves that hurts the target heals the named friend by 1 wound, or D3 for a crit. Once per turning point across both weapons.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.12"
+  },
+  {
+    "id": "lg.a.astartes",
+    "kind": "factionRule",
+    "name": "ASTARTES",
+    "team": "legionaries",
+    "scope": {
+      "side": "friendly",
+      "keyword": "LEGIONARY"
+    },
+    "effect": {
+      "code": "lgAstartes",
+      "params": {
+        "doubleActions": [
+          "shoot",
+          "fight"
+        ],
+        "counteractAnyOrder": true
+      }
+    },
+    "text": "A Legionary may double up in one activation: two Shoots or two Fights. A double Shoot must use a bolt pistol, boltgun or tainted bolt pistol at least once (the same weapon twice is fine). Its order never stops it counteracting.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.27"
+  },
+  {
+    "id": "lg.a.khorne",
+    "kind": "factionRule",
+    "name": "KHORNE: Wrathful Onslaught",
+    "team": "legionaries",
+    "scope": {
+      "side": "friendly",
+      "keyword": "KHORNE"
+    },
+    "effect": {
+      "grantWeaponRule": {
+        "rule": "core.wr.severe",
+        "filter": {
+          "weaponType": "melee"
+        }
+      }
+    },
+    "text": "Melee weapons of a KHORNE operative have Severe.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.22"
+  },
+  {
+    "id": "lg.a.nurgle",
+    "kind": "factionRule",
+    "name": "NURGLE: Disgusting Vigour",
+    "team": "legionaries",
+    "scope": {
+      "side": "friendly",
+      "keyword": "NURGLE"
+    },
+    "effect": {
+      "code": "disgustingVigour",
+      "params": {
+        "threshold": 3,
+        "rollOn": 5,
+        "reduceBy": 1
+      }
+    },
+    "text": "Each attack die of Normal Dmg 3 or more that hurts a NURGLE operative gets a D6; on a 5+ it does 1 less. Crits, Devastating and other damage are never reduced.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.23"
+  },
+  {
+    "id": "lg.a.slaanesh",
+    "kind": "factionRule",
+    "name": "SLAANESH: Unnatural Agility",
+    "team": "legionaries",
+    "scope": {
+      "side": "friendly",
+      "keyword": "SLAANESH"
+    },
+    "effect": {
+      "code": "unnaturalAgility",
+      "params": {
+        "inches": 1
+      }
+    },
+    "text": "A SLAANESH operative has +1 inch of Move (injury still takes 2 inches; the floor is 4 inches).",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.24"
+  },
+  {
+    "id": "lg.a.tzeentch",
+    "kind": "factionRule",
+    "name": "TZEENTCH: Empyreal Guidance",
+    "team": "legionaries",
+    "scope": {
+      "side": "friendly",
+      "keyword": "TZEENTCH"
+    },
+    "effect": {
+      "grantWeaponRule": {
+        "rule": "core.wr.severe",
+        "filter": {
+          "weaponType": "ranged"
+        }
+      }
+    },
+    "text": "Ranged weapons of a TZEENTCH operative have Severe.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.25"
+  },
+  {
+    "id": "lg.a.undivided",
+    "kind": "factionRule",
+    "name": "UNDIVIDED: Vicious Reavers",
+    "team": "legionaries",
+    "scope": {
+      "side": "friendly",
+      "keyword": "UNDIVIDED"
+    },
+    "effect": {
+      "code": "viciousReavers",
+      "params": {
+        "inches": 6
+      }
+    },
+    "text": "An UNDIVIDED operative has Ceaseless on its weapons when shooting, fighting or retaliating against an enemy within 6 inches of it, checked per target.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.26"
+  },
+  {
+    "id": "lg.a.in-the-eyes-of-the-gods",
+    "kind": "ability",
+    "name": "In the Eyes of the Gods",
+    "team": "legionaries",
+    "effect": {
+      "code": "inTheEyesOfTheGods",
+      "params": {
+        "aplDelta": 1
+      }
+    },
+    "text": "The first time in each of its own activations that the Aspiring Champion incapacitates an enemy, it has +1 APL until that activation ends.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.8"
+  },
+  {
+    "id": "lg.a.daemonic-aura",
+    "kind": "ability",
+    "name": "Daemonic Aura",
+    "team": "legionaries",
+    "effect": {
+      "code": "daemonicAura",
+      "params": {
+        "rollOn": 3
+      }
+    },
+    "text": "When an enemy within the Chosen's control range declares a Fall Back, roll a D6: on a 3+ the Fall Back is cancelled, its AP is refunded and that enemy cannot Fall Back again this activation or counteraction.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.9"
+  },
+  {
+    "id": "lg.a.soul-gorge",
+    "kind": "ability",
+    "name": "Soul Gorge",
+    "team": "legionaries",
+    "effect": {
+      "code": "soulGorge",
+      "params": {
+        "dice": "D3",
+        "plus": 1
+      }
+    },
+    "text": "Once a fight the Chosen took part in is over, if it is still standing and it killed its opponent or landed a damaging crit strike, it heals up to D3+1 wounds.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.10"
+  },
+  {
+    "id": "lg.a.unleash-daemon",
+    "kind": "ability",
+    "name": "Unleash Daemon",
+    "team": "legionaries",
+    "effect": {
+      "code": "unleashDaemon",
+      "params": {
+        "reduceFrom": 4,
+        "reduceBy": 1
+      }
+    },
+    "text": "Once per battle, when the Anointed is activated, it unleashes the daemon for the rest of the battle: no Pick Up Marker or mission actions (a carried marker is placed at once), every attack die of Normal or Critical Dmg 4 or more does 1 less to it, and its daemonic claw gains Ceaseless and Lethal 5+.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.11"
+  },
+  {
+    "id": "lg.a.devastating-onslaught",
+    "kind": "ability",
+    "name": "Devastating Onslaught",
+    "team": "legionaries",
+    "effect": {
+      "code": "devastatingOnslaught",
+      "params": {
+        "maxMove": 2,
+        "near": 2
+      }
+    },
+    "text": "Enemies cannot assist against the Butcher when it fights or retaliates. At the end of each enemy activation or counteraction, the Butcher may take a free Charge of up to 2 inches that ends in the control range of an enemy within 2 inches of it, switching to Engage if needed.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.13, T-LG.14"
+  },
+  {
+    "id": "lg.a.icon-bearer",
+    "kind": "ability",
+    "name": "Icon Bearer",
+    "team": "legionaries",
+    "effect": {
+      "code": "lgIconBearer",
+      "params": {
+        "controlAplBonus": 1
+      }
+    },
+    "text": "Adds 1 to its APL in the marker-control count only; its real APL is unchanged, so APL changes still apply on top.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.15"
+  },
+  {
+    "id": "lg.a.favoured-of-the-dark-gods",
+    "kind": "ability",
+    "name": "Favoured of the Dark Gods",
+    "team": "legionaries",
+    "effect": {
+      "code": "favouredOfTheDarkGods",
+      "params": {
+        "cp": 1
+      }
+    },
+    "text": "Each Ready step, an objective the Icon Bearer holds that nobody has tainted yet becomes tainted for good and its player gains 1 CP. No marker can be tainted twice, by either side.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.16"
+  },
+  {
+    "id": "lg.a.vicious-reflexes",
+    "kind": "ability",
+    "name": "Vicious Reflexes",
+    "team": "legionaries",
+    "effect": {
+      "code": "viciousReflexes"
+    },
+    "text": "When the Shrivetalon retaliates, its side resolves the first attack die of the fight instead of the attacker.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.17"
+  },
+  {
+    "id": "lg.a.horrifying-dismemberment",
+    "kind": "ability",
+    "name": "Horrifying Dismemberment",
+    "team": "legionaries",
+    "effect": {
+      "code": "horrifyingDismemberment",
+      "params": {
+        "near": 3,
+        "aplDelta": -1
+      }
+    },
+    "text": "A kill the Shrivetalon makes in melee (fighting or retaliating) horrifies a second enemy that it or the victim can see within 3 inches: that enemy has 1 less APL until its next activation is over.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.18"
+  },
+  {
+    "id": "lg.a.grisly-mark",
+    "kind": "uniqueAction",
+    "name": "GRISLY MARK",
+    "team": "legionaries",
+    "ap": 2,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "grislyMark",
+      "params": {
+        "near": 3,
+        "costDelta": 1,
+        "controlDelta": -1
+      }
+    },
+    "text": "The Shrivetalon sets its Grisly marker down within its control range, where it stays for the battle. Enemies within 3 inches of it pay 1 extra AP for Pick Up Marker and mission actions, and their side counts 1 less APL on any marker they contest from there. Once per battle; not while an enemy is in its control range.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.19"
+  },
+  {
+    "id": "lg.a.infernal-pact",
+    "kind": "ability",
+    "name": "Infernal Pact",
+    "team": "legionaries",
+    "effect": {
+      "code": "infernalPact",
+      "params": {
+        "oncePer": "battle"
+      }
+    },
+    "text": "Once per battle for the whole kill team, when a friendly Warrior is activated, you may change its Mark of Chaos to a different one. The new mark applies at once.",
+    "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md T-LG.20"
+  }
+]

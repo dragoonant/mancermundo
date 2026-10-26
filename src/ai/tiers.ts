@@ -149,6 +149,8 @@ export interface PlanStep {
   action: string
   /** movement steps: the validated path */
   wps?: { x: number; z: number; y?: number; jump?: boolean }[]
+  /** the move is a FLY set-up (Jump Pack): answered with one waypoint */
+  fly?: boolean
   /** charge/fight/shoot: the enemy the step is aimed at */
   targetId?: string
   weaponId?: string

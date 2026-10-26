@@ -1,0 +1,174 @@
+[
+  {
+    "id": "nb.p.attack-order",
+    "name": "ATTACK ORDER",
+    "team": "imperial-navy-breachers",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "nbAttackOrder",
+      "params": {
+        "inches": 3
+      },
+      "duration": "turningPoint",
+      "scope": {
+        "side": "friendly",
+        "keyword": "IMPERIAL NAVY BREACHER"
+      }
+    },
+    "text": "Put your Attack Order marker down anywhere in the killzone. Friendly Imperial Navy Breachers within 3\" of it gain Ceaseless when they shoot, fight or retaliate. The marker is cleared at the next Ready step. Cannot share a Strategy phase with Defence Order; free while your Sergeant-at-Arms is in the killzone.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.33"
+  },
+  {
+    "id": "nb.p.defence-order",
+    "name": "DEFENCE ORDER",
+    "team": "imperial-navy-breachers",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "nbDefenceOrder",
+      "params": {
+        "inches": 3
+      },
+      "duration": "turningPoint",
+      "scope": {
+        "side": "friendly",
+        "keyword": "IMPERIAL NAVY BREACHER"
+      }
+    },
+    "text": "Put your Defence Order marker down anywhere in the killzone. Whenever an operative shoots a friendly Imperial Navy Breacher within 3\" of it, pick one defence die result: you may re-roll every die showing it. The marker is cleared at the next Ready step. Cannot share a Strategy phase with Attack Order; free while your Sergeant-at-Arms is in the killzone.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.34"
+  },
+  {
+    "id": "nb.p.close-assault",
+    "name": "CLOSE ASSAULT",
+    "team": "imperial-navy-breachers",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "nbCloseAssault",
+      "params": {
+        "inches": 3,
+        "dmgDelta": 1
+      },
+      "duration": "turningPoint",
+      "scope": {
+        "side": "friendly",
+        "keyword": "IMPERIAL NAVY BREACHER"
+      }
+    },
+    "text": "For this turning point, whenever a friendly Imperial Navy Breacher fights or shoots an operative within 3\" of it, both Dmg values of its Navis shotgun and Navis heavy shotgun profiles rise by 1, and if two or more of its attack dice fail you may throw one fail away to keep another as a normal success. Retaliating does not count.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.35"
+  },
+  {
+    "id": "nb.p.brace-for-counterattack",
+    "name": "BRACE FOR COUNTERATTACK",
+    "team": "imperial-navy-breachers",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "nbBrace",
+      "params": {
+        "threshold": 3,
+        "reduceBy": 1
+      },
+      "duration": "turningPoint",
+      "scope": {
+        "side": "friendly",
+        "keyword": "IMPERIAL NAVY BREACHER"
+      }
+    },
+    "text": "For this turning point, attacks on a friendly Imperial Navy Breacher that is in your territory, or that has not Charged, Fallen Back or Repositioned this turning point, deal 1 less damage with each die whose Normal or Critical Dmg is 3 or more. Shooting, fighting and retaliating all count, whoever attacks; Devastating and other damage not dealt by a die is unchanged.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.36"
+  },
+  {
+    "id": "nb.p.overwhelm-target",
+    "name": "OVERWHELM TARGET",
+    "team": "imperial-navy-breachers",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.activationStart",
+    "effect": {
+      "code": "nbOverwhelm",
+      "params": {
+        "aplDelta": 1
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "IMPERIAL NAVY BREACHER"
+      }
+    },
+    "text": "As you activate either operative of a Breach and Clear pair, choose one of the two: its APL is 1 higher until its activation ends.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.37"
+  },
+  {
+    "id": "nb.p.blitz",
+    "name": "BLITZ",
+    "team": "imperial-navy-breachers",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "shoot.targetSelected",
+      "fight.weaponsSelected"
+    ],
+    "effect": {
+      "code": "nbBlitz",
+      "params": {
+        "inches": 6
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "IMPERIAL NAVY BREACHER"
+      }
+    },
+    "text": "When a friendly Imperial Navy Breacher Shoots or Fights against an enemy within 6\": if no other friendly operative has shot or fought yet this turning point, its weapons gain Accurate 1 for that action, and Severe as well if it was also your first operative activated this turning point.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.38"
+  },
+  {
+    "id": "nb.p.lock-it-down",
+    "name": "LOCK IT DOWN",
+    "team": "imperial-navy-breachers",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.activationStart",
+    "effect": {
+      "code": "nbLockItDown",
+      "params": {
+        "controlAplDelta": 1
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "IMPERIAL NAVY BREACHER"
+      }
+    },
+    "text": "As a friendly Imperial Navy Breacher activates, choose an objective marker. For control of that marker its APL counts as 1 higher (not an APL change) for the rest of the battle, or until you use this ploy again.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.39"
+  },
+  {
+    "id": "nb.p.deck-hand",
+    "name": "DECK HAND",
+    "team": "imperial-navy-breachers",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "firefight.activationStart",
+      "firefight.actionEnded"
+    ],
+    "effect": {
+      "code": "nbDeckHand",
+      "params": {
+        "maxApl": 2
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "IMPERIAL NAVY BREACHER"
+      }
+    },
+    "text": "During a friendly Imperial Navy Breacher's activation, before or after an action, and only while its APL is 1 or 2: once in the rest of that activation it may cross one Accessible terrain feature without the extra 1\", even in a Charge or Fall Back. (Its free Operate Hatch has no use in this killzone.)",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.40"
+  }
+]

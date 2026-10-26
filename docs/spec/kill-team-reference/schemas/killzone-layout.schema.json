@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mancermundo.dev/schemas/killzone-layout.schema.json",
+  "title": "Killzone layout",
+  "description": "Terrain for one killzone plus, per mission map, the objective marker spots. All coordinates are inches, killzone centred at the origin (x in [-15,15], z in [-11,11]). Part footprints are absolute killzone coordinates; pos and yaw place the model (yaw in degrees about +Y, same sense as three.js rotation.y).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "size", "pieces", "maps", "text", "source"],
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/Id" },
+    "name": { "type": "string", "minLength": 1 },
+    "size": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "z"],
+      "properties": { "x": { "type": "number", "exclusiveMinimum": 0 }, "z": { "type": "number", "exclusiveMinimum": 0 } }
+    },
+    "pieces": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Piece" } },
+    "maps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "objectiveSpots"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/Slug", "description": "A map id declared by the missions (prelim-1, prelim-2)." },
+          "objectiveSpots": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["centre", "territoryA", "territoryB", "default"],
+            "description": "Candidate marker positions, each individually legal under the mission's objective setup constraints, plus one default triple whose members are mutually more than the minimum distance apart.",
+            "properties": {
+              "centre": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/Vec2" } },
+              "territoryA": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/Vec2" } },
+              "territoryB": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/Vec2" } },
+              "default": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["centre", "a", "b"],
+                "properties": {
+                  "centre": { "$ref": "common.schema.json#/$defs/Vec2" },
+                  "a": { "$ref": "common.schema.json#/$defs/Vec2" },
+                  "b": { "$ref": "common.schema.json#/$defs/Vec2" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "text": { "$ref": "common.schema.json#/$defs/Text" },
+    "source": { "$ref": "common.schema.json#/$defs/Source" }
+  },
+  "$defs": {
+    "Piece": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "model", "pos", "yaw", "parts"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Slug" },
+        "model": { "$ref": "common.schema.json#/$defs/Slug", "description": "Placeholder model slug, for example t-large-ruin." },
+        "pos": { "$ref": "common.schema.json#/$defs/Vec2" },
+        "yaw": { "type": "number" },
+        "parts": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Part" } }
+      }
+    },
+    "Part": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "footprint", "height", "traits"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Slug" },
+        "footprint": { "$ref": "common.schema.json#/$defs/Polygon" },
+        "height": { "type": "number", "exclusiveMinimum": 0, "description": "Top surface height above the killzone floor, inches." },
+        "thickness": { "type": "number", "exclusiveMinimum": 0, "description": "Wall thickness; used by Breach (parts no thicker than 1 inch)." },
+        "traits": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/TerrainTrait" } },
+        "vantageFloors": { "type": "array", "minItems": 1, "items": { "type": "number", "exclusiveMinimum": 0 }, "description": "Heights of placeable Vantage floors on this part." }
+      }
+    }
+  }
+}

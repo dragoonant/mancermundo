@@ -1,0 +1,557 @@
+[
+  {
+    "id": "hk.theyn",
+    "name": "Hearthkyn Theyn",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 9
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "LEADER",
+      "THEYN"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "ranged",
+          "label": "Ranged weapon",
+          "from": [
+            "hk.w.autoch-bolt-pistol-theyn",
+            "hk.w.autoch-bolter",
+            "hk.w.bolt-revolver-theyn",
+            "hk.w.etacarn-plasma-pistol",
+            "hk.w.ion-blaster",
+            "hk.w.ion-pistol"
+          ]
+        },
+        {
+          "id": "melee",
+          "label": "Melee weapon",
+          "from": [
+            "hk.w.concussion-gauntlet",
+            "hk.w.plasma-weapon"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "hk.a.eye-of-the-ancestors",
+      "hk.a.weavefield-crest"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hk-theyn"
+    },
+    "text": "The squad's veteran leader: one sidearm or rifle and one heavy close-combat tool, a once-per-battle field crest, and a knack for marking enemies as grudge targets.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.dozr",
+    "name": "Hearthkyn Dôzr",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "DOZR"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.w.autoch-bolt-pistol",
+        "hk.w.concussion-knux"
+      ]
+    },
+    "abilities": [
+      "hk.a.brawler"
+    ],
+    "uniqueActions": [
+      "hk.a.knux-smash"
+    ],
+    "figure": {
+      "archetype": "hk-dozr"
+    },
+    "text": "The squad's hatch-breaker: it shrugs off big hits in a brawl, bars others from helping its victims, and can hurl an enemy aside with a knuckle-slam before charging on.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.field-medic",
+    "name": "Hearthkyn Field Medic",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "MEDIC",
+      "FIELD MEDIC"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.w.bolt-revolver",
+        "hk.w.plasma-knife-medic"
+      ]
+    },
+    "abilities": [
+      "hk.a.medic"
+    ],
+    "uniqueActions": [
+      "hk.a.medikit"
+    ],
+    "figure": {
+      "archetype": "hk-field-medic"
+    },
+    "text": "Keeps a kinsman on his feet at the last moment once each turning point, and patches wounds between shots.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.grenadier",
+    "name": "Hearthkyn Grenadier",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "GRENADIER"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.w.autoch-bolt-pistol",
+        "hk.w.c8-hx-charge",
+        "hk.w.fists"
+      ]
+    },
+    "abilities": [
+      "hk.a.grenadier"
+    ],
+    "uniqueActions": [
+      "hk.a.utility-grenade"
+    ],
+    "figure": {
+      "archetype": "hk-grenadier"
+    },
+    "text": "Carries its own frag, krak, smoke and stun grenades apart from the team's kit, throws them better, and drops sticky markers that make others' mission work cost more.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.gunner-plasma-beamer",
+    "name": "Hearthkyn Gunner (EtaCarn plasma beamer)",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.w.etacarn-plasma-beamer",
+        "hk.w.fists"
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hk-gunner",
+      "variant": "plasma-beamer"
+    },
+    "text": "Fires a plasma beam whose best hits also scorch anything lined up behind the target, friend or foe.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.gunner-auto-rifle",
+    "name": "Hearthkyn Gunner (HYLas auto rifle)",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.w.hylas-auto-rifle",
+        "hk.w.fists"
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hk-gunner",
+      "variant": "auto-rifle"
+    },
+    "text": "Carries a rapid-fire laser rifle.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.gunner-rotary-cannon",
+    "name": "Hearthkyn Gunner (HYLas rotary cannon)",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.wg.hylas-rotary-cannon",
+        "hk.w.fists"
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hk-gunner",
+      "variant": "rotary-cannon"
+    },
+    "text": "Carries a heavy rotary laser, focused or swept.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.gunner-missile-launcher",
+    "name": "Hearthkyn Gunner (L7 missile launcher)",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.wg.l7-missile-launcher",
+        "hk.w.fists"
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hk-gunner",
+      "variant": "missile-launcher"
+    },
+    "text": "Carries a missile launcher with blast and anti-armour warheads.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.gunner-rail-rifle",
+    "name": "Hearthkyn Gunner (Magna rail rifle)",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.w.magna-rail-rifle",
+        "hk.w.fists"
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hk-gunner",
+      "variant": "rail-rifle"
+    },
+    "text": "Carries a long rail gun whose crits hit like a spear.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.jump-pack-warrior",
+    "name": "Hearthkyn Jump Pack Warrior",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 8,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "JUMP PACK WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.w.autoch-bolt-pistol",
+        "hk.w.plasma-weapon-jpw"
+      ]
+    },
+    "abilities": [
+      "hk.a.jump-pack"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hk-jump-pack-warrior"
+    },
+    "text": "Leaps over ground and obstacles on a jump pack, and its plasma blade turns brutal after a charge.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.kinlynk",
+    "name": "Hearthkyn Kinlynk",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "KINLYNK"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.w.fists"
+      ],
+      "options": [
+        {
+          "id": "ranged",
+          "label": "Ranged weapon",
+          "from": [
+            "hk.w.autoch-bolter",
+            "hk.w.ion-blaster"
+          ]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "hk.a.signal",
+      "hk.a.system-jam"
+    ],
+    "figure": {
+      "archetype": "hk-kinlynk"
+    },
+    "text": "The squad's comms specialist: it can boost a kinsman anywhere on the field and jam an enemy's orders.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.kognitaar",
+    "name": "Hearthkyn Kognitâar",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "KOGNITAAR"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.w.fists"
+      ],
+      "options": [
+        {
+          "id": "ranged",
+          "label": "Ranged weapon",
+          "from": [
+            "hk.w.autoch-bolter",
+            "hk.w.ion-blaster"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "hk.a.tactician"
+    ],
+    "uniqueActions": [
+      "hk.a.accelerated-appraisal"
+    ],
+    "figure": {
+      "archetype": "hk-kognitaar"
+    },
+    "text": "A thinking machine that lays down a field marker: either sharper attacks around it or a re-roll for the Kin who are shot there.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.lokatr",
+    "name": "Hearthkyn Lokâtr",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "LOKATR"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.w.fists"
+      ],
+      "options": [
+        {
+          "id": "ranged",
+          "label": "Ranged weapon",
+          "from": [
+            "hk.w.autoch-bolter",
+            "hk.w.ion-blaster"
+          ]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "hk.a.spot",
+      "hk.a.pan-spectral-scan"
+    ],
+    "figure": {
+      "archetype": "hk-lokatr"
+    },
+    "text": "The squad's scanner: it marks one enemy so the Kin can see it clearly, or drops a scan field that sharpens everyone's aim inside it.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.lugger",
+    "name": "Hearthkyn Lugger",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "extraEquipment": 1,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "LUGGER"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.w.fists"
+      ],
+      "options": [
+        {
+          "id": "ranged",
+          "label": "Ranged weapon",
+          "from": [
+            "hk.w.autoch-bolter",
+            "hk.w.ion-blaster"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "hk.a.well-supplied",
+      "hk.a.ive-got-it"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hk-lugger"
+    },
+    "text": "Hauls the squad's supplies: one more equipment option, an extra command point at the start, and cheaper mission work.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  },
+  {
+    "id": "hk.warrior",
+    "name": "Hearthkyn Warrior",
+    "team": "hearthkyn-salvagers",
+    "stats": {
+      "apl": 2,
+      "move": 5,
+      "save": "3+",
+      "wounds": 8
+    },
+    "base": 28,
+    "keywords": [
+      "HEARTHKYN SALVAGER",
+      "LEAGUES OF VOTANN",
+      "WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [
+        "hk.w.fists"
+      ],
+      "options": [
+        {
+          "id": "ranged",
+          "label": "Ranged weapon",
+          "from": [
+            "hk.w.autoch-bolter",
+            "hk.w.ion-blaster"
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "hk.a.secure-salvage"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "hk-warrior"
+    },
+    "text": "The squad's rank and file; it hangs on grimly while holding a claim.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10"
+  }
+]

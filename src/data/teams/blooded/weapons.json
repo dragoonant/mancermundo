@@ -1,0 +1,637 @@
+[
+  {
+    "id": "bl.w.autopistol",
+    "name": "Autopistol",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      }
+    ],
+    "text": "Autopistol carried by the Traitor Chieftain.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.bolt-pistol",
+    "name": "Bolt pistol",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      }
+    ],
+    "text": "Bolt pistol carried by the Traitor Chieftain.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.boltgun",
+    "name": "Boltgun",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [],
+    "text": "Boltgun carried by the Traitor Chieftain.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.laspistol",
+    "name": "Laspistol",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      }
+    ],
+    "text": "Laspistol carried by the Traitor Chieftain.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.plasma-pistol-standard",
+    "name": "Plasma pistol",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "bl.wg.plasma-pistol",
+    "profile": "standard",
+    "text": "Plasma pistol carried by the Traitor Chieftain. This is the standard profile.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.plasma-pistol-supercharge",
+    "name": "Plasma pistol",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.hot"
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "bl.wg.plasma-pistol",
+    "profile": "supercharge",
+    "text": "Plasma pistol carried by the Traitor Chieftain. This is the supercharge profile.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.bayonet-chieftain",
+    "name": "Bayonet",
+    "team": "blooded",
+    "type": "melee",
+    "atk": 3,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "Bayonet carried by the Traitor Chieftain.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.chainsword",
+    "name": "Chainsword",
+    "team": "blooded",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [],
+    "text": "Chainsword carried by the Traitor Chieftain.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.improvised-blade",
+    "name": "Improvised blade",
+    "team": "blooded",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "Improvised blade carried by the Traitor Chieftain.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.power-weapon",
+    "name": "Power weapon",
+    "team": "blooded",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "Power weapon carried by the Traitor Chieftain.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.lasgun",
+    "name": "Lasgun",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "Standard-issue las rifle of the rank and file.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.diabolyk-bomb",
+    "name": "Diabolyk bomb",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      },
+      {
+        "rule": "core.wr.blast",
+        "inches": 2
+      },
+      {
+        "rule": "core.wr.devastating",
+        "x": 2
+      },
+      {
+        "rule": "core.wr.limited",
+        "x": 1
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "reposition"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      },
+      {
+        "rule": "core.wr.saturate"
+      }
+    ],
+    "text": "A single unstable warp-alchemical bomb. Its crit damage is lower than its normal damage, as printed.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.flamer",
+    "name": "Flamer",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.saturate"
+      },
+      {
+        "rule": "core.wr.torrent",
+        "inches": 2
+      }
+    ],
+    "text": "A promethium sprayer taken as a trophy.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.grenade-launcher-frag",
+    "name": "Grenade launcher",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.blast",
+        "inches": 2
+      }
+    ],
+    "profileGroup": "bl.wg.grenade-launcher",
+    "profile": "frag",
+    "text": "Fragmentation round that bursts among bunched targets.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.grenade-launcher-krak",
+    "name": "Grenade launcher",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "bl.wg.grenade-launcher",
+    "profile": "krak",
+    "text": "Anti-armour round for a single target.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.meltagun",
+    "name": "Meltagun",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 6,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      },
+      {
+        "rule": "core.wr.devastating",
+        "x": 4
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 2
+      }
+    ],
+    "text": "A short-range fusion beam. Its crit damage is lower than its normal damage, as printed.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.plasma-gun-standard",
+    "name": "Plasma gun",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "bl.wg.plasma-gun",
+    "profile": "standard",
+    "text": "A plasma rifle on its safe setting.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.plasma-gun-supercharge",
+    "name": "Plasma gun",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 5,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.hot"
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "bl.wg.plasma-gun",
+    "profile": "supercharge",
+    "text": "The same rifle overcharged, at a risk to the bearer.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.long-las-mobile",
+    "name": "Long-las",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [],
+    "profileGroup": "bl.wg.long-las",
+    "profile": "mobile",
+    "text": "Fired on the move with no special rules.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.long-las-stationary",
+    "name": "Long-las",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.devastating",
+        "x": 1
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "dash"
+      },
+      {
+        "rule": "core.wr.silent"
+      }
+    ],
+    "profileGroup": "bl.wg.long-las",
+    "profile": "stationary",
+    "text": "A braced, deliberate shot.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.shotgun",
+    "name": "Shotgun",
+    "team": "blooded",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 6
+      }
+    ],
+    "text": "Close-range scattergun of the Trench Sweeper.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.bayonet",
+    "name": "Bayonet",
+    "team": "blooded",
+    "type": "melee",
+    "atk": 3,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "A blade fixed under the barrel of a las or special weapon.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.stimm-needle",
+    "name": "Stimm needle",
+    "team": "blooded",
+    "type": "melee",
+    "atk": 3,
+    "hit": "5+",
+    "dmg": {
+      "normal": 1,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "A syringe of combat drugs the Corpseman will happily use on an enemy.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.power-weapon-cleaver",
+    "name": "Power weapon & cleaver",
+    "team": "blooded",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.ceaseless"
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "bl.a.wr-blood-offering"
+      }
+    ],
+    "text": "A power blade in one fist and a butcher's cleaver in the other.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.power-fist",
+    "name": "Power fist",
+    "team": "blooded",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 5,
+      "crit": 7
+    },
+    "rules": [
+      {
+        "rule": "core.wr.brutal"
+      }
+    ],
+    "text": "A crackling gauntlet that crushes whatever it grips.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.skinning-blades",
+    "name": "Skinning blades",
+    "team": "blooded",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.ceaseless"
+      },
+      {
+        "rule": "bl.a.wr-stalk"
+      }
+    ],
+    "text": "A pair of curved knives clashed together in anticipation.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.power-maul-claw",
+    "name": "Power maul & mutant claw",
+    "team": "blooded",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 5,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.rending"
+      },
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "A shock maul in one hand and a mutated claw in the other.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.heavy-club",
+    "name": "Heavy club",
+    "team": "blooded",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.brutal"
+      }
+    ],
+    "text": "A brutal slab of timber and iron.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  },
+  {
+    "id": "bl.w.bayonet-shield",
+    "name": "Bayonet & shield",
+    "team": "blooded",
+    "type": "melee",
+    "atk": 3,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "bl.a.wr-shield"
+      }
+    ],
+    "text": "A bayonet behind a riot shield.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.3"
+  }
+]

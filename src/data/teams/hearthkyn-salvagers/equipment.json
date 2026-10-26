@@ -1,0 +1,42 @@
+[
+  {
+    "id": "hk.e.plasma-knives",
+    "name": "PLASMA KNIVES",
+    "scope": "faction",
+    "team": "hearthkyn-salvagers",
+    "count": 1,
+    "grants": { "weapons": ["hk.w.plasma-knife"], "to": { "keyword": "HEARTHKYN SALVAGER", "notKeywords": ["FIELD MEDIC"] } },
+    "text": "Every Hearthkyn Salvager gains a plasma knife as an extra melee weapon (Atk 3, Hit 4+, Dmg 3/5, Lethal 5+). The Field Medic already has a better one and keeps only that.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.37"
+  },
+  {
+    "id": "hk.e.climbing-rigs",
+    "name": "CLIMBING RIGS",
+    "scope": "faction",
+    "team": "hearthkyn-salvagers",
+    "count": 1,
+    "effect": { "code": "hkClimbingRigs", "params": { "climbAs": 2 } },
+    "text": "Once in each Hearthkyn Salvager's activation, pick one: a climb it makes counts as 2 inches of vertical distance whatever its real height, or the vertical distance of a drop it makes is ignored.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.38"
+  },
+  {
+    "id": "hk.e.excavation-tools",
+    "name": "EXCAVATION TOOLS",
+    "scope": "faction",
+    "team": "hearthkyn-salvagers",
+    "count": 1,
+    "effect": { "code": "hkExcavationTools", "params": { "pickUpDelta": -1 } },
+    "text": "Hearthkyn Salvagers take Pick Up Marker for 1 less AP and need only contest the marker rather than control it. No current mission has a marker to pick up, so it does nothing yet.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.39"
+  },
+  {
+    "id": "hk.e.writ-of-claim",
+    "name": "WRIT OF CLAIM",
+    "scope": "faction",
+    "team": "hearthkyn-salvagers",
+    "count": 1,
+    "effect": { "code": "hkWritOfClaim", "params": { "objectivesContested": 2 } },
+    "text": "Once per battle, right after the initiative roll-off, if your Hearthkyn Salvagers contest two or more objective markers you may re-roll your initiative die.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md T-HK.40"
+  }
+]

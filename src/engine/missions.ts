@@ -1,7 +1,7 @@
 // MSN: mission.* - Preliminary Ops: objective placement, the crit op actions (Secure, Loot,
 // Transmission), kill op grades, end-of-turning-point scoring, VP and the battle result (docs/spec/11-missions.md).
 import { composeMissionMap, missionMap } from './bundle'
-import { isExpendable } from './conditions'
+import { killOpIgnored } from './conditions'
 import { baseGap2D, circleInsidePolygon, distPointSegment } from './geometry'
 import { markerControl } from './query'
 import { stubModule, type Ctx } from './registry'
@@ -60,7 +60,7 @@ export function startMission(ctx: Ctx, mission: RuntimeMission, mapId: string, r
   const s = ctx.state
   s.map = composeMissionMap(s.map, missionMap(mission, mapId))
   const startCount: Record<Seat, number> = { A: 0, B: 0 }
-  for (const op of allOps(s)) if (!isExpendable(s, op)) startCount[op.seat] += 1
+  for (const op of allOps(s)) if (!killOpIgnored(s, op)) startCount[op.seat] += 1
   const m: MissionState = {
     id: mission.id,
     mapId,
@@ -167,6 +167,35 @@ export function placeObjective(ctx: Ctx, pos: Vec2, seat: Seat): void {
 // Kill op
 // ---------------------------------------------------------------------------
 
+/**
+ * M9 prep (reanimation): an incapacitated operative came back, so it no longer counts towards the
+ * opponent's kill grade. The grade is recomputed from the current count; VP that kill grade rules gave
+ * for grades no longer held are taken back (and given again if the grade is regained). RULING logged.
+ */
+export function onOperativeReturned(ctx: Ctx, op: Operative): void {
+  const s = ctx.state
+  const m = s.mission
+  const def = missionDef(s)
+  if (!m || !def || !m.counted.includes(op.id)) return
+  m.counted = m.counted.filter((id) => id !== op.id)
+  if (killOpIgnored(s, op)) return
+  const scorer = otherSeat(op.seat)
+  m.kills[scorer] = Math.max(0, m.kills[scorer] - 1)
+  const grade = gradeFor(gradeThresholds(s, scorer), m.kills[scorer])
+  if (grade >= m.grade[scorer]) return
+  const lost = m.grade[scorer] - grade
+  m.grade[scorer] = grade
+  ctx.emit({ type: 'KillGradeChanged', grade, kills: m.kills[scorer] }, scorer)
+  for (const rule of rulesFor(def, 'killGradeIncreased')) {
+    const scored = (m.scored[rule.id] ??= { A: 0, B: 0 })
+    const back = Math.min(scored[scorer], rule.vp * lost)
+    if (back <= 0) continue
+    scored[scorer] -= back
+    s.players[scorer].vp -= back
+    ctx.emit({ type: 'VpScored', amount: -back, vp: s.players[scorer].vp, ruleId: rule.id }, scorer)
+  }
+}
+
 /** Enemy incapacitations `seat` needs for kill grades 1..5, from the enemy's starting (non-Expendable) count. */
 export function gradeThresholds(state: GameState, seat: Seat): number[] {
   const def = missionDef(state)
@@ -215,7 +244,7 @@ export function onOperativeRemoved(ctx: Ctx, op: Operative): void {
   const def = missionDef(s)
   if (!m || !def || m.counted.includes(op.id)) return
   m.counted.push(op.id)
-  if (isExpendable(s, op)) return
+  if (killOpIgnored(s, op)) return
   const scorer = otherSeat(op.seat)
   m.kills[scorer] += 1
   const grade = gradeFor(gradeThresholds(s, scorer), m.kills[scorer])

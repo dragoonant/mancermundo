@@ -1,0 +1,542 @@
+[
+  {
+    "id": "hk.w.autoch-bolt-pistol-theyn",
+    "name": "Autoch-pattern bolt pistol",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.accurate",
+        "x": 1
+      }
+    ],
+    "text": "A steady-handed leader's sidearm with a smart sight.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.autoch-bolter",
+    "name": "Autoch-pattern bolter",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.accurate",
+        "x": 1
+      }
+    ],
+    "text": "The standard Kin bolt rifle, its targeting aid steadying the first shot.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.bolt-revolver-theyn",
+    "name": "Bolt revolver",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      }
+    ],
+    "text": "A heavy-calibre revolver that hits hard on a clean shot.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.etacarn-plasma-pistol",
+    "name": "EtaCarn plasma pistol",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "text": "A stable Votann plasma sidearm that punches through armour without overheating.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.ion-blaster",
+    "name": "Ion blaster",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1,
+        "crits": true
+      }
+    ],
+    "text": "An ion rifle whose best hits strip away the target's protection.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.ion-pistol",
+    "name": "Ion pistol",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1,
+        "crits": true
+      }
+    ],
+    "text": "A short-ranged ion sidearm in a practised hand.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.concussion-gauntlet",
+    "name": "Concussion gauntlet",
+    "team": "hearthkyn-salvagers",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 5,
+      "crit": 7
+    },
+    "rules": [
+      {
+        "rule": "core.wr.brutal"
+      },
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "A powered fist that releases a shockwave on impact.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.plasma-weapon",
+    "name": "Plasma weapon",
+    "team": "hearthkyn-salvagers",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "A superheated close-combat blade or axe.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.autoch-bolt-pistol",
+    "name": "Autoch-pattern bolt pistol",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.accurate",
+        "x": 1
+      }
+    ],
+    "text": "A standard Kin sidearm with a smart sight.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.bolt-revolver",
+    "name": "Bolt revolver",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      }
+    ],
+    "text": "A heavy-calibre revolver in the field medic's holster.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.c8-hx-charge",
+    "name": "C8 HX charge",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 4
+      },
+      {
+        "rule": "core.wr.blast",
+        "inches": 1
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "reposition"
+      },
+      {
+        "rule": "core.wr.limited",
+        "x": 1
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      },
+      {
+        "rule": "core.wr.saturate"
+      }
+    ],
+    "text": "A shaped demolition charge, thrown once and then gone.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.etacarn-plasma-beamer",
+    "name": "EtaCarn plasma beamer",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 5,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      },
+      {
+        "rule": "hk.wr.beam"
+      }
+    ],
+    "text": "A plasma beam that keeps going: its best hits scorch whatever stands behind the target.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.hylas-auto-rifle",
+    "name": "HYLas auto rifle",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.ceaseless"
+      },
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "A rapid-cycling laser rifle that chews through whatever it is aimed at.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.hylas-rotary-cannon-focused",
+    "name": "HYLas rotary cannon",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.ceaseless"
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "reposition"
+      },
+      {
+        "rule": "core.wr.saturate"
+      }
+    ],
+    "profileGroup": "hk.wg.hylas-rotary-cannon",
+    "profile": "focused",
+    "text": "A multi-barrel laser cannon held on a single target.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.hylas-rotary-cannon-sweeping",
+    "name": "HYLas rotary cannon",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.ceaseless"
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "reposition"
+      },
+      {
+        "rule": "core.wr.saturate"
+      },
+      {
+        "rule": "core.wr.torrent",
+        "inches": 1
+      }
+    ],
+    "profileGroup": "hk.wg.hylas-rotary-cannon",
+    "profile": "sweeping",
+    "text": "The same cannon swept across a knot of enemies.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.l7-missile-launcher-blast",
+    "name": "L7 missile launcher",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.blast",
+        "inches": 2
+      }
+    ],
+    "profileGroup": "hk.wg.l7-missile-launcher",
+    "profile": "blast",
+    "text": "A fragmentation missile that bursts among a crowd.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.l7-missile-launcher-focused",
+    "name": "L7 missile launcher",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 5,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "hk.wg.l7-missile-launcher",
+    "profile": "focused",
+    "text": "An anti-armour missile for a single hard target.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.magna-rail-rifle",
+    "name": "Magna rail rifle",
+    "team": "hearthkyn-salvagers",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 2
+    },
+    "rules": [
+      {
+        "rule": "core.wr.devastating",
+        "x": 3
+      },
+      {
+        "rule": "core.wr.heavy",
+        "only": "dash"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 2
+      }
+    ],
+    "text": "A long rail gun: a crit punches Devastating 3 straight through at once, which is why its printed crit Dmg sits below the normal Dmg.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.plasma-weapon-jpw",
+    "name": "Plasma weapon",
+    "team": "hearthkyn-salvagers",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "hk.wr.force-impact"
+      }
+    ],
+    "text": "A superheated blade swung with the weight of a jump pack behind it.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.concussion-knux",
+    "name": "Concussion knux",
+    "team": "hearthkyn-salvagers",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.ceaseless"
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "Powered knuckle-plates built to break hatches and whoever is behind them.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.plasma-knife-medic",
+    "name": "Plasma knife",
+    "team": "hearthkyn-salvagers",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "A heated blade, equally at home cutting clothing and armour.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.plasma-knife",
+    "name": "Plasma knife",
+    "team": "hearthkyn-salvagers",
+    "type": "melee",
+    "atk": 3,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "A heated utility blade every Kin carries when the Plasma Knives kit is issued.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  },
+  {
+    "id": "hk.w.fists",
+    "name": "Fists",
+    "team": "hearthkyn-salvagers",
+    "type": "melee",
+    "atk": 3,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "Bare, armoured knuckles.",
+    "source": "Hearthkyn Salvagers team PDF (April '26); docs/spec/13-teams.md section 10.3"
+  }
+]

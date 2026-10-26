@@ -4,12 +4,12 @@ import {
   EPS,
   circleInsidePolygon,
   circleOverlapsPolygon,
-  circlesOverlap,
   distToPolygon,
   pointInPolygon,
   polygonBBox,
   type BBox,
 } from './geometry'
+import { discCentres, footprintOf, footprintsOverlap, type Footprint } from './footprint'
 import type { GameState, MapDef, Polygon, Rejection, Vec2, Vec3 } from './types'
 
 export interface Solid {
@@ -166,6 +166,8 @@ export interface PlacementSpec {
   pos: Vec3
   radius: number
   height: number
+  /** M9 batch B: oval bases (footprint.ts), the centre-to-end-disc vector */
+  axis?: Vec2
 }
 
 /**
@@ -174,21 +176,24 @@ export interface PlacementSpec {
  */
 export function placementProblem(state: GameState, spec: PlacementSpec): Rejection | null {
   const idx = terrainOf(state.map)
-  const c = { x: spec.pos.x, z: spec.pos.z }
-  if (!insideKillzone(idx, c, spec.radius)) {
+  const fp: Footprint = spec.axis ? { pos: spec.pos, baseRadius: spec.radius, axis: spec.axis } : { pos: spec.pos, baseRadius: spec.radius }
+  const discs = discCentres(fp)
+  if (!discs.every((c) => insideKillzone(idx, c, spec.radius))) {
     return { code: 'E_OUT_OF_RANGE', reason: 'base would cross the killzone edge' }
   }
   if (spec.pos.y > Y_TOL) {
-    if (!placeableSolid(idx, c, spec.radius, spec.pos.y)) {
+    if (!discs.every((c) => placeableSolid(idx, c, spec.radius, spec.pos.y))) {
       return { code: 'E_NO_PATH', reason: 'no Vantage surface at that height supports the base' }
     }
   }
-  const blocker = discBlockedBy(idx, c, spec.pos.y, spec.radius, spec.height)
-  if (blocker) return { code: 'E_OVERLAP', reason: 'base overlaps terrain', details: { part: blocker.partId } }
+  for (const c of discs) {
+    const blocker = discBlockedBy(idx, c, spec.pos.y, spec.radius, spec.height)
+    if (blocker) return { code: 'E_OVERLAP', reason: 'base overlaps terrain', details: { part: blocker.partId } }
+  }
   for (const o of Object.values(state.operatives)) {
     if (o.status !== 'active' || o.id === spec.id) continue
     if (Math.abs(o.pos.y - spec.pos.y) >= 0.5) continue
-    if (circlesOverlap(c, spec.radius, o.pos, o.baseRadius)) {
+    if (footprintsOverlap(fp, footprintOf(o))) {
       return { code: 'E_OVERLAP', reason: `base overlaps ${o.id}`, details: { operative: o.id } }
     }
   }

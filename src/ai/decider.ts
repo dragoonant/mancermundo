@@ -4,12 +4,14 @@
 // returns an action the engine would reject. All randomness comes from `SeededRng(seed + decision id)`.
 import { SeededRng, validate, type Action, type Decider, type DecisionKind, type GameState, type PendingDecision, type PlayerView } from '@/engine'
 import { answerDecision } from '@/engine/query'
+import * as choices from './choices'
 import * as fight from './fight'
 import * as moves from './moves'
 import * as ploys from './ploys'
 import { passAction, randomPolicy } from './random'
 import * as setup from './setup'
 import * as shoot from './shoot'
+import { placeMarker } from './teamActions'
 import { aiBudgetMs, clock, newMemory, tunedWeights, TIERS, workPerMs, type AiCtx, type AiMemory, type Tier, type TierParams, type Weights } from './tiers'
 
 type Policy = (ctx: AiCtx) => Action | null
@@ -42,6 +44,9 @@ export const POLICIES: Partial<Record<DecisionKind, Policy>> = {
   'dice.reroll': ploys.ruleReroll,
   'dice.commandReroll': ploys.commandReroll,
   'ploy.firefight': ploys.firefightPloy,
+  'ability.choice': choices.abilityChoice,
+  // Place Marker (team mines); free-point decisions keep the random answer they always had
+  'marker.place': (ctx) => placeMarker(ctx) ?? randomPolicy(ctx),
   'guard.interrupt': (ctx) => fight.guardInterrupt(ctx) ?? passAction(ctx.pending),
   confirm: (ctx) => ctx.legal?.[0] ?? (ctx.pending.canPass ? passAction(ctx.pending) : null),
 }

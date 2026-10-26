@@ -28,13 +28,20 @@ import type {
 import { MANIFEST, SCHEMA_NAMES } from './manifest'
 import { TYPE_OF_SCHEMA, buildIndex, checkRefs, recordCodes, type RecordIndex, type RecordType } from './refs'
 import { defaultLoadout, enumerateLoadouts, resolveLoadout, validateLoadout } from './loadout'
-import { enumerateRosters, validateRoster } from './roster'
+import { defaultRosterPicks, enumerateRosters, loadoutCapProblems, rosterPickProblems, teamCapProblems, validateOperativePicks, validateRoster } from './roster'
 import { dist, distToPolygon, distToPolygonBoundary, pointInPolygon, polygonArea, polygonDistance, polygonSegmentDistance, segDist } from './geometry'
 
 const DATA_ROOT = path.dirname(fileURLToPath(import.meta.url))
 const SCHEMA_DIR = path.resolve(DATA_ROOT, '../../docs/spec/schemas')
 const MIRROR_DIR = path.join(DATA_ROOT, 'schema')
-const HOOKS_FILE = path.join(DATA_ROOT, 'code-hooks.json')
+
+/**
+ * The six Approved Ops 2025 killzone cards (Killzone: Volkus, Maps 1 to 6) are official: where a piece, a drop zone edge or
+ * a marker lands is the card's call, not ours. Our own placement clearances (lane minimum, drop zone edge clearance, marker
+ * clearance) are therefore not applied to them, and each card lists only the one mission map it is drawn for. Everything else
+ * (board bounds, footprints, objective setup constraints) still applies.
+ */
+export const isOfficialCard = (l: { id: string }): boolean => l.id.startsWith('kz.volkus-ao25-')
 
 /** Layout rules (inches). */
 export const LAYOUT_RULES = {
@@ -61,7 +68,10 @@ export interface ValidationResult {
 }
 
 export interface ValidateOptions {
-  /** write: regenerate src/data/code-hooks.json; check: error when it is out of date; skip: ignore it. */
+  /**
+   * Kept for callers: the code-hook list used to be a generated src/data/code-hooks.json; it is now derived
+   * from the data at load time (src/data/index.ts CODE_HOOKS), so every mode is the same and nothing is written.
+   */
   hooksFile?: 'write' | 'check' | 'skip'
 }
 
@@ -75,11 +85,6 @@ function listJson(dir: string, base = dir): string[] {
     else if (entry.name.endsWith('.json')) out.push(path.relative(base, full).split(path.sep).join('/'))
   }
   return out
-}
-
-function formatHooks(hooks: HookUse[]): string {
-  const rows = hooks.map((h) => `    { "name": ${JSON.stringify(h.name)}, "usedBy": ${JSON.stringify(h.usedBy).replace(/","/g, '", "')} }`)
-  return `{\n  "hooks": [\n${rows.join(',\n')}\n  ]\n}\n`
 }
 
 // ------------------------------------------------------------------ weapon rules
@@ -250,17 +255,58 @@ export function validateAll(options: ValidateOptions = {}): ValidationResult {
   for (const t of teams) {
     const cards = datacards.filter((d) => d.team === t.id)
     const inSlots = new Set(t.selection.slots.flatMap((s) => s.from))
-    for (const c of cards) if (!inSlots.has(c.id)) errors.push(`${where(t.id)}: datacard ${c.id} is in no selection slot of ${t.id}`)
+    // batch D prep: a `selectable: false` card is reached only by changing datacard mid-battle, never from a slot
+    for (const c of cards) if (!inSlots.has(c.id) && c.selectable !== false) errors.push(`${where(t.id)}: datacard ${c.id} is in no selection slot of ${t.id}`)
+    for (const c of cards) if (inSlots.has(c.id) && c.selectable === false) errors.push(`${where(t.id)}: datacard ${c.id} is selectable: false but sits in a selection slot`)
     for (const s of t.selection.slots) {
       for (const id of s.from) if (index.byId[id] && (index.byId[id] as DatacardData).team !== t.id) errors.push(`${where(t.id)}: slot ${s.id} lists ${id} from another team`)
       for (const id of s.repeatable ?? []) if (!s.from.includes(id)) errors.push(`${where(t.id)}: slot ${s.id} repeatable ${id} is not in from`)
       for (const id of s.halfSelections ?? []) if (!s.from.includes(id)) errors.push(`${where(t.id)}: slot ${s.id} halfSelections ${id} is not in from`)
     }
-    const first = enumerateRosters(t).next()
-    if (first.done) errors.push(`${where(t.id)}: team ${t.id} has no legal roster`)
-    else {
-      const check = validateRoster(t, first.value)
-      if (!check.ok) errors.push(`${where(t.id)}: enumerated roster fails validation: ${check.reasons.join('; ')}`)
+    const byId = Object.fromEntries(cards.map((c) => [c.id, c])) as Record<Id, DatacardData>
+    // M9 batch B: team caps (keyword caps over every slot) can rule out enumerated shapes; find the first legal one
+    let legal = false
+    let tried = 0
+    let firstReasons: string[] = []
+    for (const shape of enumerateRosters(t)) {
+      const check = validateRoster(t, shape, byId)
+      if (check.ok) {
+        legal = true
+        break
+      }
+      if (tried === 0) firstReasons = check.reasons
+      if (++tried > 5000) break
+    }
+    if (!legal) errors.push(`${where(t.id)}: team ${t.id} has no legal roster${firstReasons.length ? ` (${firstReasons.join('; ')})` : ''}`)
+    // M9 batch B: the selection caps and operative choices name real things
+    for (const c of t.selection.caps ?? []) for (const id of c.from ?? []) if (!byId[id]) errors.push(`${where(t.id)}: selection cap lists ${id}, not a datacard of ${t.id}`)
+    for (const c of t.selection.loadoutCaps ?? []) for (const id of c.weapons) if (!index.byId[id] && !index.groups[id]) errors.push(`${where(t.id)}: loadout cap lists unknown weapon ${id}`)
+    for (const oc of t.operativeChoices ?? []) for (const e of oc.exclude ?? []) for (const id of e.datacards) if (!byId[id]) errors.push(`${where(t.id)}: operative choice ${oc.id} excludes unknown datacard ${id}`)
+    // batch C shared: display labels name picks the choice offers
+    for (const oc of t.operativeChoices ?? []) for (const k of Object.keys(oc.labels ?? {})) if (!oc.keywords.includes(k)) errors.push(`${where(t.id)}: operative choice ${oc.id} labels unknown pick ${k}`)
+    // M9 batch B: the default roster honours the team caps, loadout caps and operative choices
+    const d = t.defaults
+    if (d?.roster) {
+      const defCards = d.roster.map((id) => byId[id]).filter((c): c is DatacardData => !!c)
+      for (const r of teamCapProblems(t, d.roster, byId)) errors.push(`${where(t.id)}: default roster: ${r}`)
+      if (d.loadouts && d.loadouts.length > d.roster.length) errors.push(`${where(t.id)}: defaults.loadouts is longer than defaults.roster`)
+      if (d.operativePicks && d.operativePicks.length > d.roster.length) errors.push(`${where(t.id)}: defaults.operativePicks is longer than defaults.roster`)
+      const carried = defCards.map((c, i) => {
+        const answer = d.loadouts?.[i]
+        const choice = answer && Object.keys(answer).length > 0 ? answer : defaultLoadout(c)
+        for (const r of validateLoadout(c, choice)) errors.push(`${where(t.id)}: default loadout ${i} (${c.id}): ${r}`)
+        return resolveLoadout(c, choice, index.groups)
+      })
+      for (const r of loadoutCapProblems(t, carried, index.groups)) errors.push(`${where(t.id)}: default loadouts: ${r}`)
+      // M9 batch C: roster-aware defaults (unique choices kept apart), then the roster-wide pick check
+      const allPicks = defaultRosterPicks(t, defCards, d.operativePicks ?? [])
+      defCards.forEach((c, i) => {
+        for (const r of validateOperativePicks(t, c, allPicks[i])) errors.push(`${where(t.id)}: default picks: ${r}`)
+      })
+      for (const r of rosterPickProblems(t, allPicks)) errors.push(`${where(t.id)}: default picks: ${r}`)
+    }
+    for (const r of t.selection.requires ?? []) {
+      for (const id of [r.id, ...r.needs]) if (!byId[id]) errors.push(`${where(t.id)}: roster requirement lists ${id}, not a datacard of ${t.id}`)
     }
     for (const tc of t.teamChoices ?? []) {
       const offered = abilities.filter((a) => a.choiceGroup === tc.group && a.team === t.id)
@@ -327,13 +373,7 @@ export function validateAll(options: ValidateOptions = {}): ValidationResult {
   const hooks: HookUse[] = [...usage.entries()]
     .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
     .map(([name, usedBy]) => ({ name, usedBy: [...new Set(usedBy)].sort() }))
-  const hooksText = formatHooks(hooks)
-  if (hooksMode === 'write') {
-    if (!fs.existsSync(HOOKS_FILE) || fs.readFileSync(HOOKS_FILE, 'utf8').replace(/\r\n/g, '\n') !== hooksText) fs.writeFileSync(HOOKS_FILE, hooksText, 'utf8')
-  } else if (hooksMode === 'check') {
-    const current = fs.existsSync(HOOKS_FILE) ? fs.readFileSync(HOOKS_FILE, 'utf8').replace(/\r\n/g, '\n') : ''
-    if (current !== hooksText) errors.push('src/data/code-hooks.json: out of date (run npm run validate:data)')
-  }
+  void hooksMode
 
   return { errors, files: MANIFEST.length, records: recordCount, hooks, index }
 }
@@ -364,8 +404,10 @@ function checkLayout(l: KillzoneLayoutData, missions: MissionData[], missionMaps
       for (const h of q.vantageFloors ?? []) if (h > q.height) err(`${p.id}.${q.id}: vantage floor ${h} is above the part height`)
     }
   }
-  // lanes between pieces
-  for (let i = 0; i < l.pieces.length; i++) {
+  // lanes between pieces (official cards keep the card's own gaps)
+  const official = isOfficialCard(l)
+  if (official && l.maps.length !== 1) err(`an official card lists exactly one mission map (found ${l.maps.length})`)
+  for (let i = 0; i < l.pieces.length && !official; i++) {
     for (let j = i + 1; j < l.pieces.length; j++) {
       let d = Infinity
       for (const a of l.pieces[i].parts) for (const b of l.pieces[j].parts) d = Math.min(d, polygonDistance(a.footprint, b.footprint))
@@ -374,7 +416,7 @@ function checkLayout(l: KillzoneLayoutData, missions: MissionData[], missionMaps
   }
   // maps
   const layoutMapIds = new Set(l.maps.map((m) => m.id))
-  for (const id of missionMaps.keys()) if (!layoutMapIds.has(id)) err(`no entry for mission map ${id}`)
+  if (!official) for (const id of missionMaps.keys()) if (!layoutMapIds.has(id)) err(`no entry for mission map ${id}`)
   for (const lm of l.maps) {
     const defs = missionMaps.get(lm.id)
     if (!defs) {
@@ -390,7 +432,7 @@ function checkLayout(l: KillzoneLayoutData, missions: MissionData[], missionMaps
           const b = poly[(i + 1) % poly.length]
           const onBoard = (a.x === b.x && Math.abs(a.x) === board.maxX) || (a.z === b.z && Math.abs(a.z) === board.maxZ)
           if (onBoard) continue
-          for (const p of l.pieces) {
+          for (const p of official ? [] : l.pieces) {
             for (const q of p.parts) {
               const d = polygonSegmentDistance(q.footprint, a, b)
               if (d <= LAYOUT_RULES.dropZoneEdgeClear) err(`${p.id}.${q.id} is ${d.toFixed(2)} from the ${lm.id} drop zone ${seat} edge (must be more than ${LAYOUT_RULES.dropZoneEdgeClear})`)
@@ -398,18 +440,19 @@ function checkLayout(l: KillzoneLayoutData, missions: MissionData[], missionMaps
           }
         }
       }
-      for (const mission of missions.filter((m) => m.maps.includes(map))) checkSpots(l, lm, map, mission, err)
+      for (const mission of missions.filter((m) => m.maps.includes(map))) checkSpots(l, lm, map, mission, err, official)
     }
   }
 }
 
-function checkSpots(l: KillzoneLayoutData, lm: KillzoneLayoutData['maps'][number], map: MissionMap, mission: MissionData, err: (m: string) => void): void {
+function checkSpots(l: KillzoneLayoutData, lm: KillzoneLayoutData['maps'][number], map: MissionMap, mission: MissionData, err: (m: string) => void, official = false): void {
   const steps = mission.objectiveSetup.steps
   const r = mission.objectiveSetup.markerMm / 2 / 25.4
   const centreRules: ObjectiveConstraints = steps[0]?.constraints ?? {}
   const sideRules: ObjectiveConstraints = steps[1]?.constraints ?? {}
   const tag = `${lm.id}/${mission.id}`
   const clear = (p: Vec2, label: string) => {
+    if (official) return // the card's skull is where the card puts it, even next to a wall
     for (const piece of l.pieces) for (const part of piece.parts) {
       if (distToPolygon(p, part.footprint) < LAYOUT_RULES.spotClear) err(`${tag} ${label} (${p.x}, ${p.z}) is within ${LAYOUT_RULES.spotClear} of ${piece.id}.${part.id}`)
     }
@@ -429,8 +472,9 @@ function checkSpots(l: KillzoneLayoutData, lm: KillzoneLayoutData['maps'][number
     list.forEach((p, i) => {
       const label = `territory${seat}[${i}]`
       if (sideRules.whollyWithinTerritory && !(pointInPolygon(p, terr) && distToPolygonBoundary(p, terr) >= r - 1e-9)) err(`${tag} ${label} (${p.x}, ${p.z}) is not wholly within territory ${seat}`)
-      if (sideRules.withinCentrelineInches !== undefined && toLine(p) - r > sideRules.withinCentrelineInches + 1e-9) err(`${tag} ${label} is more than ${sideRules.withinCentrelineInches} from the centreline`)
-      if (sideRules.minFromNeutralEdges !== undefined && neutral(p) - r <= sideRules.minFromNeutralEdges) err(`${tag} ${label} is too close to a neutral edge`)
+      // official cards: a skull may sit a hair outside the setup limits (Map 3: 1.94 in from a neutral edge, 3.23 in from the centreline); the engine falls back to the layout's default spots then
+      if (!official && sideRules.withinCentrelineInches !== undefined && toLine(p) - r > sideRules.withinCentrelineInches + 1e-9) err(`${tag} ${label} is more than ${sideRules.withinCentrelineInches} from the centreline`)
+      if (!official && sideRules.minFromNeutralEdges !== undefined && neutral(p) - r <= sideRules.minFromNeutralEdges) err(`${tag} ${label} is too close to a neutral edge`)
       clear(p, label)
     })
   }

@@ -8,6 +8,7 @@ import { findOffer } from '@/engine/abilities'
 import { windowsOf } from '@/engine/ploys'
 import { fightOutcome, hitOdds, type FightMove, type FightPosition, type FightSideState } from '@/engine/query'
 import { dataBundle } from './adapter'
+import { ployParamLabel } from '../teams'
 import { decisionInfo, humanize, opName, rulesLine, SEAT_NAME, weaponName } from './labels'
 
 export const pct = (v: number): string => `${Math.round(v * 100)}%`
@@ -407,11 +408,50 @@ export interface PloyCardInfo {
   cost: number | null
   text: string
   param: string | null
+  /** rules text of the picked option when the param is an ability (a Chapter Tactic) */
+  paramText: string | null
+  /** the pick this option swaps out (Adaptive Tactics: the current secondary Chapter Tactic) */
+  replaces: { name: string; text: string } | null
   affordable: boolean
+}
+
+type NamedRecord = { name?: string; text?: string } | undefined
+
+function recordOf(id: string | null | undefined): NamedRecord {
+  return id ? (dataBundle().byId[id] as NamedRecord) : undefined
+}
+
+export interface TeamPickLine {
+  label: string
+  name: string
+  text: string
+  /** set while a ploy has swapped this pick out (Adaptive Tactics) */
+  swappedFrom: string | null
+}
+
+/** A seat's team-level picks (Chapter Tactics) with their rules; Adaptive Tactics' swap applied. */
+export function teamPicks(state: GameState, seat: Seat): TeamPickLine[] {
+  const team = dataBundle().teams[state.players[seat].teamId]
+  const cfg = state.config[seat]
+  return (team?.teamChoices ?? []).flatMap((tc) => {
+    const picked = cfg.choices[tc.id]
+    if (!picked) return []
+    const live = tc.id === 'secondary-tactic' && cfg.adaptive ? cfg.adaptive : picked
+    const rec = recordOf(live)
+    return [{ label: tc.label, name: rec?.name ?? humanize(live), text: rec?.text ?? '', swappedFrom: live !== picked ? (recordOf(picked)?.name ?? humanize(picked)) : null }]
+  })
 }
 
 function ployText(state: GameState, id: string): string {
   return state.data.ploys?.[id]?.text ?? (dataBundle().byId[id] as { text?: string } | undefined)?.text ?? ''
+}
+
+/** A ploy param that names a marker on the board (Drop and Secure): its kind and where it lies, else null. */
+function markerParamLabel(state: GameState, param: string): string | null {
+  const m = state.markers.find((k) => k.id === param)
+  if (!m) return null
+  const kind = m.kind === 'objective' ? 'Objective marker' : `${humanize(m.kind)} marker`
+  return `${kind} at ${m.pos.x.toFixed(1)}, ${m.pos.z.toFixed(1)}`
 }
 
 /** Card for one offered ploy or gambit option. */
@@ -422,13 +462,25 @@ export function ployCard(opt: DecisionOption, state: GameState, seat: Seat): Plo
   const cost = num(d.cost)
   const name = str(d.name) ?? state.data.gambits.find((g) => g.id === ployId)?.name ?? state.data.ploys?.[ployId]?.name ?? humanize(ployId)
   const param = str(p.param)
+  const paramRec = param && !state.operatives[param] ? recordOf(param) : undefined
+  // a ploy that swaps one team pick for another names the pick it replaces (Adaptive Tactics)
+  const replaceKey = ((state.data.ploys?.[ployId]?.effect as { params?: { replace?: string } } | undefined)?.params?.replace)
+  let replaces: PloyCardInfo['replaces'] = null
+  if (replaceKey && paramRec) {
+    const cfg = state.config[seat]
+    const cur = (replaceKey === 'secondary' ? cfg.adaptive : null) ?? cfg.choices[`${replaceKey}-tactic`]
+    const r = recordOf(cur)
+    if (cur) replaces = { name: r?.name ?? humanize(cur), text: r?.text ?? '' }
+  }
   return {
     id: opt.id,
     ployId,
     name,
     cost,
     text: ployText(state, ployId),
-    param: param ? (state.operatives[param] ? opName(state, param) : humanize(param)) : null,
+    param: param ? (state.operatives[param] ? opName(state, param) : (ployParamLabel(ployId, param) ?? markerParamLabel(state, param) ?? paramRec?.name ?? humanize(param))) : null,
+    paramText: paramRec?.text ?? null,
+    replaces,
     affordable: cost === null || cost <= state.players[seat].cp,
   }
 }
@@ -507,6 +559,21 @@ const CHOICE_LABELS: Record<string, string> = {
   'shoot-first': 'Shoot first, then dash',
 }
 
+/** M10 batch D: option wording keyed by the engine's label key, for options that carry a name or a spot but need a verb (Scout Squad follow-ups). */
+const LABEL_KEY_TEXT: Record<string, (d: Dict) => string> = {
+  'ss.fs.done': () => 'Finish Forward Scouting',
+  'ss.fs.redeployOp': (d) => `Redeploy ${str(d.name) ?? 'a Scout'}`,
+  'ss.fs.repositionOp': (d) => `Reposition ${str(d.name) ?? 'a Scout'}`,
+  'ss.fs.designate': (d) => `Designate ${str(d.name) ?? 'this enemy'}${num(d.wounds) !== null ? ` (${num(d.wounds)} wounds left)` : ''}`,
+  'ss.fs.redeploySpot': (d) => `Set up at ${Number(d.x).toFixed(1)}, ${Number(d.z).toFixed(1)}`,
+  'ss.fs.tripSpot': (d) => `Trip Alarm marker at ${Number(d.x).toFixed(1)}, ${Number(d.z).toFixed(1)}`,
+  'ss.fs.boobySpot': (d) => `Booby Trap marker at ${Number(d.x).toFixed(1)}, ${Number(d.z).toFixed(1)}`,
+  'ss.adaptable.done': () => 'Finish Adaptable Training',
+  'ss.adaptable.flip': (d) => `${str(d.name) ?? 'A Scout'}: switch to ${d.order === 'engage' ? 'Conceal' : 'Engage'}`,
+  'ss.stealth.done': () => 'No more Dashes',
+  'ss.stealth.dash': (d) => `${str(d.name) ?? 'A Scout'} takes a free Dash`,
+}
+
 export function abilityChoiceOption(opt: DecisionOption): ChoiceOptionInfo {
   const d = (opt.data ?? {}) as Dict
   const payload = opt.action.payload as { option?: string }
@@ -516,13 +583,79 @@ export function abilityChoiceOption(opt: DecisionOption): ChoiceOptionInfo {
   const spot = x !== null && z !== null ? { x, z } : null
   return {
     id: opt.id,
-    label: CHOICE_LABELS[key] ?? (spot ? `Spot ${spot.x.toFixed(1)}, ${spot.z.toFixed(1)}` : humanize(opt.labelKey || key)),
+    // a named option (a free Dash for one operative, a Skill at Arms) reads by its name even when it also carries a position
+    label: CHOICE_LABELS[key] ?? LABEL_KEY_TEXT[opt.labelKey ?? '']?.(d) ?? str(d.name) ?? (spot ? `Spot ${spot.x.toFixed(1)}, ${spot.z.toFixed(1)}` : humanize(opt.labelKey || key)),
     detail: spot ? 'Click the ringed spot on the board, or pick it here.' : '',
     spot,
   }
 }
 
+/** What a team hook's choice decides, in one sentence (M10 batch C hooks); null for hooks the default wording covers. */
+function hookHeadline(pending: PendingDecision, state: GameState | null): string | null {
+  const c = pending.context
+  const op = opName(state, str(c.operativeId))
+  switch (str(c.hook)) {
+    case 'ksTacticalCommand':
+      return c.mode === 'sweep' ? `${op}'s Tactical Command: choose where the Clearance Sweep marker goes.` : `${op}'s Tactical Command: choose the extra Skill at Arms for ${opName(state, str(c.targetId))}.`
+    case 'ksPlaceMine':
+      return `${op} places the Melta Mine: choose a spot. Any other operative that comes within its control range, friend or foe, sets it off.`
+    case 'ksRelocate':
+      return 'Relocate: choose who takes a free Dash next, or finish.'
+    case 'nvAutoBroadcaster':
+      return `${op}'s Auto-broadcaster: choose where the marker goes.`
+    case 'nvRighteousAdvance':
+      return 'Righteous Advance: choose which Novitiate takes a free Dash next, or stop.'
+    case 'cvPlunderers':
+      return 'Plunderers: choose which Voidscarred takes a free Dash next, or finish.'
+    case 'fkReadyStep':
+      return 'Farstalker: change an operative\'s order before the Strategy phase goes on, or finish.'
+    case 'fkMarkedForTheHunt':
+      return `${op} drops the Pech'ra marker: choose a spot.`
+    case 'fkGather':
+      return `${op} has finished the first move of GATHER: place the carried marker here, or keep carrying it.`
+    case 'exDeployNuncio':
+      return `${op} deploys the Nuncio-aquila: choose a spot within 6 inches of the Proctor, or of where the marker stands now.`
+    case 'exMarkedForJustice':
+      return 'Marked for Justice: the mark has fallen. Choose the enemy who is the new mark, or pass to leave it.'
+    case 'preBattle': {
+      const hooks = new Set((Array.isArray(c.offers) ? (c.offers as { hook?: string }[]) : []).map((o) => o.hook))
+      if (hooks.has('ssForwardScouting')) return 'Before the battle: use a Forward Scouting option with your Scouts, or pass when you are finished.'
+      if (hooks.has('blRegularDosage')) return 'Before the battle: the Corpseman may give a friend a stimm (Regular Dosage), or pass to start the battle.'
+      return 'Before the battle starts: use a team rule, or pass.'
+    }
+    case 'ssForwardScouting': {
+      const left = num(c.left)
+      switch (str(c.step)) {
+        case 'redeploy.op':
+          return `Forward Scouting, Redeploy: choose a Scout to set up again${left !== null ? ` (${left} left)` : ''}, or finish.`
+        case 'redeploy.spot':
+          return `Forward Scouting, Redeploy: choose where ${opName(state, str(c.moverId))} goes, within your drop zone, or leave it where it is.`
+        case 'reposition.op':
+          return 'Forward Scouting, Reposition: choose the Scout that takes the free move. It must end wholly within 3 inches of your drop zone.'
+        case 'marker':
+          return c.kind === 'tripAlarm' ? 'Forward Scouting, Trip Alarm: choose where the marker goes. An enemy that comes close to it sets it off.' : 'Forward Scouting, Booby Trap: choose where the marker goes. An enemy that comes close to it sets it off.'
+        case 'designate':
+          return 'Forward Scouting, Designate Target: choose the enemy operative the Scouts mark.'
+        default:
+          return `${op}'s Forward Scouting: choose how it resolves.`
+      }
+    }
+    case 'ssAdaptableTraining': {
+      const left = num(c.left)
+      return `Adaptable Training: choose a Scout to switch between Engage and Conceal${left !== null ? ` (${left} switch${left === 1 ? '' : 'es'} left)` : ''}, or finish.`
+    }
+    case 'ssStealthRelocation': {
+      const left = num(c.left)
+      return `Stealth Relocation: choose which concealed Scout takes a free Dash${left !== null ? ` (${left} left)` : ''}, or finish.`
+    }
+    default:
+      return null
+  }
+}
+
 export function abilityChoiceHeadline(pending: PendingDecision, state: GameState | null): string {
+  const named = hookHeadline(pending, state)
+  if (named) return named
   const op = opName(state, str(pending.context.operativeId))
   const ability = str(pending.context.abilityId)
   const name = ability ? (state?.data.abilities[ability]?.name ?? humanize(ability)) : 'an ability'
@@ -754,7 +887,8 @@ function promptSummaryBase(state: GameState, pending: PendingDecision): PromptSu
       const lines = [
         ...opts.map((o) => {
           const c = ployCard(o, state, pending.seat)
-          return `${c.name}${c.cost !== null ? ` (${c.cost} CP)` : ''}${c.param ? ` on ${c.param}` : ''}: ${c.text}`
+          const swap = c.replaces ? ` (swap ${c.replaces.name} for ${c.param})` : c.param ? ` on ${c.param}` : ''
+          return `${c.name}${c.cost !== null ? ` (${c.cost} CP)` : ''}${swap}: ${c.text}${c.paramText ? ` ${c.param}: ${c.paramText}` : ''}`
         }),
         ...unavailablePloys(state, pending).map((u) => `${u.name} (${u.cost} CP): unavailable, ${u.reason}`),
       ]

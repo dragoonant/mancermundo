@@ -2,7 +2,7 @@
 // shoot-cover game: every drawer opens inside the screen, the activation bar and the shoot prompts fit, and every button
 // in the prompt layer is at least 44 px. Screenshots land in e2e-out/mobile-<project>-0N.png.
 import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test'
-import { screenshotRendered, startBattle } from './helpers'
+import { boardPixel, screenshotRendered, snapshot, startBattle } from './helpers'
 
 const MIN_TOUCH = 44
 
@@ -55,9 +55,11 @@ test('phone: drawers, activation bar and shoot prompts fit the screen with 44 px
   await expect(page.getByTestId('rotate-prompt')).toHaveCount(0)
   await noPageScroll(page)
 
-  // activate prompt
+  // activate prompt: a slim bar, the operatives are picked on the board (the list is only a fallback behind "List")
   const prompt = page.getByTestId('decision-prompt')
   await expectInViewport(page, prompt, 'activate prompt')
+  await expect(page.getByTestId('activate-hint')).toContainText('glowing operative')
+  await expect(page.getByTestId('activate-A6')).toHaveCount(0)
   await shot(page, info, 1)
   const problems: string[] = []
   problems.push(...(await smallTargets(page.getByTestId('battle'))).map((t) => `activate screen: ${t}`))
@@ -80,8 +82,26 @@ test('phone: drawers, activation bar and shoot prompts fit the screen with 44 px
     await expect(drawer).toHaveCount(0)
   }
 
-  // activation: order, then the action bar
-  await page.getByTestId('activate-A6').click()
+  // activation: a tap on the board marks the operative, Cancel drops it, a second tap and Activate send it
+  const a6 = (await snapshot(page)).ops.find((o) => o.id === 'A6')!
+  let at: { x: number; y: number } | null = null
+  await expect.poll(async () => (at = await boardPixel(page, a6.pos.x, a6.pos.y + 0.7, a6.pos.z)), 'A6 can be tapped on the board').not.toBeNull()
+  await page.touchscreen.tap(at!.x, at!.y)
+  await expect(page.getByTestId('activate-confirm-text')).toContainText('(A6)?')
+  await expect(page.getByTestId('activate-A6')).toHaveCount(0)
+  await expectInViewport(page, prompt, 'confirm bar')
+  await shot(page, info, n++)
+  problems.push(...(await smallTargets(prompt)).map((t) => `confirm bar: ${t}`))
+  await page.getByTestId('cancel-activate').click()
+  await expect(page.getByTestId('activate-hint')).toBeVisible()
+  // the List button is the fallback: it opens the old buttons
+  await page.getByTestId('activate-list-toggle').click()
+  await expect(page.getByTestId('activate-A6')).toBeVisible()
+  await expectInViewport(page, prompt, 'activate list')
+  await page.getByTestId('activate-list-toggle').click()
+  await expect(page.getByTestId('activate-A6')).toHaveCount(0)
+  await page.touchscreen.tap(at!.x, at!.y)
+  await page.getByTestId('confirm-activate').click()
   await expect(page.getByTestId('order-engage')).toBeVisible()
   await expectInViewport(page, prompt, 'order prompt')
   await page.getByTestId('order-engage').click()

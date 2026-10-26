@@ -45,7 +45,8 @@ describe('AI deciders', () => {
     const x = createAiDecider('normal', { seed: 'same' }).decideSync(view(s, p.seat), p, legalActions(s, p)).action
     const y = createAiDecider('normal', { seed: 'same' }).decideSync(view(s, p.seat), p, legalActions(s, p)).action
     expect(JSON.stringify(y)).toBe(JSON.stringify(x))
-  })
+    // three full easy-tier games: about 34 s on a CI runner, over the 30 s default
+  }, 120000)
 
   it('AI-003 the work cap makes answers independent of the clock; a blown hard stop still answers legally', () => {
     const acts = states.filter((s) => s.pending!.kind === 'firefight.activate').slice(0, 6)

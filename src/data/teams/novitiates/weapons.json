@@ -1,0 +1,443 @@
+[
+  {
+    "id": "nv.w.plasma-pistol-standard",
+    "name": "Plasma pistol",
+    "team": "novitiates",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "nv.wg.plasma-pistol",
+    "profile": "standard",
+    "text": "Plasma pistol carried by the Novitiate Superior, on its safe setting.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.plasma-pistol-supercharge",
+    "name": "Plasma pistol",
+    "team": "novitiates",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.hot"
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1
+      }
+    ],
+    "profileGroup": "nv.wg.plasma-pistol",
+    "profile": "supercharge",
+    "text": "Plasma pistol carried by the Novitiate Superior, supercharged: hits harder but can burn its user.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.relic-bolt-pistol",
+    "name": "Relic bolt pistol",
+    "team": "novitiates",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "Relic bolt pistol carried by the Novitiate Superior.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.relic-boltgun",
+    "name": "Relic boltgun",
+    "team": "novitiates",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "Relic boltgun carried by the Novitiate Superior. No printed range.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.gun-butt-superior",
+    "name": "Gun butt",
+    "team": "novitiates",
+    "type": "melee",
+    "atk": 3,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "The Superior's rifle butt; it hits a little better than a novice's.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.power-weapon",
+    "name": "Power weapon",
+    "team": "novitiates",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      }
+    ],
+    "text": "Power weapon carried by the Novitiate Superior.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.condemnor-stakethrower",
+    "name": "Condemnor stakethrower",
+    "team": "novitiates",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "nv.a.wr-anti-psyker"
+      },
+      {
+        "rule": "core.wr.devastating",
+        "x": 2
+      },
+      {
+        "rule": "core.wr.piercing",
+        "x": 1,
+        "crits": true
+      },
+      {
+        "rule": "core.wr.silent"
+      }
+    ],
+    "text": "A silent launcher for blessed stakes, made to pin psykers.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.null-rod",
+    "name": "Null rod",
+    "team": "novitiates",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "nv.a.wr-anti-psyker"
+      },
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "A warded rod that smothers psychic power and punishes psykers.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.autopistol",
+    "name": "Autopistol",
+    "team": "novitiates",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      }
+    ],
+    "text": "Standard sidearm of the novices.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.dialogus-stave",
+    "name": "Dialogus stave",
+    "team": "novitiates",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 3,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "Iron-shod stave of the voice of the squad.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.duelling-blades",
+    "name": "Duelling blades",
+    "team": "novitiates",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.ceaseless"
+      },
+      {
+        "rule": "nv.a.wr-riposte"
+      }
+    ],
+    "text": "Paired blades for a duellist who answers every perfect parry with a cut.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.neural-whips-ranged",
+    "name": "Neural whips (ranged)",
+    "team": "novitiates",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 3
+      },
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.stun"
+      }
+    ],
+    "text": "The Exactor's barbed whips lashed at a short range.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.neural-whips-melee",
+    "name": "Neural whips (melee)",
+    "team": "novitiates",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.shock"
+      }
+    ],
+    "text": "The Exactor's barbed whips used up close. Always carried together with the ranged profile.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.surgical-saw",
+    "name": "Surgical saw",
+    "team": "novitiates",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [
+      {
+        "rule": "core.wr.lethal",
+        "target": "5+"
+      },
+      {
+        "rule": "core.wr.rending"
+      }
+    ],
+    "text": "A bone saw that serves the Hospitaller just as well in a fight.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.autogun",
+    "name": "Autogun",
+    "team": "novitiates",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "Militant's long gun. No printed range.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.gun-butt",
+    "name": "Gun butt",
+    "team": "novitiates",
+    "type": "melee",
+    "atk": 3,
+    "hit": "4+",
+    "dmg": {
+      "normal": 2,
+      "crit": 3
+    },
+    "rules": [],
+    "text": "A rifle or pistol butt swung in close combat.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.novitiate-blade",
+    "name": "Novitiate blade",
+    "team": "novitiates",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 4,
+      "crit": 5
+    },
+    "rules": [],
+    "text": "Simple blade carried by a Militant.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.penitent-eviscerator",
+    "name": "Penitent eviscerator",
+    "team": "novitiates",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 5,
+      "crit": 6
+    },
+    "rules": [
+      {
+        "rule": "core.wr.brutal"
+      },
+      {
+        "rule": "nv.a.wr-zealous-rage"
+      }
+    ],
+    "text": "A huge chain-bladed weapon wielded in a penitent's frenzy.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.mace-of-the-righteous",
+    "name": "Mace of the Righteous",
+    "team": "novitiates",
+    "type": "melee",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": {
+      "normal": 5,
+      "crit": 5
+    },
+    "rules": [
+      {
+        "rule": "core.wr.brutal"
+      },
+      {
+        "rule": "core.wr.severe"
+      }
+    ],
+    "text": "A heavy mace carried as the Preceptor's staff of office.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  },
+  {
+    "id": "nv.w.ministorum-flamer",
+    "name": "Ministorum flamer",
+    "team": "novitiates",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "2+",
+    "dmg": {
+      "normal": 4,
+      "crit": 4
+    },
+    "rules": [
+      {
+        "rule": "core.wr.range",
+        "inches": 8
+      },
+      {
+        "rule": "core.wr.saturate"
+      },
+      {
+        "rule": "core.wr.torrent",
+        "inches": 2
+      }
+    ],
+    "text": "Promethium flamer that scours heretics and the ground around them.",
+    "source": "team-novitiates.pdf (Aug '26); docs/spec/13-teams.md section 12.3"
+  }
+]

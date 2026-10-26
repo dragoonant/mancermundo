@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest'
 import { dataBundle } from '@/client/game/adapter'
 import { ACTION_LABEL } from '@/client/game/labels'
-import { allEntries, linkTerms, lookupTerm } from '@/client/game/glossary'
+import { allEntries, linkTerms, lookupTerm, weaponReach } from '@/client/game/glossary'
 import type { AbilityData, DatacardData, EquipmentData, PloyData, WeaponData } from '@/data'
 
 const records = () => Object.values(dataBundle().byId)
@@ -126,5 +126,21 @@ describe('glossary', () => {
     for (let i = 0; i < 2000; i++) linkTerms(`${line} ${i % 50}`)
     expect(performance.now() - t0).toBeLessThan(1500)
     expect(linkTerms(line)).toBe(linkTerms(line))
+  })
+
+  it('gives every weapon profile a range for the sheet: its Range rule, unlimited, or control range for melee', () => {
+    for (const w of weapons()) {
+      const reach = weaponReach(w)
+      expect(reach.label, w.id).toMatch(/^(\d+″|∞)$/)
+      expect(lookupTerm(reach.term, 'weaponRule'), `${w.id}: ${reach.term}`).toBeTruthy()
+    }
+    const grenade = dataBundle().byId['core.w.frag-grenade'] as WeaponData
+    expect(weaponReach(grenade).label).toBe('6″')
+    const melee = weapons().find((w) => w.type === 'melee')!
+    expect(weaponReach(melee)).toEqual({ label: '1″', term: 'Control range' })
+    const unlimited = weapons().find((w) => w.type === 'ranged' && !w.rules.some((r) => r.rule === 'core.wr.range'))!
+    expect(weaponReach(unlimited).label).toBe('∞')
+    // engine state spells the rule `range` (bundle ruleName), and the sheet reads weapons from state
+    expect(weaponReach({ type: 'ranged', rules: [{ rule: 'range', inches: 8 }] }).label).toBe('8″')
   })
 })

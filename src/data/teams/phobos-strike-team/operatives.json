@@ -1,0 +1,508 @@
+[
+  {
+    "id": "ph.infiltrator-sergeant",
+    "name": "Infiltrator Sergeant",
+    "team": "phobos-strike-team",
+    "stats": {
+      "apl": 3,
+      "move": 7,
+      "save": "3+",
+      "wounds": 13
+    },
+    "base": 32,
+    "keywords": [
+      "PHOBOS STRIKE TEAM",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "LEADER",
+      "INFILTRATOR",
+      "SERGEANT"
+    ],
+    "weapons": {
+      "fixed": [
+        "ph.w.marksman-bolt-carbine",
+        "ph.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ph.a.tactical-advantage"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ph-infiltrator-sergeant"
+    },
+    "text": "Leads with a marksman bolt carbine; once per battle it steals the initiative roll or makes a firefight ploy free.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md 13.2"
+  },
+  {
+    "id": "ph.incursor-sergeant",
+    "name": "Incursor Sergeant",
+    "team": "phobos-strike-team",
+    "stats": {
+      "apl": 3,
+      "move": 7,
+      "save": "3+",
+      "wounds": 13
+    },
+    "base": 32,
+    "keywords": [
+      "PHOBOS STRIKE TEAM",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "LEADER",
+      "INCURSOR",
+      "SERGEANT"
+    ],
+    "weapons": {
+      "fixed": [
+        "ph.w.occulus-bolt-carbine",
+        "ph.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ph.a.tactical-advantage"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ph-incursor-sergeant"
+    },
+    "text": "An auspex-guided skirmisher leader with the same once-per-battle Tactical Advantage.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md 13.2"
+  },
+  {
+    "id": "ph.reiver-sergeant",
+    "name": "Reiver Sergeant",
+    "team": "phobos-strike-team",
+    "stats": {
+      "apl": 3,
+      "move": 7,
+      "save": "3+",
+      "wounds": 13
+    },
+    "base": 32,
+    "keywords": [
+      "PHOBOS STRIKE TEAM",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "LEADER",
+      "REIVER",
+      "SERGEANT"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "kit",
+          "label": "Reiver kit",
+          "sets": [
+            {
+              "id": "pistol-and-knife",
+              "name": "Special issue bolt pistol and combat knife",
+              "fixed": [
+                "ph.w.special-issue-bolt-pistol",
+                "ph.w.combat-knife"
+              ]
+            },
+            {
+              "id": "carbine-and-fists",
+              "name": "Bolt carbine and fists",
+              "fixed": [
+                "ph.w.bolt-carbine",
+                "ph.w.fists"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "ph.a.tactical-advantage",
+      "ph.a.grav-chute"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ph-reiver-sergeant-pistol-knife"
+    },
+    "text": "A terror-trooper leader: knife and pistol or carbine and fists, with a grav-chute that makes climbs short and drops free.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md 13.2"
+  },
+  {
+    "id": "ph.infiltrator-commsman",
+    "name": "Infiltrator Commsman",
+    "team": "phobos-strike-team",
+    "stats": {
+      "apl": 3,
+      "move": 7,
+      "save": "3+",
+      "wounds": 12
+    },
+    "base": 32,
+    "keywords": [
+      "PHOBOS STRIKE TEAM",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "INFILTRATOR",
+      "COMMSMAN"
+    ],
+    "weapons": {
+      "fixed": [
+        "ph.w.marksman-bolt-carbine",
+        "ph.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ph.a.strategic-oversight",
+      "ph.a.comms-array"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ph-infiltrator-commsman"
+    },
+    "text": "Keeps the team talking: it can earn an extra command point each turning point and swap one strategy ploy for another.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md 13.2"
+  },
+  {
+    "id": "ph.infiltrator-helix-adept",
+    "name": "Infiltrator Helix Adept",
+    "team": "phobos-strike-team",
+    "stats": {
+      "apl": 3,
+      "move": 7,
+      "save": "3+",
+      "wounds": 12
+    },
+    "base": 32,
+    "keywords": [
+      "PHOBOS STRIKE TEAM",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "MEDIC",
+      "INFILTRATOR",
+      "HELIX ADEPT"
+    ],
+    "weapons": {
+      "fixed": [
+        "ph.w.marksman-bolt-carbine",
+        "ph.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ph.a.medic"
+    ],
+    "uniqueActions": [
+      "ph.a.helix-gauntlet"
+    ],
+    "figure": {
+      "archetype": "ph-infiltrator-helix-adept"
+    },
+    "text": "The squad medic: it pulls a falling friend back to D3 wounds, and heals up to D3+3 with the Helix Gauntlet.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md 13.2"
+  },
+  {
+    "id": "ph.infiltrator-saboteur",
+    "name": "Infiltrator Saboteur",
+    "team": "phobos-strike-team",
+    "stats": {
+      "apl": 3,
+      "move": 7,
+      "save": "3+",
+      "wounds": 12
+    },
+    "base": 32,
+    "keywords": [
+      "PHOBOS STRIKE TEAM",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "INFILTRATOR",
+      "SABOTEUR"
+    ],
+    "weapons": {
+      "fixed": [
+        "ph.w.marksman-bolt-carbine",
+        "ph.w.remote-detonator",
+        "ph.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ph.a.plant-explosives"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ph-infiltrator-saboteur"
+    },
+    "text": "Carries the Explosives marker; place it, step away and set it off with the remote detonator.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md 13.2"
+  },
+  {
+    "id": "ph.infiltrator-veteran",
+    "name": "Infiltrator Veteran",
+    "team": "phobos-strike-team",
+    "stats": {
+      "apl": 3,
+      "move": 7,
+      "save": "3+",
+      "wounds": 12
+    },
+    "base": 32,
+    "keywords": [
+      "PHOBOS STRIKE TEAM",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "INFILTRATOR",
+      "VETERAN"
+    ],
+    "weapons": {
+      "fixed": [
+        "ph.w.custom-bolt-carbine",
+        "ph.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ph-infiltrator-veteran"
+    },
+    "text": "A veteran with a carbine tuned to two weapon rules of its owner's choice.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md 13.2"
+  },
+  {
+    "id": "ph.infiltrator-voxbreaker",
+    "name": "Infiltrator Voxbreaker",
+    "team": "phobos-strike-team",
+    "stats": {
+      "apl": 3,
+      "move": 7,
+      "save": "3+",
+      "wounds": 12
+    },
+    "base": 32,
+    "keywords": [
+      "PHOBOS STRIKE TEAM",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "INFILTRATOR",
+      "VOXBREAKER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ph.w.marksman-bolt-carbine",
+        "ph.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ph.a.voxbreak"
+    ],
+    "uniqueActions": [
+      "ph.a.auspex-scan"
+    ],
+    "figure": {
+      "archetype": "ph-infiltrator-voxbreaker"
+    },
+    "text": "Jams enemy re-rolls close by and scans for enemies hiding behind smoke and heavy terrain.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md 13.2"
+  },
+  {
+    "id": "ph.infiltrator-warrior",
+    "name": "Infiltrator Warrior",
+    "team": "phobos-strike-team",
+    "stats": {
+      "apl": 3,
+      "move": 7,
+      "save": "3+",
+      "wounds": 12
+    },
+    "base": 32,
+    "keywords": [
+      "PHOBOS STRIKE TEAM",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "INFILTRATOR",
+      "WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [
+        "ph.w.marksman-bolt-carbine",
+        "ph.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ph.a.vanguard"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ph-infiltrator-warrior"
+    },
+    "text": "A rank-and-file Infiltrator, the first to reach an objective.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md 13.2"
+  },
+  {
+    "id": "ph.incursor-marksman",
+    "name": "Incursor Marksman",
+    "team": "phobos-strike-team",
+    "stats": {
+      "apl": 3,
+      "move": 7,
+      "save": "3+",
+      "wounds": 12
+    },
+    "base": 32,
+    "keywords": [
+      "PHOBOS STRIKE TEAM",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "INCURSOR",
+      "MARKSMAN"
+    ],
+    "weapons": {
+      "fixed": [
+        "ph.w.stalker-marksman-bolt-carbine",
+        "ph.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ph.a.track-target"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ph-incursor-marksman"
+    },
+    "text": "A hunter with a 2+ carbine that can stand guard while hidden.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md 13.2"
+  },
+  {
+    "id": "ph.incursor-minelayer",
+    "name": "Incursor Minelayer",
+    "team": "phobos-strike-team",
+    "stats": {
+      "apl": 3,
+      "move": 7,
+      "save": "3+",
+      "wounds": 12
+    },
+    "base": 32,
+    "keywords": [
+      "PHOBOS STRIKE TEAM",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "INCURSOR",
+      "MINELAYER"
+    ],
+    "weapons": {
+      "fixed": [
+        "ph.w.occulus-bolt-carbine",
+        "ph.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ph.a.haywire-mine",
+      "ph.a.proximity-mine"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ph-incursor-minelayer"
+    },
+    "text": "Carries the Haywire Mine, a trap that hurts anything that walks beside it.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md 13.2"
+  },
+  {
+    "id": "ph.incursor-warrior",
+    "name": "Incursor Warrior",
+    "team": "phobos-strike-team",
+    "stats": {
+      "apl": 3,
+      "move": 7,
+      "save": "3+",
+      "wounds": 12
+    },
+    "base": 32,
+    "keywords": [
+      "PHOBOS STRIKE TEAM",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "INCURSOR",
+      "WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [
+        "ph.w.occulus-bolt-carbine",
+        "ph.w.fists"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "ph.a.vanguard"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ph-incursor-warrior"
+    },
+    "text": "A rank-and-file Incursor.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md 13.2"
+  },
+  {
+    "id": "ph.reiver-warrior",
+    "name": "Reiver Warrior",
+    "team": "phobos-strike-team",
+    "stats": {
+      "apl": 3,
+      "move": 7,
+      "save": "3+",
+      "wounds": 12
+    },
+    "base": 32,
+    "keywords": [
+      "PHOBOS STRIKE TEAM",
+      "IMPERIUM",
+      "ADEPTUS ASTARTES",
+      "REIVER",
+      "WARRIOR"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "kit",
+          "label": "Reiver kit",
+          "sets": [
+            {
+              "id": "pistol-and-knife",
+              "name": "Special issue bolt pistol and combat knife",
+              "fixed": [
+                "ph.w.special-issue-bolt-pistol",
+                "ph.w.combat-knife"
+              ]
+            },
+            {
+              "id": "carbine-and-fists",
+              "name": "Bolt carbine and fists",
+              "fixed": [
+                "ph.w.bolt-carbine",
+                "ph.w.fists"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "ph.a.vanguard",
+      "ph.a.grav-chute"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "ph-reiver-warrior-pistol-knife"
+    },
+    "text": "A shock trooper: knife and pistol or carbine and fists, with a grav-chute.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md 13.2"
+  }
+]

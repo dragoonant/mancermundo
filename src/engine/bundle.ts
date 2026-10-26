@@ -74,7 +74,10 @@ export function snapshotData(bundle: EngineBundle, datacardIds: Iterable<string>
     const def = bundle.weapons[w]
     if (def) weapons[w] = def
   }
-  for (const id of datacardIds) {
+  // batch D prep: datacards an operative can only change into (selectable: false) come with their team
+  const ids = [...datacardIds]
+  for (const c of Object.values(bundle.datacards)) if (c.selectable === false && teamSet.has(c.teamId)) ids.push(c.id)
+  for (const id of ids) {
     const card = bundle.datacards[id]
     if (!card || datacards[id]) continue
     datacards[id] = card
@@ -282,6 +285,9 @@ function adaptDatacard(c: DatacardData, groups: Record<string, string[]>): Runti
   }
   if (c.expendable) out.expendable = true
   if (c.nonOperativeForSelection) out.nonOperativeForSelection = true
+  if (c.selectable === false) out.selectable = false
+  if (c.extraEquipment) out.extraEquipment = c.extraEquipment
+  if (c.ovalBase) out.ovalBase = { long: c.ovalBase.long, short: c.ovalBase.short, ...(c.ovalBase.weapons ? { weapons: [...c.ovalBase.weapons] } : {}) }
   return out
 }
 
@@ -296,7 +302,9 @@ function adaptTeam(t: TeamData): RuntimeTeam {
     ploys: [...t.ploys],
     equipment: [...t.equipment],
   }
+  if (t.playable === false) out.playable = false
   if (t.teamChoices) out.teamChoices = t.teamChoices.map((c) => ({ ...c, ...(c.distinctFrom ? { distinctFrom: [...c.distinctFrom] } : {}) }))
+  if (t.operativeChoices) out.operativeChoices = t.operativeChoices.map((c) => ({ ...c, keywords: [...c.keywords], ...(c.exclude ? { exclude: c.exclude.map((e) => ({ datacards: [...e.datacards], keywords: [...e.keywords] })) } : {}), ...(c.distinctFrom ? { distinctFrom: [...c.distinctFrom] } : {}), ...(c.labels ? { labels: { ...c.labels } } : {}) }))
   return out
 }
 
@@ -353,7 +361,10 @@ export function bundleFromData(db: DataBundle): EngineBundle {
       equipment[r.id] = rec as RuntimeEquipment
     }
   }
-  for (const t of Object.values(db.teams)) teams[t.id] = adaptTeam(t)
+  for (const t of Object.values(db.teams)) {
+    teams[t.id] = adaptTeam(t)
+    if (t.defaults) TEAM_DEFAULTS[t.id] = t.defaults
+  }
   for (const l of Object.values(db.layouts)) layouts[l.id] = adaptLayout(l)
   const missions: Record<string, RuntimeMission> = {}
   for (const m of Object.values(db.missions)) missions[m.id] = m
@@ -412,37 +423,21 @@ export function defaultLoadoutFor(bundle: EngineBundle, datacardId: string): Loa
   return { weaponIds: [...(card.legalLoadouts?.[0] ?? [])] }
 }
 
-const DEFAULT_ROSTERS: Record<string, string[]> = {
-  'angels-of-death': [
-    'aod.space-marine-captain',
-    'aod.assault-intercessor-grenadier',
-    'aod.intercessor-gunner',
-    'aod.heavy-intercessor-gunner',
-    'aod.eliminator-sniper',
-    'aod.intercessor-warrior',
-  ],
-  kommandos: [
-    'kom.boss-nob',
-    'kom.bomb-squig',
-    'kom.grot',
-    'kom.boy',
-    'kom.breacha-boy',
-    'kom.burna-boy',
-    'kom.comms-boy',
-    'kom.dakka-boy',
-    'kom.rokkit-boy',
-    'kom.slasha-boy',
-    'kom.snipa-boy',
-  ],
+// Default rosters, team picks and equipment live in each team's data (team.json `defaults`), so a new team
+// needs no edit here. bundleFromData records them; the helpers below read the bundle when one is given and
+// otherwise the most recently adapted bundle (all bundles come from the same static data).
+const TEAM_DEFAULTS: Record<string, NonNullable<TeamData['defaults']>> = {}
+
+function defaultsOf(teamId: string, bundle?: EngineBundle): NonNullable<TeamData['defaults']> | undefined {
+  return bundle?.teamData?.[teamId]?.defaults ?? TEAM_DEFAULTS[teamId]
 }
 
-const DEFAULT_TEAM_CHOICES: Record<string, Record<string, string>> = {
-  'angels-of-death': { 'primary-tactic': 'aod.a.ct-sharpshooter', 'secondary-tactic': 'aod.a.ct-stealthy' },
-}
-
-const DEFAULT_EQUIPMENT: Record<string, string[]> = {
-  'angels-of-death': ['aod.e.purity-seals', 'core.e.mines', 'core.e.razor-wire', 'core.e.ammo-cache'],
-  kommandos: ['kom.e.choppas', 'core.e.comms-device', 'core.e.ladders', 'core.e.utility-grenades'],
+/** Teams whose data is complete (`playable` is not false); scaffolded teams are left out of pickers, sims and the bench. */
+export function playableTeams(bundle: EngineBundle): string[] {
+  return Object.values(bundle.teams)
+    .filter((t) => t.playable !== false)
+    .map((t) => t.id)
+    .sort()
 }
 
 const DEFAULT_PICKS: Record<string, string[]> = {
@@ -452,17 +447,25 @@ const DEFAULT_PICKS: Record<string, string[]> = {
 
 /** The default roster of a real team: one legal operative list with each datacard's first legal loadout. */
 export function defaultRosterFor(bundle: EngineBundle, teamId: string): RosterEntry[] {
-  const ids = DEFAULT_ROSTERS[teamId]
+  const ids = defaultsOf(teamId, bundle)?.roster
   if (!ids) throw new Error(`no default roster for team ${teamId}`)
-  return ids.map((id): RosterEntry => ({ datacardId: id, loadout: defaultLoadoutFor(bundle, id) }))
+  const d = defaultsOf(teamId, bundle)
+  return ids.map((id, i): RosterEntry => {
+    // M9 batch B: team.json defaults may give a loadout answer (loadout caps) and operative picks per entry
+    const answer = d?.loadouts?.[i]
+    const entry: RosterEntry = { datacardId: id, loadout: answer && Object.keys(answer).length > 0 ? resolveLoadoutChoice(bundle, id, answer) : defaultLoadoutFor(bundle, id) }
+    const picks = d?.operativePicks?.[i]
+    if (picks && Object.keys(picks).length > 0) entry.picks = { ...picks }
+    return entry
+  })
 }
 
-export function defaultTeamChoicesFor(teamId: string): Record<string, string> {
-  return { ...(DEFAULT_TEAM_CHOICES[teamId] ?? {}) }
+export function defaultTeamChoicesFor(teamId: string, bundle?: EngineBundle): Record<string, string> {
+  return { ...(defaultsOf(teamId, bundle)?.teamChoices ?? {}) }
 }
 
-export function defaultEquipmentFor(teamId: string): string[] {
-  return [...(DEFAULT_EQUIPMENT[teamId] ?? [])]
+export function defaultEquipmentFor(teamId: string, bundle?: EngineBundle): string[] {
+  return [...(defaultsOf(teamId, bundle)?.equipment ?? [])]
 }
 
 /** The terrain of a layout as a MapDef with no drop zones yet (the mission map supplies them). */
@@ -526,21 +529,24 @@ export interface RealSetupOptions {
 /** A complete GameSetup for two real teams with default rosters, tactics, equipment and grenade picks. */
 export function realSetup(bundle: EngineBundle, opts: RealSetupOptions = {}): GameSetup {
   const [ta, tb] = opts.teams ?? ['angels-of-death', 'kommandos']
-  const layoutId = opts.layoutId ?? 'kz.volkus-01'
+  const layoutId = opts.layoutId ?? 'kz.volkus-ao25-1'
   const picks = (teamId: string): Record<string, string[]> => {
     const out: Record<string, string[]> = {}
-    for (const e of defaultEquipmentFor(teamId)) if (DEFAULT_PICKS[e]) out[e] = [...DEFAULT_PICKS[e]!]
+    for (const e of defaultEquipmentFor(teamId, bundle)) if (DEFAULT_PICKS[e]) out[e] = [...DEFAULT_PICKS[e]!]
     return out
   }
   const mission: NonNullable<GameSetup['mission']> = {}
   if (opts.missionId) mission.missionId = opts.missionId
+  // An official card is terrain plus map: unless the caller names a map, play the one the layout lists.
+  const ownMaps = Object.keys(bundle.layouts?.[layoutId]?.spots ?? {})
   if (opts.mapId) mission.mapId = opts.mapId
+  else if (ownMaps.length === 1) mission.mapId = ownMaps[0]!
   const setup: GameSetup = {
     teams: { A: ta, B: tb },
     rosters: { A: defaultRosterFor(bundle, ta), B: defaultRosterFor(bundle, tb) },
-    equipment: { A: defaultEquipmentFor(ta), B: defaultEquipmentFor(tb) },
+    equipment: { A: defaultEquipmentFor(ta, bundle), B: defaultEquipmentFor(tb, bundle) },
     equipmentChoices: { A: picks(ta), B: picks(tb) },
-    teamChoices: { A: defaultTeamChoicesFor(ta), B: defaultTeamChoicesFor(tb) },
+    teamChoices: { A: defaultTeamChoicesFor(ta, bundle), B: defaultTeamChoicesFor(tb, bundle) },
     map: layoutMap(bundle, layoutId),
     mission,
   }

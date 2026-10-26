@@ -1,0 +1,281 @@
+[
+  {
+    "id": "hc.a.canticle-of-destruction",
+    "kind": "ability",
+    "name": "Canticle of Destruction",
+    "team": "hunter-clade",
+    "effect": {
+      "code": "hcCanticleDestruction",
+      "params": {
+        "inches": 3,
+        "extraDamage": 1
+      }
+    },
+    "text": "While a friendly Ruststalker within 3 inches of this operative (itself included) is fighting, the first critical strike it lands in that fight deals 1 extra damage. Retaliating does not count.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.10"
+  },
+  {
+    "id": "hc.a.wasteland-stalker",
+    "kind": "ability",
+    "name": "Wasteland Stalker",
+    "team": "hunter-clade",
+    "effect": {
+      "code": "hcWastelandStalker",
+      "params": {
+        "extraCover": 1
+      }
+    },
+    "text": "Shot while it is allowed cover saves, this operative keeps one extra cover save, or keeps one of them as a critical success instead. No extra on top of the improved cover save from Vantage terrain.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.11"
+  },
+  {
+    "id": "hc.a.canticle-of-shroudpsalm",
+    "kind": "ability",
+    "name": "Canticle of Shroudpsalm",
+    "team": "hunter-clade",
+    "effect": {
+      "code": "hcShroudpsalm",
+      "params": {
+        "inches": 3,
+        "shooterWithin": 2
+      }
+    },
+    "text": "A friendly Infiltrator within 3 inches of this operative (itself included) that has a Conceal order and stands in cover cannot be selected as a target, whatever Seek or Vantage would allow, unless the shooter is within 2 inches of it.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.12"
+  },
+  {
+    "id": "hc.a.control-protocol",
+    "kind": "ability",
+    "name": "Control Protocol",
+    "team": "hunter-clade",
+    "effect": {
+      "code": "hcControlProtocol",
+      "params": {
+        "ploy": "hc.p.command-override",
+        "cost": 0
+      }
+    },
+    "text": "Command Override costs 0 CP when the operative it names is visible to this leader (the leader itself always is).",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.13"
+  },
+  {
+    "id": "hc.a.canticle-of-elimination",
+    "kind": "ability",
+    "name": "Canticle of Elimination",
+    "team": "hunter-clade",
+    "effect": {
+      "code": "hcElimination",
+      "params": {
+        "inches": 3
+      }
+    },
+    "text": "A friendly Ranger within 3 inches of this operative (itself included) has Punishing on its ranged weapons.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.14"
+  },
+  {
+    "id": "hc.a.targeting-protocol",
+    "kind": "ability",
+    "name": "Targeting Protocol",
+    "team": "hunter-clade",
+    "effect": {
+      "code": "hcTargeting",
+      "params": {
+        "lethal": 5
+      }
+    },
+    "text": "When this Ranger shoots without having moved this activation, or when it is counteracting, the ranged weapons on its datacard gain Lethal 5+. It may still move after shooting (Heavy weapons still forbid it).",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.15"
+  },
+  {
+    "id": "hc.a.canticle-of-the-glow",
+    "kind": "ability",
+    "name": "Canticle of the Glow",
+    "team": "hunter-clade",
+    "effect": {
+      "code": "hcGlow",
+      "params": {
+        "inches": 3,
+        "atkDelta": -1
+      }
+    },
+    "text": "An enemy within 3 inches of this operative that is under Rad-Saturation also has 1 less Atk on its weapons.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.16"
+  },
+  {
+    "id": "hc.a.rad-saturation",
+    "kind": "ability",
+    "name": "Rad-Saturation",
+    "team": "hunter-clade",
+    "effect": {
+      "code": "hcRadSaturation",
+      "params": {
+        "inches": 2,
+        "hitWorse": 1
+      }
+    },
+    "text": "An enemy within 2 inches of one or more friendly Vanguard (no sight needed) has the Hit of its weapons worsened by 1. Several Vanguards still give 1, and it does not stack with being injured.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.17"
+  },
+  {
+    "id": "hc.a.signal",
+    "kind": "uniqueAction",
+    "name": "SIGNAL",
+    "team": "hunter-clade",
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "hcSignal",
+      "params": {
+        "inches": 6,
+        "apl": 1
+      }
+    },
+    "text": "Support. Pick another friendly Hunter Clade operative visible to and within 6 inches: it gains +1 APL until the end of its next activation. Not usable in an enemy control range.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.18"
+  },
+  {
+    "id": "hc.a.spot",
+    "kind": "uniqueAction",
+    "name": "SPOT",
+    "team": "hunter-clade",
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "hcSpot",
+      "params": {
+        "shooterWithin": 3
+      }
+    },
+    "text": "Support. Mark an enemy this operative can see. For the rest of the turning point, a friendly Hunter Clade operative within 3 inches of the Surveyor that shoots the marked enemy gains Seek Light on its ranged weapons, and the enemy cannot be obscured. Not usable in an enemy control range.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.19"
+  },
+  {
+    "id": "hc.a.doctrina-imperatives",
+    "kind": "factionRule",
+    "name": "Doctrina Imperatives",
+    "team": "hunter-clade",
+    "scope": {
+      "side": "friendly",
+      "keyword": "HUNTER CLADE"
+    },
+    "effect": {
+      "code": "hcDoctrina",
+      "params": {
+        "modes": [
+          "protector",
+          "conqueror",
+          "bulwark",
+          "aggressor",
+          "neutral"
+        ]
+      }
+    },
+    "text": "Pick a Primary Mode with the roster. Each Strategy phase you may adopt one Imperative as a free strategic gambit: its Optimisation and its Deprecation both apply to every Hunter Clade operative until the turning point ends. Once per battle, adopting your Primary Mode lets you drop its Deprecation for that turning point.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.21, T-HC.22"
+  },
+  {
+    "id": "hc.a.imp-protector",
+    "kind": "ability",
+    "name": "Protector Imperative",
+    "team": "hunter-clade",
+    "scope": {
+      "side": "friendly",
+      "keyword": "HUNTER CLADE"
+    },
+    "choiceGroup": "doctrina",
+    "effect": {
+      "code": "hcImperative",
+      "params": {
+        "mode": "protector"
+      }
+    },
+    "text": "Optimisation: friendly ranged weapons have Ceaseless. Deprecation: the Hit of friendly melee weapons is worsened by 1, never on top of being injured.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.23 to T-HC.27"
+  },
+  {
+    "id": "hc.a.imp-conqueror",
+    "kind": "ability",
+    "name": "Conqueror Imperative",
+    "team": "hunter-clade",
+    "scope": {
+      "side": "friendly",
+      "keyword": "HUNTER CLADE"
+    },
+    "choiceGroup": "doctrina",
+    "effect": {
+      "code": "hcImperative",
+      "params": {
+        "mode": "conqueror"
+      }
+    },
+    "text": "Optimisation: friendly melee weapons have Ceaseless. Deprecation: the Hit of friendly ranged weapons is worsened by 1, never on top of being injured.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.23 to T-HC.27"
+  },
+  {
+    "id": "hc.a.imp-bulwark",
+    "kind": "ability",
+    "name": "Bulwark Imperative",
+    "team": "hunter-clade",
+    "scope": {
+      "side": "friendly",
+      "keyword": "HUNTER CLADE"
+    },
+    "choiceGroup": "doctrina",
+    "effect": {
+      "code": "hcImperative",
+      "params": {
+        "mode": "bulwark"
+      }
+    },
+    "text": "Optimisation: a normal success of Dmg 3 or more deals 1 less damage to a friendly operative. Deprecation: friendly Move is 1 inch lower.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.23 to T-HC.27"
+  },
+  {
+    "id": "hc.a.imp-aggressor",
+    "kind": "ability",
+    "name": "Aggressor Imperative",
+    "team": "hunter-clade",
+    "scope": {
+      "side": "friendly",
+      "keyword": "HUNTER CLADE"
+    },
+    "choiceGroup": "doctrina",
+    "effect": {
+      "code": "hcImperative",
+      "params": {
+        "mode": "aggressor"
+      }
+    },
+    "text": "Optimisation: friendly Move is 1 inch higher. Deprecation: friendly Save is worsened by 1.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.23 to T-HC.27"
+  },
+  {
+    "id": "hc.a.imp-neutral",
+    "kind": "ability",
+    "name": "Neutral Imperative",
+    "team": "hunter-clade",
+    "scope": {
+      "side": "friendly",
+      "keyword": "HUNTER CLADE"
+    },
+    "choiceGroup": "doctrina",
+    "effect": {
+      "code": "hcImperative",
+      "params": {
+        "mode": "neutral"
+      }
+    },
+    "text": "No Optimisation and no Deprecation. A legal Primary Mode and a legal pick for the gambit or Command Override.",
+    "source": "team-hunter-clade.pdf (January '26); docs/spec/13-teams.md T-HC.23 to T-HC.27"
+  }
+]

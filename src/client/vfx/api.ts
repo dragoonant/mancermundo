@@ -36,14 +36,28 @@ function begin(): void {
   noteSpawn()
 }
 
-/** A shooter fires one volley at a target; returns the timings so the director can hold the dice tray until it lands. */
-export function volley(shooter: Operative, target: Operative, weaponId: string, kinds: DieKind[], secondary: boolean, inCover: boolean): R.VolleyInfo {
+/** Volley timings plus, per attack die, the seconds until its tracer lands (index = die). */
+export interface VolleyTimes extends R.VolleyInfo {
+  impacts: number[]
+}
+
+/** Seconds until each of `n` tracers lands, spread evenly from the first impact to the last. */
+export function impactTimes(n: number, first: number, duration: number): number[] {
+  const f = Number.isFinite(first) ? first : duration
+  return Array.from({ length: n }, (_, i) => (n <= 1 ? f : f + ((duration - f) * i) / (n - 1)))
+}
+
+/**
+ * A shooter fires one volley at a target; returns the timings. `onImpact(die)` (optional) is called once per attack
+ * die when its tracer arrives (timers, so it also runs when the effects layer is paused or not drawing).
+ */
+export function volley(shooter: Operative, target: Operative, weaponId: string, kinds: DieKind[], secondary: boolean, inCover: boolean, onImpact?: (die: number) => void): VolleyTimes {
   begin()
   const v = vfxOf(weaponId)
   const dx = target.pos.x - shooter.pos.x
   const dz = target.pos.z - shooter.pos.z
   const l = Math.hypot(dx, dz) || 1
-  return R.fireVolley(fx, {
+  const info = R.fireVolley(fx, {
     family: v.family,
     variant: v.variant,
     fx: shooter.pos.x + (dx / l) * 0.5,
@@ -59,6 +73,19 @@ export function volley(shooter: Operative, target: Operative, weaponId: string, 
     secondary,
     inCover,
   })
+  const impacts = impactTimes(kinds.length, info.first, info.duration)
+  if (onImpact) {
+    impacts.forEach((t, die) => {
+      setTimeout(() => {
+        try {
+          onImpact(die)
+        } catch (err) {
+          console.warn('[vfx] volley impact callback failed', err)
+        }
+      }, Math.max(0, Math.round(t * 1000)))
+    })
+  }
+  return { ...info, impacts }
 }
 
 /** One melee blow landing (a strike die). */

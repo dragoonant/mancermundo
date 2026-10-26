@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex.e.reinforced-mirror-visor",
+    "name": "REINFORCED MIRROR-VISOR",
+    "scope": "faction",
+    "team": "exaction-squad",
+    "count": 1,
+    "effect": {
+      "code": "exMirrorVisor"
+    },
+    "text": "Friendly Exaction Squad operatives ignore changes that would lower their APL, and enemy weapons have no Shock against them.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.7"
+  },
+  {
+    "id": "ex.e.manacles",
+    "name": "MANACLES",
+    "scope": "faction",
+    "team": "exaction-squad",
+    "count": 1,
+    "effect": {
+      "code": "exManacles"
+    },
+    "text": "When an enemy would Fall Back while alone in a friendly Exaction Squad operative's control range, roll two D6 (one if the enemy has more Wounds): on any 4+ it cannot Fall Back, and this cannot be used again this turning point.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.7"
+  },
+  {
+    "id": "ex.e.strobing-phosphor-lumen",
+    "name": "STROBING PHOSPHOR-LUMEN",
+    "scope": "faction",
+    "team": "exaction-squad",
+    "count": 1,
+    "effect": {
+      "code": "exStrobing"
+    },
+    "text": "When an enemy shoots, fights or retaliates against a friendly Exaction Squad operative within 2 inches of it, attack dice showing 1 cannot be re-rolled.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.7"
+  },
+  {
+    "id": "ex.e.special-issue-shells",
+    "name": "SPECIAL ISSUE SHELLS",
+    "scope": "faction",
+    "team": "exaction-squad",
+    "count": 1,
+    "effect": {
+      "code": "exSpecialIssueShells"
+    },
+    "text": "Up to twice per turning point, when a friendly Exaction Squad operative Shoots with a shotgun or shotpistol, the weapon gains Saturate, or Piercing 1 against a target with a 3+ or better Save, or Torrent 1 inch with at most one secondary target, until the end of the action.",
+    "source": "team-exaction-squad.pdf (Jun '26); docs/spec/13-teams.md section 24.7"
+  }
+]

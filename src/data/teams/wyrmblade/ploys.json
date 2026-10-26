@@ -1,0 +1,169 @@
+[
+  {
+    "id": "wyr.p.the-day-is-at-hand",
+    "name": "THE DAY IS AT HAND",
+    "team": "wyrmblade",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "tpFlagPloy",
+      "params": {
+        "flag": "dayIsAtHand"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "WYRMBLADE"
+      }
+    },
+    "text": "This turning point, an operative whose order flips from Conceal to Engage when it is activated fights dirty until that activation ends: Rending on its ranged weapons and one extra attack die (5 at most) on its melee weapons.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.6"
+  },
+  {
+    "id": "wyr.p.crossfire",
+    "name": "CROSSFIRE",
+    "team": "wyrmblade",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "tpFlagPloy",
+      "params": {
+        "flag": "crossfire"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "WYRMBLADE"
+      }
+    },
+    "text": "This turning point, a Wyrmblade shooting an enemy that a different Wyrmblade has already shot this turning point gains Accurate 1 on its ranged weapons.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.6"
+  },
+  {
+    "id": "wyr.p.one-with-the-shadows",
+    "name": "ONE WITH THE SHADOWS",
+    "team": "wyrmblade",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "tpFlagPloy",
+      "params": {
+        "flag": "oneWithTheShadows"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "WYRMBLADE"
+      }
+    },
+    "text": "This turning point, a Conceal Wyrmblade that is shot counts as obscured behind intervening Light terrain, unless that terrain lies within 1 inch of the shooter or the target.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.6"
+  },
+  {
+    "id": "wyr.p.divert-and-disappear",
+    "name": "DIVERT AND DISAPPEAR",
+    "team": "wyrmblade",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "divertAndDisappear",
+      "params": {
+        "slots": 3,
+        "maxMove": 3
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "WYRMBLADE"
+      }
+    },
+    "text": "Shuffle up to three Wyrmblade operatives in turn: each takes a free Dash or a free Charge capped at 3 inches. A Cult Agent uses two of the three places and may take a free 3-inch Fall Back instead, at the price of -1 APL until its next activation ends.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.6"
+  },
+  {
+    "id": "wyr.p.slink-into-darkness",
+    "name": "SLINK INTO DARKNESS",
+    "team": "wyrmblade",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.activationEnded",
+    "effect": {
+      "code": "slinkIntoDarkness",
+      "params": {
+        "oncePerBattleEach": true
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "WYRMBLADE"
+      }
+    },
+    "text": "When a Wyrmblade operative's activation ends on an Engage order, flip it to Conceal. Each operative can be the subject only once per battle.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.6"
+  },
+  {
+    "id": "wyr.p.coiled-serpent",
+    "name": "COILED SERPENT",
+    "team": "wyrmblade",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "shoot.attackRolled",
+      "fight.rolled"
+    ],
+    "effect": {
+      "code": "coiledSerpent",
+      "params": {
+        "oncePerActivation": true
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "WYRMBLADE"
+      }
+    },
+    "text": "In the first Shoot or Fight of an activation that began with a Conceal-to-Engage switch, after your attack dice are rolled, upgrade one normal success to a critical. Once per activation.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.6"
+  },
+  {
+    "id": "wyr.p.unquestioning-loyalty",
+    "name": "UNQUESTIONING LOYALTY",
+    "team": "wyrmblade",
+    "type": "firefight",
+    "cost": 1,
+    "window": [
+      "shoot.targetSelected",
+      "fight.weaponsSelected"
+    ],
+    "effect": {
+      "code": "unquestioningLoyalty",
+      "params": {
+        "range": 3
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "WYRMBLADE"
+      }
+    },
+    "text": "When a Cult Agent or the Leader is picked as a Shoot target or Fight opponent, a different Neophyte (not the Leader) within 3 inches that it can see throws itself in the way and takes its place, valid or not. In a Fight the stand-in counts as within the attacker's control range; in a Shoot it is in cover or obscured only if the original target was. Useless against Blast and Torrent.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.6"
+  },
+  {
+    "id": "wyr.p.a-plan-generations-in-the-making",
+    "name": "A PLAN GENERATIONS IN THE MAKING",
+    "team": "wyrmblade",
+    "type": "firefight",
+    "cost": 1,
+    "window": "operative.incapacitated",
+    "effect": {
+      "code": "planGenerations",
+      "params": {
+        "allow": "mission"
+      },
+      "scope": {
+        "side": "friendly",
+        "keyword": "WYRMBLADE"
+      }
+    },
+    "text": "A Neophyte that is incapacitated may carry out one free mission action before it is removed.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6.6"
+  }
+]

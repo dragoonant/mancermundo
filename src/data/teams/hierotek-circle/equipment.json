@@ -1,0 +1,38 @@
+[
+  {
+    "id": "hie.e.magnification-conduits",
+    "name": "MAGNIFICATION CONDUITS",
+    "scope": "faction",
+    "team": "hierotek-circle",
+    "count": 1,
+    "text": "Once per turning point, when a friendly Apprentek or Cryptek performs a Shoot action, another friendly Hierotek Circle operative that is not a Plasmacyte, has an Engage order, is outside enemy control ranges and is visible to the shooter may serve as the Magnify viewpoint even though it is not an Apprentek or Cryptek.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.38"
+  },
+  {
+    "id": "hie.e.phase-shifter",
+    "name": "PHASE SHIFTER",
+    "scope": "faction",
+    "team": "hierotek-circle",
+    "count": 1,
+    "text": "Once per turning point, as a friendly Cryptek (never the Apprentek) is about to roll defence dice against a shot, it phases partly out of reality: the attacker's Piercing value drops by 1 for that sequence.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.39"
+  },
+  {
+    "id": "hie.e.tesseract-cube",
+    "name": "TESSERACT CUBE",
+    "scope": "faction",
+    "team": "hierotek-circle",
+    "count": 1,
+    "text": "When CP are gained in the Ready step and your Cryptek is on the table, clear of enemy control ranges and has not come back through reanimation this turning point, roll a D6: a 1 burns the Cube out for good, a 4+ adds 1 CP. Once it has produced 2 CP in total it stops working.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.40"
+  },
+  {
+    "id": "hie.e.tesla-weave",
+    "name": "TESLA WEAVE",
+    "scope": "faction",
+    "team": "hierotek-circle",
+    "count": 1,
+    "text": "Once per turning point, an enemy whose Charge finishes in the control range of any of your Hierotek Circle operatives is struck by arcing tesla energy for D3+1 damage.",
+    "source": "team-hierotek-circle.pdf; docs/spec/13-teams.md T-HIE.41"
+  }
+]

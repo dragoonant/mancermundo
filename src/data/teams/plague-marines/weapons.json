@@ -1,0 +1,258 @@
+[
+  {
+    "id": "pm.w.plasma-pistol-standard",
+    "name": "Plasma pistol",
+    "team": "plague-marines",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 5 },
+    "rules": [{ "rule": "core.wr.range", "inches": 8 }, { "rule": "core.wr.piercing", "x": 1 }],
+    "profileGroup": "pm.wg.plasma-pistol",
+    "profile": "standard",
+    "text": "A compact plasma sidearm on its safe setting.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.plasma-pistol-supercharge",
+    "name": "Plasma pistol",
+    "team": "plague-marines",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [
+      { "rule": "core.wr.range", "inches": 8 },
+      { "rule": "core.wr.hot" },
+      { "rule": "core.wr.lethal", "target": "5+" },
+      { "rule": "core.wr.piercing", "x": 1 }
+    ],
+    "profileGroup": "pm.wg.plasma-pistol",
+    "profile": "supercharge",
+    "text": "The same pistol overcharged, at the risk of the wielder.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.plague-sword",
+    "name": "Plague sword",
+    "team": "plague-marines",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [{ "rule": "core.wr.severe" }, { "rule": "pm.a.wr-poison" }, { "rule": "pm.a.wr-toxic" }],
+    "text": "A corroded blade that leaves a festering wound.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.boltgun-bombardier",
+    "name": "Boltgun",
+    "team": "plague-marines",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 4 },
+    "rules": [],
+    "text": "A standard bolt weapon, pitted with rust.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.boltgun-warrior",
+    "name": "Boltgun",
+    "team": "plague-marines",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 4 },
+    "rules": [{ "rule": "pm.a.wr-toxic" }],
+    "text": "A bolt weapon whose rounds hit harder against the already sick.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.bolt-pistol",
+    "name": "Bolt pistol",
+    "team": "plague-marines",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 4 },
+    "rules": [{ "rule": "core.wr.range", "inches": 8 }],
+    "text": "A sidearm that fires small explosive rounds.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.flail-of-corruption",
+    "name": "Flail of Corruption",
+    "team": "plague-marines",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [{ "rule": "core.wr.brutal" }, { "rule": "core.wr.severe" }, { "rule": "core.wr.shock" }, { "rule": "pm.a.wr-poison" }],
+    "text": "A heavy chain weapon that batters and infects.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.plague-spewer",
+    "name": "Plague spewer",
+    "team": "plague-marines",
+    "type": "ranged",
+    "atk": 5,
+    "hit": "2+",
+    "dmg": { "normal": 3, "crit": 3 },
+    "rules": [
+      { "rule": "core.wr.range", "inches": 7 },
+      { "rule": "core.wr.saturate" },
+      { "rule": "core.wr.severe" },
+      { "rule": "core.wr.torrent", "inches": 2 },
+      { "rule": "pm.a.wr-poison" }
+    ],
+    "text": "A hose that sprays a corrosive, disease-laden sludge.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.plague-knife-icon-bearer",
+    "name": "Plague knife",
+    "team": "plague-marines",
+    "type": "melee",
+    "atk": 5,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 4 },
+    "rules": [{ "rule": "core.wr.severe" }, { "rule": "pm.a.wr-poison" }],
+    "text": "A crude blade coated in filth. This is the Icon Bearer version.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.plague-knife-warrior",
+    "name": "Plague knife",
+    "team": "plague-marines",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 4 },
+    "rules": [{ "rule": "core.wr.severe" }, { "rule": "pm.a.wr-poison" }],
+    "text": "A crude blade coated in filth. This is the Warrior version.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.entropy",
+    "name": "Entropy",
+    "team": "plague-marines",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 7 },
+    "rules": [
+      { "rule": "pm.a.wr-psychic" },
+      { "rule": "core.wr.range", "inches": 7 },
+      { "rule": "core.wr.saturate" },
+      { "rule": "core.wr.severe" },
+      { "rule": "pm.a.wr-poison" }
+    ],
+    "text": "A focused blast of decay that rots flesh at a short distance.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.plague-wind",
+    "name": "Plague wind",
+    "team": "plague-marines",
+    "type": "ranged",
+    "atk": 6,
+    "hit": "3+",
+    "dmg": { "normal": 2, "crit": 3 },
+    "rules": [
+      { "rule": "pm.a.wr-psychic" },
+      { "rule": "core.wr.saturate" },
+      { "rule": "core.wr.severe" },
+      { "rule": "core.wr.torrent", "inches": 1 },
+      { "rule": "pm.a.wr-poison" }
+    ],
+    "text": "A drifting cloud of killing wind with no printed range.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.corrupted-staff",
+    "name": "Corrupted staff",
+    "team": "plague-marines",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 4 },
+    "rules": [
+      { "rule": "pm.a.wr-psychic" },
+      { "rule": "core.wr.severe" },
+      { "rule": "core.wr.shock" },
+      { "rule": "core.wr.stun" },
+      { "rule": "pm.a.wr-poison" }
+    ],
+    "text": "A warp-tainted staff that stuns and sickens whatever it strikes.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.fists",
+    "name": "Fists",
+    "team": "plague-marines",
+    "type": "melee",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 3, "crit": 4 },
+    "rules": [],
+    "text": "Armoured gauntlets.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.blight-grenade",
+    "name": "Blight grenade",
+    "team": "plague-marines",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": { "normal": 2, "crit": 4 },
+    "rules": [
+      { "rule": "core.wr.range", "inches": 6 },
+      { "rule": "core.wr.blast", "inches": 2 },
+      { "rule": "core.wr.saturate" },
+      { "rule": "core.wr.severe" },
+      { "rule": "pm.a.wr-poison" }
+    ],
+    "text": "A grenade packed with shrapnel and pathogens (team equipment version, at most two uses a battle between the whole team).",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.blight-grenade-bombardier",
+    "name": "Blight grenade",
+    "team": "plague-marines",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 2, "crit": 4 },
+    "rules": [
+      { "rule": "core.wr.range", "inches": 6 },
+      { "rule": "core.wr.blast", "inches": 2 },
+      { "rule": "core.wr.saturate" },
+      { "rule": "core.wr.severe" },
+      { "rule": "pm.a.wr-poison" },
+      { "rule": "pm.a.wr-toxic" },
+      { "rule": "core.wr.limited", "x": 2 }
+    ],
+    "text": "The Bombardier's own blight grenade: better aimed, and nastier against the already poisoned. Its two uses are separate from the team's.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  },
+  {
+    "id": "pm.w.krak-grenade-bombardier",
+    "name": "Krak grenade",
+    "team": "plague-marines",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "3+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [
+      { "rule": "core.wr.range", "inches": 6 },
+      { "rule": "core.wr.piercing", "x": 1 },
+      { "rule": "core.wr.saturate" },
+      { "rule": "core.wr.limited", "x": 1 }
+    ],
+    "text": "The Bombardier's own krak grenade, one throw a battle, separate from any team grenades.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5.3"
+  }
+]

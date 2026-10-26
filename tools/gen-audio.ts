@@ -26,7 +26,7 @@ const SRC_DIR = join(ROOT, 'tools', 'audio-src')
 const LOG_PATH = join(SRC_DIR, 'gen-log.json')
 const MALLET_DIR = resolve(process.env.MALLET_AUDIO_DIR ?? join(ROOT, '..', 'Mallet-42k', 'public', 'audio'))
 const SR = 44100
-const JOB_TIMEOUT_MS = 3 * 60 * 1000
+const JOB_TIMEOUT_MS = 5 * 60 * 1000
 const QUEUE_TIMEOUT_MS = 10 * 60 * 1000
 const PEAK_TARGET = Math.pow(10, -1 / 20) // -1 dBFS
 
@@ -49,6 +49,8 @@ interface Item {
   guidance?: number
   seed?: number
   loop?: boolean
+  /** Ask the studio for this many takes (batch) and keep the one with the highest crest factor (gunshots). */
+  candidates?: number
   /** Optional manual trim in ms from the decoded start/end, applied after silence trimming. */
   trim?: { startMs?: number; endMs?: number }
 }
@@ -102,19 +104,14 @@ async function ensureStudio(): Promise<void> {
   if (studioChecked) return
   let s = await studioStatus()
   if (!s) throw new Error(`Audio Studio is not reachable at ${STUDIO}. Start it and rerun.`)
-  const deadline = Date.now() + 2 * 60 * 1000
-  while (s && s.comfy === 'down') {
-    if (Date.now() > deadline) throw new Error('ComfyUI is down and did not come up within 2 minutes. Start the studios and rerun.')
-    console.log('[gen-audio] ComfyUI is down, waiting...')
-    await sleep(10_000)
-    s = await studioStatus()
-  }
+  // ComfyUI is started by the studio on the first music/SFX job, so 'down' is not an error: the first job is just slow.
+  if (s.comfy === 'down') console.log('[gen-audio] ComfyUI is down; the first job will start it (slow)')
   studioChecked = true
 }
 
 function jobParams(item: Item, manifest: Manifest): Record<string, unknown> {
   if (item.kind === 'sfx') {
-    return { mode: 'sfx', prompt: item.prompt, negative: item.negative ?? '', seconds: item.seconds ?? 3, steps: item.steps ?? 50, guidance: item.guidance ?? 5, batch: 1, ...(item.seed ? { seed: item.seed } : {}) }
+    return { mode: 'sfx', prompt: item.prompt, negative: item.negative ?? '', seconds: item.seconds ?? 3, steps: item.steps ?? 50, guidance: item.guidance ?? 5, batch: item.candidates ?? 1, ...(item.seed ? { seed: item.seed } : {}) }
   }
   if (item.kind === 'music') {
     return { mode: 'music', prompt: item.prompt, lyrics: '', duration: item.duration ?? 60, steps: item.steps ?? 8, bpm: item.bpm ?? 100, key: item.key ?? 'D minor', timesig: item.timesig ?? '4', language: 'en', batch: 1, ...(item.seed ? { seed: item.seed } : {}) }
@@ -165,18 +162,22 @@ async function waitForJob(id: string): Promise<Job> {
   }
 }
 
-async function runJob(item: Item, manifest: Manifest): Promise<{ file: Buffer; name: string; job: Job; seed?: number }> {
+async function runJob(item: Item, manifest: Manifest): Promise<{ files: { file: Buffer; name: string }[]; job: Job; seed?: number }> {
   const params = jobParams(item, manifest)
   for (let attempt = 1; ; attempt++) {
     try {
       await ensureStudio()
       const posted = await postJob(params)
       const done = await waitForJob(posted.id)
-      const name = done.audios?.[0] ?? (item.kind === 'voice' ? 'voice.wav' : 'audio_0.flac')
-      const r = await fetch(`${STUDIO}/files/${done.id}/${name}`)
-      if (!r.ok) throw new Error(`download ${name} failed: ${r.status}`)
+      const names = done.audios?.length ? done.audios : [item.kind === 'voice' ? 'voice.wav' : 'audio_0.flac']
+      const files: { file: Buffer; name: string }[] = []
+      for (const name of names) {
+        const r = await fetch(`${STUDIO}/files/${done.id}/${name}`)
+        if (!r.ok) throw new Error(`download ${name} failed: ${r.status}`)
+        files.push({ file: Buffer.from(await r.arrayBuffer()), name })
+      }
       const seed = (done as unknown as { params?: { seed?: number } }).params?.seed
-      return { file: Buffer.from(await r.arrayBuffer()), name, job: done, seed }
+      return { files, job: done, seed }
     } catch (err) {
       if (attempt >= 2) throw err
       console.log(`[gen-audio] ${item.id}: ${(err as Error).message}; retrying once${err instanceof RestartError ? ' (server restarted)' : ''}`)
@@ -412,10 +413,19 @@ async function main(): Promise<void> {
     if (dry) { console.log(`[dry] generate ${item.id} (${item.kind}) ${JSON.stringify(jobParams(item, manifest))}`); continue }
     const t0 = Date.now()
     try {
-      const { file, name, job, seed } = await runJob(item, manifest)
-      if (keepSrc) await writeFile(join(SRC_DIR, `${item.id}-${name}`), file)
-      const decoded = await decode(file, name)
-      const pcm = processAudio(decoded, item)
+      const { files, job, seed } = await runJob(item, manifest)
+      let pcm: Float32Array | undefined
+      let bestCrest = -1
+      for (const { file, name } of files) {
+        if (keepSrc) await writeFile(join(SRC_DIR, `${item.id}-${name}`), file)
+        const cand = processAudio(await decode(file, name), item)
+        let sum = 0
+        for (const v of cand) sum += v * v
+        const crest = peakOf(cand) / Math.max(1e-9, Math.sqrt(sum / cand.length))
+        if (files.length > 1) console.log(`[gen-audio] ${item.id} take ${name}: crest ${crest.toFixed(1)}`)
+        if (crest > bestCrest) { bestCrest = crest; pcm = cand }
+      }
+      if (!pcm) throw new Error('no audio decoded')
       await writeFile(out, encodeMp3(pcm))
       const seconds = pcm.length / SR
       const wall = (Date.now() - t0) / 1000

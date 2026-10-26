@@ -1,0 +1,55 @@
+[
+  {
+    "id": "ks.e.foregrip",
+    "name": "FOREGRIP",
+    "scope": "faction",
+    "team": "kasrkin",
+    "count": 1,
+    "effect": {
+      "code": "ksForegrip"
+    },
+    "text": "When a friendly Kasrkin shoots an enemy within 3 inches, the ranged weapons printed on its datacard (pistols excluded) have Accurate 1.",
+    "source": "team-kasrkin.pdf (Apr '26); docs/spec/13-teams.md T-KS.34"
+  },
+  {
+    "id": "ks.e.long-range-scope",
+    "name": "LONG-RANGE SCOPE",
+    "scope": "faction",
+    "team": "kasrkin",
+    "count": 1,
+    "effect": {
+      "code": "ksLongRangeScope"
+    },
+    "text": "When a friendly Kasrkin shoots an enemy more than 6 inches away and retains any crit, its hot-shot weapons other than the hot-shot laspistol have Saturate for that sequence.",
+    "source": "team-kasrkin.pdf (Apr '26); docs/spec/13-teams.md T-KS.35"
+  },
+  {
+    "id": "ks.e.relics-of-cadia",
+    "name": "RELICS OF CADIA",
+    "scope": "faction",
+    "team": "kasrkin",
+    "count": 1,
+    "effect": {
+      "code": "ksRelicsOfCadia"
+    },
+    "text": "Once per turning point, if a friendly Kasrkin's attack roll (shooting, fighting or retaliating) shows at least two fails, throw one of them away and count another as a normal success.",
+    "source": "team-kasrkin.pdf (Apr '26); docs/spec/13-teams.md T-KS.36"
+  },
+  {
+    "id": "ks.e.combat-daggers",
+    "name": "COMBAT DAGGERS",
+    "scope": "faction",
+    "team": "kasrkin",
+    "count": 1,
+    "grants": {
+      "weapons": [
+        "ks.w.combat-dagger"
+      ],
+      "to": {
+        "keyword": "KASRKIN"
+      }
+    },
+    "text": "Every friendly Kasrkin carries a combat dagger (Atk 3, Hit 4+, Dmg 3/4) for the battle.",
+    "source": "team-kasrkin.pdf (Apr '26); docs/spec/13-teams.md T-KS.37"
+  }
+]

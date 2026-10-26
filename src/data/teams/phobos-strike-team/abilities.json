@@ -1,0 +1,271 @@
+[
+  {
+    "id": "ph.a.astartes",
+    "kind": "factionRule",
+    "name": "ASTARTES",
+    "team": "phobos-strike-team",
+    "scope": {
+      "side": "friendly",
+      "keyword": "PHOBOS STRIKE TEAM"
+    },
+    "effect": {
+      "code": "phAstartes"
+    },
+    "text": "In one activation a Phobos operative may perform Shoot twice or Fight twice, but not both twice. A double Shoot needs a bolt weapon (any ranged weapon with bolt in its name) in at least one of the two, and the same weapon may fire twice. Any Phobos operative can counteract, whatever its order.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.25"
+  },
+  {
+    "id": "ph.a.multi-spectrum-array",
+    "kind": "factionRule",
+    "name": "MULTI-SPECTRUM ARRAY",
+    "team": "phobos-strike-team",
+    "scope": {
+      "side": "friendly",
+      "keyword": "INCURSOR"
+    },
+    "effect": {
+      "code": "phMultiSpectrum"
+    },
+    "text": "While a friendly Incursor shoots, enemy operatives cannot be obscured. Cover still counts.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.26"
+  },
+  {
+    "id": "ph.a.terror",
+    "kind": "factionRule",
+    "name": "TERROR",
+    "team": "phobos-strike-team",
+    "scope": {
+      "side": "friendly",
+      "keyword": "PHOBOS STRIKE TEAM"
+    },
+    "effect": {
+      "code": "phTerror"
+    },
+    "text": "An enemy within 3 inches of a friendly Reiver pays 1 extra AP for Pick Up Marker and mission actions, and when a marker is contested your opponent counts 1 lower in total APL if any operative of theirs contesting it stands within 3 inches of a Reiver.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.24"
+  },
+  {
+    "id": "ph.a.tactical-advantage",
+    "kind": "ability",
+    "name": "Tactical Advantage",
+    "team": "phobos-strike-team",
+    "effect": {
+      "code": "phTacticalAdvantage"
+    },
+    "text": "Once per battle each: re-roll your initiative die after the roll-off while this operative is in the killzone; and use one firefight ploy for 0 CP when this operative is the one it names, or the Patient Ambush ploy for 0 CP while this operative is ready and out of enemy control range.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.7"
+  },
+  {
+    "id": "ph.a.strategic-oversight",
+    "kind": "ability",
+    "name": "Strategic Oversight",
+    "team": "phobos-strike-team",
+    "effect": {
+      "code": "phStrategicOversight",
+      "params": {
+        "rollOn": 4
+      }
+    },
+    "text": "In each Ready step, while this operative is in the killzone and out of enemy control range, roll a D6 as you gain CP: on a 4+ you gain 1 extra CP.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.9"
+  },
+  {
+    "id": "ph.a.comms-array",
+    "kind": "ability",
+    "name": "Comms Array",
+    "team": "phobos-strike-team",
+    "effect": {
+      "code": "phCommsArray"
+    },
+    "text": "Once per turning point, during a friendly Phobos operative's activation or counteraction, before or after one of its actions, while this operative is in the killzone, swap one strategy ploy you used this turning point for another one you have not used, free of CP.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.10"
+  },
+  {
+    "id": "ph.a.medic",
+    "kind": "ability",
+    "name": "Medic!",
+    "team": "phobos-strike-team",
+    "window": "operative.incapacitated",
+    "effect": {
+      "code": "phMedic",
+      "params": {
+        "range": 3,
+        "aplDelta": -1
+      }
+    },
+    "text": "Once per turning point, the first time another friendly Phobos operative this one can see within 3 inches would be incapacitated, neither of them in an enemy control range, it is saved instead: it is left on D3 wounds and cannot be incapacitated for the rest of the action. Afterwards it may make a free Dash that must end in this operative's control range. Both have 1 less APL until their next activations end, and if it was the saved operative's own activation, that activation ends. Not usable if this operative is down or is a target of that Shoot.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.11"
+  },
+  {
+    "id": "ph.a.helix-gauntlet",
+    "kind": "uniqueAction",
+    "name": "HELIX GAUNTLET",
+    "team": "phobos-strike-team",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "phHelixGauntlet",
+      "params": {
+        "heal": "D3+3"
+      }
+    },
+    "text": "One friendly Phobos operative in this operative's control range (itself included) regains up to D3+3 lost wounds. Not an operative Medic! saved this turning point. Not in an enemy control range.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.12"
+  },
+  {
+    "id": "ph.a.plant-explosives",
+    "kind": "ability",
+    "name": "Plant Explosives",
+    "team": "phobos-strike-team",
+    "effect": {
+      "code": "phPlantExplosives"
+    },
+    "text": "This operative starts the battle carrying your Explosives marker. Only it can pick that marker up, and each time it places the marker it may make a free Dash.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.13"
+  },
+  {
+    "id": "ph.a.wr-detonate",
+    "kind": "weaponRule",
+    "name": "Detonate",
+    "team": "phobos-strike-team",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "phDetonate",
+      "params": {
+        "radius": 2
+      }
+    },
+    "text": "No target is chosen: the weapon shoots every operative within 2 inches of your Explosives marker (friend or foe), each as its own sequence with no cover and no obscuring, except those cut off from the marker by Heavy terrain wholly in between. It cannot be picked unless the marker is in the killzone, and the marker is removed when the action ends.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.14"
+  },
+  {
+    "id": "ph.a.wr-custom",
+    "kind": "weaponRule",
+    "name": "Custom",
+    "team": "phobos-strike-team",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "phCustom"
+    },
+    "text": "When the roster is chosen the Veteran picks two different weapon rules from Balanced, Lethal 5+, Piercing Crits 1, Rending and Saturate; the carbine has both for the battle.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.15"
+  },
+  {
+    "id": "ph.a.voxbreak",
+    "kind": "ability",
+    "name": "Voxbreak",
+    "team": "phobos-strike-team",
+    "effect": {
+      "code": "phVoxbreak",
+      "params": {
+        "range": 6
+      }
+    },
+    "text": "While an enemy operative is within 6 inches of this operative (no sight needed), your opponent cannot re-roll the attack or defence dice rolled for that enemy.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.16"
+  },
+  {
+    "id": "ph.a.auspex-scan",
+    "kind": "uniqueAction",
+    "name": "AUSPEX SCAN",
+    "team": "phobos-strike-team",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "phAuspexScan",
+      "params": {
+        "range": 8
+      }
+    },
+    "text": "Until the start of this operative's next activation or its incapacitation, enemies within 8 inches of it cannot be obscured when a friendly Phobos operative shoots them, and an Incursor shooting them also has Seek Light on its ranged weapons. Not in an enemy control range.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.17"
+  },
+  {
+    "id": "ph.a.vanguard",
+    "kind": "ability",
+    "name": "Vanguard",
+    "team": "phobos-strike-team",
+    "effect": {
+      "code": "phVanguard",
+      "params": {
+        "aplDelta": -1
+      }
+    },
+    "text": "Once per turning point, for the whole team, one friendly operative with Vanguard may perform Pick Up Marker or a mission action for 1 AP less.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.18"
+  },
+  {
+    "id": "ph.a.track-target",
+    "kind": "ability",
+    "name": "Track Target",
+    "team": "phobos-strike-team",
+    "effect": {
+      "code": "phTrackTarget"
+    },
+    "text": "This operative may perform Guard while it has a Conceal order. When it then takes its free Shoot or Fight, its order changes to Engage.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.19"
+  },
+  {
+    "id": "ph.a.haywire-mine",
+    "kind": "ability",
+    "name": "Haywire Mine",
+    "team": "phobos-strike-team",
+    "effect": {
+      "code": "phHaywireMine"
+    },
+    "text": "This operative starts the battle carrying your Haywire Mine marker and alone can pick it up. The marker can never be placed with any part of it in an enemy control range; if the carrier is incapacitated and the mine cannot legally be placed, it is removed.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.20"
+  },
+  {
+    "id": "ph.a.proximity-mine",
+    "kind": "ability",
+    "name": "Proximity Mine",
+    "team": "phobos-strike-team",
+    "effect": {
+      "code": "phProximityMine",
+      "params": {
+        "damage": "2D3+3",
+        "aplDelta": -1
+      }
+    },
+    "text": "The first time your placed Haywire Mine marker is within the control range of any operative other than the Minelayer, friend or foe, it is removed: that operative loses 1 APL until its next activation ends and takes 2D3+3 damage, and if it survives, its current action ends at once.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.21"
+  },
+  {
+    "id": "ph.a.grav-chute",
+    "kind": "ability",
+    "name": "Grav-chute and Grapnel Launcher",
+    "team": "phobos-strike-team",
+    "effect": {
+      "code": "phGravChute",
+      "params": {
+        "climb": 2
+      }
+    },
+    "text": "Each separate climb up counts as 2 inches of vertical distance however high it is, and drops cost no vertical distance at all.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.22"
+  },
+  {
+    "id": "ph.a.guerrilla-warfare",
+    "kind": "uniqueAction",
+    "name": "GUERRILLA WARFARE",
+    "team": "phobos-strike-team",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "phGuerrillaWarfare"
+    },
+    "text": "Change this operative's order. Not in an enemy control range. Available to every Phobos operative while the ploy of the same name is in force.",
+    "source": "team-phobos-strike-team.pdf (Nov '25); docs/spec/13-teams.md T-PH.27"
+  }
+]

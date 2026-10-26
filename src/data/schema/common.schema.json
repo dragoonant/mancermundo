@@ -7,7 +7,7 @@
     "Id": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9][a-z0-9-]*)*$",
-      "description": "Lowercase kebab, dot-namespaced: aod.intercessor-sergeant, aod.w.bolt-rifle, core.wr.piercing, kz.volkus-01."
+      "description": "Lowercase kebab, dot-namespaced: aod.intercessor-sergeant, aod.w.bolt-rifle, core.wr.piercing, kz.volkus-ao25-1."
     },
     "Slug": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
     "ActionId": {
@@ -54,6 +54,7 @@
           "enum": [
             "turningPoint.start",
             "strategy.gambit",
+            "firefight.start",
             "firefight.activationStart",
             "firefight.actionDeclared",
             "firefight.actionEnded",
@@ -64,6 +65,20 @@
             "fight.weaponsSelected",
             "fight.rolled",
             "fight.resolved",
+            "shoot.beforeDefenceRerolls",
+            "fight.beforeRerolls",
+            "firefight.opponentActionDeclared",
+            "firefight.beforeActivation",
+            "ploy.opponentUsed",
+            "operative.killed",
+            "shoot.beforeAttackRerolls",
+            "shoot.beforeDefenceRoll",
+            "shoot.defenderBeforeRerolls",
+            "shoot.attackerDefenceRolled",
+            "shoot.defenderAttackRolled",
+            "firefight.fallBackMoved",
+            "firefight.chargeMoved",
+            "shoot.beforeResolve",
             "operative.incapacitated",
             "firefight.activationEnded",
             "turningPoint.end",
@@ -181,7 +196,7 @@
           "additionalProperties": false,
           "required": ["stat", "value"],
           "properties": {
-            "stat": { "enum": ["apl", "move", "save", "wounds", "hit", "atk"] },
+            "stat": { "enum": ["move", "hit", "atk"] },
             "value": { "type": "integer" },
             "cap": { "type": "integer" },
             "filter": { "$ref": "#/$defs/WeaponFilter" }

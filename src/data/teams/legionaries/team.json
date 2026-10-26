@@ -1,0 +1,140 @@
+{
+  "id": "legionaries",
+  "name": "Legionaries",
+  "factionKeyword": "LEGIONARY",
+  "archetypes": [
+    "security",
+    "seek-and-destroy"
+  ],
+  "selection": {
+    "slots": [
+      {
+        "id": "leader",
+        "label": "Leader",
+        "count": 1,
+        "from": [
+          "lg.aspiring-champion",
+          "lg.chosen"
+        ]
+      },
+      {
+        "id": "main",
+        "label": "Selections",
+        "count": 5,
+        "from": [
+          "lg.anointed",
+          "lg.balefire-acolyte",
+          "lg.butcher",
+          "lg.gunner",
+          "lg.heavy-gunner",
+          "lg.icon-bearer",
+          "lg.shrivetalon",
+          "lg.warrior"
+        ],
+        "repeatable": [
+          "lg.warrior"
+        ]
+      }
+    ]
+  },
+  "operativeChoices": [
+    {
+      "id": "mark",
+      "label": "Mark of Chaos",
+      "keywords": [
+        "KHORNE",
+        "NURGLE",
+        "SLAANESH",
+        "TZEENTCH",
+        "UNDIVIDED"
+      ],
+      "exclude": [
+        {
+          "datacards": [
+            "lg.balefire-acolyte"
+          ],
+          "keywords": [
+            "KHORNE"
+          ]
+        }
+      ]
+    }
+  ],
+  "factionRules": [
+    "lg.a.astartes",
+    "lg.a.khorne",
+    "lg.a.nurgle",
+    "lg.a.slaanesh",
+    "lg.a.tzeentch",
+    "lg.a.undivided"
+  ],
+  "ploys": [
+    "lg.p.blood-for-the-blood-god",
+    "lg.p.implacable",
+    "lg.p.quicksilver-speed",
+    "lg.p.fickle-fates",
+    "lg.p.unending-bloodshed",
+    "lg.p.mutability-and-change",
+    "lg.p.malignant-aura",
+    "lg.p.sickening-captivation",
+    "lg.p.warded-armour",
+    "lg.p.chaos-talismans"
+  ],
+  "equipment": [
+    "lg.e.warded-armour",
+    "lg.e.malefic-blades",
+    "lg.e.tainted-rounds",
+    "lg.e.chaos-talismans"
+  ],
+  "playable": true,
+  "defaults": {
+    "roster": [
+      "lg.aspiring-champion",
+      "lg.butcher",
+      "lg.gunner",
+      "lg.heavy-gunner",
+      "lg.icon-bearer",
+      "lg.warrior"
+    ],
+    "equipment": [
+      "lg.e.tainted-rounds",
+      "lg.e.malefic-blades",
+      "core.e.ladders",
+      "core.e.utility-grenades"
+    ],
+    "operativePicks": [
+      {
+        "mark": "UNDIVIDED"
+      },
+      {
+        "mark": "KHORNE"
+      },
+      {
+        "mark": "TZEENTCH"
+      },
+      {
+        "mark": "NURGLE"
+      },
+      {
+        "mark": "SLAANESH"
+      },
+      {
+        "mark": "UNDIVIDED"
+      }
+    ]
+  },
+  "paint": {
+    "major": {
+      "h": 0,
+      "s": 0.05,
+      "l": 0.12
+    },
+    "minor": {
+      "h": 0.12,
+      "s": 0.65,
+      "l": 0.5
+    }
+  },
+  "text": "Six traitor veterans, each bearing a mark of a dark god, who kill twice where others kill once and twist every pact to their advantage.",
+  "source": "team-legionaries.pdf (Oct '25); docs/spec/13-teams.md section 7"
+}

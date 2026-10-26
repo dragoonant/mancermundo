@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createGame, step } from '@/engine'
-import { effectiveRules } from '@/engine/attack-common'
+import { attackStats, effectiveRules } from '@/engine/attack-common'
 import { repeatSurcharge } from '@/engine/abilities'
 import { actionAvailability, actionCost } from '@/engine/firefight'
 import { runHook } from '@/engine/hooks'
@@ -455,9 +455,19 @@ describe('TEAM-AOD ploys, Chapter Veteran and faction equipment', () => {
     const hurt = edit(g, (st) => {
       st.operatives[w.id]!.wounds = 3
     })
-    const d = { kind: 'shoot' as const, atk: 4, hitDelta: 1, accurate: [], lethal: null, rerolls: [], assists: [] }
-    runHook('modifyAttackDice', { seat: 'A', state: hurt, operativeId: w.id, targetId: opOf(g, 'B', 'kom.boy'), weaponId: 'aod.w.bolt-rifle', data: d })
-    expect(d.hitDelta).toBe(0) // the +1 injury penalty is cancelled
+    // INJ-001 core rules: injured worsens Hit by 1; ignoring that removes the penalty and never improves Hit
+    const boy = opOf(g, 'B', 'kom.boy')
+    const printed = realBundle.weapons['aod.w.bolt-rifle']!.hit
+    const need = (st: GameState) => attackStats(st, w.id, 'aod.w.bolt-rifle', boy, { kind: 'shoot' }).need
+    expect(need(hurt)).toBe(printed) // the +1 injury penalty is cancelled, nothing more
+    const plain = edit(hurt, (st) => {
+      delete st.operatives[w.id]!.flags.ignoreInjured
+    })
+    expect(need(plain)).toBe(printed + 1)
+    const fresh = edit(g, (st) => {
+      st.operatives[w.id]!.wounds = st.operatives[w.id]!.maxWounds
+    })
+    expect(need(fresh)).toBe(printed) // not injured: nothing to ignore
     expect(g.operatives[opOf(g, 'B', 'kom.boy')]!.flags.ignoreInjured).toBeUndefined()
   })
 

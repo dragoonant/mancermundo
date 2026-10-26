@@ -1,0 +1,312 @@
+[
+  {
+    "id": "cv.a.wr-psychic",
+    "kind": "weaponRule",
+    "name": "PSYCHIC",
+    "team": "corsair-voidscarred",
+    "weaponRule": {
+      "param": "none"
+    },
+    "text": "A tag with no effect of its own. Other teams' rules read it: a Null Rod, for example, switches PSYCHIC weapons and actions off.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.1 T-CV.6"
+  },
+  {
+    "id": "cv.a.rifles",
+    "kind": "factionRule",
+    "name": "RIFLES",
+    "team": "corsair-voidscarred",
+    "scope": {
+      "side": "friendly",
+      "keyword": "CORSAIR VOIDSCARRED"
+    },
+    "effect": {
+      "code": "cvRifles"
+    },
+    "text": "A shuriken rifle or ranger long rifle (either profile) has Accurate 1 in an activation in which its bearer has not made a Charge, Fall Back or Reposition. Shooting first does not stop it moving afterwards, and a Dash does not switch the rule off.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.5 T-CV.23"
+  },
+  {
+    "id": "cv.a.aeldari-raiders",
+    "kind": "factionRule",
+    "name": "AELDARI RAIDERS",
+    "team": "corsair-voidscarred",
+    "scope": {
+      "side": "friendly",
+      "keyword": "CORSAIR VOIDSCARRED"
+    },
+    "effect": {
+      "code": "cvAeldariRaiders"
+    },
+    "text": "Each Voidscarred may make one free Dash in its own activation (the Felarch swaps this for Veteran Raider). It is a cost change: the Dash costs 0 AP, still counts as a Dash, and does not exist in counteractions.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.5 T-CV.24"
+  },
+  {
+    "id": "cv.a.veteran-raider",
+    "kind": "ability",
+    "name": "Veteran Raider",
+    "team": "corsair-voidscarred",
+    "effect": {
+      "code": "veteranRaider"
+    },
+    "text": "Instead of the free Dash, once in each of its activations the Felarch may take any one 1 AP action for free (read after every other cost change).",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.7"
+  },
+  {
+    "id": "cv.a.one-step-ahead",
+    "kind": "ability",
+    "name": "One Step Ahead",
+    "team": "corsair-voidscarred",
+    "effect": {
+      "code": "oneStepAhead"
+    },
+    "text": "Once per battle, after an enemy operative performs an action, if the Felarch is ready: roll a D6. If it beats that enemy's current APL, the Felarch interrupts with a free Shoot or a free Fight that can only target that enemy, then has -1 APL until the end of its next activation. The roll spends the use even when it fails.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.8"
+  },
+  {
+    "id": "cv.a.camo-cloak",
+    "kind": "ability",
+    "name": "Camo Cloak",
+    "team": "corsair-voidscarred",
+    "effect": {
+      "code": "cvCamoCloak"
+    },
+    "text": "Shots at the Fate Dealer lose Saturate. If it may keep cover saves it keeps one extra, or keeps one as a critical save instead (not on top of the improved cover from Vantage terrain).",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.9"
+  },
+  {
+    "id": "cv.a.blademaster",
+    "kind": "uniqueAction",
+    "name": "Dash (Blademaster)",
+    "team": "corsair-voidscarred",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true,
+      "notCounteracting": true
+    },
+    "effect": {
+      "code": "blademaster",
+      "params": {
+        "maxInches": 3
+      }
+    },
+    "text": "After a Charge in the same activation, the Kurnathi may still Dash, but only with the move distance the Charge left over and never more than 3 inches. It counts as a Dash for every rule, and as the free Dash when that is unused.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.10"
+  },
+  {
+    "id": "cv.a.bladed-stance",
+    "kind": "ability",
+    "name": "Bladed Stance",
+    "team": "corsair-voidscarred",
+    "effect": {
+      "code": "bladedStance"
+    },
+    "text": "When it fights or retaliates, the Kurnathi may play one of its successes out of turn, before anyone else resolves a die; a success played this way has to be a block.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.11"
+  },
+  {
+    "id": "cv.a.faolchus-bond",
+    "kind": "ability",
+    "name": "Faolchú's Bond",
+    "team": "corsair-voidscarred",
+    "effect": {
+      "code": "faolchusBond"
+    },
+    "text": "The first time each turning point that the Kurnite Hunter retaliates while it is ready, its side resolves the first attack die of the fight instead of the attacker.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.12"
+  },
+  {
+    "id": "cv.a.erudite-hunter",
+    "kind": "ability",
+    "name": "Erudite Hunter",
+    "team": "corsair-voidscarred",
+    "effect": {
+      "code": "eruditeHunter",
+      "params": {
+        "range": 9
+      }
+    },
+    "text": "A strategic gambit while the Kurnite Hunter is in the killzone, free of CP: pick an enemy within 9 inches. Once this turning point, after that enemy performs an action in which it moves, the Kurnite Hunter may interrupt with a free Reposition that does not end farther from that enemy, or a free Charge (it may switch to Engage first) that ends in that enemy's control range.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.13"
+  },
+  {
+    "id": "cv.a.blink-pack",
+    "kind": "ability",
+    "name": "Blink Pack",
+    "team": "corsair-voidscarred",
+    "effect": {
+      "code": "blinkPack",
+      "params": {
+        "inches": 7
+      }
+    },
+    "text": "Whenever the Shade Runner Charges, Falls Back or Repositions it may warp jump: it is lifted and set up wholly within 7 inches horizontally of where it stood, anywhere it can be placed, and (unless it is a Charge) not in an enemy control range. A Dash never warp jumps.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.14"
+  },
+  {
+    "id": "cv.a.slicing-attack",
+    "kind": "ability",
+    "name": "Slicing Attack",
+    "team": "corsair-voidscarred",
+    "effect": {
+      "code": "slicingAttack",
+      "params": {
+        "inches": 7,
+        "damage": "D3+2"
+      }
+    },
+    "text": "After a warp-jump Reposition, trace a hair-thin line of at most 7 inches from where the Shade Runner stood to where it landed. The line may bend round terrain or rise over it, but not pass through it. One enemy that line touches takes D3+2 damage, provided the Shade Runner could see it as the action began.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.15"
+  },
+  {
+    "id": "cv.a.soul-channel",
+    "kind": "uniqueAction",
+    "name": "SOUL CHANNEL",
+    "team": "corsair-voidscarred",
+    "ap": 1,
+    "keywords": [
+      "PSYCHIC"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "target": {
+      "side": "friendly",
+      "keyword": "CORSAIR VOIDSCARRED",
+      "visible": true,
+      "withinInches": 6,
+      "notSelf": true
+    },
+    "effect": {
+      "code": "soulChannel",
+      "params": {
+        "range": 6,
+        "aplDelta": 1
+      }
+    },
+    "text": "PSYCHIC. Pick another friendly Voidscarred this operative can see within 6 inches: it has +1 APL until the end of its next activation. Not while an enemy has this operative in its control range.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.16"
+  },
+  {
+    "id": "cv.a.soul-heal",
+    "kind": "uniqueAction",
+    "name": "SOUL HEAL",
+    "team": "corsair-voidscarred",
+    "ap": 1,
+    "keywords": [
+      "PSYCHIC"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "target": {
+      "side": "friendly",
+      "keyword": "CORSAIR VOIDSCARRED",
+      "visible": true,
+      "withinInches": 6
+    },
+    "effect": {
+      "code": "soulHeal",
+      "params": {
+        "range": 6,
+        "heal": "2D3"
+      }
+    },
+    "text": "PSYCHIC. Pick a friendly Voidscarred this operative can see within 6 inches (itself included): it regains up to 2D3 lost wounds. Not while an enemy has this operative in its control range.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.17"
+  },
+  {
+    "id": "cv.a.quick-on-the-trigger",
+    "kind": "ability",
+    "name": "Quick on the Trigger",
+    "team": "corsair-voidscarred",
+    "effect": {
+      "code": "quickOnTheTrigger"
+    },
+    "text": "The Starstorm Duellist may Shoot while an enemy has it in its control range. It then picks only an enemy in its own control range (still visible; a Conceal enemy must not be in cover), even if its own friends stand in that enemy's control range. A guarding Duellist uses this instead of a point-blank shot.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.18"
+  },
+  {
+    "id": "cv.a.pistol-barrage",
+    "kind": "uniqueAction",
+    "name": "PISTOL BARRAGE",
+    "team": "corsair-voidscarred",
+    "ap": 1,
+    "conditions": {
+      "order": "engage",
+      "activationExcludes": [
+        "shoot"
+      ]
+    },
+    "effect": {
+      "code": "pistolBarrage"
+    },
+    "text": "The Duellist makes two free Shoots, one with the fusion pistol and one with the shuriken pistol, in either order. Not with a Conceal order, not in an activation in which it has Shot, and it cannot Shoot afterwards in the same activation.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.19"
+  },
+  {
+    "id": "cv.a.prowling-raiders",
+    "kind": "ability",
+    "name": "Prowling Raiders",
+    "team": "corsair-voidscarred",
+    "effect": {
+      "code": "prowlingRaiders"
+    },
+    "text": "The Capricious Flight and Light Fingers ploys cost 0 CP when the operative they name is a friendly Warrior. They are still once per turning point.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.20"
+  },
+  {
+    "id": "cv.a.warp-fold",
+    "kind": "uniqueAction",
+    "name": "WARP FOLD",
+    "team": "corsair-voidscarred",
+    "ap": 1,
+    "keywords": [
+      "PSYCHIC"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "target": {
+      "side": "friendly",
+      "keyword": "CORSAIR VOIDSCARRED",
+      "visible": true,
+      "withinInches": 5,
+      "count": 2
+    },
+    "effect": {
+      "code": "warpFold",
+      "params": {
+        "range": 5
+      }
+    },
+    "text": "PSYCHIC. Pick two friendly Voidscarreds this operative can see within 5 inches (it may be one of them): they swap places. If one of them made a Charge, Fall Back or Reposition this turning point and the other is ready, the other cannot take any of those actions in its activation this turning point. Not while an enemy has this operative in its control range.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.21"
+  },
+  {
+    "id": "cv.a.warding-shield",
+    "kind": "uniqueAction",
+    "name": "WARDING SHIELD",
+    "team": "corsair-voidscarred",
+    "ap": 1,
+    "keywords": [
+      "PSYCHIC"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "target": {
+      "side": "friendly",
+      "keyword": "CORSAIR VOIDSCARRED",
+      "visible": true,
+      "withinInches": 6
+    },
+    "effect": {
+      "code": "wardingShield",
+      "params": {
+        "range": 6
+      }
+    },
+    "text": "PSYCHIC. Pick a friendly Voidscarred this operative can see within 6 inches. The next time an attack die would do its Normal Dmg to that operative, the damage is ignored. The shield ends at the start of this operative's next activation, when it is incapacitated, or when it casts the shield again. Not while an enemy has this operative in its control range.",
+    "source": "team-corsair-voidscarred.pdf (Jan '26); docs/spec/13-teams.md section 14.4 T-CV.22"
+  }
+]

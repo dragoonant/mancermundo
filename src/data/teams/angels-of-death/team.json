@@ -48,6 +48,18 @@
     "aod.p.shock-assault"
   ],
   "equipment": ["aod.e.purity-seals", "aod.e.auspex", "aod.e.chapter-reliquaries", "aod.e.tilting-shields"],
+  "defaults": {
+    "roster": [
+      "aod.space-marine-captain",
+      "aod.assault-intercessor-grenadier",
+      "aod.intercessor-gunner",
+      "aod.heavy-intercessor-gunner",
+      "aod.eliminator-sniper",
+      "aod.intercessor-warrior"
+    ],
+    "equipment": ["aod.e.purity-seals", "core.e.mines", "core.e.razor-wire", "core.e.ammo-cache"],
+    "teamChoices": { "primary-tactic": "aod.a.ct-sharpshooter", "secondary-tactic": "aod.a.ct-stealthy" }
+  },
   "paint": { "major": { "h": 0.6, "s": 0.6, "l": 0.35 }, "minor": { "h": 0.12, "s": 0.7, "l": 0.45 } },
   "text": "Elite power-armoured veterans: six operatives, a choice of two Chapter Tactics, and a doctrine system that rewards disciplined firing and decisive assaults.",
   "source": "team-angels-of-death.pdf; docs/spec/13-teams.md 1.1"

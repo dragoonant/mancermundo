@@ -1,0 +1,103 @@
+[
+  {
+    "id": "pm.champion",
+    "name": "Plague Marine Champion",
+    "team": "plague-marines",
+    "stats": { "apl": 3, "move": 5, "save": "3+", "wounds": 15 },
+    "base": 32,
+    "keywords": ["PLAGUE MARINE", "CHAOS", "HERETIC ASTARTES", "LEADER", "CHAMPION"],
+    "weapons": { "fixed": ["pm.wg.plasma-pistol", "pm.w.plague-sword"], "options": [] },
+    "abilities": ["pm.a.grandfathers-blessing"],
+    "uniqueActions": [],
+    "figure": { "archetype": "pm-plague-marine-champion" },
+    "text": "The warband leader: a plasma pistol and a plague sword, and it feeds on the suffering of poisoned enemies nearby.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5"
+  },
+  {
+    "id": "pm.bombardier",
+    "name": "Plague Marine Bombardier",
+    "team": "plague-marines",
+    "stats": { "apl": 3, "move": 5, "save": "3+", "wounds": 14 },
+    "base": 32,
+    "keywords": ["PLAGUE MARINE", "CHAOS", "HERETIC ASTARTES", "BOMBARDIER"],
+    "weapons": {
+      "fixed": ["pm.w.boltgun-bombardier", "pm.w.fists", "pm.w.blight-grenade-bombardier", "pm.w.krak-grenade-bombardier"],
+      "options": []
+    },
+    "abilities": ["pm.a.grenadier"],
+    "uniqueActions": [],
+    "figure": { "archetype": "pm-plague-marine-bombardier" },
+    "text": "A trench-fighting specialist with its own blight and krak grenades.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5"
+  },
+  {
+    "id": "pm.fighter",
+    "name": "Plague Marine Fighter",
+    "team": "plague-marines",
+    "stats": { "apl": 3, "move": 5, "save": "3+", "wounds": 14 },
+    "base": 32,
+    "keywords": ["PLAGUE MARINE", "CHAOS", "HERETIC ASTARTES", "FIGHTER"],
+    "weapons": { "fixed": ["pm.w.bolt-pistol", "pm.w.flail-of-corruption"], "options": [] },
+    "abilities": [],
+    "uniqueActions": ["pm.a.flail"],
+    "figure": { "archetype": "pm-plague-marine-fighter" },
+    "text": "A close-combat brute whose swinging chain flail harms everyone around it.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5"
+  },
+  {
+    "id": "pm.heavy-gunner",
+    "name": "Plague Marine Heavy Gunner",
+    "team": "plague-marines",
+    "stats": { "apl": 3, "move": 5, "save": "3+", "wounds": 14 },
+    "base": 32,
+    "keywords": ["PLAGUE MARINE", "CHAOS", "HERETIC ASTARTES", "HEAVY GUNNER"],
+    "weapons": { "fixed": ["pm.w.bolt-pistol", "pm.w.plague-spewer", "pm.w.fists"], "options": [] },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": { "archetype": "pm-plague-marine-heavy-gunner" },
+    "text": "Carries the plague spewer, a short-range sludge sprayer that hits a whole cluster.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5"
+  },
+  {
+    "id": "pm.icon-bearer",
+    "name": "Plague Marine Icon Bearer",
+    "team": "plague-marines",
+    "stats": { "apl": 3, "move": 5, "save": "3+", "wounds": 14 },
+    "base": 32,
+    "keywords": ["PLAGUE MARINE", "CHAOS", "HERETIC ASTARTES", "ICON BEARER"],
+    "weapons": { "fixed": ["pm.w.bolt-pistol", "pm.w.plague-knife-icon-bearer"], "options": [] },
+    "abilities": ["pm.a.icon-bearer", "pm.a.icon-of-contagion"],
+    "uniqueActions": [],
+    "figure": { "archetype": "pm-plague-marine-icon-bearer" },
+    "text": "Bears the warband's cursed standard: stronger in marker fights, and a source of contagion in enemy territory.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5"
+  },
+  {
+    "id": "pm.plaguecaster",
+    "name": "Malignant Plaguecaster",
+    "team": "plague-marines",
+    "stats": { "apl": 3, "move": 5, "save": "3+", "wounds": 14 },
+    "base": 32,
+    "keywords": ["PLAGUE MARINE", "CHAOS", "HERETIC ASTARTES", "PSYKER", "MALIGNANT PLAGUECASTER"],
+    "weapons": { "fixed": ["pm.w.entropy", "pm.w.plague-wind", "pm.w.corrupted-staff"], "options": [] },
+    "abilities": [],
+    "uniqueActions": ["pm.a.poisonous-miasma", "pm.a.putrescent-vitality"],
+    "figure": { "archetype": "pm-malignant-plaguecaster" },
+    "text": "A psyker who spreads disease at range and mends its fellows.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5"
+  },
+  {
+    "id": "pm.warrior",
+    "name": "Plague Marine Warrior",
+    "team": "plague-marines",
+    "stats": { "apl": 3, "move": 5, "save": "3+", "wounds": 14 },
+    "base": 32,
+    "keywords": ["PLAGUE MARINE", "CHAOS", "HERETIC ASTARTES", "WARRIOR"],
+    "weapons": { "fixed": ["pm.w.boltgun-warrior", "pm.w.plague-knife-warrior"], "options": [] },
+    "abilities": ["pm.a.repulsive-fortitude"],
+    "uniqueActions": [],
+    "figure": { "archetype": "pm-plague-marine-warrior" },
+    "text": "The rank and file: a bloated hide that turns defence rolls of 5 into critical saves.",
+    "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5"
+  }
+]

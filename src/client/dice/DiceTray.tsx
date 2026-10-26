@@ -4,10 +4,11 @@
 // it floats under the HUD. It renders what the director has presented so far, never more.
 import { useEffect, type CSSProperties } from 'react'
 import { colors, fontStack, panel } from '../ui/theme'
+import { CollapseButton, CollapsedTab, useCollapsed } from '../ui/collapse'
 import { useFormFactor } from '../ui/formFactor'
 import { Keyword, KeywordText } from '../ui/Keyword'
 import { seatColor } from '../ui/widgets'
-import { poolSummary, useTray, type TrayDie, type TrayPool } from './trayStore'
+import { poolSummary, useTray, type TrayDie, type TrayPool, type TrayState } from './trayStore'
 
 const STYLE_ID = 'ms-dice-tray-style'
 
@@ -115,11 +116,13 @@ function Pool({ pool, testId }: { pool: TrayPool | null; testId: string }) {
   )
 }
 
-export function DiceTray() {
-  const tray = useTray()
-  const compact = useFormFactor().compact
-  useEffect(injectStyle, [])
+/** The tray box. Only the DOM view folds: the director writes trayStore on its own beats and never waits on this. */
+export function DiceTrayView({ tray, compact }: { tray: TrayState; compact: boolean }) {
+  const [collapsed] = useCollapsed('dicetray')
   if (!tray.atk) return null
+  if (collapsed) {
+    return <CollapsedTab id="dicetray" title="Dice tray" style={compact ? { position: 'absolute', top: 60, left: 8, zIndex: 35 } : { alignSelf: 'flex-end', flex: '0 0 auto' }} />
+  }
   const style: CSSProperties = {
     ...panel,
     padding: '8px 10px 10px',
@@ -131,7 +134,10 @@ export function DiceTray() {
   }
   return (
     <div data-testid="dice-tray" data-mode={tray.mode ?? ''} style={style}>
-      <div style={{ fontSize: 12, fontWeight: 800, marginBottom: 6, textAlign: 'center' }}>{tray.title}</div>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: 6 }}>
+        <div style={{ flex: 1, minWidth: 0, fontSize: 12, fontWeight: 800, textAlign: 'center', paddingLeft: 28 }}>{tray.title}</div>
+        <CollapseButton id="dicetray" title="dice tray" style={{ pointerEvents: 'auto', flex: '0 0 auto' }} />
+      </div>
       <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
         <Pool pool={tray.atk} testId="tray-atk" />
         <div style={{ width: 1, alignSelf: 'stretch', background: colors.border }} />
@@ -144,4 +150,11 @@ export function DiceTray() {
       )}
     </div>
   )
+}
+
+export function DiceTray() {
+  const tray = useTray()
+  const compact = useFormFactor().compact
+  useEffect(injectStyle, [])
+  return <DiceTrayView tray={tray} compact={compact} />
 }

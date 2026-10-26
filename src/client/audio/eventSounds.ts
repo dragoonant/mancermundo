@@ -7,6 +7,7 @@ import type { GameEvent, GameState, Seat } from '@/engine'
 import { flavourOf, type WeaponFlavour } from '../weaponFlavour'
 import type { PlayOptions } from './manager'
 import type { SoundId } from './ids'
+import { teamTable } from '../teams'
 
 export interface EventSound {
   id: SoundId
@@ -92,6 +93,8 @@ export const WEAPON_SOUND: Record<string, WeaponSfx> = {
   'core.w.frag-grenade': { id: 'wpn-grenade-frag' },
   'core.w.krak-grenade': { id: 'wpn-grenade-krak' },
 }
+// M9 prep: teams added later bring their own entries (src/client/teams)
+Object.assign(WEAPON_SOUND, teamTable('sound'))
 
 const FLAVOUR_FALLBACK: Record<WeaponFlavour, SoundId> = {
   bolter: 'wpn-bolt-rifle',
@@ -112,40 +115,69 @@ export function weaponSound(weaponId: string): WeaponSfx {
 
 // ---------------------------------------------------------------- teams
 
-type Faction = 'marine' | 'ork' | 'grot' | 'squig' | 'other'
+export type Faction = 'marine' | 'ork' | 'grot' | 'squig' | 'drone' | 'tau' | 'necron' | 'plague' | 'cultist' | 'other'
+
+/**
+ * Datacard keyword -> faction, first match wins (so a specific lineage listed earlier beats a broader one). A team
+ * joins by adding a row here and a profile below; nothing else in this file compares team ids.
+ */
+const FACTION_KEYWORDS: readonly (readonly [keyword: string, faction: Faction])[] = [
+  ['BOMB SQUIG', 'squig'],
+  ['SQUIG', 'squig'],
+  ['GROT', 'grot'],
+  ['ORK', 'ork'],
+  ['DRONE', 'drone'],
+  ["T'AU EMPIRE", 'tau'],
+  ['PATHFINDER', 'tau'],
+  ['NECRON', 'necron'],
+  ['PLAGUE MARINE', 'plague'],
+  ['HERETIC ASTARTES', 'plague'],
+  ['WYRMBLADE', 'cultist'],
+  ['GENESTEALER CULTS', 'cultist'],
+  ['ADEPTUS ASTARTES', 'marine'],
+]
 
 /** Faction of an operative from its datacard keywords (no team ids are compared; keywords carry the lineage). */
 export function factionOf(state: GameState | null, operativeId: string): Faction {
   const op = state?.operatives?.[operativeId]
   const kw = op ? (state?.data?.datacards?.[op.datacardId]?.keywords ?? []).map((k) => k.toUpperCase()) : []
-  if (kw.includes('BOMB SQUIG') || kw.includes('SQUIG')) return 'squig'
-  if (kw.includes('GROT')) return 'grot'
-  if (kw.includes('ORK')) return 'ork'
-  if (kw.includes('ADEPTUS ASTARTES')) return 'marine'
+  for (const [keyword, faction] of FACTION_KEYWORDS) if (kw.includes(keyword)) return faction
   return 'other'
 }
 
+interface FactionSounds {
+  /** death sound; a function varies it by the event's sequence number */
+  death: SoundId | ((seq: number) => SoundId)
+  shout?: SoundId
+  steps?: SoundId
+  /** the narrator line naming this side as the initiative holder */
+  initiative?: SoundId
+}
+
+const FACTION_SOUNDS: Record<Faction, FactionSounds> = {
+  marine: { death: (seq) => (seq % 3 === 0 ? 'death-marine-classic' : 'death-marine'), shout: 'shout-marine', steps: 'move-marine-steps', initiative: 'narr-initiative-aod' },
+  ork: { death: (seq) => (seq % 2 === 0 ? 'death-ork-roar' : 'death-ork'), shout: 'shout-ork', initiative: 'narr-initiative-kom' },
+  grot: { death: 'death-grot', shout: 'shout-ork', initiative: 'narr-initiative-kom' },
+  squig: { death: 'death-squig', initiative: 'narr-initiative-kom' },
+  drone: { death: 'death-drone', initiative: 'narr-initiative-pf' },
+  tau: { death: 'death-tau', initiative: 'narr-initiative-pf' },
+  necron: { death: 'death-necron', initiative: 'narr-initiative-ht' },
+  plague: { death: 'death-plague', initiative: 'narr-initiative-pm' },
+  cultist: { death: 'death-cultist', shout: 'shout-brood-hiss', initiative: 'narr-initiative-wb' },
+  other: { death: 'death-generic' },
+}
+
 export function deathSound(faction: Faction, seq: number): SoundId {
-  switch (faction) {
-    case 'marine':
-      return seq % 3 === 0 ? 'death-marine-classic' : 'death-marine'
-    case 'ork':
-      return seq % 2 === 0 ? 'death-ork-roar' : 'death-ork'
-    case 'grot':
-      return 'death-grot'
-    case 'squig':
-      return 'death-squig'
-    default:
-      return 'death-generic'
-  }
+  const d = FACTION_SOUNDS[faction].death
+  return typeof d === 'function' ? d(seq) : d
 }
 
 function shoutSound(faction: Faction): SoundId | null {
-  return faction === 'marine' ? 'shout-marine' : faction === 'ork' || faction === 'grot' ? 'shout-ork' : null
+  return FACTION_SOUNDS[faction].shout ?? null
 }
 
 function stepsSound(faction: Faction): SoundId {
-  return faction === 'marine' ? 'move-marine-steps' : 'move-ork-boots'
+  return FACTION_SOUNDS[faction].steps ?? 'move-ork-boots'
 }
 
 /** The narrator line that names the side holding initiative, by that seat's team (derived from its operatives' lineage). */
@@ -153,11 +185,36 @@ function initiativeLine(state: GameState | null, holder: Seat): SoundId | null {
   if (!state) return null
   for (const op of Object.values(state.operatives ?? {})) {
     if (op.seat !== holder) continue
-    const f = factionOf(state, op.id)
-    if (f === 'marine') return 'narr-initiative-aod'
-    if (f === 'ork' || f === 'grot' || f === 'squig') return 'narr-initiative-kom'
+    const line = FACTION_SOUNDS[factionOf(state, op.id)].initiative
+    if (line) return line
   }
   return null
+}
+
+// ---------------------------------------------------------------- team effects
+
+/** Ploys that get a sound of their own on top of the ploy click (keyed by ploy id). */
+const PLOY_SOUND: Record<string, SoundId> = {
+  'pm.p.cloud-of-flies': 'fx-flies-swarm',
+  'pm.p.contagion': 'fx-plague-bell',
+}
+
+/** Abilities and equipment that announce themselves with AbilityUsed (keyed by ability id). */
+const ABILITY_SOUND: Record<string, SoundId> = {
+  'pm.a.icon-of-contagion': 'fx-plague-bell',
+  'pm.e.plague-bells': 'fx-plague-bell',
+  'wyr.a.quicksilver-strike': 'shout-brood-hiss',
+}
+
+/** OperativeReturned by how it came back (the event's `kind`). */
+const RETURN_SOUND: Record<string, SoundId> = {
+  reanimated: 'fx-reanimate',
+  emerge: 'fx-ambush-emerge',
+}
+
+/** Token kinds whose gain is heard (TokenChanged with a positive delta). */
+const TOKEN_GAIN_SOUND: Record<string, SoundId> = {
+  'pf.markerlight': 'ui-markerlight',
 }
 
 // ---------------------------------------------------------------- policy
@@ -228,10 +285,20 @@ export const EVENT_POLICY: Record<GameEvent['type'], 'sound' | 'conditional' | '
   KillGradeChanged: 'sound',
   VpScored: 'conditional',
   MineTriggered: 'sound',
-  AbilityUsed: 'silent',
+  AbilityUsed: 'conditional',
   ConfigChanged: 'silent',
   EffectStarted: 'silent',
   EffectEnded: 'silent',
+  // M9 prep: generic team capabilities (bookkeeping until a team gives them a sound)
+  TokenChanged: 'conditional',
+  WoundsRegained: 'silent',
+  OperativeSetAside: 'silent',
+  OperativePickChanged: 'silent',
+  OperativeTransformed: 'sound',
+  PoolChanged: 'silent',
+  OperativeReturned: 'conditional',
+  ActivationChained: 'silent',
+  ActivationGated: 'silent',
   DiceRolled: 'sound',
   ActionRejected: 'silent',
   DecisionRequested: 'silent',
@@ -269,8 +336,23 @@ export function soundsForEvent(ev: GameEvent, ctx: SoundContext = EMPTY_CONTEXT)
     case 'CpChanged':
       return ev.delta > 0 ? [{ id: 'ui-cp-gained' }] : ev.delta < 0 ? [{ id: 'ui-ap-spend', opts: { volume: 0.8 } }] : []
     case 'GambitUsed':
-    case 'PloyUsed':
       return [{ id: 'ui-order-engage', opts: { volume: 0.8 } }]
+    case 'PloyUsed': {
+      const fx = PLOY_SOUND[ev.ployId]
+      return [{ id: 'ui-order-engage', opts: { volume: 0.8 } }, ...(fx ? [{ id: fx, opts: { delayMs: 150 } }] : [])]
+    }
+    case 'AbilityUsed': {
+      const fx = ABILITY_SOUND[ev.abilityId]
+      return fx ? [{ id: fx, opts: { volume: 0.85 } }] : []
+    }
+    case 'OperativeReturned': {
+      const fx = RETURN_SOUND[ev.kind]
+      return fx ? [{ id: fx }] : []
+    }
+    case 'TokenChanged': {
+      const fx = TOKEN_GAIN_SOUND[ev.kind]
+      return fx && ev.delta > 0 ? [{ id: fx, opts: { volume: 0.8 } }] : []
+    }
     case 'OrderSet':
       return [{ id: ev.order === 'engage' ? 'ui-order-engage' : 'ui-order-conceal' }]
     case 'ApSpent':
@@ -338,6 +420,8 @@ export function soundsForEvent(ev: GameEvent, ctx: SoundContext = EMPTY_CONTEXT)
       return ev.amount > 0 ? [{ id: 'ui-vp-scored' }] : []
     case 'MineTriggered':
       return [{ id: 'wpn-grenade-frag' }]
+    case 'OperativeTransformed':
+      return [{ id: 'fx-reanimate', opts: { volume: 0.8 } }]
     case 'DiceRolled':
       return [
         { id: 'ui-dice-rattle' },

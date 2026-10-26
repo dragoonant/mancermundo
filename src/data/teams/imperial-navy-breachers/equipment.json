@@ -1,0 +1,57 @@
+[
+  {
+    "id": "nb.e.rebreathers",
+    "name": "REBREATHERS",
+    "scope": "faction",
+    "team": "imperial-navy-breachers",
+    "count": 1,
+    "effect": {
+      "code": "nbRebreathers",
+      "params": {
+        "ignoreAplDecreases": true,
+        "ignoreShock": true
+      }
+    },
+    "text": "Friendly Imperial Navy Breachers may disregard changes to their APL (in this game only reductions are disregarded), and Shock on enemy weapons has no effect on them.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.41"
+  },
+  {
+    "id": "nb.e.slugs",
+    "name": "SLUGS",
+    "scope": "faction",
+    "team": "imperial-navy-breachers",
+    "count": 1,
+    "effect": {
+      "code": "nbSlugs",
+      "params": {
+        "perTurningPoint": 3
+      }
+    },
+    "text": "Three uses per turning point across the team. When a friendly Imperial Navy Breacher that is shooting picks its Navis shotgun (long range), spend a use: for that action the weapon hits 1 better, deals 1 more normal and critical damage, and gains Accurate 1.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.42"
+  },
+  {
+    "id": "nb.e.combat-stimms",
+    "name": "COMBAT STIMMS",
+    "scope": "faction",
+    "team": "imperial-navy-breachers",
+    "count": 1,
+    "effect": {
+      "code": "nbStimms",
+      "params": {
+        "moveDelta": 2
+      }
+    },
+    "text": "Friendly Imperial Navy Breacher operatives ignore the Move reduction from being injured. The Hit penalty still applies.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.43"
+  },
+  {
+    "id": "nb.e.system-override-device",
+    "name": "SYSTEM OVERRIDE DEVICE",
+    "scope": "faction",
+    "team": "imperial-navy-breachers",
+    "count": 1,
+    "text": "One friendly Imperial Navy Breacher per turning point may Operate Hatch at 1 AP less. Hatchways exist only in close-quarters killzones, so this has no effect in the open killzone.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.44"
+  }
+]

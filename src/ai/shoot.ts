@@ -3,7 +3,7 @@
 import { answerDecision, expectedDamage } from '@/engine/query'
 import { validTargets } from '@/engine/attack-common'
 import type { Action } from '@/engine'
-import { blastDelta, explosionValue, isExplosive, shotScore } from './eval'
+import { blastDelta, explosionValue, fixedShot, isExplosive, shotScore } from './eval'
 import { passAction } from './random'
 import type { AiCtx } from './tiers'
 
@@ -32,6 +32,12 @@ export function shootWeapon(ctx: AiCtx): Action | null {
     if (w && isExplosive(w)) {
       const score = explosionValue(ctx, view, op, wid)
       if (score > 0) pairs.push({ weaponId: wid, targetId: op.id, score })
+      continue
+    }
+    // a weapon that names its own targets (Detonate) is scored on all of them together, not as a shot at a valid enemy
+    const fixed = fixedShot(ctx, view, op, wid)
+    if (fixed) {
+      if (fixed.score > 0) pairs.push({ weaponId: wid, targetId: fixed.targetId, score: fixed.score })
       continue
     }
     let targets

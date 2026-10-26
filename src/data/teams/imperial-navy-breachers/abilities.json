@@ -1,0 +1,425 @@
+[
+  {
+    "id": "nb.a.command-breach-orders",
+    "kind": "ability",
+    "name": "Command Breach: free orders",
+    "team": "imperial-navy-breachers",
+    "effect": {
+      "code": "nbFreeOrders",
+      "params": {
+        "cost": 0
+      }
+    },
+    "text": "While the Sergeant-at-Arms is in the killzone, your Attack Order and Defence Order strategy ploys cost 0 CP.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.7"
+  },
+  {
+    "id": "nb.a.command-breach-redirect",
+    "kind": "ability",
+    "name": "Command Breach: redirect",
+    "team": "imperial-navy-breachers",
+    "effect": {
+      "code": "nbRedirect",
+      "params": {
+        "oncePer": "activation"
+      }
+    },
+    "text": "Once in each of the Sergeant-at-Arms' activations, before or after one of its actions, if your Attack Order or Defence Order marker is in the killzone, either pick the marker up and put it down again anywhere in the killzone, or turn the ploy into the other order (the marker stays where it is). Not both, and no CP is spent.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.8"
+  },
+  {
+    "id": "nb.a.group-activation",
+    "kind": "ability",
+    "name": "Group Activation",
+    "team": "imperial-navy-breachers",
+    "effect": {
+      "code": "nbGroupActivation",
+      "params": {
+        "max": 2
+      }
+    },
+    "text": "An expended Armsman obliges you to activate another ready friendly Armsman (if there is one) before your opponent's next activation. The second one does not chain on, so at most two activate back to back. Armsmen paired by Breach and Clear skip this rule.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.9"
+  },
+  {
+    "id": "nb.a.emboldened",
+    "kind": "ability",
+    "name": "Emboldened",
+    "team": "imperial-navy-breachers",
+    "effect": {
+      "code": "nbEmboldened",
+      "params": {
+        "threshold": 3,
+        "rollOn": 5,
+        "reduceBy": 1
+      }
+    },
+    "text": "Once the Axejack has made a Charge this turning point, any attack die about to deal it 3 or more damage triggers a D6 roll; on a 5+ that die deals 1 less.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.10"
+  },
+  {
+    "id": "nb.a.machine-bar",
+    "kind": "ability",
+    "name": "Machine: activation bar",
+    "team": "imperial-navy-breachers",
+    "effect": {
+      "code": "nbCatBar"
+    },
+    "text": "The C.A.T. Unit can neither activate nor take any action (free actions included) while it is in an enemy operative's control range, and never again once a friendly Surveyor has been incapacitated. If it is left ready, the turning point still ends.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.11"
+  },
+  {
+    "id": "nb.a.machine-actions",
+    "kind": "ability",
+    "name": "Machine: actions",
+    "team": "imperial-navy-breachers",
+    "effect": {
+      "code": "nbMachineActions",
+      "params": {
+        "CAT UNIT": [
+          "reposition",
+          "dash",
+          "fallBack",
+          "charge",
+          "ability:nb.a.spot"
+        ],
+        "GHEISTSKULL": [
+          "reposition",
+          "dash",
+          "fallBack",
+          "charge",
+          "ability:nb.a.boost"
+        ]
+      }
+    },
+    "text": "The C.A.T. Unit can only Charge, Dash, Fall Back, Reposition and SPOT. The Gheistskull can only BOOST, Charge, Dash, Fall Back and Reposition. Neither can Shoot, Fight, Pick Up or Place a marker, or take mission actions.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.12"
+  },
+  {
+    "id": "nb.a.machine-limits",
+    "kind": "ability",
+    "name": "Machine: no retaliating, assisting or climbing",
+    "team": "imperial-navy-breachers",
+    "effect": {
+      "code": "nbMachineLimits"
+    },
+    "text": "A Machine cannot retaliate or assist a friendly fighter. The C.A.T. Unit also cannot climb or jump (it can still drop).",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.13"
+  },
+  {
+    "id": "nb.a.machine-control",
+    "kind": "ability",
+    "name": "Machine: control",
+    "team": "imperial-navy-breachers",
+    "effect": {
+      "code": "nbMachineControl",
+      "params": {
+        "delta": -1
+      }
+    },
+    "text": "When marker control is worked out, a Machine counts its APL as 1 lower. That is not an APL change, so it stacks with real APL changes.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.14"
+  },
+  {
+    "id": "nb.a.machine-cover",
+    "kind": "ability",
+    "name": "Machine: hidden in cover",
+    "team": "imperial-navy-breachers",
+    "effect": {
+      "code": "nbMachineCover",
+      "params": {
+        "shooterWithin": 2
+      }
+    },
+    "text": "A Machine on a Conceal order that is in cover can never be picked as a valid target, overriding Seek, Vantage terrain and every other rule; only a shooter within 2\" is exempt.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.15"
+  },
+  {
+    "id": "nb.a.wide-view",
+    "kind": "ability",
+    "name": "Machine: wide view",
+    "team": "imperial-navy-breachers",
+    "text": "The C.A.T. Unit's sight is checked from any part of its model, not only its head. (The engine tries its head point and points around its body.)",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.16"
+  },
+  {
+    "id": "nb.a.expendable",
+    "kind": "ability",
+    "name": "Expendable",
+    "team": "imperial-navy-breachers",
+    "text": "A Machine is ignored for the opponent's kill op, both when it is incapacitated and in your starting count of operatives.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.17"
+  },
+  {
+    "id": "nb.a.spot",
+    "kind": "uniqueAction",
+    "name": "SPOT",
+    "team": "imperial-navy-breachers",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "nbSpot",
+      "params": {
+        "seekLight": true,
+        "noObscured": true
+      }
+    },
+    "text": "Mark one enemy operative this C.A.T. Unit can see. While the mark lasts, friendly Imperial Navy Breachers shooting that enemy may give their ranged weapons Seek Light and deny it obscuring. The mark ends with the turning point, as soon as the C.A.T. Unit can no longer see the enemy, or when it uses SPOT again. Not while an enemy is in its control range.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.18"
+  },
+  {
+    "id": "nb.a.breachwall",
+    "kind": "ability",
+    "name": "Breachwall",
+    "team": "imperial-navy-breachers",
+    "effect": {
+      "code": "nbBreachwall"
+    },
+    "text": "On an Engage order, the Endurant guards one friendly Breacher in base contact with it: while the Endurant stands in the way of the shot, your opponent cannot pick that Breacher as a valid target. The guard fails if two or more other friendly operatives are in base contact with the Endurant.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.19"
+  },
+  {
+    "id": "nb.a.wr-shield",
+    "kind": "weaponRule",
+    "name": "Shield",
+    "team": "imperial-navy-breachers",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "nbShield",
+      "params": {
+        "blocks": 2
+      }
+    },
+    "text": "Fighting or retaliating with this weapon, each block the Endurant makes may cancel two of the enemy's unresolved successes rather than one.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.20"
+  },
+  {
+    "id": "nb.a.disengage",
+    "kind": "ability",
+    "name": "Disengage",
+    "team": "imperial-navy-breachers",
+    "effect": {
+      "costDelta": {
+        "actions": [
+          "fall-back"
+        ],
+        "delta": -1
+      }
+    },
+    "text": "The Endurant's Fall Back action costs 1 AP less.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.21"
+  },
+  {
+    "id": "nb.a.boost",
+    "kind": "uniqueAction",
+    "name": "BOOST",
+    "team": "imperial-navy-breachers",
+    "ap": 1,
+    "conditions": {
+      "turningPoint": {
+        "min": 2
+      }
+    },
+    "effect": {
+      "code": "nbBoost",
+      "params": {
+        "extraInches": 2
+      }
+    },
+    "text": "Until this activation ends, this Gheistskull's next Charge may move 4\" farther rather than 2\". Usable once per battle, and not in the first turning point.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.22"
+  },
+  {
+    "id": "nb.a.grenadier",
+    "kind": "ability",
+    "name": "Grenadier",
+    "team": "imperial-navy-breachers",
+    "effect": [
+      {
+        "modifyStat": {
+          "stat": "hit",
+          "value": -1,
+          "filter": {
+            "weaponIds": [
+              "core.w.frag-grenade",
+              "core.w.krak-grenade"
+            ]
+          }
+        }
+      },
+      {
+        "code": "nbGrenadier",
+        "params": {
+          "frag": 1,
+          "krak": 1,
+          "stun": 1
+        }
+      }
+    ],
+    "text": "This Grenadier may throw frag and krak grenades and use STUN GRENADE without the team owning them, and these never draw on the team's grenade uses. Its frag and krak grenades hit 1 better.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.23"
+  },
+  {
+    "id": "nb.a.weld-shut",
+    "kind": "uniqueAction",
+    "name": "WELD SHUT",
+    "team": "imperial-navy-breachers",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "text": "Seal a closed hatchway within 1\" so other operatives pay 1 extra AP to open it. Hatchways exist only in close-quarters killzones, so this action is never available in the open killzone.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.24"
+  },
+  {
+    "id": "nb.a.breach-point",
+    "kind": "uniqueAction",
+    "name": "BREACH POINT",
+    "team": "imperial-navy-breachers",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "nbBreachPoint",
+      "params": {
+        "maxThickness": 1,
+        "withinInches": 1
+      }
+    },
+    "text": "Set down one of your Breach markers within this Hatchcutter's control range, as near as it can go to a terrain feature that is also in its control range. Any operative within 1\" of the marker treats the parts of that feature up to 1\" thick as Accessible terrain. Needs a terrain feature in control range and no enemy in it.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.25"
+  },
+  {
+    "id": "nb.a.wayfind",
+    "kind": "uniqueAction",
+    "name": "WAYFIND",
+    "team": "imperial-navy-breachers",
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "nbWayfind",
+      "params": {
+        "range": 6,
+        "aplDelta": 1
+      }
+    },
+    "text": "SUPPORT. Choose another friendly Imperial Navy Breacher (never a C.A.T. Unit or Gheistskull) that this Surveyor, or a friendly C.A.T. Unit, can see within 6\". Its APL is 1 higher until its next activation ends. With a Comms Device, only the operative that controls the marker gets the longer reach. Not while an enemy is in control range.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.26"
+  },
+  {
+    "id": "nb.a.remote-control",
+    "kind": "uniqueAction",
+    "name": "REMOTE CONTROL",
+    "team": "imperial-navy-breachers",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "nbRemoteControl",
+      "params": {
+        "maxMove": 3
+      }
+    },
+    "text": "Choose a friendly C.A.T. Unit: it takes one free action right now, moving no more than 3\" during it. Needs a C.A.T. Unit in the killzone and no enemy in this Surveyor's control range.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.27"
+  },
+  {
+    "id": "nb.a.wr-detonate",
+    "kind": "weaponRule",
+    "name": "Detonate",
+    "team": "imperial-navy-breachers",
+    "weaponRule": {
+      "param": "none"
+    },
+    "effect": {
+      "code": "nbDetonate",
+      "params": {
+        "blast": 1
+      }
+    },
+    "text": "This weapon never selects a target: the friendly Gheistskull is its primary target, gets no cover and is never obscured. It cannot be chosen while the Gheistskull is out of the killzone. Its Blast catches every other operative, from either side, that is visible to and within 1\" of the Gheistskull.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.28"
+  },
+  {
+    "id": "nb.a.interference-pulse",
+    "kind": "uniqueAction",
+    "name": "INTERFERENCE PULSE",
+    "team": "imperial-navy-breachers",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "nbInterferencePulse",
+      "params": {
+        "range": 8,
+        "rollOn": 3
+      }
+    },
+    "text": "Choose an enemy operative a friendly Gheistskull can see within 8\" and roll a D6, +1 if the Gheistskull could pick that enemy as a valid target. On a 3+ the enemy's APL drops by 1 until its next activation ends. Needs a Gheistskull in the killzone and no enemy in this Void-Jammer's control range.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.29"
+  },
+  {
+    "id": "nb.a.void-armour",
+    "kind": "factionRule",
+    "name": "Void Armour: re-roll",
+    "team": "imperial-navy-breachers",
+    "scope": {
+      "side": "friendly",
+      "keyword": "IMPERIAL NAVY BREACHER"
+    },
+    "effect": {
+      "code": "nbVoidArmour",
+      "params": {
+        "dice": 1,
+        "grenadierDice": 2
+      }
+    },
+    "text": "When a friendly Imperial Navy Breacher is shot with a Blast or Torrent weapon, you may re-roll one of its defence dice (a Grenadier up to two). Weapons that have a sweeping profile do not trigger this.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.30"
+  },
+  {
+    "id": "nb.a.void-armour-shrapnel",
+    "kind": "factionRule",
+    "name": "Void Armour: blast shrapnel",
+    "team": "imperial-navy-breachers",
+    "scope": {
+      "side": "friendly",
+      "keyword": "IMPERIAL NAVY BREACHER"
+    },
+    "effect": {
+      "code": "nbVoidShrapnel"
+    },
+    "text": "Devastating with a distance (x\" Devastating x) cannot harm a friendly Imperial Navy Breacher unless that Breacher is the target of the attack.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.31"
+  },
+  {
+    "id": "nb.a.breach-and-clear",
+    "kind": "factionRule",
+    "name": "Breach and Clear",
+    "team": "imperial-navy-breachers",
+    "scope": {
+      "side": "friendly",
+      "keyword": "IMPERIAL NAVY BREACHER"
+    },
+    "effect": {
+      "code": "nbBreachAndClear",
+      "params": {
+        "inches": 3
+      }
+    },
+    "text": "Once each turning point, as you activate a ready friendly Breacher, you may name a second ready friendly Breacher it can see within 3\". Once the first is expended, the named one may activate straight away, before your opponent's next activation; after it, play passes as normal.",
+    "source": "team-imperial-navy-breachers.pdf (Aug '26); docs/spec/13-teams.md T-NB.32"
+  }
+]

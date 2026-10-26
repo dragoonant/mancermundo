@@ -328,6 +328,17 @@ const scenarios: Record<string, () => void> = {
   },
 }
 
+// Each team owns its firing scenarios in tests/engine/teams/<team>.hooks.ts (export `scenarios`), so adding a
+// team's hooks never edits this shared file. A name defined twice is a mistake and fails the coverage check.
+const TEAM_SCENARIOS = import.meta.glob<{ scenarios: Record<string, () => void> }>('./teams/*.hooks.ts', { eager: true })
+const duplicateScenarios: string[] = []
+for (const [file, mod] of Object.entries(TEAM_SCENARIOS)) {
+  for (const [name, run] of Object.entries(mod.scenarios)) {
+    if (name in scenarios) duplicateScenarios.push(`${file}: ${name}`)
+    scenarios[name] = run
+  }
+}
+
 /** A lone operative on an objective in turning point 2 performs the mission action. */
 function missionAction(missionId: string, abilityId: string): void {
   let s = edit(openReal({ missionId }), (st) => {
@@ -365,11 +376,13 @@ describe('code hooks', () => {
         }
       }
       expect(failures).toEqual([])
-    })
+      // every team's scenarios run here: give a loaded machine (full suite in parallel) room
+    }, 120_000)
     it.each(names)('%s', (name) => {
       expect(hookFireCount(name), `${name} never fired`).toBeGreaterThan(0)
     })
     it('the scenarios cover every hook', () => {
+      expect(duplicateScenarios).toEqual([])
       expect(Object.keys(scenarios).sort()).toEqual([...names].sort())
       void hasOption
       void passIt

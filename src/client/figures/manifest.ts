@@ -24,6 +24,10 @@ export interface BodyEntry {
   facing?: '+Z' | '-Z'
   sockets?: Partial<Record<SocketName, V3>>
   poses?: Partial<Record<'long' | 'heavy' | 'melee2h' | 'shield', string>>
+  /** v2 bodies (docs/spec/30-figures.md section 7): the default weapons are part of the mesh, so no weapon attachment is mounted */
+  weaponsBaked?: boolean
+  /** alternate bodies for the same archetype (other poses); an operative picks one by its id so a squad does not repeat */
+  variants?: string[]
 }
 /** A point in the attachment's own frame: [x, y, z] or {x, y, z}. */
 export type PointLike = V3 | { x: number; y: number; z: number }

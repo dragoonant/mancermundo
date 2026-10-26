@@ -1,4 +1,6 @@
-// npm run sim -- --games 20 --seed 1 [--teams real] [--replay tools/out/sim-report.json [index]]
+// npm run sim -- --games 20 --seed 1 [--teams real] [--decider easy|normal] [--replay tools/out/sim-report.json [index]]
+// --teams real rotates every playable team (each appears in at least 4 of any 40 games); --decider makes both seats
+// play the AI tier instead of the random bot (read by sim-core playGame).
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { replay, type Action, type EngineBundle } from '@/engine'

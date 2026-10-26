@@ -1,18 +1,20 @@
 // The decision prompt: names what is being decided and shows the engine's numbers. One body per decision
 // kind (deploy, move path, activate, order, action bar); everything else (setup rolls, drop zones, gambits,
 // shoot/fight/ploy kinds the engine adds later) renders through the generic option list, never a crash.
-import { useEffect, useMemo, type ReactNode } from 'react'
-import { suggestPlacement, type DecisionOption, type GameState, type PendingDecision } from '@/engine'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { act, suggestPlacement, type DecisionOption, type GameState, type PendingDecision } from '@/engine'
 import * as firefight from '@/engine/firefight'
 import { effectiveApl } from '@/engine/state'
 import { ACTION_HELP, ACTION_LABEL, ACTION_ORDER_FALLBACK, contextFacts, decisionInfo, humanize, opName, optionDetail, optionLabel, ORDER_HELP, SEAT_NAME } from '../game/labels'
 import { abilityActions, markerActionLabel } from '../game/promptLabels'
+import { setAsideWording } from '../teams'
 import { AbilityChoiceBody, EquipBody, GuardBody, MarkerPlaceBody, ObjectiveBody, PloyBody } from './GamePrompts'
 import { BlockBody, CoverSaveBody, FightResolveBody, FightTargetBody, FightWeaponBody, RerollBody, ShootTargetBody, ShootWeaponBody } from './AttackPrompts'
-import { cancelPath, confirmPath, deployAction, deployChoice, optionOperative, previewMove } from '../interaction/controller'
+import { activateOption, bearingTo, canFlyNow, cancelActivate, cancelPath, confirmActivate, confirmPath, deployAction, deployChoice, facingTowardEnemy, optionOperative, pendingPick, previewMove, turnedBy } from '../interaction/controller'
 import { useSettled } from '../presentation/presentedStore'
 import { useGame } from '../store/game'
 import { BottomSheet } from './BottomSheet'
+import { CollapseButton, CollapsedTab, useCollapse, useCollapsed } from './collapse'
 import { Keyword, KeywordText } from './Keyword'
 import { Why } from './promptParts'
 import { useFormFactor } from './formFactor'
@@ -47,8 +49,29 @@ function Shell({ pending, children, title, footer }: { pending: PendingDecision;
       </BottomSheet>
     )
   }
+  return <DesktopShell pending={pending} title={title} footer={footer}>{children}</DesktopShell>
+}
+
+/** The floating desktop prompt: a drawer button folds it down to a title pill (a new decision always opens it again). */
+function DesktopShell({ pending, children, title, footer }: { pending: PendingDecision; children: ReactNode; title: string; footer?: ReactNode }) {
+  const [collapsed] = useCollapsed('prompt')
+  // a tapped operative waiting for its confirm must be seen
+  const picked = useUi((s) => s.pendingActivate)
+  useEffect(() => {
+    if (picked) useCollapse.getState().setCollapsed('prompt', false)
+  }, [picked])
+  if (collapsed) {
+    return (
+      <div style={{ position: 'absolute', left: '50%', bottom: 10, transform: 'translateX(-50%)', zIndex: 25, pointerEvents: 'none' }}>
+        <CollapsedTab id="prompt" title={title} testId="collapsed-prompt" />
+      </div>
+    )
+  }
   return (
     <div data-testid="decision-prompt" data-kind={pending.kind} data-decision={pending.id} style={containerStyle}>
+      <div style={{ position: 'absolute', top: 6, right: 6 }}>
+        <CollapseButton id="prompt" title={title} />
+      </div>
       {children}
       {footer && <div style={{ marginTop: 8 }}>{footer}</div>}
     </div>
@@ -166,10 +189,12 @@ function DeployBody({ pending, state }: { pending: PendingDecision; state: GameS
   const ids = pending.constraints?.operativeIds ?? []
   const current = deployChoice(pending, picked)
   const left = Number(pending.context.left ?? 0)
+  const facing = useUi((s) => s.facing)
+  const currentOp = current ? state.operatives[current] : undefined
   const auto = () => {
     if (!current) return
     const spot = suggestPlacement(state, pending, current)
-    if (spot) dispatch(deployAction(pending, current, { x: spot.x, z: spot.z, y: spot.y }))
+    if (spot) dispatch(deployAction(pending, current, { x: spot.x, z: spot.z, y: spot.y }, currentOp?.ovalHalfAxis ? facing : null))
   }
   return (
     <>
@@ -179,11 +204,23 @@ function DeployBody({ pending, state }: { pending: PendingDecision; state: GameS
       </Muted>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }} data-testid="deploy-tray">
         {ids.map((id) => (
-          <Btn key={id} data-testid={`deploy-op-${id}`} variant={id === current ? 'active' : 'base'} onClick={() => useUi.setState({ deployOp: id })}>
+          <Btn key={id} data-testid={`deploy-op-${id}`} variant={id === current ? 'active' : 'base'} onClick={() => useUi.setState({ deployOp: id, facing: null })}>
             {opName(state, id)}
           </Btn>
         ))}
       </div>
+      <HidingControl pending={pending} state={state} />
+      {currentOp?.ovalHalfAxis ? (
+        <TurnControl
+          current={facing ?? 0}
+          chosen={facing !== null}
+          label="Base facing"
+          help="This operative stands on an oval base. It is set up with its long side along the facing you pick (default: towards the centre of the killzone)."
+          onSet={(f) => useUi.setState({ facing: f })}
+          onEnemy={null}
+          onReset={() => useUi.setState({ facing: null })}
+        />
+      ) : null}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <Btn data-testid="deploy-auto" onClick={auto}>
           Auto-place {current ?? ''}
@@ -196,14 +233,103 @@ function DeployBody({ pending, state }: { pending: PendingDecision; state: GameS
   )
 }
 
+/** Set-up option for teams that may start operatives out of the killzone (Wyrmblade HIDING): one button per operative the engine allows. */
+function HidingControl({ pending, state }: { pending: PendingDecision; state: GameState }) {
+  const dispatch = useGame((g) => g.dispatch)
+  const allowed = Array.isArray(pending.context.setAsideIds) ? (pending.context.setAsideIds as string[]) : []
+  const hidden = Object.values(state.operatives).filter((o) => o.seat === pending.seat && o.offboard !== undefined)
+  if (allowed.length === 0 && hidden.length === 0) return null
+  const wording = setAsideWording(state.players[pending.seat]?.teamId)
+  return (
+    <div data-testid="hiding-control" style={{ marginBottom: 8 }}>
+      <Muted style={{ marginBottom: 4 }}>
+        <KeywordText text={wording.intro} />
+      </Muted>
+      {hidden.length > 0 && (
+        <div data-testid="hiding-list" style={{ fontSize: 12, marginBottom: 4 }}>
+          <Keyword term={wording.term} />: {hidden.map((o) => o.name).join(', ')}
+        </div>
+      )}
+      {allowed.length > 0 ? (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+          {allowed.map((id) => (
+            <Btn key={id} data-testid={`hide-op-${id}`} onClick={() => dispatch(act.setAside(pending, id))}>
+              {wording.verb} {opName(state, id)}
+            </Btn>
+          ))}
+        </div>
+      ) : (
+        <Muted>{wording.none}</Muted>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------- oval base turn
+
+/** Turn buttons for an oval base: 30 degree steps, face the nearest enemy, along the last step, and back to the default. */
+function TurnControl({
+  current,
+  chosen,
+  label,
+  help,
+  onSet,
+  onEnemy,
+  onAlong,
+  onReset,
+}: {
+  current: number
+  chosen: boolean
+  label: string
+  help: string
+  onSet(f: number): void
+  onEnemy: (() => void) | null
+  onAlong?: () => void
+  onReset(): void
+}) {
+  const step = Math.PI / 6
+  const degrees = Math.round(((current * 180) / Math.PI + 360) % 360)
+  return (
+    <div data-testid="turn-control" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, margin: '4px 0 8px' }}>
+      <Tooltip title={label} body={help}>
+        <span style={{ fontSize: 12, fontWeight: 700 }}>
+          {label}: <span data-testid="turn-facing">{chosen ? `${degrees}°` : 'as is'}</span>
+        </span>
+      </Tooltip>
+      <Btn data-testid="turn-left" onClick={() => onSet(turnedBy(current, -step))}>
+        ↶ 30°
+      </Btn>
+      <Btn data-testid="turn-right" onClick={() => onSet(turnedBy(current, step))}>
+        30° ↷
+      </Btn>
+      {onEnemy && (
+        <Btn data-testid="turn-enemy" onClick={onEnemy}>
+          Face enemy
+        </Btn>
+      )}
+      {onAlong && (
+        <Btn data-testid="turn-along" onClick={onAlong}>
+          Along move
+        </Btn>
+      )}
+      <Btn data-testid="turn-reset" disabled={!chosen} onClick={onReset}>
+        Default
+      </Btn>
+    </div>
+  )
+}
+
 // ---------------------------------------------------------------- move path
 
 function MoveBody({ pending, state }: { pending: PendingDecision; state: GameState }) {
   const waypoints = useUi((s) => s.waypoints)
   const jumpNext = useUi((s) => s.jumpNext)
+  const facing = useUi((s) => s.facing)
+  const fly = useUi((s) => s.fly)
+  const canFly = canFlyNow(state, pending)
   const c = pending.constraints
   const op = c?.operativeId ? state.operatives[c.operativeId] : null
-  const preview = useMemo(() => previewMove(state, pending, waypoints), [state, pending, waypoints])
+  const preview = useMemo(() => previewMove(state, pending, waypoints, facing, fly), [state, pending, waypoints, facing, fly])
   const max = c?.maxInches ?? Number(pending.context.maxInches ?? 0)
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -226,7 +352,7 @@ function MoveBody({ pending, state }: { pending: PendingDecision; state: GameSta
         {c?.mustEndOutsideControlRange && c.kind !== 'charge' && <>, finishing outside every enemy <Keyword term="Control range">control range</Keyword></>}.
       </div>
       <div data-testid="move-total" style={{ fontSize: 15, fontWeight: 800, color: plan ? colors.text : colors.muted }}>
-        {plan ? `Path cost ${plan.cost}/${plan.maxInches}″` : waypoints.length ? 'Path not allowed' : 'Click the board to lay the first step'}
+        {plan ? `Path cost ${plan.cost}/${plan.maxInches}″ · ${plan.maxInches - plan.cost}″ left` : waypoints.length || facing !== null ? 'Path not allowed' : `Click the board to lay the first step (${max}″ available)`}
       </div>
       {plan && (
         <div style={{ fontSize: 12, color: colors.muted, margin: '2px 0 4px' }} data-testid="move-segments">
@@ -243,6 +369,30 @@ function MoveBody({ pending, state }: { pending: PendingDecision; state: GameSta
           {preview.rejection.reason}
         </div>
       )}
+      {op?.ovalHalfAxis ? (
+        <TurnControl
+          current={facing ?? plan?.facing ?? op.facing}
+          chosen={facing !== null}
+          label="Turn base"
+          help="An oval base may turn on the spot at the end of a move. The end of its long side sweeps an arc, and that arc counts as one more step (rounded up to a whole inch) against the move."
+          onSet={(f) => useUi.setState({ facing: f })}
+          onEnemy={() => {
+            const end = plan?.end ?? waypoints[waypoints.length - 1] ?? op.pos
+            const f = facingTowardEnemy(state, op, end)
+            if (f !== null) useUi.setState({ facing: f })
+          }}
+          onAlong={
+            waypoints.length > 0
+              ? () => {
+                  const last = waypoints[waypoints.length - 1]!
+                  const from = waypoints.length > 1 ? waypoints[waypoints.length - 2]! : op.pos
+                  useUi.setState({ facing: bearingTo(from, last) })
+                }
+              : undefined
+          }
+          onReset={() => useUi.setState({ facing: null })}
+        />
+      ) : null}
       <Muted style={{ marginBottom: 8 }}>
         <KeywordText text="Each straight step is rounded up to a whole inch. Click ground for flat steps, click a Vantage platform to climb, click ground beside a tower to drop. Use Jump for a leap across a gap." />
       </Muted>
@@ -256,6 +406,13 @@ function MoveBody({ pending, state }: { pending: PendingDecision; state: GameSta
         <Btn data-testid="move-clear" disabled={waypoints.length === 0} onClick={() => useUi.getState().resetPath()}>
           Clear
         </Btn>
+        {canFly && (
+          <Tooltip title="Fly" body="Jump pack: instead of walking, set the operative up again anywhere within its move, measured in a straight line. Terrain in between, climbs and drops cost nothing. Click the board to choose the spot.">
+            <Btn data-testid="move-fly" variant={fly ? 'active' : 'base'} onClick={() => useUi.setState({ fly: !fly, waypoints: [] })}>
+              Fly
+            </Btn>
+          </Tooltip>
+        )}
         <Tooltip title="Jump" body="Mark the next step as a leap across a gap or down from a platform (up to 4 inches).">
           <Btn data-testid="move-jump" variant={jumpNext ? 'active' : 'base'} onClick={() => useUi.setState({ jumpNext: !jumpNext })}>
             Jump next
@@ -271,40 +428,119 @@ function MoveBody({ pending, state }: { pending: PendingDecision; state: GameSta
 
 // ---------------------------------------------------------------- activate / order / action
 
-function ActivateBody({ pending, state }: { pending: PendingDecision; state: GameState }) {
+/** One button per activation option: operatives (activate / counteract) or a team's alternative to counteracting. */
+function ActivateButtons({ pending, state, alternatives }: { pending: PendingDecision; state: GameState; alternatives: boolean }) {
   const choose = useGame((g) => g.choose)
-  const opts = pending.options ?? []
   return (
     <>
-      <Header pending={pending} seat />
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-        {opts.map((o) => {
-          const p = o.action.payload as { operativeId: string; counteract?: boolean }
-          const op = state.operatives[p.operativeId]
+      {(pending.options ?? []).map((o) => {
+        const p = o.action.payload as { operativeId: string; counteract?: boolean; alternative?: number }
+        const op = state.operatives[p.operativeId]
+        // M9 batch C: a team's alternative to counteracting
+        if (p.alternative !== undefined) {
+          if (!alternatives) return null
           return (
-            <Btn
-              key={o.id}
-              data-testid={p.counteract ? `counteract-${p.operativeId}` : `activate-${p.operativeId}`}
-              variant="primary"
-              onClick={() => choose(o.id)}
-              onMouseEnter={() => useUi.setState({ hoverOp: p.operativeId })}
-              onMouseLeave={() => useUi.setState({ hoverOp: null })}
-            >
-              {p.counteract ? 'Counteract: ' : ''}
-              {op ? `${op.name} (${op.id})` : p.operativeId}
+            <Btn key={o.id} data-testid={`alt-${p.alternative}`} onClick={() => choose(o.id)}>
+              {optionLabel(o, state, pending)}
             </Btn>
           )
-        })}
-        {pending.canPass && (
-          <Tooltip title="Skip" body="No counteraction: the other side keeps going.">
-            <Btn data-testid="opt-pass" onClick={() => choose('pass')}>
-              Skip
-            </Btn>
-          </Tooltip>
-        )}
-      </div>
-      <Muted style={{ marginTop: 6 }}>You can also click an operative on the board. Ready operatives are ringed in yellow.</Muted>
+        }
+        if (alternatives) return null
+        return (
+          <Btn
+            key={o.id}
+            data-testid={p.counteract ? `counteract-${p.operativeId}` : `activate-${p.operativeId}`}
+            variant="primary"
+            onClick={() => choose(o.id)}
+            onMouseEnter={() => useUi.setState({ hoverOp: p.operativeId })}
+            onMouseLeave={() => useUi.setState({ hoverOp: null })}
+          >
+            {p.counteract ? 'Counteract: ' : ''}
+            {op ? `${op.name} (${op.id})` : p.operativeId}
+          </Btn>
+        )
+      })}
     </>
+  )
+}
+
+function SkipButton({ pending }: { pending: PendingDecision }) {
+  const choose = useGame((g) => g.choose)
+  if (!pending.canPass) return null
+  return (
+    <Tooltip title="Skip" body="No counteraction: the other side keeps going.">
+      <Btn data-testid="opt-pass" onClick={() => choose('pass')}>
+        Skip
+      </Btn>
+    </Tooltip>
+  )
+}
+
+function ActivateBody({ pending, state }: { pending: PendingDecision; state: GameState }) {
+  const touch = useFormFactor().touch
+  const compact = useFormFactor().compact
+  const picked = useUi((s) => s.pendingActivate)
+  const [listOpen, setListOpen] = useState(false)
+  if (!touch) {
+    return (
+      <>
+        <Header pending={pending} seat />
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+          <ActivateButtons pending={pending} state={state} alternatives={false} />
+          <ActivateButtons pending={pending} state={state} alternatives />
+          <SkipButton pending={pending} />
+        </div>
+        <Muted style={{ marginTop: 6 }}>You can also click an operative on the board. Operatives you can pick pulse in yellow.</Muted>
+      </>
+    )
+  }
+  // touch: the board is the picker. A tap only marks an operative; the player confirms it here.
+  const pick = pendingPick(pending, picked)
+  const opt = pick ? activateOption(pending, pick) : null
+  const op = pick ? state.operatives[pick] : undefined
+  const counteract = !!(opt?.action.payload as { counteract?: boolean } | undefined)?.counteract
+  return (
+    <div data-testid="activate-bar">
+      {!compact && (
+        <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }} data-testid="prompt-title">
+          <Dot seat={pending.seat} />
+          {decisionInfo(pending.kind).title}
+        </div>
+      )}
+      {pick ? (
+        <>
+          <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }} data-testid="activate-confirm-text">
+            {counteract ? 'Counteract with' : 'Activate'} {op ? `${op.name} (${op.id})` : pick}?
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            <Btn data-testid="confirm-activate" variant="primary" onClick={() => confirmActivate()}>
+              {counteract ? 'Counteract' : 'Activate'}
+            </Btn>
+            <Btn data-testid="cancel-activate" onClick={() => cancelActivate()}>
+              Cancel
+            </Btn>
+          </div>
+        </>
+      ) : (
+        <>
+          <div style={{ fontSize: 13, marginBottom: 6 }} data-testid="activate-hint">
+            Tap a glowing operative on the board to activate it.
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            <Btn data-testid="activate-list-toggle" variant={listOpen ? 'active' : 'base'} aria-expanded={listOpen} onClick={() => setListOpen(!listOpen)}>
+              {listOpen ? 'Hide list' : 'List'}
+            </Btn>
+            <ActivateButtons pending={pending} state={state} alternatives />
+            <SkipButton pending={pending} />
+          </div>
+          {listOpen && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 6 }} data-testid="activate-list">
+              <ActivateButtons pending={pending} state={state} alternatives={false} />
+            </div>
+          )}
+        </>
+      )}
+    </div>
   )
 }
 
@@ -516,7 +752,9 @@ export function DecisionPrompt() {
   // Reset path / pick when the decision changes.
   const id = pending?.id
   useEffect(() => {
-    useUi.setState({ waypoints: [], jumpNext: false, deployOp: null, hoverNote: null, hoverZone: null, hoverOp: null, hoverOption: null, hoverSpot: null })
+    // a new decision always opens the prompt again, so a required choice is never hidden
+    if (id !== undefined && useCollapse.getState().collapsed.prompt) useCollapse.getState().setCollapsed('prompt', false)
+    useUi.setState({ waypoints: [], jumpNext: false, facing: null, fly: false, deployOp: null, pendingActivate: null, hoverNote: null, hoverZone: null, hoverOp: null, hoverOption: null, hoverSpot: null })
   }, [id])
   if (!pending || !state || state.phase === 'ended') return null
   if (!settled) return <Waiting text="..." />
@@ -531,7 +769,7 @@ export function DecisionPrompt() {
       body = <MoveBody pending={pending} state={state} />
       break
     case 'firefight.activate':
-      body = <ActivateBody pending={pending} state={state} />
+      body = <ActivateBody key={pending.id} pending={pending} state={state} />
       break
     case 'firefight.order':
       body = <OrderBody pending={pending} state={state} />

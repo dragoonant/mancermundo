@@ -1,0 +1,253 @@
+[
+  {
+    "id": "wyr.a.familiar-territory",
+    "kind": "factionRule",
+    "name": "Familiar Territory",
+    "team": "wyrmblade",
+    "scope": {
+      "side": "friendly",
+      "keyword": "WYRMBLADE"
+    },
+    "text": "Up to a third of the kill team (Neophytes only) can start in HIDING, out of the killzone. A hiding operative activates as normal and either stays hidden (expended) or emerges as a Reposition in a placeable spot wholly within 6 inches of your drop zone and more than 6 inches from every enemy, with the order of your choice. Operatives still hiding when the second turning point ends are incapacitated.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.cult-agent",
+    "kind": "factionRule",
+    "name": "Cult Agent",
+    "team": "wyrmblade",
+    "scope": {
+      "side": "friendly",
+      "keyword": "WYRMBLADE"
+    },
+    "text": "Shots at a Cult Agent lose Piercing and Saturate. If it may keep cover saves it keeps one extra, or keeps one as a critical save instead; this does not add to the improved cover of Vantage terrain.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.cult-ambush",
+    "kind": "factionRule",
+    "name": "Cult Ambush",
+    "team": "wyrmblade",
+    "scope": {
+      "side": "friendly",
+      "keyword": "WYRMBLADE"
+    },
+    "text": "Ambush bonus: during its own activation, a Wyrmblade operative has Ceaseless on its weapons if that activation began with a Conceal-to-Engage switch, or with no enemy able to see it.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.shadow-vector",
+    "kind": "ability",
+    "name": "Shadow Vector",
+    "team": "wyrmblade",
+    "limit": "oncePerTurningPoint",
+    "effect": {
+      "code": "shadowVector",
+      "params": {
+        "oncePerTurningPoint": true
+      }
+    },
+    "text": "One free ploy a turning point: Slink Into Darkness or Coiled Serpent costs nothing when it is played on a different Neophyte within the Leader's sight.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.expert-gunslinger",
+    "kind": "ability",
+    "name": "Expert Gunslinger",
+    "team": "wyrmblade",
+    "text": "The Kelermorph may take two Shoot actions in the same activation.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.heroic-inspiration",
+    "kind": "ability",
+    "name": "Heroic Inspiration",
+    "team": "wyrmblade",
+    "text": "Once the Kelermorph has taken down an enemy this turning point, Neophytes it can see within 3 inches have Severe on their weapons while shooting, fighting or retaliating.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.wr-hypersense",
+    "kind": "weaponRule",
+    "name": "Hypersense",
+    "team": "wyrmblade",
+    "weaponRule": {
+      "param": "none"
+    },
+    "text": "Firing this profile, the Kelermorph's enemy targets are never obscured.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.expert-swordsman",
+    "kind": "ability",
+    "name": "Expert Swordsman",
+    "team": "wyrmblade",
+    "text": "Two Fight actions per activation. After any Fight that leaves no enemy in its control range it may lunge with a free Charge of at most 3 inches, even having charged already; that lunge does not stop a later Dash.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.bladed-stance",
+    "kind": "ability",
+    "name": "Bladed Stance",
+    "team": "wyrmblade",
+    "text": "Fighting or retaliating, the Locus may spend one success as a block straight away, ahead of the usual turn order.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.quicksilver-strike",
+    "kind": "ability",
+    "name": "Quicksilver Strike",
+    "team": "wyrmblade",
+    "limit": "oncePerTurningPoint",
+    "effect": {
+      "code": "quicksilverStrike",
+      "params": {
+        "maxMove": 3,
+        "perTurningPoint": 1
+      }
+    },
+    "text": "Once per turning point, right after an enemy finishes an action that moved it or set it up, the Locus may cut in with a free Charge of at most 3 inches that ends in that enemy's control range (it may switch to Engage for this). If no such Charge exists nothing happens and the use is kept.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.heavy-weapon-bipod",
+    "kind": "ability",
+    "name": "Heavy Weapon Bipod",
+    "team": "wyrmblade",
+    "text": "Datacard weapons gain Ceaseless if the Heavy Gunner has not moved this activation or is counteracting; one that already has Ceaseless gets Relentless instead. Shooting does not pin it in place afterwards.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.icon-bearer",
+    "kind": "ability",
+    "name": "Icon Bearer",
+    "team": "wyrmblade",
+    "text": "Adds 1 to its APL in the marker-control count only. Its real APL is unchanged, so APL changes still apply on top.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.overthrow-the-oppressors",
+    "kind": "ability",
+    "name": "Overthrow the Oppressors",
+    "team": "wyrmblade",
+    "limit": "oncePerTurningPoint",
+    "effect": {
+      "code": "overthrowOppressors",
+      "params": {
+        "range": 6
+      }
+    },
+    "text": "Once per turning point, if a ready Neophyte this operative can see within 6 inches is incapacitated, it gets a last act before removal: one free Shoot (it may switch to Engage), or A Plan Generations in the Making at no cost.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.target-vulnerability",
+    "kind": "uniqueAction",
+    "name": "TARGET VULNERABILITY",
+    "team": "wyrmblade",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "targetVulnerability",
+      "params": {
+        "lethal": 5
+      }
+    },
+    "text": "For the rest of this activation the rifle's stationary profile scores criticals on 5s as well as 6s (Lethal 5+). Not usable with an enemy in control range.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.familiars-soulsight-sniper",
+    "kind": "uniqueAction",
+    "name": "FAMILIAR'S SOULSIGHT",
+    "team": "wyrmblade",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "soulsight",
+      "params": {
+        "role": "sniper"
+      }
+    },
+    "text": "Mark an enemy the Sniper can see with your Soulsight token; the mark lasts the battle, or until either familiar marks someone else. Against the marked enemy every sniper rifle profile has Saturate and the target cannot be obscured. Not with an enemy in control range.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.familiars-soulsight-talon",
+    "kind": "uniqueAction",
+    "name": "FAMILIAR'S SOULSIGHT",
+    "team": "wyrmblade",
+    "ap": 1,
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "soulsight",
+      "params": {
+        "role": "talon"
+      }
+    },
+    "text": "Mark an enemy the Talon can see with your Soulsight token; the mark lasts the battle, or until either familiar marks someone else. Fighting or retaliating against the marked enemy, the bio-dagger has Brutal and Balanced. Not with an enemy in control range.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.creeping-shadow",
+    "kind": "ability",
+    "name": "Creeping Shadow",
+    "team": "wyrmblade",
+    "text": "The Talon may Charge on a Conceal order (it stays Conceal). After every Fight action it may slip away with a free Dash, or a free Fall Back of at most 3 inches, whatever it did earlier in the activation.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.assassinate",
+    "kind": "uniqueAction",
+    "name": "ASSASSINATE",
+    "team": "wyrmblade",
+    "ap": 2,
+    "conditions": {
+      "notInEnemyControlRange": true,
+      "order": "conceal"
+    },
+    "effect": {
+      "code": "assassinate",
+      "params": {
+        "maxMove": "move",
+        "secondStrike": true
+      }
+    },
+    "text": "Choose an enemy that cannot see the Talon. The Talon closes in with a free Charge no longer than its Move (no extra 2 inches) that must end in that enemy's control range, then fights it at once; at its first strike it may strike again with a second success before the defender acts. Needs a Conceal order and no enemy in control range.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.group-activation",
+    "kind": "ability",
+    "name": "Group Activation",
+    "team": "wyrmblade",
+    "text": "After a Warrior is expended, if another friendly Warrior is ready you must activate it next, before the opponent goes. The chain stops there: two Warriors in a row at most.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  },
+  {
+    "id": "wyr.a.emerge",
+    "kind": "uniqueAction",
+    "name": "EMERGE",
+    "team": "wyrmblade",
+    "ap": 1,
+    "keywords": [
+      "REPOSITION"
+    ],
+    "effect": {
+      "code": "emerge",
+      "params": {
+        "withinDropZone": 6,
+        "minFromEnemies": 6,
+        "treatedAs": "reposition"
+      }
+    },
+    "text": "A hiding operative leaves HIDING: set it up in a placeable spot wholly within 6 inches of your drop zone and more than 6 inches from every enemy, with the order of your choice. This counts as a Reposition action.",
+    "source": "wahapedia kill-teams wyrmblade; docs/spec/13-teams.md 6"
+  }
+]

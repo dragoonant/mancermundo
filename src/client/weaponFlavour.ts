@@ -2,6 +2,7 @@
 // stand-ins (hold class). Explicit per weapon id for both teams and the core grenades; a test fails on any
 // weapon in the data that has no entry, so a new weapon cannot ship unclassified. `flavourOf` also
 // classifies an unknown id by name as a safety net for stale replays.
+import { teamTable } from './teams'
 export type WeaponFlavour = 'bolter' | 'slugga' | 'flamer' | 'plasma' | 'rokkit' | 'chain' | 'crush' | 'blade' | 'bite'
 
 export const FLAVOURS: readonly WeaponFlavour[] = ['bolter', 'slugga', 'flamer', 'plasma', 'rokkit', 'chain', 'crush', 'blade', 'bite']
@@ -63,6 +64,8 @@ export const WEAPON_FLAVOUR: Record<string, WeaponFlavour> = {
   'core.w.frag-grenade': 'rokkit',
   'core.w.krak-grenade': 'rokkit',
 }
+// M9 prep: teams added later bring their own entries (src/client/teams)
+Object.assign(WEAPON_FLAVOUR, teamTable('flavour'))
 
 /** The flavour of a weapon: the explicit entry, else a best guess from the id. Never throws. */
 export function flavourOf(weaponId: string): WeaponFlavour {

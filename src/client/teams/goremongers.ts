@@ -1,0 +1,103 @@
+// Goremongers client presentation: weapon flavours, VFX families, sounds, attachments, glossary and figure stand-ins for
+// this team's weapons and datacards (teams/types.ts). Owned by the team implementer. Figure archetypes use the concept
+// slugs `gm-<operative>[-<variant>]` so the v2 body GLBs drop in by name; until they exist every archetype is a
+// stand-in. Every Goremonger datacard has one fixed loadout, so no datacard needs a body per loadout. The team weapons
+// use team slugs that draw the hold-class placeholder until their meshes are built (the chainblade shares the standard
+// chainsword mesh); the four Wrist Chains twins draw the same mesh as the melee weapon they copy. Sounds reuse existing
+// audio ids.
+import type { TeamPresentation } from './types'
+
+export const PRESENTATION: TeamPresentation = {
+  flavour: {
+    'gm.w.icon-of-khorne': 'plasma',
+    'gm.w.autopistol': 'bolter',
+    'gm.w.fleshskewer-ranged': 'blade',
+    'gm.w.dual-autopistols-focused': 'bolter',
+    'gm.w.dual-autopistols-point-blank': 'bolter',
+    'gm.w.chainblade': 'chain',
+    'gm.w.chainglaive': 'chain',
+    'gm.w.ritual-blade': 'blade',
+    'gm.w.fleshskewer-stab': 'blade',
+    'gm.w.great-chainaxe': 'chain',
+    'gm.w.pickrippers': 'chain',
+    'gm.w.chainblade-thrown': 'blade',
+    'gm.w.chainglaive-thrown': 'blade',
+    'gm.w.great-chainaxe-thrown': 'blade',
+    'gm.w.pickrippers-thrown': 'blade',
+  },
+  vfx: {
+    'gm.w.icon-of-khorne': { family: 'plasma', variant: 'standard' },
+    'gm.w.autopistol': { family: 'bolt', variant: 'pistol' },
+    'gm.w.fleshskewer-ranged': { family: 'harpoon', variant: 'harpoon' },
+    'gm.w.dual-autopistols-focused': { family: 'bolt', variant: 'auto' },
+    'gm.w.dual-autopistols-point-blank': { family: 'bolt', variant: 'auto' },
+    'gm.w.chainblade': { family: 'blade', variant: 'chain' },
+    'gm.w.chainglaive': { family: 'blade', variant: 'chain' },
+    'gm.w.ritual-blade': { family: 'blade', variant: 'power' },
+    'gm.w.fleshskewer-stab': { family: 'blade', variant: 'choppa' },
+    'gm.w.great-chainaxe': { family: 'blade', variant: 'big' },
+    'gm.w.pickrippers': { family: 'blade', variant: 'chain' },
+    'gm.w.chainblade-thrown': { family: 'knives', variant: 'knives' },
+    'gm.w.chainglaive-thrown': { family: 'knives', variant: 'knives' },
+    'gm.w.great-chainaxe-thrown': { family: 'knives', variant: 'knives' },
+    'gm.w.pickrippers-thrown': { family: 'knives', variant: 'knives' },
+  },
+  sound: {
+    'gm.w.icon-of-khorne': { id: 'wpn-staff-beam' },
+    'gm.w.autopistol': { id: 'wpn-autogun' },
+    'gm.w.fleshskewer-ranged': { id: 'wpn-harpoon' },
+    'gm.w.dual-autopistols-focused': { id: 'wpn-autogun' },
+    'gm.w.dual-autopistols-point-blank': { id: 'wpn-autogun' },
+    'gm.w.chainblade': { id: 'wpn-chainsword-hit' },
+    'gm.w.chainglaive': { id: 'wpn-chainsword-hit' },
+    'gm.w.ritual-blade': { id: 'wpn-plague-blade' },
+    'gm.w.fleshskewer-stab': { id: 'wpn-power-weapon' },
+    'gm.w.great-chainaxe': { id: 'wpn-chainsword-hit' },
+    'gm.w.pickrippers': { id: 'wpn-claws-rend' },
+    'gm.w.chainblade-thrown': { id: 'wpn-throwing-knives' },
+    'gm.w.chainglaive-thrown': { id: 'wpn-throwing-knives' },
+    'gm.w.great-chainaxe-thrown': { id: 'wpn-throwing-knives' },
+    'gm.w.pickrippers-thrown': { id: 'wpn-throwing-knives' },
+  },
+  attachments: {
+    'gm.w.icon-of-khorne': ['gm-w-icon-of-khorne'],
+    'gm.w.autopistol': ['gm-w-autopistol'],
+    'gm.w.fleshskewer-ranged': ['gm-w-fleshskewer'],
+    'gm.w.dual-autopistols-focused': ['gm-w-autopistol', 'gm-w-autopistol'],
+    'gm.w.dual-autopistols-point-blank': ['gm-w-autopistol', 'gm-w-autopistol'],
+    'gm.w.chainblade': ['w-chainsword'],
+    'gm.w.chainglaive': ['gm-w-chainglaive'],
+    'gm.w.ritual-blade': ['gm-w-ritual-blade'],
+    'gm.w.fleshskewer-stab': ['gm-w-fleshskewer'],
+    'gm.w.great-chainaxe': ['gm-w-great-chainaxe'],
+    'gm.w.pickrippers': ['gm-w-pickrippers'],
+    'gm.w.chainblade-thrown': ['w-chainsword'],
+    'gm.w.chainglaive-thrown': ['gm-w-chainglaive'],
+    'gm.w.great-chainaxe-thrown': ['gm-w-great-chainaxe'],
+    'gm.w.pickrippers-thrown': ['gm-w-pickrippers'],
+  },
+  // every Goremonger datacard has a single fixed loadout, so no datacard needs a body per loadout
+  loadoutBodies: {},
+  standIns: [
+  ],
+  // Keywords and rule terms in our own wording (game/glossary.ts merges them over the generic fallbacks).
+  glossary: [
+    { term: 'GOREMONGER', kind: 'keyword', body: 'Faction keyword of the Goremongers kill team. Every operative has it, and the gore tank rules, Sanguavitae, Runes of Khorne and most of the team\'s ploys and equipment name Goremonger operatives.' },
+    { term: 'BLOOD HERALD', kind: 'keyword', body: 'Goremonger Leader. Khorne\'s Favour refills its empty gore tank once per activation, and Impending Apotheosis lets it ignore one Normal Dmg die once per battle.' },
+    { term: 'ASPIRANT', kind: 'keyword', body: 'Goremonger fighter and the only operative a team may take several times. Obsessive Bloodlust gives it a free 2 inch Charge after a Fight, once per turning point for the whole team.' },
+    { term: 'BLOODTAKER', kind: 'keyword', body: 'Goremonger blood-gatherer. Its ritual blade can raise its gore tank, and Transfusion Ritual moves a level of gore to a friend.' },
+    { term: 'IMPALER', kind: 'keyword', body: 'Goremonger harpooner. Its ranged fleshskewer drags the target towards it before damage is dealt, and Gore-fuel gives both profiles Severe.' },
+    { term: 'INCITER', kind: 'keyword', body: 'Goremonger skirmisher with no melee weapon. Dash and Spray gives a free Dash and a free focused Shoot, and Incite the Hunt turns its shots into gore for the pack.' },
+    { term: 'SKULLCLAIMER', kind: 'keyword', body: 'Goremonger duellist. Brutish turns its Critical Dmg taken into Normal Dmg, and Claim Skull pays 1 CP for a great chainaxe kill.' },
+    { term: 'STALKER', kind: 'keyword', body: 'Goremonger tracker. Climbing Picks make every climb count as only 2 inches of height, and Rooftop Stalker gives its melee weapons Relentless when it fights after dropping at least 2 inches from Vantage terrain in the same activation, or when it fights an enemy standing on Vantage terrain at least 2 inches up.' },
+    { term: 'Gore tank', kind: 'rule', aliases: ['gore tanks', 'GORE TANK', 'GORE TANKS'], body: 'Each Goremonger has a tank with three levels: empty, half and full. It starts the battle at half. Raising it moves it up one level and lowering it one level down. A Goremonger that takes down an operative in its control range, or visible within 2 inches, raises its tank. Sanguavitae rules spend a level each.' },
+    { term: 'Sanguavitae', kind: 'rule', aliases: ['SANGUAVITAE'], body: 'The gore-fuelled rules a Goremonger can use: Rejuvenate, Mania, Fury, Rake, Surge and Rage. Each costs a gore tank level. An operative uses each at most once, and at most two, per activation or counteraction, and never Mania and Fury together.' },
+    { term: 'Gore token', kind: 'status', aliases: ['Gore tank token', 'Gore tokens'], body: 'Shows a Goremonger\'s gore tank. One token is a half tank and two is a full tank; an empty tank has no token.' },
+    { term: 'Bleeding token', kind: 'status', aliases: ['Bleeding tokens'], body: 'An enemy the Inciter wounded but did not take down with its dual autopistols. A friendly Goremonger within 8 inches of it may remove the token to raise its own gore tank, before or after an action.' },
+    { term: 'Apotheosis token', kind: 'status', body: 'The Blood Herald has used Impending Apotheosis for this battle.' },
+    { term: 'Gore fuel token', kind: 'status', aliases: ['Gore-fuel token'], body: 'The Impaler\'s fleshskewer has Severe on both profiles until it next uses one of them.' },
+    { term: 'Claim skull token', kind: 'status', body: 'The Skullclaimer has claimed its skull for this turning point.' },
+    { term: 'Gory Totem marker', kind: 'status', aliases: ['Gory Totem'], body: 'While an enemy operative within 3 inches of this marker shoots, fights or retaliates, its attack dice cannot be re-rolled.' },
+    { term: 'Bloody Cadaver marker', kind: 'status', aliases: ['Bloody Cadaver'], body: 'Only friendly Goremongers can pick it up. In each Ready step one Goremonger that controls it, and is not in an enemy control range, may raise its gore tank.' },
+  ],
+}

@@ -1,0 +1,234 @@
+[
+  {
+    "team": "chaos-cult",
+    "kind": "weaponRule",
+    "id": "cc.a.wr-psychic",
+    "name": "PSYCHIC",
+    "weaponRule": {
+      "param": "none"
+    },
+    "text": "A tag with no effect of its own. Rules of other teams read it (a Null Rod switches PSYCHIC weapons and actions off nearby).",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.5"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "factionRule",
+    "id": "cc.a.mutation",
+    "name": "MUTATION",
+    "text": "Cult operatives mutate as a free strategic gambit each turning point, and a Devotee may mutate after it incapacitates an enemy within its control range. A mutation turns a Devotee into a Mutant, a Mutant into a Torment (twice per turning point at most), or regains up to D3+1 lost wounds. No more than five Mutants and three Torments at once, and no operative mutates twice in one turning point.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.19 to T-CC.21"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "factionRule",
+    "id": "cc.a.accursed-gifts",
+    "name": "ACCURSED GIFTS",
+    "text": "The first Devotee to become a Mutant earns the team a primary gift that every Mutant has; the first Mutant to become a Torment earns a secondary gift that every Torment has as well. No gift is chosen twice in a battle.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.22"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.gift-deformed-wings",
+    "name": "Deformed Wings",
+    "text": "Any climb costs 2\" of movement whatever its height, and drops cost nothing.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.23"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.gift-fleet",
+    "name": "Fleet",
+    "text": "Add 1\" to its Move.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.24"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.gift-chitinous",
+    "name": "Chitinous",
+    "text": "Improve its Save by 1.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.25"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.gift-horned",
+    "name": "Horned",
+    "text": "When it ends a Charge move, it may inflict 1 damage (D3 for a Torment) on one enemy in its control range.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.26"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.gift-sinewed",
+    "name": "Sinewed",
+    "text": "Its melee weapons ignore the Hit change from being injured and have Brutal.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.27"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.gift-barbed",
+    "name": "Barbed",
+    "text": "While it fights or retaliates, enemies cannot assist; on its first strike of the sequence every other enemy in its control range takes 1 damage (D3 each, rolled separately, for a Torment).",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.28"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.cut-them-down",
+    "name": "Cut Them Down",
+    "text": "An enemy that Falls Back from a Blessed Blade's control range takes D3+1 damage before it moves (2D3+2 once if two Blessed Blades hold it).",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.8"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.attuned-in-purpose",
+    "name": "Attuned In Purpose",
+    "text": "When a Blessed Blade activates, it may activate the other ready Blessed Blade within 6\" with it, and the two act action by action in any order.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.9"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.icon-bearer",
+    "name": "Icon Bearer",
+    "text": "Counts as 1 higher APL when control of a marker is worked out (not a change to its APL).",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.10"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.group-activation",
+    "name": "Group Activation",
+    "effect": {
+      "code": "ccGuisesRoll"
+    },
+    "text": "When a Devotee is expended, the cult must next activate one other ready Devotee. That one does not chain on.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.14"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.accursed-mutant",
+    "name": "Accursed Mutant",
+    "text": "Cannot perform unique actions. Pick Up Marker and mission actions cost 1 more AP (Operate Hatch excepted).",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.15"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.unnatural-regeneration",
+    "name": "Unnatural Regeneration",
+    "text": "Whenever an attack die would inflict 3 or more damage on it, roll a D6: on a 5+ that damage is 1 lower.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.16"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.accursed-torment",
+    "name": "Accursed Torment",
+    "text": "Can only use the weapons on its datacard and cannot perform Pick Up Marker, unique or mission actions (Operate Hatch excepted).",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.17"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "ability",
+    "id": "cc.a.brute",
+    "name": "Brute",
+    "text": "On Conceal, it cannot use Light terrain to count as in cover when an enemy selects a valid target; it keeps its cover save.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.18"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "uniqueAction",
+    "id": "cc.a.incite-slaughter",
+    "name": "INCITE SLAUGHTER",
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "effect": {
+      "code": "ccIncite"
+    },
+    "text": "SUPPORT. Another friendly cult operative visible to and within 9\" of the Demagogue immediately performs a free Fight action (it still needs an enemy in its control range).",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.6"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "uniqueAction",
+    "id": "cc.a.incite-urgency",
+    "name": "INCITE URGENCY",
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "effect": {
+      "code": "ccIncite"
+    },
+    "text": "SUPPORT. Another friendly cult operative visible to and within 9\" of the Demagogue immediately performs a free Dash, or a free Charge that moves no more than 3\".",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.7"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "uniqueAction",
+    "id": "cc.a.ruinous-icon",
+    "name": "RUINOUS ICON",
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "ap": 1,
+    "keywords": [
+      "PSYCHIC"
+    ],
+    "effect": {
+      "code": "ccRuinousIcon"
+    },
+    "text": "PSYCHIC. Pick Invigoration (friendly cult operatives within 4\" of the Iconarch take 1 less from each Normal or Critical Dmg of 4 or more) or Deterioration (enemies within 4\" take 1 more from each Normal and Critical Dmg). It lasts until the start of the Iconarch's next activation, its incapacitation or its next use of this action.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.11"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "uniqueAction",
+    "id": "cc.a.heinous-deluge",
+    "name": "HEINOUS DELUGE",
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "ap": 1,
+    "keywords": [
+      "PSYCHIC"
+    ],
+    "effect": {
+      "code": "ccHeinousDeluge"
+    },
+    "text": "PSYCHIC. An enemy operative that is a valid target for the Mindwitch has 1 less APL until the end of its next activation.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.12"
+  },
+  {
+    "team": "chaos-cult",
+    "kind": "uniqueAction",
+    "id": "cc.a.malefic-vortex",
+    "name": "MALEFIC VORTEX",
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "ap": 1,
+    "keywords": [
+      "PSYCHIC"
+    ],
+    "effect": {
+      "code": "ccMaleficVortex"
+    },
+    "text": "PSYCHIC. Remove your Malefic Vortex marker if it is in the killzone, then place it visible to the Mindwitch or on Vantage terrain of a visible feature. Each enemy within 2\" of it takes 1 damage now and again in the Ready step of each later Strategy phase.",
+    "source": "team-chaos-cult.pdf (Jul '25); docs/spec/13-teams.md T-CC.13"
+  }
+]

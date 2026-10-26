@@ -1,0 +1,37 @@
+{
+  "id": "plague-marines",
+  "name": "Plague Marines",
+  "factionKeyword": "PLAGUE MARINE",
+  "archetypes": ["seek-and-destroy", "security"],
+  "selection": {
+    "slots": [
+      { "id": "leader", "label": "Leader", "count": 1, "from": ["pm.champion"] },
+      {
+        "id": "main",
+        "label": "Selections",
+        "count": 5,
+        "from": ["pm.bombardier", "pm.fighter", "pm.heavy-gunner", "pm.icon-bearer", "pm.plaguecaster", "pm.warrior"]
+      }
+    ]
+  },
+  "factionRules": ["pm.a.astartes", "pm.a.disgustingly-resilient"],
+  "ploys": [
+    "pm.p.contagion",
+    "pm.p.lumbering-death",
+    "pm.p.cloud-of-flies",
+    "pm.p.nurglings",
+    "pm.p.virulent-poison",
+    "pm.p.sickening-resilience",
+    "pm.p.poisonous-demise",
+    "pm.p.curse-of-rot"
+  ],
+  "equipment": ["pm.e.plague-bells", "pm.e.plague-rounds", "pm.e.blight-grenades", "pm.e.poison-vents"],
+  "playable": true,
+  "defaults": {
+    "roster": ["pm.champion", "pm.bombardier", "pm.fighter", "pm.heavy-gunner", "pm.plaguecaster", "pm.warrior"],
+    "equipment": ["pm.e.plague-rounds", "pm.e.poison-vents", "core.e.ladders", "core.e.utility-grenades"]
+  },
+  "paint": { "major": { "h": 0.2, "s": 0.35, "l": 0.4 }, "minor": { "h": 0.08, "s": 0.5, "l": 0.35 } },
+  "text": "Six bloated, near-unkillable warriors who spread poison and shrug off wounds.",
+  "source": "wahapedia kill-teams plague-marines; docs/spec/13-teams.md section 5"
+}

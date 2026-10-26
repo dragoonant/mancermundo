@@ -1,12 +1,13 @@
 // Start screen: seats (human / bot / hot-seat), teams, mission, layout, map and seed. Continues to the team
 // builder, or straight to the briefing with default rosters (Quick start).
-import type { CSSProperties, ReactNode } from 'react'
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import type { Seat } from '@/engine'
 import { MATS, matThumbUrl } from '../board/mats'
 import { BOT_TIERS, type BotTier } from '../bot/botTier'
-import { dataBundle } from '../game/adapter'
-import { layoutList, missionList, teamList } from '../game/defaults'
+import { dataBundle, layoutMapId } from '../game/adapter'
+import { AUTO_LAYOUT, effectiveLayout, layoutList, missionList, teamList } from '../game/defaults'
 import { useSettings, type AnimSpeed } from '../presentation/settings'
+import { relativeTime } from '../store/saveGame'
 import { randomSeed, useSession } from '../store/session'
 import { colors, fontStack, panel } from './theme'
 import { Tooltip } from './Tooltip'
@@ -134,14 +135,59 @@ function SeatRow({ seat }: { seat: Seat }) {
   )
 }
 
+/** The game in progress on this device: who is playing, how far along, and when it was last played. */
+function ContinueCard() {
+  const saved = useSession((s) => s.savedGame)
+  const notice = useSession((s) => s.saveNotice)
+  const [now, setNow] = useState(() => Date.now())
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 30_000)
+    return () => clearInterval(t)
+  }, [])
+  const tryContinue = () => {
+    useSession.getState().continueSaved()
+  }
+  return (
+    <>
+      {notice && (
+        <div role="status" data-testid="save-notice" style={{ ...panel, padding: '10px 12px', marginBottom: 12, borderColor: colors.accent, display: 'flex', gap: 10, alignItems: 'center', justifyContent: 'space-between', fontSize: 13 }}>
+          <span>{notice}</span>
+          <Btn data-testid="save-notice-dismiss" aria-label="Dismiss message" onClick={() => useSession.getState().dismissSaveNotice()}>
+            OK
+          </Btn>
+        </div>
+      )}
+      {saved && (
+        <div data-testid="continue-card" style={{ ...panel, padding: 16, marginBottom: 12, borderColor: colors.accent }}>
+          <div style={{ fontWeight: 700, marginBottom: 6 }}>Continue your game</div>
+          <div data-testid="continue-teams" style={{ fontSize: 16, fontWeight: 800 }}>
+            <Dot seat="A" />
+            {saved.teamA} <span style={{ color: colors.muted, fontWeight: 400 }}>vs</span> <Dot seat="B" />
+            {saved.teamB}
+          </div>
+          <div data-testid="continue-progress" style={{ fontSize: 13, marginTop: 4 }}>
+            {saved.progress} &middot; {saved.mode}
+          </div>
+          <Muted style={{ marginTop: 2 }}>
+            Last played <span data-testid="continue-when">{relativeTime(saved.savedAt, now)}</span>
+          </Muted>
+          <Btn data-testid="continue-game" variant="primary" style={{ padding: '10px 18px', fontSize: 15, marginTop: 10, minHeight: 44 }} onClick={tryContinue}>
+            Continue
+          </Btn>
+        </div>
+      )}
+    </>
+  )
+}
+
 export function StartScreen() {
   const s = useSession()
   const speed = useSettings((x) => x.animSpeed)
   const setSpeed = useSettings((x) => x.setAnimSpeed)
   const b = dataBundle()
-  const layout = b.layouts[s.layoutId]
+  const layout = effectiveLayout(b, s.layoutId, s.seed)
   const mission = b.missions[s.missionId]
-  const maps = mission && layout ? mission.maps.filter((m) => layout.maps.some((lm) => lm.id === m.id)) : []
+  const mapName = mission?.maps.find((m) => m.id === layoutMapId(layout, mission))?.name ?? '-'
   return (
     <div className="ms-touch" style={page} data-testid="start-screen">
       <div style={{ width: 'min(620px, 100%)' }}>
@@ -149,6 +195,7 @@ export function StartScreen() {
           Mancermundo
         </h1>
         <Muted style={{ marginBottom: 14 }}>A fan-made kill team skirmish in the browser. Not affiliated with Games Workshop.</Muted>
+        <ContinueCard />
         <div style={{ ...panel, padding: 16 }}>
           <div style={{ fontWeight: 700, marginBottom: 8 }}>Seats and teams</div>
           <SeatRow seat="A" />
@@ -164,23 +211,25 @@ export function StartScreen() {
             </select>
           </Row>
           <Row label="Killzone layout">
-            <select data-testid="layout" style={field} value={s.layoutId} onChange={(e) => s.setLayout(e.target.value)}>
-              {layoutList(b).map((l) => (
-                <option key={l.id} value={l.id}>
-                  {l.name}
-                </option>
-              ))}
-            </select>
+            <span>
+              <select data-testid="layout" style={field} value={s.layoutId} onChange={(e) => s.setLayout(e.target.value)}>
+                <option value={AUTO_LAYOUT}>Roll from the seed</option>
+                {layoutList(b).map((l) => (
+                  <option key={l.id} value={l.id}>
+                    {l.name}
+                  </option>
+                ))}
+              </select>
+              <Muted style={{ marginTop: 4 }}>
+                {s.layoutId === AUTO_LAYOUT ? `This seed rolls ${layout.name}.` : layout.text}
+              </Muted>
+            </span>
           </Row>
           <Row label="Map">
-            <select data-testid="map" style={field} value={s.mapId} onChange={(e) => s.setMap(e.target.value)}>
-              <option value="auto">Roll from the seed</option>
-              {maps.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.name}
-                </option>
-              ))}
-            </select>
+            <div style={{ fontSize: 13 }}>
+              <span data-testid="map">{mapName}</span>
+              <Muted style={{ marginTop: 2 }}>Each official card comes with its own deployment map.</Muted>
+            </div>
           </Row>
           <Row label="Seed">
             <span style={{ display: 'flex', gap: 6 }}>

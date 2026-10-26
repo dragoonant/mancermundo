@@ -1,0 +1,509 @@
+[
+  {
+    "id": "bl.chieftain",
+    "name": "Traitor Chieftain",
+    "team": "blooded",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "BLOODED",
+      "CHAOS",
+      "LEADER",
+      "CHIEFTAIN"
+    ],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "loadout",
+          "label": "Loadout",
+          "sets": [
+            {
+              "id": "autopistol-chainsword",
+              "name": "Autopistol and chainsword",
+              "fixed": [
+                "bl.w.autopistol",
+                "bl.w.chainsword"
+              ]
+            },
+            {
+              "id": "autopistol-power-weapon",
+              "name": "Autopistol and power weapon",
+              "fixed": [
+                "bl.w.autopistol",
+                "bl.w.power-weapon"
+              ]
+            },
+            {
+              "id": "laspistol-chainsword",
+              "name": "Laspistol and chainsword",
+              "fixed": [
+                "bl.w.laspistol",
+                "bl.w.chainsword"
+              ]
+            },
+            {
+              "id": "laspistol-power-weapon",
+              "name": "Laspistol and power weapon",
+              "fixed": [
+                "bl.w.laspistol",
+                "bl.w.power-weapon"
+              ]
+            },
+            {
+              "id": "bolt-pistol-chainsword",
+              "name": "Bolt pistol and chainsword",
+              "fixed": [
+                "bl.w.bolt-pistol",
+                "bl.w.chainsword"
+              ]
+            },
+            {
+              "id": "boltgun-bayonet",
+              "name": "Boltgun and bayonet",
+              "fixed": [
+                "bl.w.boltgun",
+                "bl.w.bayonet-chieftain"
+              ]
+            },
+            {
+              "id": "plasma-pistol-improvised-blade",
+              "name": "Plasma pistol and improvised blade",
+              "fixed": [
+                "bl.wg.plasma-pistol",
+                "bl.w.improvised-blade"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": [
+      "bl.a.blooded-icon",
+      "bl.a.lead-with-strength"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "bl-chieftain"
+    },
+    "text": "The warband's tyrant: keeps hold of favour when a marked follower falls nearby, and fights as if the dark gods watch whenever it carries a token or stands deep in enemy ground.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.2"
+  },
+  {
+    "id": "bl.brimstone-grenadier",
+    "name": "Traitor Brimstone Grenadier",
+    "team": "blooded",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "BLOODED",
+      "CHAOS",
+      "BRIMSTONE GRENADIER"
+    ],
+    "weapons": {
+      "fixed": [
+        "bl.w.diabolyk-bomb",
+        "bl.w.lasgun",
+        "bl.w.bayonet"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "bl.a.grenadier",
+      "bl.a.explosive-demise"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "bl-brimstone-grenadier"
+    },
+    "text": "Hurls a single diabolyk bomb, throws frag and krak grenades better than anyone, and goes out in a blast that catches friend and foe alike.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.2"
+  },
+  {
+    "id": "bl.butcher",
+    "name": "Traitor Butcher",
+    "team": "blooded",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 8
+    },
+    "base": 25,
+    "keywords": [
+      "BLOODED",
+      "CHAOS",
+      "BUTCHER"
+    ],
+    "weapons": {
+      "fixed": [
+        "bl.w.power-weapon-cleaver"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "bl.a.unholy-sustenance"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "bl-butcher"
+    },
+    "text": "A cannibal brawler whose first critical strike each fight earns a token and whose kills close his wounds.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.2"
+  },
+  {
+    "id": "bl.commsman",
+    "name": "Traitor Commsman",
+    "team": "blooded",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "BLOODED",
+      "CHAOS",
+      "COMMSMAN"
+    ],
+    "weapons": {
+      "fixed": [
+        "bl.w.lasgun",
+        "bl.w.bayonet"
+      ],
+      "options": []
+    },
+    "abilities": [],
+    "uniqueActions": [
+      "bl.a.signal",
+      "bl.a.sacrilegious-actuation"
+    ],
+    "figure": {
+      "archetype": "bl-commsman"
+    },
+    "text": "Relays orders to sharpen a comrade's next activation and, while marked, whispers a prayer that brings another token.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.2"
+  },
+  {
+    "id": "bl.corpseman",
+    "name": "Traitor Corpseman",
+    "team": "blooded",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "BLOODED",
+      "CHAOS",
+      "CORPSEMAN"
+    ],
+    "weapons": {
+      "fixed": [
+        "bl.w.lasgun",
+        "bl.w.bayonet",
+        "bl.w.stimm-needle"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "bl.a.regular-dosage"
+    ],
+    "uniqueActions": [
+      "bl.a.stimms"
+    ],
+    "figure": {
+      "archetype": "bl-corpseman"
+    },
+    "text": "A twisted field surgeon who doses comrades with stimms before the fight and during it.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.2"
+  },
+  {
+    "id": "bl.enforcer",
+    "name": "Traitor Enforcer",
+    "team": "blooded",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 9
+    },
+    "base": 32,
+    "keywords": [
+      "BLOODED",
+      "CHAOS",
+      "ENFORCER"
+    ],
+    "weapons": {
+      "fixed": [
+        "bl.w.bolt-pistol",
+        "bl.w.power-fist"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "bl.a.gruelling-disciplinarian"
+    ],
+    "uniqueActions": [
+      "bl.a.enforce"
+    ],
+    "figure": {
+      "archetype": "bl-enforcer"
+    },
+    "text": "A sadistic officer whose glare drives nearby traitors to ignore their wounds and whose order sends one into a quick action.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.2"
+  },
+  {
+    "id": "bl.flenser",
+    "name": "Traitor Flenser",
+    "team": "blooded",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "BLOODED",
+      "CHAOS",
+      "FLENSER"
+    ],
+    "weapons": {
+      "fixed": [
+        "bl.w.skinning-blades"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "bl.a.wretched"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "bl-flenser"
+    },
+    "text": "A knife-clashing torturer that can charge from hiding and strikes one last time as it falls.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.2"
+  },
+  {
+    "id": "bl.gunner",
+    "name": "Traitor Gunner",
+    "team": "blooded",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "BLOODED",
+      "CHAOS",
+      "GUNNER"
+    ],
+    "weapons": {
+      "fixed": [
+        "bl.w.bayonet"
+      ],
+      "options": [
+        {
+          "id": "special",
+          "label": "Special weapon",
+          "from": [
+            "bl.w.flamer",
+            "bl.wg.grenade-launcher",
+            "bl.w.meltagun",
+            "bl.wg.plasma-gun"
+          ]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "bl-gunner-flamer"
+    },
+    "text": "Carries a flamer, grenade launcher, meltagun or plasma gun taken from a victim. Each special weapon can be fielded once.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.2"
+  },
+  {
+    "id": "bl.ogryn",
+    "name": "Traitor Ogryn",
+    "team": "blooded",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 16
+    },
+    "base": 40,
+    "keywords": [
+      "BLOODED",
+      "CHAOS",
+      "OGRYN"
+    ],
+    "weapons": {
+      "fixed": [
+        "bl.w.power-maul-claw"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "bl.a.avalanche-of-muscle",
+      "bl.a.chem-enhanced",
+      "bl.a.brute",
+      "bl.a.slow-witted"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "bl-ogryn"
+    },
+    "text": "A mutant brute that crashes into a charge for extra damage, shrugs off APL changes and is slow to do anything but fight. Counts as two selections.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.2"
+  },
+  {
+    "id": "bl.sharpshooter",
+    "name": "Traitor Sharpshooter",
+    "team": "blooded",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "BLOODED",
+      "CHAOS",
+      "SHARPSHOOTER"
+    ],
+    "weapons": {
+      "fixed": [
+        "bl.wg.long-las",
+        "bl.w.bayonet"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "bl.a.camo-cloak",
+      "bl.a.name-whispered"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "bl-sharpshooter"
+    },
+    "text": "A cloaked marksman who dedicates one enemy to the dark gods and shoots it as a favoured champion.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.2"
+  },
+  {
+    "id": "bl.thug",
+    "name": "Traitor Thug",
+    "team": "blooded",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "BLOODED",
+      "CHAOS",
+      "THUG"
+    ],
+    "weapons": {
+      "fixed": [
+        "bl.w.heavy-club"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "bl.a.tough"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "bl-thug"
+    },
+    "text": "A savage bruiser that takes less from every heavy blow.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.2"
+  },
+  {
+    "id": "bl.trench-sweeper",
+    "name": "Traitor Trench Sweeper",
+    "team": "blooded",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "4+",
+      "wounds": 9
+    },
+    "base": 25,
+    "keywords": [
+      "BLOODED",
+      "CHAOS",
+      "TRENCH SWEEPER"
+    ],
+    "weapons": {
+      "fixed": [
+        "bl.w.shotgun",
+        "bl.w.bayonet-shield"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "bl.a.shielding"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "bl-trench-sweeper"
+    },
+    "text": "A shield-bearer that can dig in to shrug off fire or surge forward to clear a path.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.2"
+  },
+  {
+    "id": "bl.trooper",
+    "name": "Traitor Trooper",
+    "team": "blooded",
+    "stats": {
+      "apl": 2,
+      "move": 6,
+      "save": "5+",
+      "wounds": 7
+    },
+    "base": 25,
+    "keywords": [
+      "BLOODED",
+      "CHAOS",
+      "TROOPER"
+    ],
+    "weapons": {
+      "fixed": [
+        "bl.w.lasgun",
+        "bl.w.bayonet"
+      ],
+      "options": []
+    },
+    "abilities": [
+      "bl.a.group-activation"
+    ],
+    "uniqueActions": [],
+    "figure": {
+      "archetype": "bl-trooper"
+    },
+    "text": "The rank and file. Troopers activate in pairs.",
+    "source": "team-blooded.pdf (Apr '26); docs/spec/13-teams.md section 18.2"
+  }
+]

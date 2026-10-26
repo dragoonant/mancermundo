@@ -6,22 +6,20 @@ import { Html, Line } from '@react-three/drei'
 import { DoubleSide, Shape } from 'three'
 import type { GameState, PendingDecision, Waypoint } from '@/engine'
 import { fightTargetCard, pct, targetCard, unlistedTargets } from '../game/promptLabels'
-import { deployChoice, optionOperative, placedMarkerRadius, previewMove, spotOptions } from './controller'
+import { BaseRing, FrontMark } from '../figures/OvalBase'
+import { bearingTo, deployChoice, optionOperative, moveReach, placedMarkerRadius, previewMove, snapStep, spotOptions } from './controller'
 import { useUi, type Pt } from '../ui/uiStore'
 
 const KIND_COLOR: Record<string, string> = { walk: '#ffffff', climb: '#ff9f43', drop: '#2ee6c8', jump: '#ff5ce1' }
 
-function Ghost({ x, y, z, r, ok }: { x: number; y: number; z: number; r: number; ok: boolean }) {
+/** The ghost base at a spot. An oval base is drawn as its ellipse with a wedge at the front end, turned to `facing`. */
+function Ghost({ x, y, z, r, ok, oval, facing = 0 }: { x: number; y: number; z: number; r: number; ok: boolean; oval?: number; facing?: number }) {
+  const color = ok ? '#6dff9a' : '#ff5a4f'
   return (
-    <group position={[x, y + 0.07, z]}>
-      <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[r, 28]} />
-        <meshBasicMaterial color={ok ? '#6dff9a' : '#ff5a4f'} transparent opacity={0.35} depthWrite={false} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]}>
-        <ringGeometry args={[r * 0.9, r, 28]} />
-        <meshBasicMaterial color={ok ? '#6dff9a' : '#ff5a4f'} />
-      </mesh>
+    <group position={[x, y + 0.07, z]} rotation={[0, facing, 0]}>
+      <BaseRing baseRadius={r} ovalHalfAxis={oval} inner={0} outer={0} solid color={color} opacity={0.35} depthWrite={false} />
+      <BaseRing baseRadius={r} ovalHalfAxis={oval} inner={-r * 0.1} outer={0} color={color} y={0.005} />
+      <FrontMark baseRadius={r} ovalHalfAxis={oval} color={color} y={0.006} />
     </group>
   )
 }
@@ -30,10 +28,13 @@ export function DeployGhost({ state, pending }: { state: GameState; pending: Pen
   const hover = useUi((s) => s.hover)
   const note = useUi((s) => s.hoverNote)
   const picked = useUi((s) => s.deployOp)
+  const turn = useUi((s) => s.facing)
   const id = deployChoice(pending, picked)
   const op = id ? state.operatives[id] : null
   if (!hover || !op) return null
-  return <Ghost x={hover.x} y={hover.y} z={hover.z} r={op.baseRadius} ok={note?.ok ?? false} />
+  // an oval base faces the centre unless a facing was chosen (the engine's default)
+  const facing = op.ovalHalfAxis ? (turn ?? bearingTo(hover, { x: 0, z: 0 })) : 0
+  return <Ghost x={hover.x} y={hover.y} z={hover.z} r={op.baseRadius} ok={note?.ok ?? false} oval={op.ovalHalfAxis} facing={facing} />
 }
 
 function Label({ at, text, color }: { at: [number, number, number]; text: string; color: string }) {
@@ -48,21 +49,45 @@ export function MovePreviewLayer({ state, pending }: { state: GameState; pending
   const waypoints = useUi((s) => s.waypoints)
   const hover = useUi((s) => s.hover)
   const jumpNext = useUi((s) => s.jumpNext)
+  const turn = useUi((s) => s.facing)
+  const fly = useUi((s) => s.fly)
   const opId = pending.constraints?.operativeId
   const op = opId ? state.operatives[opId] : null
-  const committed = useMemo(() => previewMove(state, pending, waypoints), [state, pending, waypoints])
+  const committed = useMemo(() => previewMove(state, pending, waypoints, turn, fly), [state, pending, waypoints, turn, fly])
+  const reach = useMemo(() => moveReach(state, pending, waypoints, turn, fly), [state, pending, waypoints, turn, fly])
+  const reachShape = useMemo(() => {
+    if (!reach) return null
+    const sh = new Shape()
+    reach.points.forEach((p, i) => (i === 0 ? sh.moveTo(p.x, -p.z) : sh.lineTo(p.x, -p.z)))
+    sh.closePath()
+    return sh
+  }, [reach])
   const whatIf = useMemo(() => {
     if (!hover) return null
-    const wp: Waypoint = { x: hover.x, z: hover.z, y: hover.y, ...(jumpNext ? { jump: true } : {}) }
-    return previewMove(state, pending, [...waypoints, wp])
-  }, [state, pending, waypoints, hover, jumpNext])
+    const raw: Waypoint = { x: hover.x, z: hover.z, y: hover.y, ...(jumpNext ? { jump: true } : {}) }
+    const wp = fly ? raw : snapStep(state, pending, waypoints, raw, turn)
+    return { at: { x: wp.x, y: hover.y, z: wp.z }, ...previewMove(state, pending, fly ? [wp] : [...waypoints, wp], turn, fly) }
+  }, [state, pending, waypoints, hover, jumpNext, turn, fly])
   if (!op) return null
   const start: [number, number, number] = [op.pos.x, op.pos.y + 0.12, op.pos.z]
   const segs = committed.plan?.segments ?? []
   const last = waypoints[waypoints.length - 1]
   const lastPt: [number, number, number] = last ? [last.x, (last.y ?? op.pos.y) + 0.12, last.z] : start
+  const showReach = reach && reachShape && !jumpNext
+  const reachRim = showReach ? reach.points.map((p) => [p.x, reach.centre.y + 0.06, p.z] as [number, number, number]) : []
+  const farthest = showReach ? reach.points.reduce((a, p) => (Math.hypot(p.x - reach.centre.x, p.z - reach.centre.z) > Math.hypot(a.x - reach.centre.x, a.z - reach.centre.z) ? p : a), reach.points[0]!) : null
   return (
     <group>
+      {showReach && reachShape && farthest && (
+        <>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, reach.centre.y + 0.04, 0]} renderOrder={2}>
+            <shapeGeometry args={[reachShape]} />
+            <meshBasicMaterial color="#4fc3ff" transparent opacity={0.25} side={DoubleSide} depthWrite={false} />
+          </mesh>
+          <Line points={[...reachRim, reachRim[0]!]} color="#4fc3ff" lineWidth={2.5} />
+          <Label at={[farthest.x, reach.centre.y + 0.5, farthest.z]} text={`${reach.left}″ left`} color="#4fc3ff" />
+        </>
+      )}
       {segs.map((s, i) => (
         <group key={i}>
           <Line points={[[s.from.x, s.from.y + 0.12, s.from.z], [s.to.x, s.to.y + 0.12, s.to.z]]} color={KIND_COLOR[s.kind] ?? '#fff'} lineWidth={3} />
@@ -77,14 +102,14 @@ export function MovePreviewLayer({ state, pending }: { state: GameState; pending
         <Line points={[start, ...waypoints.map((w) => [w.x, (w.y ?? op.pos.y) + 0.12, w.z] as [number, number, number])]} color="#ff5a4f" lineWidth={3} />
       )}
       {committed.plan ? (
-        <Ghost x={committed.plan.end.x} y={committed.plan.end.y} z={committed.plan.end.z} r={op.baseRadius} ok />
+        <Ghost x={committed.plan.end.x} y={committed.plan.end.y} z={committed.plan.end.z} r={op.baseRadius} ok oval={op.ovalHalfAxis} facing={committed.plan.facing} />
       ) : last ? (
-        <Ghost x={last.x} y={last.y ?? 0} z={last.z} r={op.baseRadius} ok={false} />
+        <Ghost x={last.x} y={last.y ?? 0} z={last.z} r={op.baseRadius} ok={false} oval={op.ovalHalfAxis} facing={turn ?? op.facing} />
       ) : null}
       {hover && whatIf && (
         <>
           <Line
-            points={[lastPt, [hover.x, hover.y + 0.12, hover.z]]}
+            points={[lastPt, [whatIf.at.x, whatIf.at.y + 0.12, whatIf.at.z]]}
             color={whatIf.ok ? '#6dff9a' : '#ff5a4f'}
             lineWidth={2}
             dashed
@@ -92,7 +117,7 @@ export function MovePreviewLayer({ state, pending }: { state: GameState; pending
             gapSize={0.2}
           />
           <Label
-            at={[hover.x, hover.y + 1.1, hover.z]}
+            at={[whatIf.at.x, whatIf.at.y + 1.1, whatIf.at.z]}
             text={whatIf.plan ? `total ${whatIf.plan.cost}/${whatIf.plan.maxInches}″` : (whatIf.rejection?.reason ?? 'blocked').slice(0, 56)}
             color={whatIf.ok ? '#6dff9a' : '#ff8a80'}
           />
@@ -143,10 +168,9 @@ export function TargetBadges({ state, pending }: { state: GameState; pending: Pe
         const hot = hover === l.id
         return (
           <group key={l.id}>
-            <mesh position={[op.pos.x, op.pos.y + 0.09, op.pos.z]} rotation={[-Math.PI / 2, 0, 0]}>
-              <ringGeometry args={[op.baseRadius + 0.1, op.baseRadius + (hot ? 0.42 : 0.28), 36]} />
-              <meshBasicMaterial color={l.color} transparent opacity={hot ? 1 : 0.8} />
-            </mesh>
+            <group position={[op.pos.x, op.pos.y, op.pos.z]} rotation={[0, op.facing, 0]}>
+              <BaseRing baseRadius={op.baseRadius} ovalHalfAxis={op.ovalHalfAxis} inner={0.1} outer={hot ? 0.42 : 0.28} color={l.color} opacity={hot ? 1 : 0.8} y={0.09} />
+            </group>
             <Html position={[op.pos.x, op.pos.y + op.height + 1.7, op.pos.z]} center zIndexRange={[10, 0]} distanceFactor={16} style={{ pointerEvents: 'none' }}>
               <div
                 data-testid={`board-badge-${l.id}`}

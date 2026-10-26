@@ -1,5 +1,6 @@
 // Audio mapping: every weapon of both teams maps to an mp3 that exists, every engine event type has a sound or an
 // explicit silence, a real game only ever asks for ids that exist, deaths and music follow the team and the score.
+import { ALL_WEAPON_IDS, isPresented } from '../fixtures/presentation'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -15,7 +16,7 @@ const ROOT = join(__dirname, '..', '..')
 const AUDIO_DIR = join(ROOT, 'public', 'audio')
 const mp3 = (id: string) => join(AUDIO_DIR, `${id}.mp3`)
 
-const weapons = Object.values(dataBundle().byId).filter((r) => 'atk' in r && 'dmg' in r) as unknown as { id: string; name: string }[]
+const weapons = Object.values(dataBundle().byId).filter((r) => 'atk' in r && 'dmg' in r && isPresented(r)) as unknown as { id: string; name: string }[]
 
 describe('audio assets', () => {
   it('SOUND_IDS is exactly the set of mp3 files in public/audio', () => {
@@ -56,7 +57,7 @@ describe('weapon sounds', () => {
   })
 
   it('has no stale weapon entries', () => {
-    const ids = new Set(weapons.map((w) => w.id))
+    const ids = ALL_WEAPON_IDS
     expect(Object.keys(WEAPON_SOUND).filter((id) => !ids.has(id))).toEqual([])
   })
 
@@ -80,6 +81,7 @@ const SAMPLES: Record<string, GameEvent> = {
   OperativeDeployed: ev({ type: 'OperativeDeployed', operativeId: 'A1', pos: { x: 0, y: 0, z: 0 } }),
   GambitUsed: ev({ type: 'GambitUsed', gambitId: 'g' }),
   PloyUsed: ev({ type: 'PloyUsed', ployId: 'p' }),
+  OperativeTransformed: ev({ type: 'OperativeTransformed', operativeId: 'A1', from: 'cc.devotee', to: 'cc.mutant' }),
   OrderSet: ev({ type: 'OrderSet', operativeId: 'A1', order: 'engage' }),
   ApSpent: ev({ type: 'ApSpent', operativeId: 'A1', amount: 1, total: 1 }),
   Counteracted: ev({ type: 'Counteracted', operativeId: 'A1' }),
@@ -167,7 +169,7 @@ describe('a whole game on the real engine', () => {
     const heard = new Set<string>()
     const kindsSeen = new Set<string>()
     let mode: SoundContext['mode'] = null
-    const { final, steps } = playGame({ seed: 'audio-1', maxSteps: 2500 }, ({ state, events }) => {
+    const listen = ({ state, events }: { state: GameState; events: GameEvent[] }) => {
       for (const e of events) {
         if (e.type === 'ShootStarted') mode = 'shoot'
         if (e.type === 'FightStarted') mode = 'fight'
@@ -178,7 +180,10 @@ describe('a whole game on the real engine', () => {
         if (e.type === 'ShootEnded' || e.type === 'FightEnded') mode = null
         kindsSeen.add(e.type)
       }
-    })
+    }
+    const { final, steps } = playGame({ seed: 'audio-1', maxSteps: 2500 }, listen)
+    // a seed whose game happens to end with nobody killed is topped up with a second game
+    if (![...heard].some((i) => i.startsWith('death-'))) playGame({ seed: 'audio-2', maxSteps: 2500 }, listen)
     expect(steps).toBeGreaterThan(200)
     expect(final.seq).toBeGreaterThan(200)
     const ids = [...heard]
@@ -209,6 +214,78 @@ describe('a whole game on the real engine', () => {
     for (const id of orkDeaths) expect(id.startsWith('death-ork')).toBe(true)
     expect(deathSound('grot', 1)).toBe('death-grot')
     expect(deathSound('squig', 1)).toBe('death-squig')
+  })
+})
+
+// ---------------------------------------------------------------- batch A teams
+
+/** A minimal state: one operative per seat with the given datacard keywords. */
+function stubState(a: string[], b: string[]): GameState {
+  return {
+    operatives: { A1: { id: 'A1', seat: 'A', datacardId: 'dcA' }, B1: { id: 'B1', seat: 'B', datacardId: 'dcB' } },
+    data: { datacards: { dcA: { keywords: a }, dcB: { keywords: b } } },
+  } as unknown as GameState
+}
+
+const TEAM_KEYWORDS: Record<string, { kw: string[]; faction: string; death: string; initiative: string | null }> = {
+  drone: { kw: ['PATHFINDER', "T'AU EMPIRE", 'DRONE', 'MB3 RECON'], faction: 'drone', death: 'death-drone', initiative: 'narr-initiative-pf' },
+  tau: { kw: ['PATHFINDER', "T'AU EMPIRE", "SHAS'LA"], faction: 'tau', death: 'death-tau', initiative: 'narr-initiative-pf' },
+  necron: { kw: ['HIEROTEK CIRCLE', 'NECRON', 'IMMORTAL'], faction: 'necron', death: 'death-necron', initiative: 'narr-initiative-ht' },
+  plague: { kw: ['PLAGUE MARINE', 'CHAOS', 'HERETIC ASTARTES', 'FIGHTER'], faction: 'plague', death: 'death-plague', initiative: 'narr-initiative-pm' },
+  cultist: { kw: ['WYRMBLADE', 'TYRANIDS', 'GENESTEALER CULTS'], faction: 'cultist', death: 'death-cultist', initiative: 'narr-initiative-wb' },
+  marine: { kw: ['ADEPTUS ASTARTES', 'ANGEL OF DEATH'], faction: 'marine', death: 'death-marine', initiative: 'narr-initiative-aod' },
+  ork: { kw: ['ORK', 'KOMMANDO'], faction: 'ork', death: 'death-ork', initiative: 'narr-initiative-kom' },
+}
+
+describe('batch A team sounds (Pathfinders, Hierotek Circle, Plague Marines, Wyrmblade)', () => {
+  it('sorts operatives into factions by keyword, and deaths and initiative lines follow', () => {
+    for (const [name, t] of Object.entries(TEAM_KEYWORDS)) {
+      const state = stubState(t.kw, ['ORK'])
+      expect(factionOf(state, 'A1'), name).toBe(t.faction)
+      const death = soundsForEvent(ev({ type: 'OperativeIncapacitated', operativeId: 'A1', seq: 1 }), { ...EMPTY_CONTEXT, state })
+      expect(death[0]!.id.startsWith(t.death), name).toBe(true)
+      const init = soundsForEvent(ev({ type: 'InitiativeDecided', holder: 'A', setup: false }), { ...EMPTY_CONTEXT, state })
+      expect(init.map((s) => s.id), name).toContain(t.initiative)
+    }
+    expect(factionOf(stubState(['SOMETHING ELSE'], []), 'A1')).toBe('other')
+  })
+
+  it('every new team death, initiative and effect id exists as an mp3', () => {
+    const ids = ['death-drone', 'death-tau', 'death-necron', 'death-plague', 'death-cultist', 'fx-reanimate', 'fx-ambush-emerge', 'ui-markerlight', 'fx-flies-swarm', 'fx-plague-bell', 'shout-brood-hiss', 'narr-initiative-pf', 'narr-initiative-ht', 'narr-initiative-pm', 'narr-initiative-wb']
+    for (const id of ids) {
+      expect(SOUND_IDS).toContain(id)
+      expect(existsSync(mp3(id)), id).toBe(true)
+    }
+  })
+
+  it('a reanimated or emerging operative gets its sting; other returns are silent', () => {
+    const back = (kind: string) => soundsForEvent(ev({ type: 'OperativeReturned', operativeId: 'A1', pos: { x: 0, y: 0, z: 0 }, wounds: 1, ready: true, kind }), EMPTY_CONTEXT).map((s) => s.id)
+    expect(back('reanimated')).toEqual(['fx-reanimate'])
+    expect(back('emerge')).toEqual(['fx-ambush-emerge'])
+    expect(back('somethingElse')).toEqual([])
+  })
+
+  it('gaining a markerlight token pings; losing one or other tokens does not', () => {
+    const token = (kind: string, delta: number) => soundsForEvent(ev({ type: 'TokenChanged', operativeId: 'B1', kind, owner: 'A', count: 1, delta, reason: 'markerlight' }), EMPTY_CONTEXT).map((s) => s.id)
+    expect(token('pf.markerlight', 1)).toEqual(['ui-markerlight'])
+    expect(token('pf.markerlight', -1)).toEqual([])
+    expect(token('other.token', 1)).toEqual([])
+  })
+
+  it('Plague Marine and Wyrmblade moments add their effect on top of the ploy click', () => {
+    const ploy = (ployId: string) => soundsForEvent(ev({ type: 'PloyUsed', ployId }), EMPTY_CONTEXT).map((s) => s.id)
+    expect(ploy('pm.p.cloud-of-flies')).toEqual(['ui-order-engage', 'fx-flies-swarm'])
+    expect(ploy('pm.p.contagion')).toEqual(['ui-order-engage', 'fx-plague-bell'])
+    expect(ploy('other.p.x')).toEqual(['ui-order-engage'])
+    const ability = (abilityId: string) => soundsForEvent(ev({ type: 'AbilityUsed', operativeId: 'A1', abilityId }), EMPTY_CONTEXT).map((s) => s.id)
+    expect(ability('wyr.a.quicksilver-strike')).toEqual(['shout-brood-hiss'])
+    expect(ability('pm.a.icon-of-contagion')).toEqual(['fx-plague-bell'])
+    expect(ability('aod.a.optics')).toEqual([])
+  })
+
+  it('a Wyrmblade interrupt hisses', () => {
+    const state = stubState(TEAM_KEYWORDS.cultist!.kw, ['ORK'])
+    expect(soundsForEvent(ev({ type: 'GuardInterrupt', operativeId: 'A1' }), { ...EMPTY_CONTEXT, state }).map((s) => s.id)).toEqual(['shout-brood-hiss'])
   })
 })
 

@@ -6,6 +6,7 @@ import { create } from 'zustand'
 import {
   createGame,
   legalActions,
+  load as engineLoad,
   save as engineSave,
   step,
   view as seatView,
@@ -20,6 +21,7 @@ import {
 } from '@/engine'
 import type { MissionData } from '@/data'
 import { buildGameSetup, dataBundle, engineBundle, type SeatBuild } from '../game/adapter'
+import { effectiveLayout } from '../game/defaults'
 import { rejectionText } from '../game/labels'
 import { RandomBot } from '../bot/randomBot'
 import { AiWorkerClient } from '../bot/aiWorkerClient'
@@ -32,6 +34,7 @@ import { isAnnouncementHolding } from '../presentation/announceStore'
 import { pushSnapshot, resetPresentation, usePresentedStore } from '../presentation/presentedStore'
 import { speedFactor, useSettings } from '../presentation/settings'
 import type { SeatMode } from '../params'
+import { clearSave, SAVE_ENVELOPE_VERSION, SAVE_KIND, writeSave, type SaveEnvelope } from './saveGame'
 
 export interface GameMeta {
   seed: string
@@ -47,7 +50,9 @@ export interface NewGameOptions {
   seats: Record<Seat, SeatMode>
   seed: string
   missionId: string
+  /** a layout id, or 'auto' to roll one of the official cards from the seed */
   layoutId: string
+  /** only honoured when the layout lists it; an official card names its own map */
   mapId?: string | null
   /** the human places objective and equipment markers on the board instead of the engine's suggestions */
   manualPlacement?: boolean
@@ -67,6 +72,8 @@ interface GameStore {
   events: GameEvent[]
   rejection: { code: string; reason: string; nonce: number } | null
   newGame(opts: NewGameOptions): void
+  /** Open a saved game exactly where it stopped, with no replay of its dice or banners. Throws (and changes nothing) when the save cannot be restored exactly. */
+  restore(env: SaveEnvelope): void
   /** Answer the pending decision. A rejection of a bot seat's action is only logged; a human's shows one toast. */
   dispatch(action: Action): Rejection | null
   /** answer the pending decision with the option whose id matches */
@@ -87,6 +94,8 @@ let bots: Record<Seat, RandomBot> | null = null
 let aiClient: AiWorkerClient | null = null
 let botTier: BotTier = 'normal'
 let botSeed = ''
+/** false for games rewritten after creation (scenario fixtures): their log does not replay, so they are never saved */
+let savable = true
 let botTimer: ReturnType<typeof setTimeout> | null = null
 let watchdog: ReturnType<typeof setInterval> | null = null
 let watchId: string | null = null
@@ -104,7 +113,41 @@ export const useGame = create<GameStore>((set, get) => {
     set({ state, pending, legal: pending ? legalActions(state, pending) : [], events: all })
     pushSnapshot(state.seq, state)
     enqueueBatch({ seq: state.seq, events, state })
+    autosave(state)
     scheduleBot()
+  }
+
+  /** Write the save after an accepted action (cleared once the game has ended). One serialisation, errors swallowed. */
+  function autosave(state: GameState): void {
+    if (!savable) return
+    try {
+      if (state.phase === 'ended') {
+        clearSave()
+        return
+      }
+      const { meta, seats } = get()
+      if (!meta) return
+      const env: SaveEnvelope = {
+        kind: SAVE_KIND,
+        v: SAVE_ENVELOPE_VERSION,
+        savedAt: Date.now(),
+        meta: {
+          seats: { ...seats },
+          botTier,
+          seed: meta.seed,
+          missionId: meta.missionId,
+          layoutId: meta.layoutId,
+          builds: meta.builds,
+          teams: { A: state.players.A.teamId, B: state.players.B.teamId },
+          turningPoint: state.turningPoint,
+          phase: state.phase,
+        },
+        file: engineSave(state),
+      }
+      writeSave(env)
+    } catch (e) {
+      console.debug('[save] autosave skipped', e)
+    }
   }
 
   function scheduleBot(): void {
@@ -211,8 +254,10 @@ export const useGame = create<GameStore>((set, get) => {
       setDirectorPerspective(opts.seats.A === 'human' ? 'A' : opts.seats.B === 'human' ? 'B' : null)
       const b = dataBundle()
       const mission = b.missions[opts.missionId]
-      const layout = b.layouts[opts.layoutId]
-      if (!mission || !layout) throw new Error(`unknown mission/layout: ${opts.missionId} / ${opts.layoutId}`)
+      if (!mission) throw new Error(`unknown mission: ${opts.missionId}`)
+      // 'auto' is rolled from the seed here, so the game meta, the briefing and the panels all show the real layout
+      const layout = effectiveLayout(b, opts.layoutId, opts.seed)
+      // an official card is terrain plus map: buildGameSetup plays the layout's own map
       const setup = buildGameSetup(b, opts.builds.A, opts.builds.B, { layoutId: layout.id, missionId: mission.id, mapId: opts.mapId, auto: opts.manualPlacement !== true })
       let r = createGame(setup, opts.seed, engineBundle())
       if (opts.prepare) {
@@ -221,6 +266,7 @@ export const useGame = create<GameStore>((set, get) => {
       }
       bots = { A: new RandomBot(`${opts.seed}:A`), B: new RandomBot(`${opts.seed}:B`) }
       botTier = opts.botTier ?? getBotTier()
+      savable = !opts.prepare
       botSeed = opts.seed
       aiClient ??= new AiWorkerClient()
       aiClient.reset()
@@ -234,7 +280,7 @@ export const useGame = create<GameStore>((set, get) => {
         meta: {
           seed: opts.seed,
           missionId: opts.missionId,
-          layoutId: opts.layoutId,
+          layoutId: layout.id,
           mission,
           builds: opts.builds,
         },
@@ -242,6 +288,42 @@ export const useGame = create<GameStore>((set, get) => {
       resetPresentation(r.state.seq, r.state)
       set({ state: r.state, pending: r.pending, legal: r.pending ? legalActions(r.state, r.pending) : [], events: [...r.events] })
       enqueueBatch({ seq: r.state.seq, events: r.events, state: r.state })
+      autosave(r.state)
+      startWatchdog()
+      scheduleBot()
+    },
+
+    restore(env) {
+      const b = dataBundle()
+      // replay first: if it is rejected or the hash differs this throws before anything on screen or in the store changes
+      const r = engineLoad(env.file, engineBundle())
+      const { meta: m } = env
+      const mission = b.missions[m.missionId]
+      if (!mission) throw new Error(`unknown mission: ${m.missionId}`)
+      generation++
+      if (botTimer) clearTimeout(botTimer)
+      resetDirector()
+      clearAnims()
+      clearFeed()
+      setDirectorPerspective(m.seats.A === 'human' ? 'A' : m.seats.B === 'human' ? 'B' : null)
+      bots = { A: new RandomBot(`${m.seed}:A`), B: new RandomBot(`${m.seed}:B`) }
+      botTier = m.botTier
+      botSeed = m.seed
+      savable = true
+      aiClient ??= new AiWorkerClient()
+      aiClient.reset()
+      resetPresentation(r.state.seq, r.state)
+      set({
+        state: r.state,
+        pending: r.pending,
+        legal: r.pending ? legalActions(r.state, r.pending) : [],
+        events: [],
+        rejection: null,
+        seats: { ...m.seats },
+        meta: { seed: m.seed, missionId: m.missionId, layoutId: m.layoutId, mission, builds: m.builds },
+      })
+      // an empty batch: the board opens on the current position; no dice, shots, banners or camera flights are replayed
+      enqueueBatch({ seq: r.state.seq, events: [], state: r.state })
       startWatchdog()
       scheduleBot()
     },

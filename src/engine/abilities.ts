@@ -4,24 +4,45 @@
 // about team rules (repeat actions, counteract, orders, cost changes).
 import './core-hooks'
 import './handlers'
-import './teams/angels-of-death'
-import './teams/kommandos'
+import './teams'
 import { activeTactics, codeOf, codeParams, effectList, evalCondition, hasKeyword, inEnemyCr, normAction, rulesOf } from './conditions'
 import { getCodeHook, markFired } from './code-hooks'
-import { cancelAction } from './firefight'
+import { cancelAction, noteReaction, reactionDone } from './firefight'
 import { markerOffers, performMarkerAction, PICK_UP, PLACE } from './markers'
 import { missionActionIds } from './missions'
 import { reject, type Ctx, type Handled, type ModuleDef } from './registry'
-import { EngineInvariantError, getOp } from './state'
+import { EngineInvariantError, effectiveApl, getOp } from './state'
 import { initEquipment } from './equipment'
+import { readyChoiceDone } from './strategy'
+import { preBattleChoiceDone } from './setup'
+import { isPsychicAbility, psychicAllowed } from './psychic'
 import type { Activation, Condition, GameSetup, GameState, Operative, Order, Rejection, RuntimeAbility, Seat } from './types'
+import {
+  providerActionForbidden,
+  providerAny,
+  providerCounteract,
+  providerExtraActions,
+  providerFlags,
+  providerMarkerActionRelief,
+  providerMaxRepeats,
+  providerCostDelta,
+  providerOffboardActions,
+  providerOrders,
+  type ReactionOffer,
+} from './team-rules'
 
 // ---------------------------------------------------------------------------
 // Rules firefight.ts asks about
 // ---------------------------------------------------------------------------
 
-/** How many times an action may be performed in one activation (R-3.7; ASTARTES, Krumpin' Time). */
+/** How many times an action may be performed in one activation (R-3.7; ASTARTES, Krumpin' Time, team rule providers). */
 export function maxRepeats(state: GameState, op: Operative, actionId: string, performed: string[]): number {
+  const base = coreMaxRepeats(state, op, actionId, performed)
+  const p = providerMaxRepeats(state, op, actionId, performed)
+  return p === null ? base : Math.max(base, p)
+}
+
+function coreMaxRepeats(state: GameState, op: Operative, actionId: string, performed: string[]): number {
   if (actionId !== 'shoot' && actionId !== 'fight') return 1
   const count = (a: string) => performed.filter((p) => p === a).length
   const other = actionId === 'shoot' ? 'fight' : 'shoot'
@@ -55,7 +76,9 @@ export function repeatSurcharge(state: GameState, op: Operative, act: Activation
   const names = ((p.repeatSurcharge as { nameContains?: string[] } | undefined)?.nameContains ?? []).map((s) => s.toLowerCase())
   const w = state.data.weapons[weaponId]
   if (!w || !names.some((n) => w.name.toLowerCase().includes(n))) return 0
-  const prior = (act.weaponsUsed ?? []).includes(weaponId)
+  // M9 batch C fix: switching profiles of the same weapon (focused / sweeping) is still the same weapon
+  const group = w.profileGroup
+  const prior = (act.weaponsUsed ?? []).some((u) => u === weaponId || (!!group && state.data.weapons[u]?.profileGroup === group))
   if (!prior) return 0
   markFired('astartes')
   return (p.repeatSurcharge as { ap?: number }).ap ?? 1
@@ -64,6 +87,9 @@ export function repeatSurcharge(state: GameState, op: Operative, act: Activation
 /** May the operative counteract (R-3.11): Engage, or any order for ASTARTES; never the Grot (Sneaky Zogger). */
 export function canCounteractWithOrder(state: GameState, op: Operative): boolean {
   if (codeParams(state, op, 'sneakyZogger')) return false
+  const team = providerCounteract(state, op)
+  if (team === 'never') return false
+  if (team === 'any') return true
   if (op.order === 'engage') return true
   const p = codeParams(state, op, 'astartes')
   if (p?.counteractAnyOrder) {
@@ -75,6 +101,14 @@ export function canCounteractWithOrder(state: GameState, op: Operative): boolean
 
 /** Orders an operative may choose (Stoopid: never Conceal; Sneaky Zogger: never Engage). */
 export function allowedOrders(state: GameState, op: Operative): Order[] {
+  const core = coreAllowedOrders(state, op)
+  const team = providerOrders(state, op)
+  if (!team) return core
+  const both = core.filter((o) => team.includes(o))
+  return both.length > 0 ? both : core
+}
+
+function coreAllowedOrders(state: GameState, op: Operative): Order[] {
   if (codeParams(state, op, 'stoopid')?.noConceal) return ['engage']
   if (codeParams(state, op, 'sneakyZogger')?.neverEngage) {
     markFired('sneakyZogger')
@@ -85,6 +119,7 @@ export function allowedOrders(state: GameState, op: Operative): Order[] {
 
 /** THROAT SLITTAS: the operative may Charge under Conceal and keeps the order (T-KOM.19). */
 export function chargeUnderConceal(state: GameState, op: Operative): boolean {
+  if (providerAny(state, op, 'chargeUnderConceal')) return true
   const p = codeParams(state, op, 'throatSlittas')
   if (!p?.chargeWhileConceal) return false
   markFired('throatSlittas')
@@ -93,6 +128,7 @@ export function chargeUnderConceal(state: GameState, op: Operative): boolean {
 
 /** Mobile: the operative may Charge from inside an enemy control range (T-AOD.16). */
 export function chargeFromControlRange(state: GameState, op: Operative): boolean {
+  if (providerAny(state, op, 'chargeFromControlRange')) return true
   if (codeParams(state, op, 'ctMobileCharge') === null) return false
   markFired('ctMobileCharge')
   return true
@@ -100,6 +136,8 @@ export function chargeFromControlRange(state: GameState, op: Operative): boolean
 
 /** Stoopid: a universal or unique action the operative can never take (T-KOM.9). */
 export function actionForbidden(state: GameState, op: Operative, actionId: string): string | null {
+  const team = providerActionForbidden(state, op, actionId)
+  if (team) return team
   const p = codeParams(state, op, 'stoopid')
   if (!p) return null
   const allowed = (p.allowedActions as string[] | undefined) ?? []
@@ -167,6 +205,11 @@ export function actionAbilityIds(state: GameState, op: Operative): string[] {
   const add = (id: string) => {
     if (!ids.includes(id)) ids.push(id)
   }
+  // M9 prep: out of the killzone (HIDING) only the actions the team offers for that state exist
+  if (op.status !== 'active') {
+    for (const id of providerOffboardActions(state, op)) add(id)
+    return ids
+  }
   for (const id of state.data.datacards[op.datacardId]?.uniqueActions ?? []) add(id)
   for (const id of missionActionIds(state)) add(id)
   for (const eqId of state.players[op.seat].equipment) {
@@ -180,23 +223,36 @@ export function actionAbilityIds(state: GameState, op: Operative): string[] {
   for (const pick of Object.values(state.equipment.picks[op.seat] ?? {})) {
     for (const a of pick) if (state.data.abilities[a]?.kind === 'uniqueAction') add(a)
   }
+  for (const id of providerExtraActions(state, op)) add(id)
   return ids
 }
 
 function offerCost(state: GameState, op: Operative, def: RuntimeAbility, seed: { cost?: number }, act: Activation | null): number {
   const base = seed.cost ?? def.ap ?? 1
   const mission = (def.keywords ?? []).includes('MISSION')
-  const delta = actionCostDelta(state, op, def.id, act, mission)
+  const delta = actionCostDelta(state, op, def.id, act, mission) + providerCostDelta(state, op, `${ABILITY_PREFIX}${def.id}`)
   return Math.max(0, base + delta)
 }
 
 /** Why the generic conditions of a unique action fail, or null. */
 function genericProblem(state: GameState, op: Operative, def: RuntimeAbility, act: Activation | null): string | null {
-  const cond = def.conditions as Condition | undefined
+  let cond = def.conditions as Condition | undefined
+  // M9 batch C: a MISSION action a team rule lets the operative take with an enemy in control range (Light Fingers)
+  if (cond?.notInEnemyControlRange && (def.keywords ?? []).includes('MISSION') && providerMarkerActionRelief(state, op, `${ABILITY_PREFIX}${def.id}`).ignoreEnemyControlRange) {
+    const { notInEnemyControlRange: _drop, ...rest } = cond
+    cond = rest
+  }
+  // M9 batch C: PSYCHIC actions do not work while a rule blocks them (Null Rod)
+  if (isPsychicAbility(state, def.id) && !psychicAllowed(state, op)) return `${def.name} is PSYCHIC and cannot be used here`
   if (cond && !evalCondition(cond, { state, seat: op.seat, subjectId: op.id, actorId: op.id, activation: act, counteracting: act?.counteract })) {
     return `conditions of ${def.name} are not met`
   }
-  if (act && !act.counteract && act.performed.includes(`${ABILITY_PREFIX}${def.id}`)) return `${def.name} cannot be performed twice in one activation`
+  // R-3.7: once per activation unless a team rule allows more (team-rules maxRepeats; e.g. FLAIL sharing a two-Fight allowance)
+  if (act && !act.counteract) {
+    const actionId = `${ABILITY_PREFIX}${def.id}`
+    const done = act.performed.filter((p) => p === actionId).length
+    if (done > 0 && done >= maxRepeats(state, op, actionId, act.performed)) return `${def.name} cannot be performed again in this activation`
+  }
   const stoop = actionForbidden(state, op, `${ABILITY_PREFIX}${def.id}`)
   if (stoop) return stoop
   return null
@@ -215,7 +271,7 @@ export function abilityOffers(state: GameState, op: Operative, act: Activation |
       if (act) {
         if (act.counteract && cost !== 1) continue
         if (!act.counteract && !act.frame) {
-          const apl = op.apl + (op.flags.ignoreApl ? 0 : Math.max(-1, Math.min(1, op.aplMods)))
+          const apl = effectiveApl(op)
           if (act.apSpent + cost > Math.max(0, apl)) continue
         }
       }
@@ -230,11 +286,14 @@ export function abilityOffers(state: GameState, op: Operative, act: Activation |
       })
     }
   }
-  for (const m of markerOffers(state, op, act)) {
-    const delta = actionCostDelta(state, op, m.action === PICK_UP ? 'pick-up-marker' : 'place-marker', act)
+  for (const m of op.status === 'active' ? markerOffers(state, op, act) : []) {
+    // M9 batch B shared fix: team rules that forbid Pick Up / Place Marker (Brutal Display, Stoopid) and an action an
+    // action.declared rule barred this activation apply to the marker actions too
+    if (actionForbidden(state, op, m.action) || act?.barred?.includes(m.action)) continue
+    const delta = actionCostDelta(state, op, m.action === PICK_UP ? 'pick-up-marker' : 'place-marker', act) + providerCostDelta(state, op, m.action)
     const cost = Math.max(0, m.cost + delta)
     if (act && !act.counteract && !act.frame) {
-      const apl = op.apl + (op.flags.ignoreApl ? 0 : Math.max(-1, Math.min(1, op.aplMods)))
+      const apl = effectiveApl(op)
       if (act.apSpent + cost > Math.max(0, apl)) continue
     }
     if (act?.counteract && cost !== 1) continue
@@ -285,6 +344,49 @@ export function performOffer(ctx: Ctx, op: Operative, offer: AbilityOffer): void
 // ---------------------------------------------------------------------------
 
 function handleChoice(state: GameState, action: { type: string; payload?: unknown }, context: Record<string, unknown>): Handled {
+  // M9 prep: a reaction offered after an action (firefight.offerReactions): pass declines it
+  if (context.reaction === true) {
+    if (action.type === 'pass') {
+      return {
+        run: (ctx) => {
+          noteReaction(ctx.state, null)
+          reactionDone(ctx)
+        },
+      }
+    }
+    if (action.type !== 'ability.choice') return reject('E_WRONG_DECISION', 'expected a reaction choice')
+    const offers = (context.offers as ReactionOffer[] | undefined) ?? []
+    const offer = offers[Number((action.payload as { option: string }).option)]
+    const hook = offer ? getCodeHook(offer.hook) : undefined
+    if (!offer || !hook?.choice || !state.operatives[offer.operativeId]) return reject('E_NOT_AN_OPTION', 'unknown reaction')
+    return {
+      run: (ctx) => {
+        // batch C shared: this operative has reacted to the action (repeat offers skip it)
+        noteReaction(ctx.state, offer.operativeId)
+        hook.choice!(ctx, getOp(ctx.state, offer.operativeId), offer.option, context)
+      },
+    }
+  }
+  // batch D prep: a pre-battle choice (setup.nextPreBattleChoice): pass ends the seat's choices
+  if (context.preBattle === true) {
+    if (action.type === 'pass') return { run: (ctx) => preBattleChoiceDone(ctx, true) }
+    if (action.type !== 'ability.choice') return reject('E_WRONG_DECISION', 'expected a pre-battle choice')
+    const offers = (context.offers as ReactionOffer[] | undefined) ?? []
+    const offer = offers[Number((action.payload as { option: string }).option)]
+    const hook = offer ? getCodeHook(offer.hook) : undefined
+    if (!offer || !hook?.choice || !state.operatives[offer.operativeId]) return reject('E_NOT_AN_OPTION', 'unknown pre-battle choice')
+    return { run: (ctx) => hook.choice!(ctx, getOp(ctx.state, offer.operativeId), offer.option, context) }
+  }
+  // batch C shared: a Ready-step choice (strategy.nextReadyChoice): pass ends the seat's choices
+  if (context.readyStep === true) {
+    if (action.type === 'pass') return { run: (ctx) => readyChoiceDone(ctx, true) }
+    if (action.type !== 'ability.choice') return reject('E_WRONG_DECISION', 'expected a Ready-step choice')
+    const offers = (context.offers as ReactionOffer[] | undefined) ?? []
+    const offer = offers[Number((action.payload as { option: string }).option)]
+    const hook = offer ? getCodeHook(offer.hook) : undefined
+    if (!offer || !hook?.choice || !state.operatives[offer.operativeId]) return reject('E_NOT_AN_OPTION', 'unknown Ready-step choice')
+    return { run: (ctx) => hook.choice!(ctx, getOp(ctx.state, offer.operativeId), offer.option, context) }
+  }
   const hookName = context.hook as string | undefined
   const hook = hookName ? getCodeHook(hookName) : undefined
   if (action.type === 'pass') return { run: (ctx) => cancelAction(ctx) }
@@ -319,15 +421,19 @@ export function refreshFlags(state: GameState): void {
   for (const op of Object.values(state.operatives)) {
     const resolute = activeTactics(state, op).includes('aod.a.ct-resolute')
     const shake = state.effects.some((e) => e.source === 'kom.p.shake-it-off' && e.operativeId === op.id)
-    const ignoreApl = resolute || shake
+    const team = providerFlags(state, op)
+    const ignoreApl = resolute || shake || team.ignoreApl
     if (ignoreApl) {
       op.flags.ignoreApl = true
       if (resolute) markFired('ctResolute')
     } else delete op.flags.ignoreApl
     const atsknf =
       hasKeyword(state, op, 'ANGEL OF DEATH') && state.effects.some((e) => e.source === 'aod.p.and-they-shall-know-no-fear' && e.seat === op.seat)
-    if (atsknf) op.flags.ignoreInjured = true
+    if (atsknf || team.ignoreInjured) op.flags.ignoreInjured = true
     else delete op.flags.ignoreInjured
+    // batch D prep: APL decreases ignored, increases kept (Mirror-visor, Toxic Blessings)
+    if (team.ignoreAplDecreases) op.flags.ignoreAplDecreases = true
+    else delete op.flags.ignoreAplDecreases
   }
 }
 

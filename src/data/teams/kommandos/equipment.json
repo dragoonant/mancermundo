@@ -5,7 +5,7 @@
     "scope": "faction",
     "team": "kommandos",
     "count": 1,
-    "grants": { "weapons": ["kom.w.choppas-equipment"] },
+    "grants": { "weapons": ["kom.w.choppas-equipment"], "to": { "keyword": "KOMMANDO", "notKeywords": ["BOMB SQUIG", "GROT"] } },
     "effect": { "code": "choppasEquipment", "params": { "scope": "kommando-not-squig-grot", "keepBetter": true } },
     "text": "Friendly Kommandos (not Squigs or Grots) gain a Choppa with Atk 3, Hit 3+, Dmg 4/5; an operative with a better choppa keeps using that.",
     "source": "team-kommandos.pdf; docs/spec/13-teams.md Faction equipment table"
@@ -16,7 +16,7 @@
     "scope": "faction",
     "team": "kommandos",
     "count": 1,
-    "grants": { "weapons": ["kom.w.dynamite"] },
+    "grants": { "weapons": ["kom.w.dynamite"], "to": { "keyword": "KOMMANDO", "notKeywords": ["BOMB SQUIG", "GROT"] } },
     "limits": { "uses": 1, "per": "battle", "scope": "team" },
     "text": "Once per battle, one friendly Kommando (not a Squig or Grot) may throw dynamite: a short-range blast that can only be thrown by an operative that moves no more than a Reposition.",
     "source": "team-kommandos.pdf; docs/spec/13-teams.md Faction equipment table"
@@ -27,7 +27,7 @@
     "scope": "faction",
     "team": "kommandos",
     "count": 1,
-    "grants": { "weapons": ["kom.w.harpoon"] },
+    "grants": { "weapons": ["kom.w.harpoon"], "to": { "keyword": "KOMMANDO", "notKeywords": ["BOMB SQUIG", "GROT"] } },
     "limits": { "uses": 1, "per": "turningPoint", "scope": "team" },
     "text": "Once per turning point, one friendly Kommando (not a Squig or Grot) may fire a harpoon that can stun its target.",
     "source": "team-kommandos.pdf; docs/spec/13-teams.md Faction equipment table"

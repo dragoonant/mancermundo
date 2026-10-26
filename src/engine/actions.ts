@@ -28,4 +28,12 @@ export const act = {
   order: (p: P, order: 'engage' | 'conceal') => makeAction('firefight.order', p, { order }),
   action: (p: P, action: string) => makeAction('firefight.action', p, { action }),
   path: (p: P, waypoints: Waypoint[]) => makeAction('move.path', p, { waypoints }),
+  /** M9 prep: answer setup.deploy by setting the operative aside (HIDING) instead of placing it */
+  setAside: (p: P, operativeId: string) => makeAction('setup.deploy', p, { operativeId, x: 0, z: 0, setAside: true }),
+  /** M9 batch B: deploy an oval-based operative with its long axis along `facing` (radians) */
+  deployFacing: (p: P, operativeId: string, x: number, z: number, facing: number) => makeAction('setup.deploy', p, { operativeId, x, z, facing }),
+  /** M9 batch B: FLY (Jump Pack): set the operative up at the point instead of moving along a path */
+  fly: (p: P, to: Waypoint) => makeAction('move.path', p, { waypoints: [to], fly: true }),
+  /** M9 batch B: a move whose oval base turns to `facing` at the end */
+  pathFacing: (p: P, waypoints: Waypoint[], facing: number) => makeAction('move.path', p, { waypoints, facing }),
 }

@@ -11,6 +11,8 @@ import { useDisplayState } from '../presentation/presentedStore'
 import { syncRoster } from '../vfx/api'
 import { fx, lowFx } from '../vfx/instance'
 import { FxRenderer } from '../vfx/renderer'
+import { warmScene, type WarmRenderer } from '../vfx/warmup'
+import { glbStats, subscribeGlb } from '../figures/glbLoader'
 
 const STYLE_ID = 'ms-fx-style'
 function ensureStyle(): void {
@@ -47,6 +49,8 @@ function FloatText({ fx: f }: { fx: Fx }) {
 }
 
 const OFFSET: [number, number, number] = [0, 0, 0]
+/** The shader warm-up starts this long after the board (or a figure GLB) appears, so the first paint is not held up. */
+const WARM_DELAY_MS = 700
 const AMBIENT_MS = 180
 const AMBIENT_LOW_MS = 420
 
@@ -68,6 +72,46 @@ function FxLayer() {
       renderer.dispose()
     }
   }, [invalidate, renderer, scene])
+
+  // compile every material (the hidden effect batches included) once the board is up and the figures have loaded,
+  // and again after a later GLB arrives; already-compiled programs cost a cache lookup
+  const gl = useThree((s) => s.gl)
+  const camera = useThree((s) => s.camera)
+  useEffect(() => {
+    let alive = true
+    let running = false
+    let again = false
+    let timer: ReturnType<typeof setTimeout> | null = null
+    const schedule = () => {
+      if (timer !== null) clearTimeout(timer)
+      timer = setTimeout(() => void run(), WARM_DELAY_MS)
+    }
+    const run = async () => {
+      timer = null
+      if (!alive || glbStats().loading > 0) return // the last load to settle schedules it again
+      if (running) {
+        again = true
+        return
+      }
+      running = true
+      try {
+        await warmScene(gl as unknown as WarmRenderer, scene, camera, () => alive)
+      } finally {
+        running = false
+      }
+      if (again && alive) {
+        again = false
+        schedule()
+      }
+    }
+    schedule()
+    const off = subscribeGlb(schedule)
+    return () => {
+      alive = false
+      off()
+      if (timer !== null) clearTimeout(timer)
+    }
+  }, [gl, scene, camera])
 
   useEffect(() => {
     syncRoster(state)

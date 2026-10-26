@@ -26,8 +26,8 @@ A skirmish between two underhive gangs of individual fighters (typically 5-15 a 
 ## 4. Decisions (defaults unless the owner changes them)
 | Topic | Decision | Why |
 |---|---|---|
-| Edition | 2023 Necromunda Rulebook + current House of Chains / House of Blades lists + latest FAQ; 1:1 mechanics; own-words prose; real gang/fighter/weapon names | Same posture as Mallet and Murder Squad |
-| Stack | Murder Squad M7 copied wholesale (Vite 8, React 19, R3F 9, zustand 5, TS 7, Vitest 5, Playwright, ajv) | Fastest path; the mobile layer, presentation and audio come with it |
+| Edition | 2023 Necromunda Rulebook + current House of Chains / House of Blades lists + latest FAQ; 1:1 mechanics; own-words prose; real gang/fighter/weapon names | Same posture as Mallet and Mancermundo |
+| Stack | Murder Squad copied wholesale (Vite 8, React 19, R3F 9, zustand 5, TS 7, Vitest 5, Playwright, ajv) | Fastest path; the mobile layer, presentation and audio come with it |
 | Engine shape | Murder Squad contracts and module split; rules modules rewritten: `priority` (was strategy), `action` phase (was firefight, two actions, no orders), `end` phase (bottle, recovery), `shoot`/`fight` with hit/wound/save and Injury dice, `traits` (was weapon rules), Zone Mortalis `terrain` (walls, doors) | Alternating activations already fit |
 | Data | JSON per gang (`fighters`, `weapons`, `wargear`, `skills`, `house rules`), `source` per record, ajv schemas | Fidelity rule |
 | Figures | Fresh MGSD body per fighter archetype, bare-handed with sockets; weapons as attachment GLBs; Murder Squad attachments reused where the weapon matches (chainsword, knives, flamer-type, pistols) | Owner's modular-figure direction from Murder Squad |

@@ -1,0 +1,170 @@
+[
+  {
+    "id": "ta.a.wr-salvo",
+    "kind": "weaponRule",
+    "name": "Salvo",
+    "team": "tempestus-aquilons",
+    "weaponRule": {
+      "param": "none"
+    },
+    "text": "The shooter may pick up to two different valid targets that are not in a friendly operative's control range and shoots each in its own sequence, in the order its player chooses.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.10"
+  },
+  {
+    "id": "ta.a.wr-concealed-position",
+    "kind": "weaponRule",
+    "name": "Concealed Position",
+    "team": "tempestus-aquilons",
+    "weaponRule": {
+      "param": "none"
+    },
+    "text": "The hot-shot long-las's concealed profile can only be used in the Marksman's first Shoot action of the battle.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.13"
+  },
+  {
+    "id": "ta.a.drop-insertion",
+    "kind": "factionRule",
+    "name": "Drop Insertion",
+    "team": "tempestus-aquilons",
+    "scope": {
+      "side": "friendly",
+      "keyword": "TEMPESTUS AQUILON"
+    },
+    "effect": {
+      "code": "taDropMarkers"
+    },
+    "text": "From the second set-up batch on, a whole batch may be put to one side (set up above) instead of deployed; the first batch is always deployed. Each batch above gives a Drop marker, placed wholly within your drop zone once set-up ends. An operative above is ready, activates like any other and either stays above (expended) or lands by the LAND action: a Reposition that sets it up within 3 inches (horizontally) of a Drop marker or wholly within your drop zone, never in an enemy control range (except the Precursor), never under Vantage terrain, with Engage or Conceal, obscured until the end of the next activation. Fewer than half of the team may still be above after turning point 1. In the Ready step of turning points 2 and 3 you lose one Drop marker, and everyone still above at the end of turning point 2 is incapacitated. A gambit lets you move your Drop markers up to 4 inches in turning points 1 and 2.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.20 to T-TA.28"
+  },
+  {
+    "id": "ta.a.land",
+    "kind": "uniqueAction",
+    "name": "LAND",
+    "team": "tempestus-aquilons",
+    "ap": 1,
+    "keywords": [
+      "REPOSITION"
+    ],
+    "effect": {
+      "code": "taLand"
+    },
+    "text": "An operative set up above lands: it is set up in the killzone as described by Drop Insertion. This counts as the Reposition action, so it cannot then Charge, Fall Back or Reposition again, and only Heavy (Reposition only) weapons can be used after it that activation.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.23"
+  },
+  {
+    "id": "ta.a.grav-chute",
+    "kind": "factionRule",
+    "name": "Grav-chute",
+    "team": "tempestus-aquilons",
+    "scope": {
+      "side": "friendly",
+      "keyword": "TEMPESTUS AQUILON"
+    },
+    "text": "Whenever a friendly Tempestus Aquilon drops, the vertical distance costs nothing.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.29"
+  },
+  {
+    "id": "ta.a.tempestus-veteran",
+    "kind": "ability",
+    "name": "Tempestus Veteran",
+    "team": "tempestus-aquilons",
+    "text": "Once per battle, either a firefight ploy that names the Tempestor costs 0 CP, or a Command Re-roll of dice rolled for the Tempestor costs 0 CP.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.7"
+  },
+  {
+    "id": "ta.a.command",
+    "kind": "uniqueAction",
+    "name": "COMMAND",
+    "team": "tempestus-aquilons",
+    "ap": 1,
+    "keywords": [
+      "SUPPORT"
+    ],
+    "conditions": {
+      "notInEnemyControlRange": true
+    },
+    "effect": {
+      "code": "taCommand"
+    },
+    "text": "Support action (not in an enemy control range): pick another friendly Tempestus Aquilon other than the Servo-Sentry that is visible to and within 6 inches of the Tempestor. It gets +1 APL until the end of its next activation.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.8"
+  },
+  {
+    "id": "ta.a.grenadier",
+    "kind": "ability",
+    "name": "Grenadier",
+    "team": "tempestus-aquilons",
+    "text": "The Grenadier may throw frag and krak grenades and perform Smoke Grenade and Stun Grenade without the team picking them, with no limit on its own uses. Any frag or krak grenade it throws hits on one better, to 3+.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.9"
+  },
+  {
+    "id": "ta.a.gunfight",
+    "kind": "ability",
+    "name": "Gunfight",
+    "team": "tempestus-aquilons",
+    "effect": {
+      "code": "taGunfight"
+    },
+    "text": "Dice an enemy within 8 inches discards as fails when it shoots the Gunfighter are counted. When that Shoot action ends, before anything it incapacitated is removed (the Gunfighter included), the Gunfighter may Shoot that enemy for free with the focused profile, rolling fails plus 1 attack dice (at most 4).",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.11"
+  },
+  {
+    "id": "ta.a.snipers-vantage",
+    "kind": "ability",
+    "name": "Sniper's Vantage",
+    "team": "tempestus-aquilons",
+    "text": "While the Marksman stands on Vantage terrain and shoots an Engage enemy whose base is at least 2 inches lower, its hot-shot long-las has Severe.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.12"
+  },
+  {
+    "id": "ta.a.vicious-knife-fighter",
+    "kind": "ability",
+    "name": "Vicious Knife Fighter",
+    "team": "tempestus-aquilons",
+    "text": "When the Precursor fights in its own Fight action, after its first die is resolved it immediately resolves a second one, before the opponent resolves anything.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.14"
+  },
+  {
+    "id": "ta.a.dynamic",
+    "kind": "ability",
+    "name": "Dynamic",
+    "team": "tempestus-aquilons",
+    "effect": {
+      "code": "taDynamic"
+    },
+    "text": "After the Precursor performs a Shoot or Fight action, it may take a free Dash, even if it has Charged in that activation.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.15"
+  },
+  {
+    "id": "ta.a.machine",
+    "kind": "ability",
+    "name": "Machine",
+    "team": "tempestus-aquilons",
+    "text": "The Servo-Sentry's only actions are Dash, Fall Back, Reposition and Shoot. It never retaliates or assists a fight and uses only the weapon on its own datacard.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.16"
+  },
+  {
+    "id": "ta.a.turret",
+    "kind": "ability",
+    "name": "Turret",
+    "team": "tempestus-aquilons",
+    "text": "The Servo-Sentry may perform two Shoot actions in one activation.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.17"
+  },
+  {
+    "id": "ta.a.rapid-insertion",
+    "kind": "ability",
+    "name": "Rapid Insertion",
+    "team": "tempestus-aquilons",
+    "text": "In turning point 1 only, as a strategic gambit: each friendly Trooper in the killzone that is wholly within your drop zone may take a free Reposition that must end wholly within 3 inches of your drop zone.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.18"
+  },
+  {
+    "id": "ta.a.swift-landing",
+    "kind": "ability",
+    "name": "Swift Landing",
+    "team": "tempestus-aquilons",
+    "text": "A landing Trooper may be set up within 4 inches (horizontally) of a Drop marker instead of 3.",
+    "source": "team-tempestus-aquilons.pdf (Aug '26); docs/spec/13-teams.md T-TA.19"
+  }
+]
