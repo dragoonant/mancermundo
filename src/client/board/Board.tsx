@@ -65,6 +65,8 @@ function Ground({ minX, maxX, minZ, maxZ }: { minX: number; maxX: number; minZ: 
 
 function Scene({ state }: { state: GameState }) {
   const pending = useGame((s) => s.pending)
+  // doors take clicks only while an action is being chosen; otherwise they would swallow deploy and move clicks on the floor behind them
+  const doorsClickable = pending?.kind === 'action.choose'
   const settled = useSettled()
   const selected = useUi((s) => s.selected)
   const hoverFighter = useUi((s) => s.hoverFighter)
@@ -120,7 +122,7 @@ function Scene({ state }: { state: GameState }) {
         shadow-normalBias={0.03}
       />
       <directionalLight position={[18, 14, -22]} intensity={0.8} color="#ffa968" />
-      <ZmBoard def={def} doors={state.board.doors} onDoorClick={clickDoor} />
+      <ZmBoard def={def} doors={state.board.doors} onDoorClick={doorsClickable ? clickDoor : undefined} />
       <Zones state={state} />
       <Ground {...def.bounds} />
       <Suspense fallback={null}>

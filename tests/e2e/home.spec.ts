@@ -13,9 +13,8 @@ test('home: the title, the setup choices and no horizontal scroll', async ({ pag
   await expect(page.getByTestId('scenario-tunnel-skirmish')).toHaveAttribute('aria-checked', 'true')
   await expect(page.getByTestId('seat-A')).toContainText('credits')
   await expect(page.getByTestId('seat-B')).toContainText('fighters')
-  // a scenario the engine cannot play yet is listed but not selectable
-  const riches = page.getByTestId('scenario-forgotten-riches')
-  if (await riches.count()) await expect(riches).toBeDisabled()
+  // all three scenarios are playable since S4 (Forgotten Riches had been greyed out before tile deployment existed)
+  await expect(page.getByTestId('scenario-forgotten-riches')).toBeEnabled()
   expect(await page.locator('[title]').count(), 'no native tooltips').toBe(0)
   await noHorizontalScroll(page)
   await page.screenshot({ path: 'tools/out/s5c-start.png', fullPage: false })

@@ -120,7 +120,13 @@ test('play: deploy, open a door, move, end the round against the random bot', as
 
   // open the door by clicking it on the board
   // the upper panel: the fighter standing in front hides the lower part from this camera
-  const dp = await pixel(page, doorAt!.x, 2.7, doorAt!.z)
+  // the action panel covers the middle of the screen: look past the door until it sits above the panel
+  let dp = await pixel(page, doorAt!.x, 2.7, doorAt!.z)
+  for (const dz of [6, -6, 0]) {
+    await focusOn(page, doorAt!.x, doorAt!.z + dz)
+    dp = await pixel(page, doorAt!.x, 2.7, doorAt!.z)
+    if (dp.y > 80 && dp.y < 270) break
+  }
   await page.mouse.click(dp.x, dp.y)
   await page.waitForFunction((id) => (window as any).__ms.getState().board.doors[id!].state === 'open', doorId)
   await expect(page.getByTestId('event-feed')).toContainText('is open')
