@@ -8,7 +8,7 @@ for (const slug of BOARDS) {
   test(`lab draws ${slug} with fighters`, async ({ page }) => {
     const errors: string[] = []
     page.on('pageerror', (e) => errors.push(e.message))
-    await page.goto(`./?board=${slug}&menu=0`)
+    await page.goto(`./?lab&board=${slug}&menu=0`)
     await expect(page.locator('canvas')).toBeVisible()
     await page.waitForFunction((id) => (window as unknown as { __lab?: { board: string } }).__lab?.board === `zm.b.${id}`, slug)
     const lab = await page.evaluate(() => (window as unknown as { __lab: { walls: number; doors: number; fighters: number } }).__lab)
@@ -21,7 +21,7 @@ for (const slug of BOARDS) {
 }
 
 test('lab pickers change the board and the doors toggle', async ({ page }) => {
-  await page.goto('./?board=foundry-run')
+  await page.goto('./?lab&board=foundry-run')
   await page.getByLabel('Board').selectOption('zm.b.hive-heart')
   await page.waitForFunction(() => (window as unknown as { __lab?: { board: string } }).__lab?.board === 'zm.b.hive-heart')
   expect(page.url()).toContain('board=zm.b.hive-heart')

@@ -5,9 +5,6 @@
 //    target's chest, so the tracers leave the shooter and cross the frame
 //  - close-up: only when a die got through (a wound or a fall to watch); a fully blocked or missed volley just
 //    holds the shoulder view for a short beat
-import type { MapDef } from '@/engine'
-import { pointInPolygon } from '@/engine/geometry'
-import { terrainOf } from '@/engine/terrain'
 import type { CameraView } from '../board/cameraApi'
 import type { LandingPlan } from './heldVolley'
 
@@ -35,7 +32,7 @@ export const DEFAULT_HEIGHT = 2
 /** The most the lens is lifted to clear terrain (inches). */
 export const MAX_RAISE = 5
 
-/** The part of an operative the camera needs: where it stands (y = the surface under it) and how tall it is. */
+/** The part of a fighter the camera needs: where it stands (y = the floor) and how tall it is. */
 export interface Body {
   x: number
   y: number
@@ -85,49 +82,13 @@ export function closeupView(shooter: Body, target: Body, opts: ViewOpts = {}): C
   }
 }
 
-/** Top of the highest terrain solid the point (x, y, z) is inside, or null when it is in the clear. */
-function solidTopAt(map: MapDef | undefined, x: number, y: number, z: number): number | null {
-  if (!map || !Array.isArray(map.features)) return null
-  let top: number | null = null
-  for (const s of terrainOf(map).solids) {
-    if (s.insignificant || y < s.bottom || y >= s.top) continue
-    const b = s.bbox
-    if (x < b.minX || x > b.maxX || z < b.minZ || z > b.maxZ) continue
-    if (pointInPolygon({ x, z }, s.polygon) && (top === null || s.top > top)) top = s.top
-  }
-  return top
+/** The right-shoulder view. No wall check yet: S5b can raise the lens when a wall stands between it and the shooter. */
+export function shoulderViewClear(shooter: Body, target: Body): CameraView {
+  return shoulderView(shooter, target)
 }
 
-/** How high the lens must rise to clear the terrain it sits in (or that is halfway to `anchor`); 0 when it is in the clear. */
-export function lensBlockedTop(map: MapDef | undefined, view: CameraView, anchor: readonly [number, number, number]): number {
-  const [px, py, pz] = view.position
-  let top = 0
-  for (const t of [0, 0.5]) {
-    const hit = solidTopAt(map, px + (anchor[0] - px) * t, py + (anchor[1] - py) * t, pz + (anchor[2] - pz) * t)
-    if (hit !== null) top = Math.max(top, hit)
-  }
-  return top
-}
-
-/**
- * Picks the first of: the right shoulder, the left shoulder, the right shoulder raised above whatever the lens is
- * inside (capped at MAX_RAISE). `anchor` is the figure the lens must not be walled off from.
- */
-export function clearView(map: MapDef | undefined, make: (o: ViewOpts) => CameraView, anchor: readonly [number, number, number]): CameraView {
-  const right = make({ side: 1 })
-  if (lensBlockedTop(map, right, anchor) === 0) return right
-  const left = make({ side: -1 })
-  if (lensBlockedTop(map, left, anchor) === 0) return left
-  const top = lensBlockedTop(map, right, anchor)
-  return make({ side: 1, raise: Math.min(MAX_RAISE, Math.max(0, top + 0.3 - right.position[1])) })
-}
-
-export function shoulderViewClear(map: MapDef | undefined, shooter: Body, target: Body): CameraView {
-  return clearView(map, (o) => shoulderView(shooter, target, o), [shooter.x, headOf(shooter), shooter.z])
-}
-
-export function closeupViewClear(map: MapDef | undefined, shooter: Body, target: Body): CameraView {
-  return clearView(map, (o) => closeupView(shooter, target, o), [target.x, chestOf(target), target.z])
+export function closeupViewClear(shooter: Body, target: Body): CameraView {
+  return closeupView(shooter, target)
 }
 
 /** What a landing earns: a close-up only when a die got through; a save shimmer or a miss does not. */

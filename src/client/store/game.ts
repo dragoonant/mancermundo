@@ -1,7 +1,7 @@
-// Client game store (docs/spec/50-client.md): the ONLY caller of engine.step. Owns the live GameState, the
-// pending decision and the legal actions; answers bot seats with the random bot after presentation idle
-// (with a watchdog so a stuck decision can never leave the UI waiting); pushes every accepted step through
-// the presentation director and the presented-seq cursor so results never show early.
+// Client game store (docs/spec/50-client.md): the ONLY caller of engine.step. Owns the live GameState, the pending decision and
+// the legal actions; answers bot seats with the random bot once the presentation is idle (with a watchdog so a stuck decision can
+// never leave the UI waiting); pushes every accepted step through the presentation director and the presented-seq cursor so
+// results never show early.
 import { create } from 'zustand'
 import {
   createGame,
@@ -9,25 +9,20 @@ import {
   load as engineLoad,
   save as engineSave,
   step,
-  view as seatView,
-  suggestPlacement,
+  suggest,
   type Action,
   type GameEvent,
   type GameState,
   type PendingDecision,
   type Rejection,
-  type Seat,
   type SaveFile,
+  type Seat,
 } from '@/engine'
-import type { MissionData } from '@/data'
-import { buildGameSetup, dataBundle, engineBundle, type SeatBuild } from '../game/adapter'
-import { effectiveLayout } from '../game/defaults'
+import { buildGameSetup, engineBundle, type SeatBuild } from '../game/adapter'
 import { rejectionText } from '../game/labels'
 import { RandomBot } from '../bot/randomBot'
-import { AiWorkerClient } from '../bot/aiWorkerClient'
-import { getBotTier, type BotTier } from '../bot/botTier'
 import { clearAnims } from '../presentation/animStore'
-import { enqueueBatch, resetDirector, setDirectorPerspective } from '../presentation/director'
+import { enqueueBatch, resetDirector, setDirectorBotSeats, setDirectorPerspective } from '../presentation/director'
 import { clearFeed, clearToasts, pushToast } from '../presentation/feedStore'
 import { waitForPresentationIdle } from '../presentation/idleStore'
 import { isAnnouncementHolding } from '../presentation/announceStore'
@@ -38,10 +33,8 @@ import { clearSave, SAVE_ENVELOPE_VERSION, SAVE_KIND, writeSave, type SaveEnvelo
 
 export interface GameMeta {
   seed: string
-  missionId: string
-  layoutId: string
-  /** the mission record from data (text, scoring); the engine's own pick is state.mission */
-  mission: MissionData
+  scenarioId: string
+  boardId: string
   builds: Record<Seat, SeatBuild>
 }
 
@@ -49,16 +42,9 @@ export interface NewGameOptions {
   builds: Record<Seat, SeatBuild>
   seats: Record<Seat, SeatMode>
   seed: string
-  missionId: string
-  /** a layout id, or 'auto' to roll one of the official cards from the seed */
-  layoutId: string
-  /** only honoured when the layout lists it; an official card names its own map */
-  mapId?: string | null
-  /** the human places objective and equipment markers on the board instead of the engine's suggestions */
-  manualPlacement?: boolean
-  /** AI tier for bot seats (random | easy | normal); defaults to the Start screen's choice (`getBotTier`) */
-  botTier?: BotTier
-  /** rewrite the freshly created game before it is shown (scenario fixtures, dev/scenarios.ts); events of the skipped steps are not replayed */
+  scenarioId: string
+  boardId: string
+  /** rewrite the freshly created game before it is shown (dev fixtures); events of the skipped steps are not replayed */
   prepare?: (state: GameState) => GameState
 }
 
@@ -91,10 +77,7 @@ const WATCHDOG_POLL_MS = 1000
 
 let generation = 0
 let bots: Record<Seat, RandomBot> | null = null
-let aiClient: AiWorkerClient | null = null
-let botTier: BotTier = 'normal'
-let botSeed = ''
-/** false for games rewritten after creation (scenario fixtures): their log does not replay, so they are never saved */
+/** false for games rewritten after creation (dev fixtures): their log does not replay, so they are never saved */
 let savable = true
 let botTimer: ReturnType<typeof setTimeout> | null = null
 let watchdog: ReturnType<typeof setInterval> | null = null
@@ -104,6 +87,14 @@ let rejectionNonce = 0
 
 function sleep(ms: number): Promise<void> {
   return ms > 0 ? new Promise((r) => setTimeout(r, ms)) : Promise.resolve()
+}
+
+function perspectiveOf(seats: Record<Seat, SeatMode>): Seat | null {
+  return seats.A === 'human' ? 'A' : seats.B === 'human' ? 'B' : null
+}
+
+function botSeatsOf(seats: Record<Seat, SeatMode>): Seat[] {
+  return (['A', 'B'] as const).filter((s) => seats[s] === 'bot')
 }
 
 export const useGame = create<GameStore>((set, get) => {
@@ -131,17 +122,7 @@ export const useGame = create<GameStore>((set, get) => {
         kind: SAVE_KIND,
         v: SAVE_ENVELOPE_VERSION,
         savedAt: Date.now(),
-        meta: {
-          seats: { ...seats },
-          botTier,
-          seed: meta.seed,
-          missionId: meta.missionId,
-          layoutId: meta.layoutId,
-          builds: meta.builds,
-          teams: { A: state.players.A.teamId, B: state.players.B.teamId },
-          turningPoint: state.turningPoint,
-          phase: state.phase,
-        },
+        meta: { seats: { ...seats }, seed: meta.seed, scenarioId: meta.scenarioId, boardId: meta.boardId, builds: meta.builds, round: state.round, phase: state.phase },
         file: engineSave(state),
       }
       writeSave(env)
@@ -162,20 +143,20 @@ export const useGame = create<GameStore>((set, get) => {
     }, 0)
   }
 
-  /** Answer the pending decision for a bot seat. Tries the bot, then every legal action, then pass. */
-  function answerForBot(expectedId: string, preferred: Action | null = null): void {
+  /** Answer the pending decision for a bot seat. Tries the bot, then every legal action, then the engine's suggestion, then pass. */
+  function answerForBot(expectedId: string): void {
     const { state, pending } = get()
     if (!state || !pending || pending.id !== expectedId) return
     const candidates: Action[] = []
-    if (preferred) candidates.push(preferred)
     try {
       candidates.push(bots![pending.seat].decide(state, pending))
     } catch (e) {
       console.warn('[bot] decide failed', e)
     }
     for (const a of legalActions(state, pending) ?? []) candidates.push(a)
+    const s = suggest(state, pending)
+    if (s) candidates.push(s)
     if (pending.canPass) candidates.push({ type: 'pass', seat: pending.seat, decisionId: pending.id, payload: {} })
-    for (const a of fallbackAnswers(state, pending)) candidates.push(a)
     for (const a of candidates) {
       const r = step(state, a)
       if (!r.rejection) {
@@ -196,19 +177,7 @@ export const useGame = create<GameStore>((set, get) => {
     await waitForPresentationIdle(PRESENTATION_IDLE_TIMEOUT_MS + backlog * 150)
     await sleep(Math.round(BOT_DELAY_MS * speedFactor(useSettings.getState().animSpeed)))
     if (gen !== generation) return
-    // the AI answers in a Web Worker (3 s timeout, random fallback); the random bot below is the last resort
-    let preferred: Action | null = null
-    const { state, pending } = get()
-    if (aiClient && state && pending && pending.id === expectedId) {
-      try {
-        const answer = await aiClient.decide(seatView(state, pending.seat), pending, legalActions(state, pending), botTier, `${botSeed}:${pending.seat}`, `${botSeed}:${pending.seat}`)
-        preferred = answer.action
-      } catch (e) {
-        console.warn('[bot] ai failed', e)
-      }
-      if (gen !== generation) return
-    }
-    answerForBot(expectedId, preferred)
+    answerForBot(expectedId)
   }
 
   function startWatchdog(): void {
@@ -251,40 +220,17 @@ export const useGame = create<GameStore>((set, get) => {
       resetDirector()
       clearAnims()
       clearFeed()
-      setDirectorPerspective(opts.seats.A === 'human' ? 'A' : opts.seats.B === 'human' ? 'B' : null)
-      const b = dataBundle()
-      const mission = b.missions[opts.missionId]
-      if (!mission) throw new Error(`unknown mission: ${opts.missionId}`)
-      // 'auto' is rolled from the seed here, so the game meta, the briefing and the panels all show the real layout
-      const layout = effectiveLayout(b, opts.layoutId, opts.seed)
-      // an official card is terrain plus map: buildGameSetup plays the layout's own map
-      const setup = buildGameSetup(b, opts.builds.A, opts.builds.B, { layoutId: layout.id, missionId: mission.id, mapId: opts.mapId, auto: opts.manualPlacement !== true })
+      setDirectorPerspective(perspectiveOf(opts.seats))
+      setDirectorBotSeats(botSeatsOf(opts.seats))
+      const setup = buildGameSetup(opts.builds, { scenarioId: opts.scenarioId, boardId: opts.boardId })
       let r = createGame(setup, opts.seed, engineBundle())
       if (opts.prepare) {
         const prepared = opts.prepare(r.state)
         r = { state: prepared, pending: prepared.pending, events: [] }
       }
       bots = { A: new RandomBot(`${opts.seed}:A`), B: new RandomBot(`${opts.seed}:B`) }
-      botTier = opts.botTier ?? getBotTier()
       savable = !opts.prepare
-      botSeed = opts.seed
-      aiClient ??= new AiWorkerClient()
-      aiClient.reset()
-      set({
-        state: null,
-        pending: null,
-        legal: null,
-        events: [],
-        rejection: null,
-        seats: { ...opts.seats },
-        meta: {
-          seed: opts.seed,
-          missionId: opts.missionId,
-          layoutId: layout.id,
-          mission,
-          builds: opts.builds,
-        },
-      })
+      set({ state: null, pending: null, legal: null, events: [], rejection: null, seats: { ...opts.seats }, meta: { seed: opts.seed, scenarioId: opts.scenarioId, boardId: opts.boardId, builds: opts.builds } })
       resetPresentation(r.state.seq, r.state)
       set({ state: r.state, pending: r.pending, legal: r.pending ? legalActions(r.state, r.pending) : [], events: [...r.events] })
       enqueueBatch({ seq: r.state.seq, events: r.events, state: r.state })
@@ -294,24 +240,18 @@ export const useGame = create<GameStore>((set, get) => {
     },
 
     restore(env) {
-      const b = dataBundle()
       // replay first: if it is rejected or the hash differs this throws before anything on screen or in the store changes
       const r = engineLoad(env.file, engineBundle())
       const { meta: m } = env
-      const mission = b.missions[m.missionId]
-      if (!mission) throw new Error(`unknown mission: ${m.missionId}`)
       generation++
       if (botTimer) clearTimeout(botTimer)
       resetDirector()
       clearAnims()
       clearFeed()
-      setDirectorPerspective(m.seats.A === 'human' ? 'A' : m.seats.B === 'human' ? 'B' : null)
+      setDirectorPerspective(perspectiveOf(m.seats))
+      setDirectorBotSeats(botSeatsOf(m.seats))
       bots = { A: new RandomBot(`${m.seed}:A`), B: new RandomBot(`${m.seed}:B`) }
-      botTier = m.botTier
-      botSeed = m.seed
       savable = true
-      aiClient ??= new AiWorkerClient()
-      aiClient.reset()
       resetPresentation(r.state.seq, r.state)
       set({
         state: r.state,
@@ -320,9 +260,9 @@ export const useGame = create<GameStore>((set, get) => {
         events: [],
         rejection: null,
         seats: { ...m.seats },
-        meta: { seed: m.seed, missionId: m.missionId, layoutId: m.layoutId, mission, builds: m.builds },
+        meta: { seed: m.seed, scenarioId: m.scenarioId, boardId: m.boardId, builds: m.builds },
       })
-      // an empty batch: the board opens on the current position; no dice, shots, banners or camera flights are replayed
+      // an empty batch: the board opens on the current position; no dice, shots or banners are replayed
       enqueueBatch({ seq: r.state.seq, events: [], state: r.state })
       startWatchdog()
       scheduleBot()
@@ -378,25 +318,6 @@ export const useGame = create<GameStore>((set, get) => {
     },
   }
 })
-
-/**
- * Answers a bot can still try when its own guess and the enumerated legal actions were all rejected: a deploy
- * spot from the engine's placement search, the suggested spot for an equipment marker, a pass.
- */
-function fallbackAnswers(state: GameState, pending: PendingDecision): Action[] {
-  const out: Action[] = []
-  if (pending.kind === 'setup.deploy') {
-    for (let skip = 0; skip < 40; skip += 5) {
-      const spot = suggestPlacement(state, pending, undefined, skip)
-      if (spot) out.push({ type: 'setup.deploy', seat: pending.seat, decisionId: pending.id, payload: { operativeId: spot.operativeId, x: spot.x, z: spot.z, y: spot.y } })
-    }
-  }
-  if (pending.kind === 'setup.equipMarker') {
-    const s = pending.context.suggestion as { x: number; z: number; yaw?: number } | undefined
-    if (s) out.push({ type: 'setup.equipMarker', seat: pending.seat, decisionId: pending.id, payload: { x: s.x, z: s.z, ...(s.yaw !== undefined ? { yaw: s.yaw } : {}) } })
-  }
-  return out
-}
 
 /** Seat whose decision is pending and who is a human (the UI may act for it). */
 export function humanToAct(): Seat | null {

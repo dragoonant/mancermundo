@@ -1,16 +1,14 @@
-// window.__ms (docs/spec/50-client.md section 4): test hooks installed when ?test=1 (or ?gallery/?debug).
-// Read-only views of the store plus `dispatch`; the store remains the only step caller.
-import { legalActions, step, suggestPlacement, type Action } from '@/engine'
-import { act } from '@/engine/actions'
-import { audio } from '../audio/instance'
-import { RandomBot } from '../bot/randomBot'
-import { useFeedStore } from '../presentation/feedStore'
+// window.__ms (docs/spec/50-client.md section 4): test hooks installed when ?test=1 (or ?debug). Read-only views of the store plus
+// `dispatch`; the store remains the only step caller.
+import { legalActions, suggest, validate, type Action } from '@/engine'
 import { cameraApi } from '../board/cameraApi'
+import { RandomBot } from '../bot/randomBot'
+import { deployFacing, deployFighterFor, previewDeploy, routeTo } from '../interaction/controller'
 import { currentParams } from '../params'
 import { useAnnouncementStore } from '../presentation/announceStore'
+import { useFeedStore } from '../presentation/feedStore'
 import { pickDisplaySnapshot, usePresentedStore } from '../presentation/presentedStore'
 import { useUi } from '../ui/uiStore'
-import { useSight } from '../interaction/sightStore'
 import { useGame } from './game'
 import { useSession } from './session'
 
@@ -25,24 +23,22 @@ export interface MsHooks {
   params(): unknown
   /** presentation caught up with the engine and no banner is showing */
   settled(): boolean
-  /** a legal deploy spot for the pending setup.deploy (engine suggestPlacement) with its page pixel */
-  suggestSpot(skip?: number): { operativeId: string; x: number; y: number; z: number; px: number; py: number } | null
-  /** would the engine accept the pending move.path along these waypoints? A dry run: nothing is dispatched */
-  pathOk(waypoints: { x: number; z: number }[]): boolean
+  /** a legal deploy spot for the pending setup.deploy (engine suggest) with its page pixel */
+  suggestSpot(): { fighterId: string; x: number; z: number; px: number; py: number } | null
+  /** would the engine accept the next deploy click at (x, z)? A dry run: nothing is dispatched */
+  deployOk(x: number, z: number): boolean
+  /** would a click at (x, z) be accepted for the pending move.path? A dry run: nothing is dispatched */
+  routeOk(x: number, z: number): { ok: boolean; cost: number; left: number; reason: string | null }
   project(x: number, y: number, z: number): { x: number; y: number } | null
   camera: typeof cameraApi
   session(): unknown
   ui(): unknown
-  /** sight-line tools: overlay on/off, threat preference, measure tool state (client only) */
-  sight(): unknown
   /** answer the pending decision (whatever seat) with the random bot's choice; false when nothing is pending */
   autoStep(): boolean
   /** the toasts currently on screen */
   toasts(): { text: string; kind: string }[]
   /** every event of the battle so far */
   events(): unknown[]
-  /** the sound ids requested so far (newest last) */
-  sounds(): string[]
 }
 
 declare global {
@@ -65,7 +61,7 @@ function autoStep(): boolean {
   }
   candidates.push(...(legalActions(state, pending) ?? []))
   for (const a of candidates) {
-    if (!step(state, a).rejection) return dispatch(a) === null
+    if (!validate(state, a)) return dispatch(a) === null
   }
   return false
 }
@@ -73,7 +69,7 @@ function autoStep(): boolean {
 export function installTestHooks(): void {
   if (typeof window === 'undefined') return
   const p = currentParams()
-  if (!p.test && !p.scenario && !p.gallery && !new URLSearchParams(location.search).has('debug')) return
+  if (!p.test && !new URLSearchParams(location.search).has('debug')) return
   window.__ms = {
     getState: () => useGame.getState().state,
     getPending: () => useGame.getState().pending,
@@ -89,30 +85,34 @@ export function installTestHooks(): void {
       const s = usePresentedStore.getState()
       return s.presentedSeq >= s.latestSeq && useAnnouncementStore.getState().current === null
     },
-    suggestSpot: (skip = 0) => {
+    suggestSpot: () => {
       const { state, pending } = useGame.getState()
       if (!state || !pending || pending.kind !== 'setup.deploy') return null
-      const picked = useUi.getState().deployOp
-      const ids = pending.constraints?.operativeIds ?? []
-      const id = picked && ids.includes(picked) ? picked : ids[0]
-      const spot = suggestPlacement(state, pending, id, skip)
-      if (!spot) return null
-      const px = cameraApi.current?.project(spot.x, spot.y, spot.z)
-      return { ...spot, px: px?.x ?? -1, py: px?.y ?? -1 }
+      const a = suggest(state, pending)
+      if (!a || a.type !== 'setup.deploy') return null
+      const id = deployFighterFor(pending, useUi.getState().deployFighter)
+      const spot = a.payload
+      const px = cameraApi.current?.project(spot.x, 0, spot.z)
+      return { fighterId: id ?? spot.fighterId, x: spot.x, z: spot.z, px: px?.x ?? -1, py: px?.y ?? -1 }
     },
-    pathOk: (waypoints) => {
+    deployOk: (x, z) => {
       const { state, pending } = useGame.getState()
-      if (!state || !pending || pending.kind !== 'move.path') return false
-      return !step(state, act.path(pending, waypoints.map(({ x, z }) => ({ x, z })))).rejection
+      if (!state || !pending || pending.kind !== 'setup.deploy') return false
+      const id = deployFighterFor(pending, useUi.getState().deployFighter)
+      return !!id && previewDeploy(state, pending, id, { x, z }, deployFacing(pending, useUi.getState().facing)).ok
+    },
+    routeOk: (x, z) => {
+      const { state, pending } = useGame.getState()
+      if (!state || !pending || pending.kind !== 'move.path') return { ok: false, cost: 0, left: 0, reason: 'no move pending' }
+      const r = routeTo(state, pending, { x, z })
+      return { ok: r.ok, cost: r.cost, left: r.left, reason: r.reason }
     },
     project: (x, y, z) => cameraApi.current?.project(x, y, z) ?? null,
     camera: cameraApi,
     session: () => useSession.getState(),
     ui: () => useUi.getState(),
-    sight: () => useSight.getState(),
     autoStep,
     toasts: () => useFeedStore.getState().toasts.map((t) => ({ text: t.text, kind: t.kind })),
     events: () => useGame.getState().events,
-    sounds: () => [...audio.history],
   }
 }

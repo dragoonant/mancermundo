@@ -21,18 +21,28 @@ const NEUTRAL: HousePaint = { major: { h: 0.6, s: 0.2, l: 0.42 }, minor: { h: 0.
 
 export const SEAT_COLOR: Record<Seat, string> = { A: colors.playerA, B: colors.playerB }
 
-export function LabFighter({ f }: { f: PlacedFighter }) {
+/** The body of a fighter: the manifest GLB when it lists one for the archetype, else the procedural stand-in (no facing wedge). */
+export function FighterBody({ f }: { f: PlacedFighter }) {
   const manifest = useBodyManifest()
   const paint = HOUSE_PAINT[f.house] ?? NEUTRAL
   const body = bodyFor(manifest, f.archetype, f.id)
   const glbSlug = body?.slug
   const flip = body?.flip ?? false
   const seatColor = SEAT_COLOR[f.seat]
-  const R = f.baseRadius
   // the stand-in is drawn until the GLB is ready (useGlbInstance returns null meanwhile); once a GLB exists the stand-in goes
+  return glbSlug ? (
+    <GlbOrStandIn slug={glbSlug} flip={flip} f={f} paint={paint} seatColor={seatColor} />
+  ) : (
+    <Procedural height={f.height} baseRadius={f.baseRadius} major={paint.major} minor={paint.minor} ranged={f.ranged} melee={f.melee} seatColor={seatColor} />
+  )
+}
+
+export function LabFighter({ f }: { f: PlacedFighter }) {
+  const seatColor = SEAT_COLOR[f.seat]
+  const R = f.baseRadius
   return (
     <group position={[f.pos.x, 0, f.pos.z]} rotation={[0, f.facing, 0]} name={`fighter-${f.id}`}>
-      {glbSlug ? <GlbOrStandIn slug={glbSlug} flip={flip} f={f} paint={paint} seatColor={seatColor} /> : <Procedural height={f.height} baseRadius={R} major={paint.major} minor={paint.minor} ranged={f.ranged} melee={f.melee} seatColor={seatColor} />}
+      <FighterBody f={f} />
       {/* facing wedge on the floor in front of the base */}
       <mesh position={[0, 0.06, R + 0.38]} rotation={[Math.PI / 2, 0, 0]} scale={[1, 1, 0.22]}>
         <coneGeometry args={[R * 0.5, 0.7, 3]} />

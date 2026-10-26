@@ -3,7 +3,9 @@
 //  - the player's own deploy: remember the view they had (the place to come back to)
 //  - a bot seat's deploy while a human plays against it: fly to the new figure, hold, fly back
 //  - hot-seat (no bot seat), bot-vs-bot (no perspective), instant speed, or any non-setup deploy: nothing
+import '@/engine' // the engine's modules import each other in a cycle: enter through the index before any submodule
 import type { GameEvent, GameState, Seat } from '@/engine'
+import { deploymentRects } from '@/engine/setup'
 import type { CameraView } from '../board/cameraApi'
 
 /** Base durations (ms at normal speed); the director multiplies by speedFactor. */
@@ -29,7 +31,7 @@ export function deployBeats(events: readonly GameEvent[], phase: GameState['phas
   const out: { index: number; beat: DeployBeat }[] = []
   if (phase !== 'setup' || ctx.factor <= 0 || ctx.perspective === null || ctx.botSeats.length === 0 || ctx.botSeats.includes(ctx.perspective)) return out
   events.forEach((ev, index) => {
-    if (ev.type !== 'OperativeDeployed' || ev.seat === null) return
+    if (ev.type !== 'FighterDeployed' || ev.seat === null) return
     if (ev.seat === ctx.perspective) out.push({ index, beat: { kind: 'record' } })
     else if (ctx.botSeats.includes(ev.seat)) out.push({ index, beat: { kind: 'visit', x: ev.pos.x, z: ev.pos.z } })
   })
@@ -43,17 +45,22 @@ export function deployTimes(factor: number): { fly: number; hold: number } {
 /** Where to look to frame a seat's chosen drop zone (centre of its bounding box, distance that fits it), or null if none is chosen yet. */
 export function zoneFocus(state: GameState, seat: Seat | null): { x: number; z: number; distance: number } | null {
   if (!seat) return null
-  const id = state.players?.[seat]?.dropZoneId
-  const zone = id ? state.map?.dropZones?.find((z) => z.id === id) : null
-  if (!zone || zone.polygon.length === 0) return null
-  const xs = zone.polygon.map((p) => p.x)
-  const zs = zone.polygon.map((p) => p.z)
+  let rects
+  try {
+    rects = deploymentRects(state, seat)
+  } catch {
+    return null
+  }
+  const pts = rects.flat()
+  if (pts.length === 0) return null
+  const xs = pts.map((p) => p.x)
+  const zs = pts.map((p) => p.z)
   const [x0, x1, z0, z1] = [Math.min(...xs), Math.max(...xs), Math.min(...zs), Math.max(...zs)]
   const size = Math.max(x1 - x0, z1 - z0)
   return { x: (x0 + x1) / 2, z: (z0 + z1) / 2, distance: Math.min(34, Math.max(16, size * 1.1 + 6)) }
 }
 
-/** The view to return to: the player's last deploy view, else their drop zone, else wherever the camera was before the visit. */
+/** The view to return to: the player's last deploy view, else their deployment strip, else wherever the camera was before the visit. */
 export function returnView<V>(lastPlayerView: V | null, zoneView: V | null, before: V): V {
   return lastPlayerView ?? zoneView ?? before
 }

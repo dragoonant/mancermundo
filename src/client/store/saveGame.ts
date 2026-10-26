@@ -1,11 +1,9 @@
-// Save game (one game in progress per browser, kept in localStorage on this device only). The engine's SaveFile is
-// a replay (setup + seed + action log + final hash), so it is tiny and exact; the client wraps it in one versioned
-// envelope with the bits only the client knows (seats, bot level, the team builds, a summary for the Continue card).
-// Nothing here throws: storage errors (quota, private mode, blocked) are swallowed and a bad save reads as "discarded".
+// Save game (one game in progress per browser, kept in localStorage on this device only). The engine's SaveFile is a replay
+// (setup + seed + action log + final hash), so it is tiny and exact; the client wraps it in one versioned envelope with the bits
+// only the client knows (seats, the starter gangs, a summary for the Continue card). Nothing here throws: storage errors (quota,
+// private mode, blocked) are swallowed and a bad save reads as "discarded".
 import type { Seat, SaveFile } from '@/engine'
 import type { SeatMode } from '../params'
-import type { BotTier } from '../bot/botTier'
-import { isTier } from '../bot/botTier'
 import { dataBundle, type SeatBuild } from '../game/adapter'
 
 export const SAVE_KEY = 'ms.save'
@@ -14,14 +12,12 @@ export const SAVE_ENVELOPE_VERSION = 1
 
 export interface SaveMeta {
   seats: Record<Seat, SeatMode>
-  botTier: BotTier
   seed: string
-  missionId: string
-  layoutId: string
+  scenarioId: string
+  boardId: string
   builds: Record<Seat, SeatBuild>
   /** summary for the Continue card, refreshed on every save */
-  teams: Record<Seat, string>
-  turningPoint: number
+  round: number
   phase: string
 }
 
@@ -41,8 +37,8 @@ export const DISCARD_MESSAGE: Record<DiscardReason, string> = {
 }
 
 export interface SaveSummary {
-  teamA: string
-  teamB: string
+  gangA: string
+  gangB: string
   /** 'Hot-seat' or 'vs bot' */
   mode: string
   progress: string
@@ -92,7 +88,7 @@ function isObj(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null
 }
 
-/** Shape and data check only (cheap): a save whose teams or mission no longer exist cannot be restored. Returns null when fine. */
+/** Shape and data check only (cheap): a save whose gangs, scenario or board no longer exist cannot be restored. Returns null when fine. */
 export function envelopeProblem(e: unknown): DiscardReason | null {
   if (!isObj(e) || e.kind !== SAVE_KIND) return 'unreadable'
   if (e.v !== SAVE_ENVELOPE_VERSION) return 'outdated'
@@ -101,17 +97,16 @@ export function envelopeProblem(e: unknown): DiscardReason | null {
   if (typeof e.savedAt !== 'number' || !isObj(m) || !isObj(f)) return 'unreadable'
   if (f.version !== 1 || typeof f.seed !== 'string' || typeof f.finalHash !== 'string' || !Array.isArray(f.actions) || !isObj(f.setup)) return 'unreadable'
   const seats = m.seats
-  const teams = m.teams
   const builds = m.builds
-  if (!isObj(seats) || !isObj(teams) || !isObj(builds) || !isObj(builds.A) || !isObj(builds.B)) return 'unreadable'
+  if (!isObj(seats) || !isObj(builds) || !isObj(builds.A) || !isObj(builds.B)) return 'unreadable'
   if (!['human', 'bot'].includes(String(seats.A)) || !['human', 'bot'].includes(String(seats.B))) return 'unreadable'
-  if (!isTier(m.botTier) || typeof m.missionId !== 'string' || typeof m.layoutId !== 'string' || typeof m.seed !== 'string') return 'unreadable'
-  if (typeof m.turningPoint !== 'number' || typeof m.phase !== 'string') return 'unreadable'
+  if (typeof m.scenarioId !== 'string' || typeof m.boardId !== 'string' || typeof m.seed !== 'string') return 'unreadable'
+  if (typeof m.round !== 'number' || typeof m.phase !== 'string') return 'unreadable'
   const b = dataBundle()
-  if (!b.missions[m.missionId] || !b.layouts[m.layoutId]) return 'outdated'
+  if (!b.scenarios[m.scenarioId] || !b.boards[m.boardId]) return 'outdated'
   for (const s of ['A', 'B']) {
-    const id = teams[s]
-    if (typeof id !== 'string' || !b.teams[id] || (builds[s] as { teamId?: unknown }).teamId !== id) return 'outdated'
+    const id = (builds[s] as { starterId?: unknown }).starterId
+    if (typeof id !== 'string' || !b.starterGangs[id]) return 'outdated'
   }
   return null
 }
@@ -139,22 +134,21 @@ export function readSave(): ReadResult {
 
 // ---------------------------------------------------------------- summary for the Continue card
 
-const PHASE_WORD: Record<string, string> = { strategy: 'Strategy phase', firefight: 'Firefight phase' }
-
-export function progressText(turningPoint: number, phase: string): string {
-  if (phase === 'setup' || turningPoint < 1) return 'Setting up the battle'
-  return `Turning point ${turningPoint}, ${PHASE_WORD[phase] ?? phase}`
+export function progressText(round: number, phase: string): string {
+  if (phase === 'setup' || round < 1) return 'Setting up the battle'
+  const word = phase === 'priority' ? 'Priority phase' : phase === 'action' ? 'Action phase' : phase === 'end' ? 'End phase' : phase
+  return `Round ${round}, ${word}`
 }
 
 export function summarize(env: SaveEnvelope): SaveSummary {
-  const teams = dataBundle().teams
+  const gangs = dataBundle().starterGangs
   const { meta } = env
   const bots = (['A', 'B'] as const).filter((s) => meta.seats[s] === 'bot').length
   return {
-    teamA: teams[meta.teams.A]?.name ?? meta.teams.A,
-    teamB: teams[meta.teams.B]?.name ?? meta.teams.B,
+    gangA: gangs[meta.builds.A.starterId]?.name ?? meta.builds.A.starterId,
+    gangB: gangs[meta.builds.B.starterId]?.name ?? meta.builds.B.starterId,
     mode: bots === 0 ? 'Hot-seat' : 'vs bot',
-    progress: progressText(meta.turningPoint, meta.phase),
+    progress: progressText(meta.round, meta.phase),
     savedAt: env.savedAt,
   }
 }
