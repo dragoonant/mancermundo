@@ -574,6 +574,10 @@ const DEPLOY_STEP = 0.25
  * gap to the bases already placed. `null` when the region is full.
  */
 export function findDeploySpot(state: GameState, f: Fighter, rects: Polygon[]): Vec2 | null {
+  return deploySpot(state, f, rects, true) ?? deploySpot(state, f, rects, false)
+}
+
+function deploySpot(state: GameState, f: Fighter, rects: Polygon[], clearance: boolean): Vec2 | null {
   if (rects.length === 0) return null
   const poly = regionPolygon(rects)
   const minX = poly[0]!.x
@@ -589,7 +593,7 @@ export function findDeploySpot(state: GameState, f: Fighter, rects: Polygon[]): 
     if (!baseInRegion(rects, c, f.baseRadius)) continue
     if (spotProblem(state, f, c)) continue
     if (placed.some((g) => Math.hypot(g.pos.x - c.x, g.pos.z - c.z) < g.baseRadius + f.baseRadius + AUTO_GAP)) continue
-    if (clearanceProblem(state, f, c)) continue
+    if (clearance && clearanceProblem(state, f, c)) continue
     return c
   }
   return null
@@ -682,7 +686,9 @@ function handleDeploy(state: GameState, action: Action, pending: PendingDecision
   const f = getFighter(state, p.fighterId)
   const at = { x: round3(p.x), z: round3(p.z) }
   if (!baseInRegion(deploymentRects(state, seat), at, f.baseRadius)) return reject('E_OUT_OF_RANGE', 'the base must lie wholly inside the deployment zone')
-  const problem = spotProblem(state, f, at) ?? clearanceProblem(state, f, at)
+  // the enemy clearance yields when no spot in the tile can keep it, so tile deployment never dead-ends (RULING M-4.4 clearance)
+  const tooClose = clearanceProblem(state, f, at)
+  const problem = spotProblem(state, f, at) ?? (tooClose && deploySpot(state, f, deploymentRects(state, seat), true) ? tooClose : null)
   if (problem) return { rejection: problem }
   return {
     run(ctx) {

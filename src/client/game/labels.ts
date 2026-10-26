@@ -174,7 +174,7 @@ export function optionLabel(opt: DecisionOption, state: GameState | null): strin
       return c === 'first' ? 'Set up first' : c === 'second' ? 'Set up second' : c === 'attacker' ? 'Be the attacker' : 'Be the defender'
     }
     case 'setup.zone':
-      return a.payload.zoneId === 'low' ? 'Far half (top of the screen)' : a.payload.zoneId === 'high' ? 'Near half (bottom of the screen)' : humanize(a.payload.zoneId)
+      return a.payload.zoneId === 'low' ? 'Far half (top of the screen)' : a.payload.zoneId === 'high' ? 'Near half (bottom of the screen)' : tilePlace(state, a.payload.zoneId)
     case 'action.choose':
       return chooseLabel(a.payload, state, d)
     case 'shoot.weapon': {
@@ -477,4 +477,13 @@ export function postureWord(p: string): string {
 export function diceOf(ev: GameEvent): { purpose: string; dice: number[]; faces?: string[] } | null {
   if (ev.type !== 'DiceRolled') return null
   return { purpose: humanize(ev.purpose), dice: ev.dice, ...(ev.faces ? { faces: ev.faces } : {}) }
+}
+
+/** A deployment tile named by where it sits as the camera first looks (far is the top of the screen). */
+export function tilePlace(state: GameState | null | undefined, tileId: string): string {
+  const t = state?.board.def.tiles.find((x) => x.id === tileId)
+  if (!t) return humanize(tileId)
+  const row = t.centre.z < -1 ? 'Far' : t.centre.z > 1 ? 'Near' : 'Middle'
+  const col = t.centre.x < -1 ? 'left' : t.centre.x > 1 ? 'right' : 'centre'
+  return `${row} ${col} tile`
 }

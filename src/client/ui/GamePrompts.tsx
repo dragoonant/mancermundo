@@ -89,7 +89,12 @@ export function ZonePrompt({ pending, state }: { pending: PendingDecision; state
     <Cards
       pending={pending}
       state={state}
-      note={(o) => ((o.action.payload as { zoneId?: string }).zoneId === 'low' ? 'The far half, at the top of the screen as the camera first looks.' : 'The near half, at the bottom of the screen.')}
+      note={(o) => {
+        const zoneId = (o.action.payload as { zoneId?: string }).zoneId
+        if (zoneId === 'low') return 'The far half, at the top of the screen as the camera first looks.'
+        if (zoneId === 'high') return 'The near half, at the bottom of the screen.'
+        return 'Set up within 3" of the outer edge of this tile.'
+      }}
     />
   )
 }

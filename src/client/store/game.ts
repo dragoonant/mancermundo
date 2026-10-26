@@ -20,7 +20,7 @@ import {
 } from '@/engine'
 import { buildGameSetup, engineBundle, type SeatBuild } from '../game/adapter'
 import { rejectionText } from '../game/labels'
-import { RandomBot } from '../bot/randomBot'
+import { createAiBot, type AiBot } from '@/ai'
 import { clearAnims } from '../presentation/animStore'
 import { enqueueBatch, resetDirector, setDirectorBotSeats, setDirectorPerspective } from '../presentation/director'
 import { clearFeed, clearToasts, pushToast } from '../presentation/feedStore'
@@ -76,7 +76,7 @@ const NO_PROGRESS_MS = 5000
 const WATCHDOG_POLL_MS = 1000
 
 let generation = 0
-let bots: Record<Seat, RandomBot> | null = null
+let bots: Record<Seat, AiBot> | null = null
 /** false for games rewritten after creation (dev fixtures): their log does not replay, so they are never saved */
 let savable = true
 let botTimer: ReturnType<typeof setTimeout> | null = null
@@ -228,7 +228,7 @@ export const useGame = create<GameStore>((set, get) => {
         const prepared = opts.prepare(r.state)
         r = { state: prepared, pending: prepared.pending, events: [] }
       }
-      bots = { A: new RandomBot(`${opts.seed}:A`), B: new RandomBot(`${opts.seed}:B`) }
+      bots = { A: createAiBot('normal', `${opts.seed}:A`), B: createAiBot('normal', `${opts.seed}:B`) }
       savable = !opts.prepare
       set({ state: null, pending: null, legal: null, events: [], rejection: null, seats: { ...opts.seats }, meta: { seed: opts.seed, scenarioId: opts.scenarioId, boardId: opts.boardId, builds: opts.builds } })
       resetPresentation(r.state.seq, r.state)
@@ -250,7 +250,7 @@ export const useGame = create<GameStore>((set, get) => {
       clearFeed()
       setDirectorPerspective(perspectiveOf(m.seats))
       setDirectorBotSeats(botSeatsOf(m.seats))
-      bots = { A: new RandomBot(`${m.seed}:A`), B: new RandomBot(`${m.seed}:B`) }
+      bots = { A: createAiBot('normal', `${m.seed}:A`), B: createAiBot('normal', `${m.seed}:B`) }
       savable = true
       resetPresentation(r.state.seq, r.state)
       set({
