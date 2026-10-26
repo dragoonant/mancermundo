@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mancermundo.dev/schemas/weapon.schema.json",
+  "title": "Weapon profile",
+  "description": "One record per profile. Profiles of one physical weapon share profileGroup; datacard loadouts reference the group id (all profiles come together) or a single profile id.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "type", "atk", "hit", "dmg", "rules", "source"],
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/Id" },
+    "name": { "type": "string", "minLength": 1, "description": "Primary name; rules that name a weapon match this (R-9.8)." },
+    "profile": { "type": "string", "minLength": 1, "description": "Bracket name of the profile, for example supercharge." },
+    "team": { "$ref": "common.schema.json#/$defs/Id" },
+    "type": { "$ref": "common.schema.json#/$defs/WeaponType" },
+    "atk": { "type": "integer", "minimum": 1 },
+    "hit": { "$ref": "common.schema.json#/$defs/RollTarget" },
+    "dmg": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["normal", "crit"],
+      "properties": {
+        "normal": { "type": "integer", "minimum": 0 },
+        "crit": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "rules": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/WeaponRuleUse" } },
+    "profileGroup": { "$ref": "common.schema.json#/$defs/Id" },
+    "text": { "$ref": "common.schema.json#/$defs/Text" },
+    "code": { "$ref": "common.schema.json#/$defs/CodeName" },
+    "source": { "$ref": "common.schema.json#/$defs/Source" }
+  },
+  "dependentRequired": { "profileGroup": ["profile"] }
+}

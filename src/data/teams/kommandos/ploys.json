@@ -1,0 +1,122 @@
+[
+  {
+    "id": "kom.p.dakka-dakka-dakka",
+    "name": "DAKKA! DAKKA! DAKKA!",
+    "team": "kommandos",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "grantWeaponRule": { "rule": "core.wr.punishing", "filter": { "weaponType": "ranged" } },
+      "duration": "turningPoint",
+      "scope": { "side": "friendly", "keyword": "KOMMANDO" }
+    },
+    "text": "For the turning point your Kommandos ranged weapons gain Punishing.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md 2.5 Ploys table"
+  },
+  {
+    "id": "kom.p.waaagh",
+    "name": "WAAAGH!",
+    "team": "kommandos",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "grantWeaponRule": { "rule": "core.wr.balanced", "filter": { "weaponType": "melee" } },
+      "duration": "turningPoint",
+      "scope": { "side": "friendly", "keyword": "KOMMANDO" }
+    },
+    "text": "For the turning point your Kommandos melee weapons gain Balanced.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md 2.5 Ploys table"
+  },
+  {
+    "id": "kom.p.skulk-about",
+    "name": "SKULK ABOUT",
+    "team": "kommandos",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "retainSuccess": { "kind": "normal", "count": 1, "withoutRolling": true },
+      "duration": "turningPoint",
+      "trigger": { "window": "shoot.defenceRolled", "when": { "subjectOrder": "conceal" } },
+      "scope": { "side": "friendly", "keyword": "KOMMANDO" }
+    },
+    "text": "When an enemy shoots a friendly Kommando that has a Conceal order, keep one defence die as a normal success without rolling it, on top of any cover save.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md 2.5 Ploys table"
+  },
+  {
+    "id": "kom.p.ssssshhhh",
+    "name": "SSSSHHHH!",
+    "team": "kommandos",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "when": {
+      "turningPoint": { "min": 2 },
+      "anyOf": [{ "subjectNotValidTarget": true }, { "subjectOrder": "conceal", "subjectMoreThanFromEveryEnemy": 6 }]
+    },
+    "effect": { "move": { "kind": "dash", "free": true }, "scope": { "side": "friendly", "keyword": "KOMMANDO" } },
+    "text": "Each friendly Kommando that no enemy can target, or that has Conceal and is more than 6 inches from every enemy, takes a free Dash straight away. Not in the first turning point.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md 2.5 Ploys table"
+  },
+  {
+    "id": "kom.p.just-a-scratch",
+    "name": "JUST A SCRATCH",
+    "team": "kommandos",
+    "type": "firefight",
+    "cost": 1,
+    "window": ["shoot.defenceRolled", "fight.rolled"],
+    "effect": {
+      "ignoreDamage": { "kind": "normal" },
+      "scope": { "side": "friendly", "keyword": "KOMMANDO", "notKeywords": ["BOMB SQUIG", "GROT"] }
+    },
+    "text": "When an attack die would deal normal damage to a friendly Kommando (not a Squig or Grot), ignore that damage.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md 2.5 Ploys table"
+  },
+  {
+    "id": "kom.p.krump-em",
+    "name": "KRUMP 'EM!",
+    "team": "kommandos",
+    "type": "firefight",
+    "cost": 1,
+    "window": "turningPoint.end",
+    "effect": {
+      "extraAction": { "action": "fight", "count": 1, "free": true },
+      "scope": { "side": "friendly", "keyword": "KOMMANDO" }
+    },
+    "text": "At the end of the Firefight phase, one friendly Kommando takes a free Fight action.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md 2.5 Ploys table"
+  },
+  {
+    "id": "kom.p.kunnin-but-brutal",
+    "name": "KUNNIN' BUT BRUTAL",
+    "team": "kommandos",
+    "type": "firefight",
+    "cost": 1,
+    "window": "fight.rolled",
+    "when": { "subjectOrder": "conceal", "activationIncludes": ["charge"] },
+    "effect": {
+      "code": "kunninButBrutal",
+      "params": { "firstStrikeNormalBecomesCrit": true },
+      "scope": { "side": "friendly", "keyword": "KOMMANDO" }
+    },
+    "text": "When a friendly Kommando with a Conceal order fights in an activation that includes a Charge, the first normal success you strike with counts as a crit.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md 2.5 Ploys table"
+  },
+  {
+    "id": "kom.p.shake-it-off",
+    "name": "SHAKE IT OFF",
+    "team": "kommandos",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.activationStart",
+    "effect": {
+      "code": "shakeItOff",
+      "params": { "ignoreAplChangesUntil": "turningPoint.start", "alsoOnAplChange": true },
+      "scope": { "side": "friendly", "keyword": "KOMMANDO" }
+    },
+    "text": "When a friendly Kommando activates or has its APL changed, ignore every change to its APL until the start of the next turning point.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md 2.5 Ploys table"
+  }
+]

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0a10" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Mancermundo" />
+    <link rel="apple-touch-icon" href="/icons/icon-180.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <title>Mancermundo</title>
+    <!-- Match the scene's clear colour (Scene.tsx). Without it the page is white, and any frame the WebGL
+         canvas fails to present (first figure/shader upload, GPU context reset) flashes white. -->
+    <style>
+      :root {
+        --safe-top: env(safe-area-inset-top, 0px);
+        --safe-right: env(safe-area-inset-right, 0px);
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+        --safe-left: env(safe-area-inset-left, 0px);
+      }
+      html, body, #root { background: #0a0a10; margin: 0; height: 100%; height: 100dvh; }
+      html, body { overflow: hidden; overscroll-behavior: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+      /* phones: anything inside an .ms-touch container is a 44 px target (buttons, selects, labels, sliders) */
+      [data-ff="compact"] .ms-touch button, [data-ff="compact"] .ms-touch select, [data-ff="compact"] .ms-touch a[href], [data-ff="compact"] .ms-touch [role="button"] { min-height: 44px; min-width: 44px; touch-action: manipulation; }
+      [data-ff="compact"] .ms-touch label { min-height: 44px; }
+      [data-ff="compact"] .ms-touch input[type="range"] { height: 44px; }
+      [data-ff="compact"] .ms-touch input[type="checkbox"], [data-ff="compact"] .ms-touch input[type="radio"] { width: 24px; height: 24px; flex: 0 0 auto; }
+      canvas { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // iOS Safari ignores user-scalable=no: block its page pinch gestures and the double-tap zoom on the
+      // board. Scrolling inside panels is untouched (only gesture* events and canvas double-taps are stopped).
+      ;(function () {
+        var stop = function (e) { e.preventDefault() }
+        document.addEventListener('gesturestart', stop)
+        document.addEventListener('gesturechange', stop)
+        document.addEventListener('gestureend', stop)
+        var last = 0
+        document.addEventListener('touchend', function (e) {
+          var t = e.target
+          if (!t || t.tagName !== 'CANVAS' || e.touches.length > 0) return
+          var now = Date.now()
+          if (now - last < 320) e.preventDefault()
+          last = now
+        }, { passive: false })
+      })()
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

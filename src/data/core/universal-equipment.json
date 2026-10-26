@@ -1,0 +1,157 @@
+[
+  {
+    "id": "core.e.comms-device",
+    "name": "Comms Device",
+    "scope": "universal",
+    "count": 1,
+    "setup": { "type": "marker", "markerMm": 20, "whollyWithinTerritory": true },
+    "effect": { "code": "commsDevice", "params": { "supportRangeBonus": 3 } },
+    "text": "A marker in your territory. While a friendly operative controls it, every SUPPORT distance naming friendly operatives grows by 3 inches. The enemy marker gives you nothing.",
+    "source": "docs/spec/11-missions.md M-5.1"
+  },
+  {
+    "id": "core.e.mines",
+    "name": "Mines",
+    "scope": "universal",
+    "count": 1,
+    "setup": {
+      "type": "marker",
+      "markerMm": 20,
+      "whollyWithinTerritory": true,
+      "clearances": [{ "from": ["otherMarkers", "accessPoints", "accessibleTerrain"], "moreThan": 2 }]
+    },
+    "effect": { "code": "mines", "params": { "damage": "D3+3" } },
+    "text": "A hidden marker in your territory. The first time any operative comes within its control range the marker is removed and that operative takes D3+3 damage.",
+    "source": "docs/spec/11-missions.md M-5.2"
+  },
+  {
+    "id": "core.e.ammo-cache",
+    "name": "Ammo Cache",
+    "scope": "universal",
+    "count": 1,
+    "setup": { "type": "marker", "markerMm": 20, "whollyWithinTerritory": true },
+    "actions": ["core.a.ammo-resupply"],
+    "text": "A supply marker in your territory that lets a controlling operative use Ammo Resupply to gain an attack-die re-roll until the next turning point.",
+    "source": "docs/spec/11-missions.md M-5.3"
+  },
+  {
+    "id": "core.e.razor-wire",
+    "name": "Razor Wire",
+    "scope": "universal",
+    "count": 1,
+    "setup": {
+      "type": "terrain",
+      "whollyWithinTerritory": true,
+      "onFloor": true,
+      "clearances": [{ "from": ["equipmentTerrain", "accessPoints", "accessibleTerrain"], "moreThan": 2 }]
+    },
+    "terrain": { "model": "t-razor-wire", "traits": ["exposed"], "tags": ["obstructing"], "height": 1 },
+    "effect": { "code": "razorWire", "params": { "extraCost": 1, "withinInches": 1 } },
+    "text": "Exposed, obstructing terrain on the floor of your territory. Crossing it within 1 inch of the wire costs an extra inch of movement.",
+    "source": "docs/spec/11-missions.md M-5.4"
+  },
+  {
+    "id": "core.e.utility-grenades",
+    "name": "Utility Grenades",
+    "scope": "universal",
+    "count": 1,
+    "choice": { "pick": 2, "from": ["core.a.smoke-grenade", "core.a.stun-grenade"], "repeatable": true },
+    "text": "Pick two grenades when selecting: two smoke, two stun, or one of each. Each pick is one use of that action for the whole team.",
+    "source": "docs/spec/11-missions.md M-5.5"
+  },
+  {
+    "id": "core.e.explosive-grenades",
+    "name": "Explosive Grenades",
+    "scope": "universal",
+    "count": 1,
+    "choice": { "pick": 2, "from": ["core.w.frag-grenade", "core.w.krak-grenade"], "repeatable": true },
+    "grants": { "weapons": ["core.w.frag-grenade", "core.w.krak-grenade"] },
+    "text": "Pick two grenades: two frag, two krak, or one of each. Each pick is one use of that weapon for the whole team, available to any operative.",
+    "source": "docs/spec/11-missions.md M-5.6"
+  },
+  {
+    "id": "core.e.light-barricades",
+    "name": "Light Barricades",
+    "scope": "universal",
+    "count": 2,
+    "setup": {
+      "type": "terrain",
+      "whollyWithinTerritory": true,
+      "onFloor": true,
+      "clearances": [{ "from": ["equipmentTerrain", "accessPoints", "accessibleTerrain"], "moreThan": 2 }]
+    },
+    "terrain": {
+      "model": "t-barricade-light",
+      "traits": ["light"],
+      "tags": ["feet-insignificant", "feet-exposed"],
+      "height": 1
+    },
+    "text": "Two low barricades on the floor of your territory. Light terrain; the feet are Insignificant and Exposed.",
+    "source": "docs/spec/11-missions.md M-5.7"
+  },
+  {
+    "id": "core.e.heavy-barricade",
+    "name": "Heavy Barricade",
+    "scope": "universal",
+    "count": 1,
+    "setup": {
+      "type": "terrain",
+      "withinDropZoneInches": 4,
+      "onFloor": true,
+      "clearances": [{ "from": ["equipmentTerrain", "accessPoints", "accessibleTerrain"], "moreThan": 2 }]
+    },
+    "terrain": { "model": "t-barricade-heavy", "traits": ["heavy"], "height": 2 },
+    "text": "One solid barricade on the floor within 4 inches of your drop zone. Heavy terrain.",
+    "source": "docs/spec/11-missions.md M-5.8"
+  },
+  {
+    "id": "core.e.ladders",
+    "name": "Ladders",
+    "scope": "universal",
+    "count": 2,
+    "setup": {
+      "type": "terrain",
+      "whollyWithinTerritory": true,
+      "uprightAgainstMinHeight": 2,
+      "clearances": [
+        { "from": ["equipmentTerrain", "accessPoints", "accessibleTerrain"], "moreThan": 2 },
+        { "from": ["doors", "accessPoints"], "moreThan": 1 }
+      ]
+    },
+    "terrain": { "model": "t-ladder", "traits": ["insignificant", "exposed"] },
+    "effect": { "code": "ladders", "params": { "climbVertical": 1 } },
+    "text": "Two ladders set against terrain at least 2 inches tall in your territory. Operatives move through them freely; one climb per action up the feature they lean on counts as 1 inch vertically.",
+    "source": "docs/spec/11-missions.md M-5.9"
+  },
+  {
+    "id": "core.e.portable-barricade",
+    "name": "Portable Barricade",
+    "scope": "universal",
+    "count": 1,
+    "setup": {
+      "type": "terrain",
+      "whollyWithinTerritory": true,
+      "onFloor": true,
+      "clearances": [{ "from": ["equipmentTerrain", "accessPoints", "accessibleTerrain"], "moreThan": 2 }]
+    },
+    "terrain": {
+      "model": "t-barricade-portable",
+      "traits": ["light"],
+      "tags": ["protective", "portable", "feet-insignificant", "feet-exposed"],
+      "height": 1
+    },
+    "actions": ["core.a.move-with-barricade"],
+    "effect": { "code": "portableBarricade", "params": { "saveBonus": 1, "bestSave": "2+" } },
+    "text": "A light barricade with a shield side that gives cover only to a connected operative and improves its Save by 1 while it benefits. Can be moved with the Move With Barricade action.",
+    "source": "docs/spec/11-missions.md M-5.10"
+  },
+  {
+    "id": "core.e.breaching-charge",
+    "name": "Breaching Charge",
+    "scope": "universal",
+    "count": 1,
+    "enabled": false,
+    "text": "Would make one Breach action cost 1 less AP, but the only Breach action in v1 already costs the minimum, so this option is not offered.",
+    "source": "docs/spec/11-missions.md M-5.11"
+  }
+]

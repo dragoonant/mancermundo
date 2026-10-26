@@ -1,0 +1,202 @@
+[
+  {
+    "id": "aod.space-marine-captain",
+    "name": "Space Marine Captain",
+    "team": "angels-of-death",
+    "stats": { "apl": 3, "move": 6, "save": "3+", "wounds": 15 },
+    "base": 40,
+    "keywords": ["ANGEL OF DEATH", "IMPERIUM", "ADEPTUS ASTARTES", "LEADER", "SPACE MARINE CAPTAIN"],
+    "weapons": { "fixed": ["aod.wg.plasma-pistol", "aod.w.power-fist-captain"], "options": [] },
+    "abilities": ["aod.a.iron-halo", "aod.a.heroic-leader"],
+    "uniqueActions": [],
+    "figure": { "archetype": "aod-space-marine-captain" },
+    "text": "The warband commander: carries both plasma pistol profiles and a power fist, and bends the doctrines of the whole team.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md 1.2"
+  },
+  {
+    "id": "aod.assault-intercessor-sergeant",
+    "name": "Assault Intercessor Sergeant",
+    "team": "angels-of-death",
+    "stats": { "apl": 3, "move": 6, "save": "3+", "wounds": 15 },
+    "base": 32,
+    "keywords": ["ANGEL OF DEATH", "IMPERIUM", "ADEPTUS ASTARTES", "LEADER", "ASSAULT INTERCESSOR", "SERGEANT"],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "kit",
+          "label": "Sergeant kit",
+          "sets": [
+            {
+              "id": "pistol-and-melee",
+              "name": "Pistol and melee weapon",
+              "options": [
+                {
+                  "id": "pistol",
+                  "label": "Pistol",
+                  "from": ["aod.w.hand-flamer", "aod.w.heavy-bolt-pistol"]
+                },
+                {
+                  "id": "melee",
+                  "label": "Melee weapon",
+                  "from": [
+                    "aod.w.chainsword-assault",
+                    "aod.w.power-fist-assault",
+                    "aod.w.power-weapon-assault",
+                    "aod.w.thunder-hammer-assault"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "plasma-and-chainsword",
+              "name": "Plasma pistol and chainsword",
+              "fixed": ["aod.wg.plasma-pistol", "aod.w.chainsword-assault"]
+            }
+          ]
+        }
+      ]
+    },
+    "abilities": ["aod.a.doctrine-warfare-assault", "aod.a.chapter-veteran"],
+    "uniqueActions": [],
+    "figure": { "archetype": "aod-assault-intercessor-sergeant" },
+    "text": "Close-assault squad leader who chooses between a pistol and a melee weapon, or trades both for a plasma pistol and chainsword.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md 1.2"
+  },
+  {
+    "id": "aod.intercessor-sergeant",
+    "name": "Intercessor Sergeant",
+    "team": "angels-of-death",
+    "stats": { "apl": 3, "move": 6, "save": "3+", "wounds": 15 },
+    "base": 32,
+    "keywords": ["ANGEL OF DEATH", "IMPERIUM", "ADEPTUS ASTARTES", "LEADER", "INTERCESSOR", "SERGEANT"],
+    "weapons": {
+      "fixed": [],
+      "options": [
+        {
+          "id": "rifle",
+          "label": "Rifle",
+          "from": ["aod.w.auto-bolt-rifle", "aod.w.bolt-rifle", "aod.wg.stalker-bolt-rifle"]
+        },
+        {
+          "id": "melee",
+          "label": "Melee weapon",
+          "from": [
+            "aod.w.chainsword-intercessor",
+            "aod.w.fists",
+            "aod.w.power-fist-intercessor",
+            "aod.w.power-weapon-intercessor",
+            "aod.w.thunder-hammer-intercessor"
+          ]
+        }
+      ]
+    },
+    "abilities": ["aod.a.doctrine-warfare-devastator", "aod.a.chapter-veteran"],
+    "uniqueActions": [],
+    "figure": { "archetype": "aod-intercessor-sergeant" },
+    "text": "Line squad leader carrying a bolt rifle of his choice and one melee weapon.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md 1.2"
+  },
+  {
+    "id": "aod.assault-intercessor-grenadier",
+    "name": "Assault Intercessor Grenadier",
+    "team": "angels-of-death",
+    "stats": { "apl": 3, "move": 6, "save": "3+", "wounds": 14 },
+    "base": 32,
+    "keywords": ["ANGEL OF DEATH", "IMPERIUM", "ADEPTUS ASTARTES", "ASSAULT INTERCESSOR", "GRENADIER"],
+    "weapons": { "fixed": ["aod.w.heavy-bolt-pistol", "aod.w.chainsword-assault"], "options": [] },
+    "abilities": ["aod.a.grenadier"],
+    "uniqueActions": [],
+    "figure": { "archetype": "aod-assault-intercessor-grenadier" },
+    "text": "Assault trooper who also throws frag and krak grenades with unusual accuracy.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md 1.2"
+  },
+  {
+    "id": "aod.assault-intercessor-warrior",
+    "name": "Assault Intercessor Warrior",
+    "team": "angels-of-death",
+    "stats": { "apl": 3, "move": 6, "save": "3+", "wounds": 14 },
+    "base": 32,
+    "keywords": ["ANGEL OF DEATH", "IMPERIUM", "ADEPTUS ASTARTES", "ASSAULT INTERCESSOR", "WARRIOR"],
+    "weapons": { "fixed": ["aod.w.heavy-bolt-pistol", "aod.w.chainsword-assault"], "options": [] },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": { "archetype": "aod-assault-intercessor-warrior" },
+    "text": "Rank-and-file assault trooper with a heavy bolt pistol and chainsword.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md 1.2"
+  },
+  {
+    "id": "aod.intercessor-gunner",
+    "name": "Intercessor Gunner",
+    "team": "angels-of-death",
+    "stats": { "apl": 3, "move": 6, "save": "3+", "wounds": 14 },
+    "base": 32,
+    "keywords": ["ANGEL OF DEATH", "IMPERIUM", "ADEPTUS ASTARTES", "INTERCESSOR", "GUNNER"],
+    "weapons": {
+      "fixed": ["aod.wg.aux-grenade-launcher", "aod.w.fists"],
+      "options": [
+        {
+          "id": "rifle",
+          "label": "Rifle",
+          "from": ["aod.w.auto-bolt-rifle", "aod.w.bolt-rifle", "aod.wg.stalker-bolt-rifle"]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": { "archetype": "aod-intercessor-gunner" },
+    "text": "Squad support trooper with an underslung grenade launcher and a rifle of his choice.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md 1.2"
+  },
+  {
+    "id": "aod.intercessor-warrior",
+    "name": "Intercessor Warrior",
+    "team": "angels-of-death",
+    "stats": { "apl": 3, "move": 6, "save": "3+", "wounds": 14 },
+    "base": 32,
+    "keywords": ["ANGEL OF DEATH", "IMPERIUM", "ADEPTUS ASTARTES", "INTERCESSOR", "WARRIOR"],
+    "weapons": {
+      "fixed": ["aod.w.fists"],
+      "options": [
+        {
+          "id": "rifle",
+          "label": "Rifle",
+          "from": ["aod.w.auto-bolt-rifle", "aod.w.bolt-rifle", "aod.wg.stalker-bolt-rifle"]
+        }
+      ]
+    },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": { "archetype": "aod-intercessor-warrior" },
+    "text": "Rank-and-file Intercessor with a rifle of his choice.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md 1.2"
+  },
+  {
+    "id": "aod.heavy-intercessor-gunner",
+    "name": "Heavy Intercessor Gunner",
+    "team": "angels-of-death",
+    "stats": { "apl": 3, "move": 5, "save": "3+", "wounds": 18 },
+    "base": 40,
+    "keywords": ["ANGEL OF DEATH", "IMPERIUM", "ADEPTUS ASTARTES", "HEAVY INTERCESSOR", "GUNNER"],
+    "weapons": { "fixed": ["aod.w.bolt-pistol", "aod.wg.heavy-bolter", "aod.w.fists"], "options": [] },
+    "abilities": [],
+    "uniqueActions": [],
+    "figure": { "archetype": "aod-heavy-intercessor-gunner" },
+    "text": "Slow, heavily armoured fire-support trooper with a heavy bolter that can be focused or swept.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md 1.2"
+  },
+  {
+    "id": "aod.eliminator-sniper",
+    "name": "Eliminator Sniper",
+    "team": "angels-of-death",
+    "stats": { "apl": 3, "move": 7, "save": "3+", "wounds": 12 },
+    "base": 40,
+    "keywords": ["ANGEL OF DEATH", "IMPERIUM", "ADEPTUS ASTARTES", "ELIMINATOR", "SNIPER"],
+    "weapons": { "fixed": ["aod.w.bolt-pistol", "aod.wg.bolt-sniper-rifle", "aod.w.fists"], "options": [] },
+    "abilities": ["aod.a.camo-cloak"],
+    "uniqueActions": ["aod.a.optics"],
+    "figure": { "archetype": "aod-eliminator-sniper" },
+    "text": "Cloaked marksman whose sniper rifle fires executioner, hyperfrag or mortis rounds.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md 1.2"
+  }
+]

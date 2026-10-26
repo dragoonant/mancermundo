@@ -1,0 +1,240 @@
+[
+  {
+    "id": "kom.a.throat-slittas",
+    "kind": "factionRule",
+    "name": "THROAT SLITTAS",
+    "team": "kommandos",
+    "scope": { "side": "friendly", "keyword": "KOMMANDO", "notKeywords": ["BOMB SQUIG"] },
+    "effect": { "code": "throatSlittas", "params": { "chargeWhileConceal": true, "keepsOrder": true } },
+    "text": "Every friendly Kommando except the Bomb Squig can Charge while it has a Conceal order, and keeps the Conceal order afterwards.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.19"
+  },
+  {
+    "id": "kom.a.krumpin-time",
+    "kind": "ability",
+    "name": "Krumpin' Time",
+    "team": "kommandos",
+    "effect": { "code": "krumpinTime", "params": { "doubleActions": ["fight"] } },
+    "text": "The Boss Nob can take two Fight actions in one activation.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.6"
+  },
+  {
+    "id": "kom.a.get-it-dun",
+    "kind": "uniqueAction",
+    "name": "GET IT DUN!",
+    "team": "kommandos",
+    "ap": 1,
+    "keywords": ["SUPPORT"],
+    "conditions": { "notInEnemyControlRange": true, "notCounteracting": true },
+    "target": {
+      "side": "friendly",
+      "keyword": "KOMMANDO",
+      "notKeywords": ["BOMB SQUIG"],
+      "visible": true,
+      "withinInches": 6,
+      "notSelf": true
+    },
+    "effect": {
+      "code": "supportAplBoost",
+      "params": {
+        "range": 6,
+        "aplDelta": 1,
+        "until": "endOfTargetNextActivation",
+        "excludeKeywords": ["BOMB SQUIG"],
+        "comms": true
+      }
+    },
+    "text": "Pick another friendly Kommando (not a Squig) that is visible and within 6 inches; add 1 to its APL until the end of its next activation. Not in an enemy control range and not while counteracting.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.7"
+  },
+  {
+    "id": "kom.a.boom",
+    "kind": "ability",
+    "name": "Boom!",
+    "team": "kommandos",
+    "window": "operative.incapacitated",
+    "effect": {
+      "code": "boom",
+      "params": { "dice": 2, "successOn": 4, "weapon": "kom.w.explosives", "unusedOnly": true }
+    },
+    "text": "If the Bomb Squig is incapacitated in a battle where it never used its explosives, roll a D6 (or two); on any 4 or more it makes a free Shoot with its Explosives before it is removed.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.8"
+  },
+  {
+    "id": "kom.a.stoopid",
+    "kind": "ability",
+    "name": "Stoopid",
+    "team": "kommandos",
+    "effect": {
+      "code": "stoopid",
+      "params": {
+        "noConceal": true,
+        "allowedActions": ["charge", "dash", "fight", "reposition", "shoot"],
+        "datacardWeaponsOnly": true
+      }
+    },
+    "text": "The Bomb Squig cannot take a Conceal order, can only Charge, Dash, Fight, Reposition and Shoot, and only uses weapons from its own datacard.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.9"
+  },
+  {
+    "id": "kom.a.expendable",
+    "kind": "ability",
+    "name": "Expendable",
+    "team": "kommandos",
+    "text": "The Bomb Squig is ignored by the opponent kill op, both when it is incapacitated and when counting your starting operatives, and by victory conditions about escaping, surviving or being incapacitated by enemies. The engine reads the datacard expendable flag.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.10"
+  },
+  {
+    "id": "kom.a.taktical-wot-notz",
+    "kind": "ability",
+    "name": "Taktical Wot-notz",
+    "team": "kommandos",
+    "limit": "oncePerTurningPoint",
+    "effect": {
+      "code": "taktikalWotNotz",
+      "params": { "actions": ["core.a.smoke-grenade", "core.a.stun-grenade"], "usesTeamTotals": false, "perAction": 1 }
+    },
+    "text": "Once per turning point each, one friendly Boy may take Smoke Grenade and one friendly Boy may take Stun Grenade. These do not use the team grenade totals.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.11"
+  },
+  {
+    "id": "kom.a.breach",
+    "kind": "uniqueAction",
+    "name": "BREACH",
+    "team": "kommandos",
+    "ap": 1,
+    "conditions": { "notInEnemyControlRange": true },
+    "effect": {
+      "code": "breach",
+      "params": {
+        "markerSupply": 1,
+        "replacesPrevious": true,
+        "maxThickness": 1,
+        "withinInches": 1,
+        "freeInside": ["charge", "reposition"]
+      }
+    },
+    "text": "Place your Breach marker in its control range as close as possible to a terrain feature in control range. Within 1 inch of the marker, feature parts no thicker than 1 inch are Accessible. Costs 0 AP when taken inside a Charge or Reposition, and the rest of that move can still be used. Not in an enemy control range or with no terrain feature nearby.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.12"
+  },
+  {
+    "id": "kom.a.dakka-dash",
+    "kind": "uniqueAction",
+    "name": "DAKKA DASH",
+    "team": "kommandos",
+    "ap": 1,
+    "conditions": { "notInEnemyControlRange": true, "order": "engage" },
+    "effect": {
+      "code": "dakkaDash",
+      "params": { "actions": ["dash", "shoot"], "free": true, "anyOrder": true, "weaponNameContains": "dakka shoota" }
+    },
+    "text": "Take a free Dash and a free Shoot, in either order; the Shoot must use a dakka shoota profile. Not with a Conceal order and not in an enemy control range.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.13"
+  },
+  {
+    "id": "kom.a.i-got-a-plan-ladz",
+    "kind": "ability",
+    "name": "I Got a Plan, Ladz",
+    "team": "kommandos",
+    "limit": "oncePerActivation",
+    "effect": { "costDelta": { "actions": ["pick-up-marker", "place-marker", "mission-action"], "delta": -1 } },
+    "text": "Once per activation, Pick Up Marker, Place Marker or a mission action costs the Comms Boy 1 less AP.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.14"
+  },
+  {
+    "id": "kom.a.listen-in",
+    "kind": "uniqueAction",
+    "name": "LISTEN IN",
+    "team": "kommandos",
+    "ap": 1,
+    "keywords": ["SUPPORT"],
+    "conditions": { "notInEnemyControlRange": true },
+    "target": {
+      "side": "friendly",
+      "keyword": "KOMMANDO",
+      "notKeywords": ["BOMB SQUIG"],
+      "visible": true,
+      "withinInches": 6,
+      "notSelf": true
+    },
+    "effect": {
+      "code": "supportAplBoost",
+      "params": {
+        "range": 6,
+        "aplDelta": 1,
+        "until": "endOfTargetNextActivation",
+        "excludeKeywords": ["BOMB SQUIG"],
+        "comms": true
+      }
+    },
+    "text": "Works like Get It Dun!: a visible friendly Kommando (not a Squig) within 6 inches gains 1 APL until the end of its next activation. Not in an enemy control range.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.15"
+  },
+  {
+    "id": "kom.a.sneaky-zogger",
+    "kind": "ability",
+    "name": "Sneaky Zogger",
+    "team": "kommandos",
+    "effect": {
+      "code": "sneakyZogger",
+      "params": { "neverEngage": true, "untargetableInCover": true, "exceptWithinInches": 2 }
+    },
+    "text": "The Grot never takes an Engage order, so it cannot counteract. While in cover it cannot be chosen as a target, even against Seek and Vantage, unless the shooter is within 2 inches.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.16"
+  },
+  {
+    "id": "kom.a.grappling-hook",
+    "kind": "uniqueAction",
+    "name": "GRAPPLING HOOK",
+    "team": "kommandos",
+    "ap": 1,
+    "keywords": ["REPOSITION"],
+    "conditions": { "notInEnemyControlRange": true, "activationExcludes": ["charge", "fall-back"] },
+    "effect": {
+      "code": "grapplingHook",
+      "params": { "withinInches": 1, "counteractWithinInches": 2, "treatedAs": "reposition", "noOperateHatch": true }
+    },
+    "text": "Pick a visible point on a terrain feature; remove the Grot and set it up within 1 inch of that point, in a placeable spot, outside enemy control range, with the point visible to it. Counts as a Reposition. Not in an activation that has a Charge or Fall Back. While counteracting, the set-up must be wholly within 2 inches.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.17"
+  },
+  {
+    "id": "kom.a.dat-all-you-got",
+    "kind": "ability",
+    "name": "Dat All You Got?",
+    "team": "kommandos",
+    "window": "fight.resolved",
+    "when": { "survived": true },
+    "effect": { "damage": { "dice": "D3", "target": "opponent" } },
+    "text": "After the Slasha Boy fights or retaliates and survives, you may deal D3 damage to the enemy operative from that sequence.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md T-KOM.18"
+  },
+  {
+    "id": "kom.a.wr-explosive",
+    "kind": "weaponRule",
+    "name": "Explosive",
+    "team": "kommandos",
+    "weaponRule": { "param": "none" },
+    "effect": {
+      "code": "explosiveRule",
+      "params": {
+        "selfPrimaryTarget": true,
+        "selfNoCoverNoObscured": true,
+        "usableInEnemyControlRange": true,
+        "blastHitsFriendAndFoe": true
+      }
+    },
+    "text": "The Squig may Shoot with its Explosives even in an enemy control range. It picks no target: it is its own primary target, never in cover or obscured, rolls its own defence dice, and Blast then hits every operative it can see within the radius, friend or foe.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md 2.3 special weapon text"
+  },
+  {
+    "id": "kom.a.wr-concealed-position",
+    "kind": "weaponRule",
+    "name": "Concealed Position",
+    "team": "kommandos",
+    "weaponRule": { "param": "none" },
+    "effect": { "code": "concealedPosition", "params": { "firstShootOfBattleOnly": true } },
+    "when": { "firstShootOfBattle": true },
+    "text": "This profile can only be used the first time the Snipa Boy ever takes the Shoot action in the battle.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md 2.3 special weapon text"
+  }
+]

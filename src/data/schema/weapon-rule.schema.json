@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mancermundo.dev/schemas/weapon-rule.schema.json",
+  "title": "Weapon rule definition",
+  "description": "Defines a universal weapon rule and the kind of parameter it takes. Team-local rules are ability records with kind weaponRule.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "param", "text", "source"],
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/Id" },
+    "name": { "type": "string", "minLength": 1 },
+    "param": {
+      "enum": ["none", "inches", "count", "target"],
+      "description": "none = bare rule; inches = Range, Blast, Torrent x in inches; count = Piercing, Devastating, Accurate, Limited x; target = Lethal x+."
+    },
+    "critsVariant": { "type": "boolean", "description": "True when the rule has a Crits variant (Piercing Crits x)." },
+    "distanceVariant": { "type": "boolean", "description": "True when the rule accepts a distance prefix (Devastating with a distance)." },
+    "moveRestriction": { "type": "boolean", "description": "True when the rule may name the only move allowed (Heavy, Dash only)." },
+    "ref": { "type": "string", "description": "Rule id in docs/spec/10-rules-core.md, for example R-10.12." },
+    "text": { "$ref": "common.schema.json#/$defs/Text" },
+    "source": { "$ref": "common.schema.json#/$defs/Source" }
+  }
+}

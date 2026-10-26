@@ -1,0 +1,81 @@
+[
+  {
+    "id": "core.a.secure",
+    "kind": "uniqueAction",
+    "name": "Secure",
+    "ap": 1,
+    "keywords": ["MISSION"],
+    "conditions": { "notInEnemyControlRange": true, "turningPoint": { "min": 2 } },
+    "effect": { "code": "missionSecure" },
+    "text": "Mission action. Mark an objective the active operative controls as secured by your team; it stays yours until the enemy secures it. Not in the first turning point.",
+    "source": "docs/spec/11-missions.md M-3.1"
+  },
+  {
+    "id": "core.a.loot",
+    "kind": "uniqueAction",
+    "name": "Loot",
+    "ap": 1,
+    "keywords": ["MISSION"],
+    "conditions": { "notInEnemyControlRange": true, "turningPoint": { "min": 2 } },
+    "effect": { "code": "missionLoot" },
+    "text": "Mission action. Loot an objective the active operative controls, unless anyone already looted it this turning point. Not in the first turning point.",
+    "source": "docs/spec/11-missions.md M-3.3"
+  },
+  {
+    "id": "core.a.initiate-transmission",
+    "kind": "uniqueAction",
+    "name": "Initiate Transmission",
+    "ap": 1,
+    "keywords": ["MISSION"],
+    "conditions": { "notInEnemyControlRange": true, "turningPoint": { "min": 2 } },
+    "effect": { "code": "missionTransmit" },
+    "text": "Mission action. An objective the active operative controls transmits until the start of the next turning point. Not in the first turning point.",
+    "source": "docs/spec/11-missions.md M-3.5"
+  },
+  {
+    "id": "core.a.ammo-resupply",
+    "kind": "uniqueAction",
+    "name": "Ammo Resupply",
+    "ap": 0,
+    "keywords": ["MISSION"],
+    "conditions": { "notInEnemyControlRange": true },
+    "effect": { "code": "ammoResupply" },
+    "text": "Use one of your Ammo Caches the operative controls: until the next turning point it may re-roll one attack die whenever it shoots with a datacard weapon. Each cache once per turning point.",
+    "source": "docs/spec/11-missions.md M-5.3"
+  },
+  {
+    "id": "core.a.stun-grenade",
+    "kind": "uniqueAction",
+    "name": "Stun Grenade",
+    "ap": 1,
+    "conditions": { "notInEnemyControlRange": true },
+    "target": { "side": "enemy", "visible": true, "withinInches": 6 },
+    "effect": {
+      "code": "stunGrenade",
+      "params": { "range": 6, "blastInches": 1, "test": "D6", "successOn": 3, "aplDelta": -1 }
+    },
+    "text": "Throw a stun grenade at a visible enemy within 6 inches; it and everything within 1 inch of it tests on a D6 and loses 1 APL on a 3 or more until the end of its next activation.",
+    "source": "docs/spec/11-missions.md M-5.5"
+  },
+  {
+    "id": "core.a.smoke-grenade",
+    "kind": "uniqueAction",
+    "name": "Smoke Grenade",
+    "ap": 1,
+    "conditions": { "notInEnemyControlRange": true },
+    "effect": { "code": "smokeGrenade", "params": { "range": 6, "radius": 1, "obscuredBeyond": 2, "clearDice": "D3" } },
+    "text": "Drop a smoke marker within 6 inches that is visible or on a visible Vantage part. Operatives wholly in the 1 inch cloud are obscured to those more than 2 inches away; the cloud clears after D3 activations of the next turning point.",
+    "source": "docs/spec/11-missions.md M-5.5"
+  },
+  {
+    "id": "core.a.move-with-barricade",
+    "kind": "uniqueAction",
+    "name": "Move With Barricade",
+    "ap": 1,
+    "keywords": ["REPOSITION"],
+    "conditions": { "notInEnemyControlRange": true, "activationExcludes": ["fall-back", "charge"] },
+    "effect": { "code": "moveWithBarricade", "params": { "moveMinus": 2, "clearanceInches": 2 } },
+    "text": "An operative connected to the inside of a Portable Barricade moves at most its Move minus 2 inches with it, then sets the barricade up connected again.",
+    "source": "docs/spec/11-missions.md M-5.10"
+  }
+]

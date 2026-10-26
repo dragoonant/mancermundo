@@ -1,0 +1,47 @@
+[
+  {
+    "id": "kom.e.choppas",
+    "name": "Choppas",
+    "scope": "faction",
+    "team": "kommandos",
+    "count": 1,
+    "grants": { "weapons": ["kom.w.choppas-equipment"] },
+    "effect": { "code": "choppasEquipment", "params": { "scope": "kommando-not-squig-grot", "keepBetter": true } },
+    "text": "Friendly Kommandos (not Squigs or Grots) gain a Choppa with Atk 3, Hit 3+, Dmg 4/5; an operative with a better choppa keeps using that.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md Faction equipment table"
+  },
+  {
+    "id": "kom.e.dynamite",
+    "name": "Dynamite",
+    "scope": "faction",
+    "team": "kommandos",
+    "count": 1,
+    "grants": { "weapons": ["kom.w.dynamite"] },
+    "limits": { "uses": 1, "per": "battle", "scope": "team" },
+    "text": "Once per battle, one friendly Kommando (not a Squig or Grot) may throw dynamite: a short-range blast that can only be thrown by an operative that moves no more than a Reposition.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md Faction equipment table"
+  },
+  {
+    "id": "kom.e.harpoon",
+    "name": "Harpoon",
+    "scope": "faction",
+    "team": "kommandos",
+    "count": 1,
+    "grants": { "weapons": ["kom.w.harpoon"] },
+    "limits": { "uses": 1, "per": "turningPoint", "scope": "team" },
+    "text": "Once per turning point, one friendly Kommando (not a Squig or Grot) may fire a harpoon that can stun its target.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md Faction equipment table"
+  },
+  {
+    "id": "kom.e.collapsible-stocks",
+    "name": "Collapsible Stocks",
+    "scope": "faction",
+    "team": "kommandos",
+    "count": 1,
+    "effect": {
+      "removeWeaponRule": { "rule": "core.wr.range", "filter": { "weaponIds": ["kom.w.shokka-pistol", "kom.w.slugga"] } }
+    },
+    "text": "Shokka pistols and Sluggas lose their Range limit, so they can hit targets at any distance.",
+    "source": "team-kommandos.pdf; docs/spec/13-teams.md Faction equipment table"
+  }
+]

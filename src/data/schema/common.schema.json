@@ -1,0 +1,316 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mancermundo.dev/schemas/common.schema.json",
+  "title": "Common primitives",
+  "description": "Shared definitions referenced by every other schema. Not used to validate a file directly.",
+  "$defs": {
+    "Id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9][a-z0-9-]*)*$",
+      "description": "Lowercase kebab, dot-namespaced: aod.intercessor-sergeant, aod.w.bolt-rifle, core.wr.piercing, kz.volkus-01."
+    },
+    "Slug": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "ActionId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Engine action name (shoot, fight, charge, dash, fall-back, reposition, pick-up-marker, place-marker, mission-action, guard, any ...)."
+    },
+    "Keyword": { "type": "string", "pattern": "^[A-Z0-9][A-Z0-9 '\\-]*$" },
+    "RollTarget": { "type": "string", "pattern": "^[2-6]\\+$", "description": "A D6 target such as 3+." },
+    "Inches": { "type": "number", "minimum": 0, "multipleOf": 0.5 },
+    "DiceExpr": { "type": "string", "pattern": "^(\\d+|\\d*D[36](\\+\\d+)?)$", "description": "D3, D6, 2D6, D3+3 or an integer." },
+    "Vec2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "z"],
+      "properties": { "x": { "type": "number" }, "z": { "type": "number" } }
+    },
+    "Vec3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z"],
+      "properties": { "x": { "type": "number" }, "y": { "type": "number" }, "z": { "type": "number" } }
+    },
+    "Polygon": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/Vec2" } },
+    "Hsl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["h", "s", "l"],
+      "properties": {
+        "h": { "type": "number", "minimum": 0, "maximum": 1 },
+        "s": { "type": "number", "minimum": 0, "maximum": 1 },
+        "l": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "Seat": { "enum": ["A", "B"] },
+    "Order": { "enum": ["engage", "conceal"] },
+    "WeaponType": { "enum": ["ranged", "melee"] },
+    "TerrainTrait": {
+      "enum": ["light", "heavy", "blocking", "vantage", "accessible", "insignificant", "exposed", "ceiling", "barred", "wall"]
+    },
+    "TimingWindowId": {
+      "anyOf": [
+        {
+          "enum": [
+            "turningPoint.start",
+            "strategy.gambit",
+            "firefight.activationStart",
+            "firefight.actionDeclared",
+            "firefight.actionEnded",
+            "shoot.targetSelected",
+            "shoot.attackRolled",
+            "shoot.defenceRolled",
+            "shoot.resolved",
+            "fight.weaponsSelected",
+            "fight.rolled",
+            "fight.resolved",
+            "operative.incapacitated",
+            "firefight.activationEnded",
+            "turningPoint.end",
+            "battle.end"
+          ]
+        },
+        { "type": "string", "pattern": "^setup\\.[a-zA-Z]+$" }
+      ]
+    },
+    "WindowSet": {
+      "anyOf": [
+        { "$ref": "#/$defs/TimingWindowId" },
+        { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/TimingWindowId" } }
+      ]
+    },
+    "Limit": { "enum": ["oncePerBattle", "oncePerTurningPoint", "oncePerActivation", "unlimited"] },
+    "Duration": {
+      "enum": ["action", "activation", "untilNextActivation", "endOfTargetNextActivation", "turningPoint", "battle"]
+    },
+    "Source": { "type": "string", "minLength": 1 },
+    "Text": { "type": "string", "minLength": 1, "description": "Own-words summary; never Games Workshop sentences." },
+    "CodeName": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9]*$", "description": "Engine code hook registered in src/engine/code-hooks.ts." },
+    "Condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Declarative predicate; every key present must hold. Context-dependent: 'subject' is the operative the effect applies to, 'target' the enemy of the current attack.",
+      "properties": {
+        "notInEnemyControlRange": { "type": "boolean" },
+        "inEnemyControlRange": { "type": "boolean" },
+        "counteracting": { "type": "boolean" },
+        "notCounteracting": { "type": "boolean" },
+        "order": { "$ref": "#/$defs/Order" },
+        "action": { "$ref": "#/$defs/ActionId" },
+        "activationIncludes": { "type": "array", "items": { "$ref": "#/$defs/ActionId" } },
+        "activationExcludes": { "type": "array", "items": { "$ref": "#/$defs/ActionId" } },
+        "actionPerformed": { "$ref": "#/$defs/Id" },
+        "weaponType": { "$ref": "#/$defs/WeaponType" },
+        "weaponNameContains": { "type": "string", "minLength": 1 },
+        "weaponHasRule": { "$ref": "#/$defs/Id" },
+        "targetKeyword": { "$ref": "#/$defs/Keyword" },
+        "targetNotKeyword": { "$ref": "#/$defs/Keyword" },
+        "targetOrder": { "$ref": "#/$defs/Order" },
+        "targetDistanceMoreThan": { "$ref": "#/$defs/Inches" },
+        "targetDistanceWithin": { "$ref": "#/$defs/Inches" },
+        "attackFailsAtLeast": { "type": "integer", "minimum": 1 },
+        "defenceFailsAtLeast": { "type": "integer", "minimum": 1 },
+        "critRetained": { "type": "boolean" },
+        "turningPoint": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "min": { "type": "integer", "minimum": 1 }, "max": { "type": "integer", "minimum": 1 } }
+        },
+        "firstShootOfBattle": { "type": "boolean" },
+        "survived": { "type": "boolean" },
+        "inKillzone": { "type": "boolean" },
+        "subjectKeyword": { "$ref": "#/$defs/Keyword" },
+        "subjectNotKeyword": { "$ref": "#/$defs/Keyword" },
+        "subjectOrder": { "$ref": "#/$defs/Order" },
+        "subjectNotValidTarget": { "type": "boolean" },
+        "subjectMoreThanFromEveryEnemy": { "$ref": "#/$defs/Inches" },
+        "ployUsedThisTurningPoint": { "$ref": "#/$defs/Id" },
+        "ployNotUsedThisTurningPoint": { "$ref": "#/$defs/Id" },
+        "allOf": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Condition" } },
+        "anyOf": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Condition" } },
+        "not": { "$ref": "#/$defs/Condition" }
+      }
+    },
+    "TargetSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["side"],
+      "properties": {
+        "side": { "enum": ["self", "friendly", "enemy", "any"] },
+        "keyword": { "$ref": "#/$defs/Keyword" },
+        "notKeywords": { "type": "array", "items": { "$ref": "#/$defs/Keyword" } },
+        "visible": { "type": "boolean" },
+        "withinInches": { "$ref": "#/$defs/Inches" },
+        "notSelf": { "type": "boolean" },
+        "count": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "WeaponFilter": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Selects which weapon profiles an effect touches; all keys present must match.",
+      "properties": {
+        "weaponIds": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Id" } },
+        "weaponType": { "$ref": "#/$defs/WeaponType" },
+        "nameContains": { "type": "string", "minLength": 1 },
+        "hasRule": { "$ref": "#/$defs/Id" }
+      }
+    },
+    "WeaponRuleUse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule"],
+      "description": "One rule on a weapon profile. Which of x / inches / target / crits / only is required is defined by the referenced weapon-rule record.",
+      "properties": {
+        "rule": { "$ref": "#/$defs/Id" },
+        "x": { "type": "integer", "minimum": 1 },
+        "inches": { "$ref": "#/$defs/Inches" },
+        "target": { "$ref": "#/$defs/RollTarget" },
+        "crits": { "type": "boolean" },
+        "only": { "enum": ["dash", "reposition"] }
+      }
+    },
+    "Effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "dependentRequired": { "params": ["code"] },
+      "properties": {
+        "modifyStat": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stat", "value"],
+          "properties": {
+            "stat": { "enum": ["apl", "move", "save", "wounds", "hit", "atk"] },
+            "value": { "type": "integer" },
+            "cap": { "type": "integer" },
+            "filter": { "$ref": "#/$defs/WeaponFilter" }
+          }
+        },
+        "grantWeaponRule": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rule"],
+          "properties": {
+            "rule": { "$ref": "#/$defs/Id" },
+            "x": { "type": "integer", "minimum": 1 },
+            "inches": { "$ref": "#/$defs/Inches" },
+            "target": { "$ref": "#/$defs/RollTarget" },
+            "crits": { "type": "boolean" },
+            "only": { "enum": ["dash", "reposition"] },
+            "filter": { "$ref": "#/$defs/WeaponFilter" }
+          }
+        },
+        "removeWeaponRule": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rule"],
+          "properties": { "rule": { "$ref": "#/$defs/Id" }, "filter": { "$ref": "#/$defs/WeaponFilter" } }
+        },
+        "reroll": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["dice", "which"],
+          "properties": {
+            "dice": { "enum": ["attack", "defence", "own"] },
+            "which": { "enum": ["one", "any", "result"] },
+            "result": { "type": "integer", "minimum": 1, "maximum": 6 }
+          }
+        },
+        "ignoreDamage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "enum": ["normal", "crit", "all"] }, "once": { "type": "boolean" } }
+        },
+        "retainSuccess": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "count"],
+          "properties": {
+            "kind": { "enum": ["normal", "crit"] },
+            "count": { "type": "integer", "minimum": 1 },
+            "from": { "enum": ["fail", "normal"] },
+            "discardFails": { "type": "integer", "minimum": 0 },
+            "withoutRolling": { "type": "boolean" }
+          }
+        },
+        "extraAction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "count"],
+          "properties": {
+            "action": { "$ref": "#/$defs/ActionId" },
+            "count": { "type": "integer", "minimum": 1 },
+            "free": { "type": "boolean" },
+            "mustDiffer": { "type": "boolean" }
+          }
+        },
+        "costDelta": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["actions", "delta"],
+          "properties": {
+            "actions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/ActionId" } },
+            "delta": { "type": "integer" }
+          }
+        },
+        "ployCost": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ploy", "cost"],
+          "properties": {
+            "ploy": { "$ref": "#/$defs/Id" },
+            "cost": { "type": "integer", "minimum": 0 },
+            "when": { "$ref": "#/$defs/Condition" }
+          }
+        },
+        "cp": { "type": "integer" },
+        "vp": { "type": "integer" },
+        "move": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": {
+            "kind": { "enum": ["dash", "reposition", "fall-back", "charge"] },
+            "inches": { "$ref": "#/$defs/Inches" },
+            "free": { "type": "boolean" }
+          }
+        },
+        "setOrder": { "$ref": "#/$defs/Order" },
+        "apl": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["delta", "until"],
+          "properties": { "delta": { "type": "integer" }, "until": { "$ref": "#/$defs/Duration" } }
+        },
+        "damage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "amount": { "type": "integer", "minimum": 0 },
+            "dice": { "$ref": "#/$defs/DiceExpr" },
+            "target": { "enum": ["self", "opponent", "target"] }
+          },
+          "oneOf": [{ "required": ["amount"] }, { "required": ["dice"] }]
+        },
+        "code": { "$ref": "#/$defs/CodeName" },
+        "params": { "type": "object" },
+        "duration": { "$ref": "#/$defs/Duration" },
+        "trigger": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["window"],
+          "properties": { "window": { "$ref": "#/$defs/WindowSet" }, "when": { "$ref": "#/$defs/Condition" } }
+        },
+        "scope": { "$ref": "#/$defs/TargetSpec" }
+      }
+    },
+    "EffectList": {
+      "oneOf": [
+        { "$ref": "#/$defs/Effect" },
+        { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Effect" } }
+      ]
+    }
+  }
+}

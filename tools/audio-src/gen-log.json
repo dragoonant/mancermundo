@@ -1,0 +1,373 @@
+{
+  "wpn-stalker-bolt-rifle": {
+    "seconds": 2.02,
+    "wallSeconds": 17,
+    "job": "20261017211250-55d831",
+    "seed": 3705233,
+    "at": "2026-10-17T21:13:06.021Z"
+  },
+  "narr-victory": {
+    "seconds": 1.33,
+    "wallSeconds": 10.7,
+    "job": "20261017213015-0c5ce0",
+    "seed": 40421,
+    "at": "2026-10-17T21:30:26.001Z"
+  },
+  "wpn-auto-bolt-rifle": {
+    "seconds": 1.93,
+    "wallSeconds": 16.9,
+    "job": "20261017212559-d52a9c",
+    "seed": 3020399341,
+    "at": "2026-10-17T21:26:14.282Z"
+  },
+  "wpn-heavy-bolt-pistol": {
+    "seconds": 1.07,
+    "wallSeconds": 14.1,
+    "job": "20261017211415-bc4057",
+    "seed": 264428180,
+    "at": "2026-10-17T21:14:29.241Z"
+  },
+  "wpn-plasma-pistol-supercharge": {
+    "seconds": 2.04,
+    "wallSeconds": 12.6,
+    "job": "20261017212614-51fe86",
+    "seed": 1858074182,
+    "at": "2026-10-17T21:26:26.865Z"
+  },
+  "wpn-bolt-sniper-rifle": {
+    "seconds": 1.49,
+    "wallSeconds": 13.9,
+    "job": "20261017211443-5f5381",
+    "seed": 2155016060,
+    "at": "2026-10-17T21:14:57.274Z"
+  },
+  "wpn-grenade-frag": {
+    "seconds": 2.97,
+    "wallSeconds": 14,
+    "job": "20261017211457-4065e7",
+    "seed": 1051167518,
+    "at": "2026-10-17T21:15:11.307Z"
+  },
+  "wpn-grenade-krak": {
+    "seconds": 2,
+    "wallSeconds": 9.4,
+    "job": "20261017211511-91d5c3",
+    "seed": 1281514981,
+    "at": "2026-10-17T21:15:20.662Z"
+  },
+  "wpn-chainsword-hit": {
+    "seconds": 2.51,
+    "wallSeconds": 7.9,
+    "job": "20261017211520-b73616",
+    "seed": 3863976233,
+    "at": "2026-10-17T21:15:28.522Z"
+  },
+  "wpn-thunder-hammer": {
+    "seconds": 2.97,
+    "wallSeconds": 6.3,
+    "job": "20261017211528-15616f",
+    "seed": 2381515343,
+    "at": "2026-10-17T21:15:34.791Z"
+  },
+  "wpn-shokka-pistol": {
+    "seconds": 1.49,
+    "wallSeconds": 14,
+    "job": "20261017212626-0af519",
+    "seed": 3435096620,
+    "at": "2026-10-17T21:26:40.851Z"
+  },
+  "wpn-scoped-big-shoota": {
+    "seconds": 2.05,
+    "wallSeconds": 12.5,
+    "job": "20261017212640-5bbf86",
+    "seed": 3255798464,
+    "at": "2026-10-17T21:26:53.324Z"
+  },
+  "wpn-throwing-knives": {
+    "seconds": 1,
+    "wallSeconds": 4.7,
+    "job": "20261017211544-a408a2",
+    "seed": 3005841731,
+    "at": "2026-10-17T21:15:48.772Z"
+  },
+  "wpn-breacha-ram": {
+    "seconds": 1.94,
+    "wallSeconds": 4.7,
+    "job": "20261017211548-23dd25",
+    "seed": 3905359481,
+    "at": "2026-10-17T21:15:53.431Z"
+  },
+  "wpn-twin-choppas": {
+    "seconds": 2.04,
+    "wallSeconds": 4.7,
+    "job": "20261017211553-153f6a",
+    "seed": 2826952679,
+    "at": "2026-10-17T21:15:58.139Z"
+  },
+  "wpn-grot-choppa": {
+    "seconds": 1.21,
+    "wallSeconds": 4.7,
+    "job": "20261017211558-5636d0",
+    "seed": 3489403166,
+    "at": "2026-10-17T21:16:02.791Z"
+  },
+  "wpn-squig-bite": {
+    "seconds": 1.2,
+    "wallSeconds": 4.7,
+    "job": "20261017211602-72e438",
+    "seed": 1974394916,
+    "at": "2026-10-17T21:16:07.459Z"
+  },
+  "wpn-explosives": {
+    "seconds": 2.92,
+    "wallSeconds": 4.7,
+    "job": "20261017211607-0b1af4",
+    "seed": 2386562664,
+    "at": "2026-10-17T21:16:12.147Z"
+  },
+  "wpn-dynamite": {
+    "seconds": 3.53,
+    "wallSeconds": 4.7,
+    "job": "20261017211612-ad59c7",
+    "seed": 1635011381,
+    "at": "2026-10-17T21:16:16.825Z"
+  },
+  "wpn-harpoon": {
+    "seconds": 2.49,
+    "wallSeconds": 4.7,
+    "job": "20261017211616-f45b6b",
+    "seed": 2866294036,
+    "at": "2026-10-17T21:16:21.493Z"
+  },
+  "block-clang": {
+    "seconds": 1.47,
+    "wallSeconds": 4.6,
+    "job": "20261017211621-73fa7b",
+    "seed": 2069622828,
+    "at": "2026-10-17T21:16:26.112Z"
+  },
+  "death-marine": {
+    "seconds": 4.46,
+    "wallSeconds": 4.7,
+    "job": "20261017211626-6af246",
+    "seed": 3104549585,
+    "at": "2026-10-17T21:16:30.839Z"
+  },
+  "death-ork-roar": {
+    "seconds": 3.53,
+    "wallSeconds": 9.6,
+    "job": "20261017211630-b3fe75",
+    "seed": 2135053178,
+    "at": "2026-10-17T21:16:40.416Z"
+  },
+  "death-grot": {
+    "seconds": 1.49,
+    "wallSeconds": 12.4,
+    "job": "20261017211640-38450f",
+    "seed": 1735377730,
+    "at": "2026-10-17T21:16:52.821Z"
+  },
+  "death-squig": {
+    "seconds": 1.21,
+    "wallSeconds": 12.3,
+    "job": "20261017211652-c0414a",
+    "seed": 1909299411,
+    "at": "2026-10-17T21:17:05.137Z"
+  },
+  "move-marine-steps": {
+    "seconds": 3.05,
+    "wallSeconds": 14,
+    "job": "20261017211705-0944f4",
+    "seed": 4100966853,
+    "at": "2026-10-17T21:17:19.144Z"
+  },
+  "move-ork-boots": {
+    "seconds": 0.75,
+    "wallSeconds": 13.9,
+    "job": "20261017211719-2d1dae",
+    "seed": 1392576941,
+    "at": "2026-10-17T21:17:33.086Z"
+  },
+  "move-climb": {
+    "seconds": 2.05,
+    "wallSeconds": 12.5,
+    "job": "20261017211733-ece86f",
+    "seed": 363152229,
+    "at": "2026-10-17T21:17:45.585Z"
+  },
+  "move-drop": {
+    "seconds": 1.76,
+    "wallSeconds": 12.5,
+    "job": "20261017211745-5547a2",
+    "seed": 844917993,
+    "at": "2026-10-17T21:17:58.101Z"
+  },
+  "ui-order-engage": {
+    "seconds": 1.02,
+    "wallSeconds": 14,
+    "job": "20261017211758-8cbfba",
+    "seed": 3068082978,
+    "at": "2026-10-17T21:18:12.075Z"
+  },
+  "ui-order-conceal": {
+    "seconds": 1.02,
+    "wallSeconds": 12.4,
+    "job": "20261017211812-c3f038",
+    "seed": 23795979,
+    "at": "2026-10-17T21:18:24.458Z"
+  },
+  "ui-ap-spend": {
+    "seconds": 1.02,
+    "wallSeconds": 13.9,
+    "job": "20261017211824-2481c8",
+    "seed": 1485352414,
+    "at": "2026-10-17T21:18:38.396Z"
+  },
+  "ui-marker-pickup": {
+    "seconds": 0.26,
+    "wallSeconds": 12.4,
+    "job": "20261017211838-e04aee",
+    "seed": 2503924121,
+    "at": "2026-10-17T21:18:50.757Z"
+  },
+  "ui-turning-point-sting": {
+    "seconds": 3.53,
+    "wallSeconds": 12.5,
+    "job": "20261017211850-a6f717",
+    "seed": 4217909869,
+    "at": "2026-10-17T21:19:03.296Z"
+  },
+  "ui-initiative-won": {
+    "seconds": 2.97,
+    "wallSeconds": 14.1,
+    "job": "20261017211903-76fdca",
+    "seed": 2984362943,
+    "at": "2026-10-17T21:19:17.445Z"
+  },
+  "ui-victory-sting": {
+    "seconds": 5.02,
+    "wallSeconds": 14.3,
+    "job": "20261017211917-178455",
+    "seed": 2703752663,
+    "at": "2026-10-17T21:19:31.725Z"
+  },
+  "amb-industrial-wind": {
+    "seconds": 17.17,
+    "wallSeconds": 15.2,
+    "job": "20261017211931-b09115",
+    "seed": 2851321714,
+    "at": "2026-10-17T21:19:46.932Z"
+  },
+  "narr-turning-point-one": {
+    "seconds": 1.23,
+    "wallSeconds": 23.7,
+    "job": "20261017212737-c5a1a7",
+    "seed": 40421,
+    "at": "2026-10-17T21:27:58.634Z"
+  },
+  "narr-strategy-phase": {
+    "seconds": 0.94,
+    "wallSeconds": 19.9,
+    "job": "20261017212758-bedad9",
+    "seed": 40421,
+    "at": "2026-10-17T21:28:18.546Z"
+  },
+  "narr-firefight-phase": {
+    "seconds": 1.38,
+    "wallSeconds": 20,
+    "job": "20261017212818-ea652d",
+    "seed": 40421,
+    "at": "2026-10-17T21:28:38.572Z"
+  },
+  "narr-initiative-aod": {
+    "seconds": 1.96,
+    "wallSeconds": 23.1,
+    "job": "20261017212838-ed0136",
+    "seed": 40421,
+    "at": "2026-10-17T21:29:01.646Z"
+  },
+  "narr-initiative-kom": {
+    "seconds": 1.86,
+    "wallSeconds": 23,
+    "job": "20261017212901-2c57cf",
+    "seed": 40421,
+    "at": "2026-10-17T21:29:24.653Z"
+  },
+  "narr-operative-down": {
+    "seconds": 1.1,
+    "wallSeconds": 16.9,
+    "job": "20261017212924-882cfd",
+    "seed": 40421,
+    "at": "2026-10-17T21:29:41.540Z"
+  },
+  "narr-objective-secured": {
+    "seconds": 1.24,
+    "wallSeconds": 13.8,
+    "job": "20261017212941-415d76",
+    "seed": 40421,
+    "at": "2026-10-17T21:29:55.379Z"
+  },
+  "narr-counteract": {
+    "seconds": 1.05,
+    "wallSeconds": 10.7,
+    "job": "20261017212955-d4eb92",
+    "seed": 40421,
+    "at": "2026-10-17T21:30:06.108Z"
+  },
+  "narr-final-turning-point": {
+    "seconds": 1.26,
+    "wallSeconds": 9.2,
+    "job": "20261017213006-bd4dc1",
+    "seed": 40421,
+    "at": "2026-10-17T21:30:15.309Z"
+  },
+  "narr-defeat": {
+    "seconds": 0.68,
+    "wallSeconds": 9.2,
+    "job": "20261017213026-833a88",
+    "seed": 40421,
+    "at": "2026-10-17T21:30:35.170Z"
+  },
+  "narr-draw": {
+    "seconds": 0.8,
+    "wallSeconds": 9.2,
+    "job": "20261017213035-cab287",
+    "seed": 40421,
+    "at": "2026-10-17T21:30:44.368Z"
+  },
+  "music-title": {
+    "seconds": 60,
+    "wallSeconds": 30.7,
+    "job": "20261017212320-538607",
+    "seed": 1835390609,
+    "at": "2026-10-17T21:23:49.618Z"
+  },
+  "music-battle-a": {
+    "seconds": 89.75,
+    "wallSeconds": 30.8,
+    "job": "20261017212349-8f9251",
+    "seed": 2235613163,
+    "at": "2026-10-17T21:24:20.469Z"
+  },
+  "music-battle-b": {
+    "seconds": 90,
+    "wallSeconds": 27.8,
+    "job": "20261017212420-6dfda2",
+    "seed": 1219847489,
+    "at": "2026-10-17T21:24:48.258Z"
+  },
+  "music-victory": {
+    "seconds": 10.15,
+    "wallSeconds": 18.2,
+    "job": "20261017212653-dbbf5d",
+    "seed": 3489817533,
+    "at": "2026-10-17T21:27:11.495Z"
+  },
+  "music-defeat": {
+    "seconds": 9.67,
+    "wallSeconds": 16.2,
+    "job": "20261017212711-f03c82",
+    "seed": 790658170,
+    "at": "2026-10-17T21:27:27.701Z"
+  }
+}

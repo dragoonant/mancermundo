@@ -1,0 +1,23 @@
+# secrets
+*.token*
+Tokens.txt
+tokens.txt*
+.env
+.env.*
+hf_token*
+.hf_token*
+
+# publisher material (never commit rules text, PDFs, photos or community data)
+docs/sources/
+*.pdf
+refs-local/
+
+# build and tooling output
+node_modules/
+dist/
+e2e-out/
+test-results/
+tools/out/
+.claude/worktrees/
+scratch/
+tools/models/raw/

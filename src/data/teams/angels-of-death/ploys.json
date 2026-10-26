@@ -1,0 +1,128 @@
+[
+  {
+    "id": "aod.p.combat-doctrine",
+    "name": "Combat Doctrine",
+    "team": "angels-of-death",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "combatDoctrine",
+      "params": {
+        "doctrines": {
+          "devastator": { "rangeMoreThan": 6, "action": "shoot" },
+          "tactical": { "rangeWithin": 6, "action": "shoot" },
+          "assault": { "actions": ["fight", "retaliate"] }
+        },
+        "grants": "core.wr.balanced",
+        "duration": "turningPoint"
+      },
+      "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" }
+    },
+    "text": "Pick a doctrine for the turning point. Your Angel of Death weapons gain Balanced: Devastator when shooting something more than 6 inches away, Tactical when shooting something within 6 inches, Assault when fighting or retaliating.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md Ploys table"
+  },
+  {
+    "id": "aod.p.indomitus",
+    "name": "Indomitus",
+    "team": "angels-of-death",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "retainSuccess": { "kind": "normal", "count": 1, "from": "fail", "discardFails": 1 },
+      "duration": "turningPoint",
+      "trigger": { "window": "shoot.defenceRolled", "when": { "defenceFailsAtLeast": 2 } },
+      "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" }
+    },
+    "text": "When an enemy shoots a friendly Angel of Death operative and you roll two or more failed defence dice, discard one fail and keep another as a normal success.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md Ploys table"
+  },
+  {
+    "id": "aod.p.and-they-shall-know-no-fear",
+    "name": "And They Shall Know No Fear",
+    "team": "angels-of-death",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "ignoreInjuredChanges",
+      "params": { "includeWeapons": true },
+      "duration": "turningPoint",
+      "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" }
+    },
+    "text": "For the turning point your Angel of Death operatives ignore every stat change caused by being injured, weapons included.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md Ploys table"
+  },
+  {
+    "id": "aod.p.adaptive-tactics",
+    "name": "Adaptive Tactics",
+    "team": "angels-of-death",
+    "type": "strategy",
+    "cost": 1,
+    "window": "strategy.gambit",
+    "effect": {
+      "code": "adaptiveTactics",
+      "params": { "replace": "secondary", "group": "chapter-tactic" },
+      "duration": "turningPoint"
+    },
+    "text": "Swap your secondary Chapter Tactic for another until the end of the turning point, when it returns.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md Ploys table"
+  },
+  {
+    "id": "aod.p.adjust-doctrine",
+    "name": "Adjust Doctrine",
+    "team": "angels-of-death",
+    "type": "firefight",
+    "cost": 1,
+    "window": ["firefight.actionDeclared", "firefight.actionEnded"],
+    "when": { "ployUsedThisTurningPoint": "aod.p.combat-doctrine" },
+    "effect": { "code": "adjustDoctrine", "params": { "ploy": "aod.p.combat-doctrine" } },
+    "text": "During a friendly Angel of Death activation, before or after an action, change the doctrine you picked with Combat Doctrine this turning point.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md Ploys table"
+  },
+  {
+    "id": "aod.p.wrath-of-vengeance",
+    "name": "Wrath of Vengeance",
+    "team": "angels-of-death",
+    "type": "firefight",
+    "cost": 1,
+    "window": "firefight.activationStart",
+    "when": { "counteracting": true },
+    "effect": { "extraAction": { "action": "any", "count": 1, "free": true, "mustDiffer": true } },
+    "text": "When a friendly Angel of Death operative counteracts, it takes one extra 1 AP action for free, which must differ from its other action.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md Ploys table"
+  },
+  {
+    "id": "aod.p.transhuman-physiology",
+    "name": "Transhuman Physiology",
+    "team": "angels-of-death",
+    "type": "firefight",
+    "cost": 1,
+    "window": "shoot.defenceRolled",
+    "effect": { "retainSuccess": { "kind": "crit", "count": 1, "from": "normal" } },
+    "text": "When an enemy shoots a friendly Angel of Death operative, keep one of your normal defence successes as a crit instead.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md Ploys table"
+  },
+  {
+    "id": "aod.p.shock-assault",
+    "name": "Shock Assault",
+    "team": "angels-of-death",
+    "type": "firefight",
+    "cost": 1,
+    "window": "fight.rolled",
+    "when": { "activationIncludes": ["charge"] },
+    "effect": [
+      {
+        "grantWeaponRule": { "rule": "core.wr.shock", "filter": { "weaponType": "melee" } },
+        "duration": "action"
+      },
+      {
+        "code": "shockAssaultStrike",
+        "params": { "extraDamage": 1, "damageCap": 7, "firstStrikeOnly": true }
+      }
+    ],
+    "text": "When a friendly Angel of Death operative fights in an activation that includes a Charge, its melee weapon gains Shock for the action and your first strike deals 1 extra damage, to a maximum of 7 per die.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md Ploys table"
+  }
+]

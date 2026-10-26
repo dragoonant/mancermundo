@@ -1,0 +1,102 @@
+{
+  "aod-space-marine-captain": {
+    "prompt": "MGSD super-deformed bare-handed body for aod-space-marine-captain (concept image in art/unit-concepts/aod-space-marine-captain.png)",
+    "height": 1.3,
+    "base": 40
+  },
+  "aod-assault-intercessor-sergeant": {
+    "prompt": "MGSD super-deformed bare-handed body for aod-assault-intercessor-sergeant (concept image in art/unit-concepts/aod-assault-intercessor-sergeant.png)",
+    "height": 1.25,
+    "base": 32
+  },
+  "aod-intercessor-sergeant": {
+    "prompt": "MGSD super-deformed bare-handed body for aod-intercessor-sergeant (concept image in art/unit-concepts/aod-intercessor-sergeant.png)",
+    "height": 1.25,
+    "base": 32
+  },
+  "aod-assault-intercessor-grenadier": {
+    "prompt": "MGSD super-deformed bare-handed body for aod-assault-intercessor-grenadier (concept image in art/unit-concepts/aod-assault-intercessor-grenadier.png)",
+    "height": 1.2,
+    "base": 32
+  },
+  "aod-assault-intercessor-warrior": {
+    "prompt": "MGSD super-deformed bare-handed body for aod-assault-intercessor-warrior (concept image in art/unit-concepts/aod-assault-intercessor-warrior.png)",
+    "height": 1.2,
+    "base": 32
+  },
+  "aod-intercessor-gunner": {
+    "prompt": "MGSD super-deformed bare-handed body for aod-intercessor-gunner (concept image in art/unit-concepts/aod-intercessor-gunner.png)",
+    "height": 1.2,
+    "base": 32
+  },
+  "aod-intercessor-warrior": {
+    "prompt": "MGSD super-deformed bare-handed body for aod-intercessor-warrior (concept image in art/unit-concepts/aod-intercessor-warrior.png)",
+    "height": 1.2,
+    "base": 32
+  },
+  "aod-heavy-intercessor-gunner": {
+    "prompt": "MGSD super-deformed bare-handed body for aod-heavy-intercessor-gunner (concept image in art/unit-concepts/aod-heavy-intercessor-gunner.png)",
+    "height": 1.35,
+    "base": 40
+  },
+  "aod-eliminator-sniper": {
+    "prompt": "MGSD super-deformed bare-handed body for aod-eliminator-sniper (concept image in art/unit-concepts/aod-eliminator-sniper.png)",
+    "height": 1.2,
+    "base": 40
+  },
+  "kom-boss-nob": {
+    "prompt": "MGSD super-deformed bare-handed body for kom-boss-nob (concept image in art/unit-concepts/kom-boss-nob.png)",
+    "height": 1.35,
+    "base": 32
+  },
+  "kom-boy": {
+    "prompt": "MGSD super-deformed bare-handed body for kom-boy (concept image in art/unit-concepts/kom-boy.png)",
+    "height": 1.15,
+    "base": 32
+  },
+  "kom-breacha-boy": {
+    "prompt": "MGSD super-deformed bare-handed body for kom-breacha-boy (concept image in art/unit-concepts/kom-breacha-boy.png)",
+    "height": 1.15,
+    "base": 32
+  },
+  "kom-burna-boy": {
+    "prompt": "MGSD super-deformed bare-handed body for kom-burna-boy (concept image in art/unit-concepts/kom-burna-boy.png)",
+    "height": 1.15,
+    "base": 32
+  },
+  "kom-comms-boy": {
+    "prompt": "MGSD super-deformed bare-handed body for kom-comms-boy (concept image in art/unit-concepts/kom-comms-boy.png)",
+    "height": 1.15,
+    "base": 32
+  },
+  "kom-dakka-boy": {
+    "prompt": "MGSD super-deformed bare-handed body for kom-dakka-boy (concept image in art/unit-concepts/kom-dakka-boy.png)",
+    "height": 1.15,
+    "base": 32
+  },
+  "kom-rokkit-boy": {
+    "prompt": "MGSD super-deformed bare-handed body for kom-rokkit-boy (concept image in art/unit-concepts/kom-rokkit-boy.png)",
+    "height": 1.15,
+    "base": 32
+  },
+  "kom-slasha-boy": {
+    "prompt": "MGSD super-deformed bare-handed body for kom-slasha-boy (concept image in art/unit-concepts/kom-slasha-boy.png)",
+    "height": 1.15,
+    "base": 32
+  },
+  "kom-snipa-boy": {
+    "prompt": "MGSD super-deformed bare-handed body for kom-snipa-boy (concept image in art/unit-concepts/kom-snipa-boy.png)",
+    "height": 1.15,
+    "base": 32
+  },
+  "kom-grot": {
+    "prompt": "MGSD super-deformed bare-handed body for kom-grot (concept image in art/unit-concepts/kom-grot.png)",
+    "height": 0.8,
+    "base": 25
+  },
+  "kom-bomb-squig": {
+    "prompt": "MGSD super-deformed bare-handed body for kom-bomb-squig (concept image in art/unit-concepts/kom-bomb-squig.png)",
+    "height": 0.75,
+    "base": 25
+  }
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "aod.e.purity-seals",
+    "name": "Purity Seals",
+    "scope": "faction",
+    "team": "angels-of-death",
+    "count": 1,
+    "window": ["shoot.attackRolled", "fight.rolled"],
+    "when": { "attackFailsAtLeast": 2 },
+    "limits": { "uses": 1, "per": "turningPoint", "scope": "team" },
+    "effect": {
+      "retainSuccess": { "kind": "normal", "count": 1, "from": "fail", "discardFails": 1 },
+      "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" }
+    },
+    "text": "Once per turning point, when a friendly Angel of Death operative shoots, fights or retaliates and you roll two or more failed attack dice, discard one and keep another as a normal success.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md Faction equipment table"
+  },
+  {
+    "id": "aod.e.auspex",
+    "name": "Auspex",
+    "scope": "faction",
+    "team": "angels-of-death",
+    "count": 1,
+    "window": "shoot.targetSelected",
+    "limits": { "uses": 1, "per": "turningPoint", "scope": "team" },
+    "effect": { "code": "auspex", "params": { "radius": 8, "noObscured": true, "until": "activation" } },
+    "text": "Once per turning point, when a friendly Angel of Death operative selects a target for Shoot, enemies within 8 inches of it cannot be obscured until the end of that activation or counteraction.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md Faction equipment table"
+  },
+  {
+    "id": "aod.e.chapter-reliquaries",
+    "name": "Chapter Reliquaries",
+    "scope": "faction",
+    "team": "angels-of-death",
+    "count": 1,
+    "effect": { "ployCost": { "ploy": "aod.p.wrath-of-vengeance", "cost": 0, "when": { "subjectOrder": "engage" } } },
+    "text": "You may use Wrath of Vengeance for 0 CP when the operative it names has an Engage order.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md Faction equipment table"
+  },
+  {
+    "id": "aod.e.tilting-shields",
+    "name": "Tilting Shields",
+    "scope": "faction",
+    "team": "angels-of-death",
+    "count": 1,
+    "window": "fight.rolled",
+    "limits": { "uses": 1, "per": "turningPoint", "scope": "team" },
+    "effect": { "code": "tiltingShields", "params": { "critOnlyOn": 6 } },
+    "text": "Once per turning point, when a friendly Angel of Death operative fights or retaliates and the enemy has rolled attack dice but not re-rolled, the enemy cannot keep any result below 6 as a crit this sequence, which blocks Lethal, Rending and Severe conversions.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md Faction equipment table"
+  }
+]

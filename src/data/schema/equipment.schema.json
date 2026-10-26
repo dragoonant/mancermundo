@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mancermundo.dev/schemas/equipment.schema.json",
+  "title": "Equipment option",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "scope", "count", "text", "source"],
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/Id" },
+    "name": { "type": "string", "minLength": 1 },
+    "scope": { "enum": ["universal", "faction"] },
+    "team": { "$ref": "common.schema.json#/$defs/Id" },
+    "count": { "type": "integer", "minimum": 1, "description": "Copies of the marker or terrain feature the option provides." },
+    "enabled": { "type": "boolean", "description": "False when the option exists in the sources but v1 does not offer it." },
+    "setup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["marker", "terrain"] },
+        "markerMm": { "type": "integer", "minimum": 1 },
+        "whollyWithinTerritory": { "type": "boolean" },
+        "withinDropZoneInches": { "$ref": "common.schema.json#/$defs/Inches" },
+        "onFloor": { "type": "boolean" },
+        "uprightAgainstMinHeight": { "$ref": "common.schema.json#/$defs/Inches" },
+        "clearances": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from", "moreThan"],
+            "properties": {
+              "from": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "enum": ["otherMarkers", "accessPoints", "accessibleTerrain", "equipmentTerrain", "doors"] }
+              },
+              "moreThan": { "$ref": "common.schema.json#/$defs/Inches" }
+            }
+          }
+        }
+      }
+    },
+    "terrain": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "model": { "$ref": "common.schema.json#/$defs/Slug" },
+        "traits": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/TerrainTrait" } },
+        "tags": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Slug" }, "description": "Equipment-only terrain properties such as obstructing, protective, portable." },
+        "height": { "$ref": "common.schema.json#/$defs/Inches" }
+      }
+    },
+    "choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pick", "from"],
+      "description": "Sub-selection made when the option is chosen (utility and explosive grenades).",
+      "properties": {
+        "pick": { "type": "integer", "minimum": 1 },
+        "from": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/Id" } },
+        "repeatable": { "type": "boolean" }
+      }
+    },
+    "grants": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "weapons": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
+        "abilities": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
+        "actions": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } }
+      }
+    },
+    "actions": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uses", "per"],
+      "properties": {
+        "uses": { "type": "integer", "minimum": 1 },
+        "per": { "enum": ["battle", "turningPoint"] },
+        "scope": { "enum": ["team", "operative"] }
+      }
+    },
+    "window": { "$ref": "common.schema.json#/$defs/WindowSet" },
+    "when": { "$ref": "common.schema.json#/$defs/Condition" },
+    "effect": { "$ref": "common.schema.json#/$defs/EffectList" },
+    "text": { "$ref": "common.schema.json#/$defs/Text" },
+    "source": { "$ref": "common.schema.json#/$defs/Source" }
+  },
+  "if": { "properties": { "scope": { "const": "faction" } }, "required": ["scope"] },
+  "then": { "required": ["team"] }
+}

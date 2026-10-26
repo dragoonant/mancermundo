@@ -1,0 +1,576 @@
+{
+  "amb-distant-battle": {
+    "rms": 0.194,
+    "peak": 0.713,
+    "crest": 3.7,
+    "seconds": 20,
+    "gain": 0.52
+  },
+  "amb-industrial-wind": {
+    "rms": 0.1199,
+    "peak": 0.848,
+    "crest": 7.1,
+    "seconds": 17.21,
+    "gain": 0.83
+  },
+  "block-clang": {
+    "rms": 0.0592,
+    "peak": 1,
+    "crest": 16.9,
+    "seconds": 1.52,
+    "gain": 1
+  },
+  "death-generic": {
+    "rms": 0.148,
+    "peak": 0.966,
+    "crest": 6.5,
+    "seconds": 0.6,
+    "gain": 1.04
+  },
+  "death-grot": {
+    "rms": 0.1093,
+    "peak": 1,
+    "crest": 9.1,
+    "seconds": 1.52,
+    "gain": 1
+  },
+  "death-marine": {
+    "rms": 0.2119,
+    "peak": 0.837,
+    "crest": 3.9,
+    "seconds": 4.49,
+    "gain": 0.76
+  },
+  "death-marine-classic": {
+    "rms": 0.2773,
+    "peak": 1,
+    "crest": 3.6,
+    "seconds": 3,
+    "gain": 0.58
+  },
+  "death-ork": {
+    "rms": 0.3662,
+    "peak": 1,
+    "crest": 2.7,
+    "seconds": 1.6,
+    "gain": 0.44
+  },
+  "death-ork-roar": {
+    "rms": 0.1343,
+    "peak": 0.878,
+    "crest": 6.5,
+    "seconds": 3.58,
+    "gain": 1.14
+  },
+  "death-squig": {
+    "rms": 0.1638,
+    "peak": 0.981,
+    "crest": 6,
+    "seconds": 1.25,
+    "gain": 0.98
+  },
+  "hit-armour": {
+    "rms": 0.0827,
+    "peak": 0.856,
+    "crest": 10.3,
+    "seconds": 0.48,
+    "gain": 1.17
+  },
+  "hit-flesh": {
+    "rms": 0.2308,
+    "peak": 1,
+    "crest": 4.3,
+    "seconds": 0.48,
+    "gain": 0.69
+  },
+  "move-climb": {
+    "rms": 0.2165,
+    "peak": 0.84,
+    "crest": 3.9,
+    "seconds": 2.09,
+    "gain": 0.74
+  },
+  "move-drop": {
+    "rms": 0.3168,
+    "peak": 0.857,
+    "crest": 2.7,
+    "seconds": 1.8,
+    "gain": 0.51
+  },
+  "move-marine-steps": {
+    "rms": 0.1015,
+    "peak": 0.867,
+    "crest": 8.5,
+    "seconds": 3.08,
+    "gain": 1.15
+  },
+  "move-ork-boots": {
+    "rms": 0.0833,
+    "peak": 0.899,
+    "crest": 10.8,
+    "seconds": 0.78,
+    "gain": 1.11
+  },
+  "music-battle-a": {
+    "rms": 0.1471,
+    "peak": 0.893,
+    "crest": 6.1,
+    "seconds": 89.78,
+    "gain": 0.68
+  },
+  "music-battle-b": {
+    "rms": 0.1661,
+    "peak": 0.85,
+    "crest": 5.1,
+    "seconds": 90.04,
+    "gain": 0.6
+  },
+  "music-defeat": {
+    "rms": 0.1305,
+    "peak": 0.847,
+    "crest": 6.5,
+    "seconds": 9.72,
+    "gain": 0.77
+  },
+  "music-title": {
+    "rms": 0.1275,
+    "peak": 0.916,
+    "crest": 7.2,
+    "seconds": 60.03,
+    "gain": 0.78
+  },
+  "music-victory": {
+    "rms": 0.1608,
+    "peak": 0.842,
+    "crest": 5.2,
+    "seconds": 10.19,
+    "gain": 0.62
+  },
+  "narr-counteract": {
+    "rms": 0.078,
+    "peak": 0.845,
+    "crest": 10.8,
+    "seconds": 1.1,
+    "gain": 1.18
+  },
+  "narr-defeat": {
+    "rms": 0.0863,
+    "peak": 0.847,
+    "crest": 9.8,
+    "seconds": 0.71,
+    "gain": 1.18
+  },
+  "narr-draw": {
+    "rms": 0.1032,
+    "peak": 0.84,
+    "crest": 8.1,
+    "seconds": 0.84,
+    "gain": 1.19
+  },
+  "narr-final-turning-point": {
+    "rms": 0.1218,
+    "peak": 0.848,
+    "crest": 7,
+    "seconds": 1.31,
+    "gain": 1.18
+  },
+  "narr-firefight-phase": {
+    "rms": 0.0928,
+    "peak": 0.844,
+    "crest": 9.1,
+    "seconds": 1.41,
+    "gain": 1.19
+  },
+  "narr-initiative-aod": {
+    "rms": 0.1787,
+    "peak": 0.841,
+    "crest": 4.7,
+    "seconds": 1.99,
+    "gain": 0.9
+  },
+  "narr-initiative-kom": {
+    "rms": 0.174,
+    "peak": 0.847,
+    "crest": 4.9,
+    "seconds": 1.91,
+    "gain": 0.92
+  },
+  "narr-objective-secured": {
+    "rms": 0.1142,
+    "peak": 0.844,
+    "crest": 7.4,
+    "seconds": 1.28,
+    "gain": 1.18
+  },
+  "narr-operative-down": {
+    "rms": 0.12,
+    "peak": 0.845,
+    "crest": 7,
+    "seconds": 1.15,
+    "gain": 1.18
+  },
+  "narr-strategy-phase": {
+    "rms": 0.0816,
+    "peak": 0.845,
+    "crest": 10.3,
+    "seconds": 0.97,
+    "gain": 1.18
+  },
+  "narr-turning-point-one": {
+    "rms": 0.1888,
+    "peak": 0.848,
+    "crest": 4.5,
+    "seconds": 1.28,
+    "gain": 0.85
+  },
+  "narr-victory": {
+    "rms": 0.0661,
+    "peak": 0.847,
+    "crest": 12.8,
+    "seconds": 1.38,
+    "gain": 1.18
+  },
+  "shout-marine": {
+    "rms": 0.2593,
+    "peak": 1,
+    "crest": 3.9,
+    "seconds": 1,
+    "gain": 0.62
+  },
+  "shout-ork": {
+    "rms": 0.3594,
+    "peak": 1,
+    "crest": 2.8,
+    "seconds": 1.2,
+    "gain": 0.45
+  },
+  "ui-ap-spend": {
+    "rms": 0.0645,
+    "peak": 0.866,
+    "crest": 13.4,
+    "seconds": 1.07,
+    "gain": 1.15
+  },
+  "ui-cp-gained": {
+    "rms": 0.0342,
+    "peak": 0.581,
+    "crest": 16.9,
+    "seconds": 0.48,
+    "gain": 1.72
+  },
+  "ui-defeat-sting": {
+    "rms": 0.0842,
+    "peak": 0.691,
+    "crest": 8.2,
+    "seconds": 1.48,
+    "gain": 1.45
+  },
+  "ui-dice-land": {
+    "rms": 0.0264,
+    "peak": 0.946,
+    "crest": 35.8,
+    "seconds": 0.48,
+    "gain": 1.06
+  },
+  "ui-dice-rattle": {
+    "rms": 0.0688,
+    "peak": 1,
+    "crest": 14.5,
+    "seconds": 0.8,
+    "gain": 1
+  },
+  "ui-initiative-won": {
+    "rms": 0.077,
+    "peak": 0.86,
+    "crest": 11.2,
+    "seconds": 3,
+    "gain": 1.16
+  },
+  "ui-marker-pickup": {
+    "rms": 0.0879,
+    "peak": 0.839,
+    "crest": 9.5,
+    "seconds": 0.29,
+    "gain": 1.19
+  },
+  "ui-order-conceal": {
+    "rms": 0.1361,
+    "peak": 0.846,
+    "crest": 6.2,
+    "seconds": 1.07,
+    "gain": 1.18
+  },
+  "ui-order-engage": {
+    "rms": 0.1471,
+    "peak": 0.845,
+    "crest": 5.7,
+    "seconds": 1.07,
+    "gain": 1.09
+  },
+  "ui-turning-point-sting": {
+    "rms": 0.0574,
+    "peak": 0.841,
+    "crest": 14.7,
+    "seconds": 3.58,
+    "gain": 1.19
+  },
+  "ui-victory-sting": {
+    "rms": 0.1657,
+    "peak": 0.838,
+    "crest": 5.1,
+    "seconds": 5.04,
+    "gain": 0.97
+  },
+  "ui-vp-scored": {
+    "rms": 0.016,
+    "peak": 0.166,
+    "crest": 10.4,
+    "seconds": 0.8,
+    "gain": 6.01
+  },
+  "wpn-auto-bolt-rifle": {
+    "rms": 0.1222,
+    "peak": 0.951,
+    "crest": 7.8,
+    "seconds": 1.96,
+    "gain": 1.05
+  },
+  "wpn-big-choppa": {
+    "rms": 0.2816,
+    "peak": 1,
+    "crest": 3.6,
+    "seconds": 1,
+    "gain": 0.57
+  },
+  "wpn-bolt-pistol": {
+    "rms": 0.1113,
+    "peak": 0.797,
+    "crest": 7.2,
+    "seconds": 0.8,
+    "gain": 1.25
+  },
+  "wpn-bolt-rifle": {
+    "rms": 0.1185,
+    "peak": 1,
+    "crest": 8.4,
+    "seconds": 0.89,
+    "gain": 1
+  },
+  "wpn-bolt-sniper-rifle": {
+    "rms": 0.087,
+    "peak": 1,
+    "crest": 11.5,
+    "seconds": 1.52,
+    "gain": 1
+  },
+  "wpn-breacha-ram": {
+    "rms": 0.2305,
+    "peak": 0.862,
+    "crest": 3.7,
+    "seconds": 1.99,
+    "gain": 0.69
+  },
+  "wpn-burna": {
+    "rms": 0.4403,
+    "peak": 1,
+    "crest": 2.3,
+    "seconds": 1.76,
+    "gain": 0.36
+  },
+  "wpn-chainsword-hit": {
+    "rms": 0.1541,
+    "peak": 0.876,
+    "crest": 5.7,
+    "seconds": 2.53,
+    "gain": 1.04
+  },
+  "wpn-chainsword-rev": {
+    "rms": 0.2057,
+    "peak": 1,
+    "crest": 4.9,
+    "seconds": 3,
+    "gain": 0.78
+  },
+  "wpn-choppa": {
+    "rms": 0.2003,
+    "peak": 1,
+    "crest": 5,
+    "seconds": 0.8,
+    "gain": 0.8
+  },
+  "wpn-dakka-shoota": {
+    "rms": 0.3106,
+    "peak": 1,
+    "crest": 3.2,
+    "seconds": 0.68,
+    "gain": 0.52
+  },
+  "wpn-dynamite": {
+    "rms": 0.1655,
+    "peak": 1,
+    "crest": 6,
+    "seconds": 3.58,
+    "gain": 0.97
+  },
+  "wpn-explosives": {
+    "rms": 0.1897,
+    "peak": 0.876,
+    "crest": 4.6,
+    "seconds": 2.95,
+    "gain": 0.84
+  },
+  "wpn-grenade-frag": {
+    "rms": 0.1426,
+    "peak": 1,
+    "crest": 7,
+    "seconds": 3,
+    "gain": 1
+  },
+  "wpn-grenade-krak": {
+    "rms": 0.2927,
+    "peak": 0.697,
+    "crest": 2.4,
+    "seconds": 2.04,
+    "gain": 0.55
+  },
+  "wpn-grenade-launcher": {
+    "rms": 0.2503,
+    "peak": 1,
+    "crest": 4,
+    "seconds": 1.48,
+    "gain": 0.64
+  },
+  "wpn-grot-choppa": {
+    "rms": 0.038,
+    "peak": 0.857,
+    "crest": 22.5,
+    "seconds": 1.25,
+    "gain": 1.17
+  },
+  "wpn-hand-flamer": {
+    "rms": 0.2992,
+    "peak": 1,
+    "crest": 3.3,
+    "seconds": 1,
+    "gain": 0.53
+  },
+  "wpn-harpoon": {
+    "rms": 0.1799,
+    "peak": 0.833,
+    "crest": 4.6,
+    "seconds": 2.53,
+    "gain": 0.89
+  },
+  "wpn-heavy-bolt-pistol": {
+    "rms": 0.0773,
+    "peak": 0.826,
+    "crest": 10.7,
+    "seconds": 1.1,
+    "gain": 1.21
+  },
+  "wpn-heavy-bolter": {
+    "rms": 0.4669,
+    "peak": 1,
+    "crest": 2.1,
+    "seconds": 1.48,
+    "gain": 0.34
+  },
+  "wpn-plasma-pistol": {
+    "rms": 0.2587,
+    "peak": 1,
+    "crest": 3.9,
+    "seconds": 1,
+    "gain": 0.62
+  },
+  "wpn-plasma-pistol-supercharge": {
+    "rms": 0.1137,
+    "peak": 0.771,
+    "crest": 6.8,
+    "seconds": 2.09,
+    "gain": 1.3
+  },
+  "wpn-power-fist": {
+    "rms": 0.1935,
+    "peak": 1,
+    "crest": 5.2,
+    "seconds": 1,
+    "gain": 0.83
+  },
+  "wpn-power-klaw": {
+    "rms": 0.0916,
+    "peak": 0.54,
+    "crest": 5.9,
+    "seconds": 0.68,
+    "gain": 1.75
+  },
+  "wpn-power-weapon": {
+    "rms": 0.1555,
+    "peak": 1,
+    "crest": 6.4,
+    "seconds": 0.88,
+    "gain": 1
+  },
+  "wpn-rokkit-launcha": {
+    "rms": 0.3858,
+    "peak": 1,
+    "crest": 2.6,
+    "seconds": 1.76,
+    "gain": 0.41
+  },
+  "wpn-scoped-big-shoota": {
+    "rms": 0.1695,
+    "peak": 0.845,
+    "crest": 5,
+    "seconds": 2.09,
+    "gain": 0.94
+  },
+  "wpn-shokka-pistol": {
+    "rms": 0.0497,
+    "peak": 0.914,
+    "crest": 18.4,
+    "seconds": 1.52,
+    "gain": 1.09
+  },
+  "wpn-slugga": {
+    "rms": 0.1294,
+    "peak": 1,
+    "crest": 7.7,
+    "seconds": 0.88,
+    "gain": 1
+  },
+  "wpn-squig-bite": {
+    "rms": 0.1659,
+    "peak": 0.993,
+    "crest": 6,
+    "seconds": 1.23,
+    "gain": 0.96
+  },
+  "wpn-stalker-bolt-rifle": {
+    "rms": 0.1058,
+    "peak": 0.915,
+    "crest": 8.7,
+    "seconds": 2.06,
+    "gain": 1.09
+  },
+  "wpn-throwing-knives": {
+    "rms": 0.1203,
+    "peak": 1,
+    "crest": 8.3,
+    "seconds": 1.04,
+    "gain": 1
+  },
+  "wpn-thunder-hammer": {
+    "rms": 0.1721,
+    "peak": 0.814,
+    "crest": 4.7,
+    "seconds": 3,
+    "gain": 0.93
+  },
+  "wpn-twin-choppas": {
+    "rms": 0.1636,
+    "peak": 0.94,
+    "crest": 5.7,
+    "seconds": 2.09,
+    "gain": 0.98
+  }
+}

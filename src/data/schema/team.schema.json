@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mancermundo.dev/schemas/team.schema.json",
+  "title": "Kill team",
+  "description": "selection.slots describe the roster shape; teamChoices describe picks made once per team at selection (for example Chapter Tactics).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "factionKeyword", "archetypes", "selection", "factionRules", "ploys", "equipment", "paint", "text", "source"],
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/Id" },
+    "name": { "type": "string", "minLength": 1 },
+    "factionKeyword": { "$ref": "common.schema.json#/$defs/Keyword" },
+    "archetypes": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/Slug" } },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slots"],
+      "properties": {
+        "slots": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "count", "from"],
+            "properties": {
+              "id": { "$ref": "common.schema.json#/$defs/Slug" },
+              "label": { "type": "string", "minLength": 1 },
+              "count": { "type": "integer", "minimum": 1, "description": "Selections to fill exactly." },
+              "from": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Id" } },
+              "repeatable": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": { "$ref": "common.schema.json#/$defs/Id" },
+                "description": "Datacards that may be taken more than once; every other datacard at most once."
+              },
+              "halfSelections": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": { "$ref": "common.schema.json#/$defs/Id" },
+                "description": "Datacards that each count as half a selection; the halves present cost ceil(n / 2) selections together."
+              }
+            }
+          }
+        }
+      }
+    },
+    "teamChoices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "group"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/Slug" },
+          "label": { "type": "string", "minLength": 1 },
+          "group": { "$ref": "common.schema.json#/$defs/Slug", "description": "choiceGroup of the abilities offered." },
+          "distinctFrom": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Slug" }, "description": "Other teamChoices ids this pick must differ from." }
+        }
+      }
+    },
+    "factionRules": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
+    "ploys": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
+    "equipment": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
+    "paint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["major", "minor"],
+      "properties": { "major": { "$ref": "common.schema.json#/$defs/Hsl" }, "minor": { "$ref": "common.schema.json#/$defs/Hsl" } }
+    },
+    "text": { "$ref": "common.schema.json#/$defs/Text" },
+    "source": { "$ref": "common.schema.json#/$defs/Source" }
+  }
+}

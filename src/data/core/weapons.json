@@ -1,0 +1,32 @@
+[
+  {
+    "id": "core.w.frag-grenade",
+    "name": "Frag grenade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": { "normal": 2, "crit": 4 },
+    "rules": [
+      { "rule": "core.wr.range", "inches": 6 },
+      { "rule": "core.wr.blast", "inches": 2 },
+      { "rule": "core.wr.saturate" }
+    ],
+    "text": "A thrown fragmentation grenade that also catches anyone near the target. Team-wide use limit equals the number picked.",
+    "source": "docs/spec/11-missions.md M-5.6"
+  },
+  {
+    "id": "core.w.krak-grenade",
+    "name": "Krak grenade",
+    "type": "ranged",
+    "atk": 4,
+    "hit": "4+",
+    "dmg": { "normal": 4, "crit": 5 },
+    "rules": [
+      { "rule": "core.wr.range", "inches": 6 },
+      { "rule": "core.wr.piercing", "x": 1 },
+      { "rule": "core.wr.saturate" }
+    ],
+    "text": "A thrown anti-armour grenade. Team-wide use limit equals the number picked.",
+    "source": "docs/spec/11-missions.md M-5.6"
+  }
+]

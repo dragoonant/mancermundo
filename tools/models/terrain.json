@@ -1,0 +1,11 @@
+{
+  "_doc": "Per-slug overrides for finalize-terrain.py. yaw = degrees about Y applied after the long axis is put on X (the front must end up on +Z: doors and openings face +Z, the rampart or back wall sits at -Z). footprint = {w,d,h} used only when no killzone layout uses the slug. cutBase: false disables the base-lip slice.",
+  "t-large-ruin": { "yaw": 0 },
+  "t-small-ruin": { "yaw": 0 },
+  "t-stronghold": { "yaw": 0, "footprint": { "w": 4, "d": 3, "h": 3 } },
+  "t-heavy-rubble": { "yaw": 0 },
+  "t-light-rubble": { "yaw": 0 },
+  "t-barricade": { "yaw": 0 },
+  "t-container": { "yaw": 0 },
+  "t-pipes": { "yaw": 0 }
+}

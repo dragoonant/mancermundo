@@ -1,0 +1,229 @@
+[
+  {
+    "id": "aod.a.astartes",
+    "kind": "factionRule",
+    "name": "ASTARTES",
+    "team": "angels-of-death",
+    "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" },
+    "effect": {
+      "code": "astartes",
+      "params": {
+        "doubleActions": ["shoot", "fight"],
+        "boltNameContains": "bolt",
+        "repeatSurcharge": { "nameContains": ["bolt sniper rifle", "heavy bolter"], "ap": 1 },
+        "counteractAnyOrder": true
+      }
+    },
+    "text": "In each activation a friendly Angel of Death operative may take two Shoot actions or two Fight actions. Two Shoot actions need at least one bolt weapon, and repeating a bolt sniper rifle or heavy bolter costs the second one 1 extra AP. Every Angel of Death operative can counteract whatever its order.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.15"
+  },
+  {
+    "id": "aod.a.chapter-tactics",
+    "kind": "factionRule",
+    "name": "CHAPTER TACTICS",
+    "team": "angels-of-death",
+    "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" },
+    "text": "When the team is chosen, pick a primary and a secondary Chapter Tactic from the eight below. Both apply to every Angel of Death operative; picking the same one twice adds nothing, so the builder asks for two different ones.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.16"
+  },
+  {
+    "id": "aod.a.ct-aggressive",
+    "kind": "ability",
+    "name": "Aggressive",
+    "team": "angels-of-death",
+    "choiceGroup": "chapter-tactic",
+    "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" },
+    "effect": { "grantWeaponRule": { "rule": "core.wr.rending", "filter": { "weaponType": "melee" } } },
+    "text": "Melee weapons gain Rending.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.16"
+  },
+  {
+    "id": "aod.a.ct-dueller",
+    "kind": "ability",
+    "name": "Dueller",
+    "team": "angels-of-death",
+    "choiceGroup": "chapter-tactic",
+    "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" },
+    "effect": { "code": "ctDueller" },
+    "text": "When this operative fights or retaliates, each of your normal successes can block one unresolved crit, except against Brutal.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.16"
+  },
+  {
+    "id": "aod.a.ct-resolute",
+    "kind": "ability",
+    "name": "Resolute",
+    "team": "angels-of-death",
+    "choiceGroup": "chapter-tactic",
+    "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" },
+    "effect": { "code": "ctResolute" },
+    "text": "Ignore every change to this operative APL, and Shock has no effect on it.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.16"
+  },
+  {
+    "id": "aod.a.ct-stealthy",
+    "kind": "ability",
+    "name": "Stealthy",
+    "team": "angels-of-death",
+    "choiceGroup": "chapter-tactic",
+    "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" },
+    "effect": { "code": "ctStealthy" },
+    "text": "When this operative is shot and could retain cover saves, it retains one extra, or retains one cover save as a crit. Does not stack with the Vantage cover improvement.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.16"
+  },
+  {
+    "id": "aod.a.ct-mobile",
+    "kind": "ability",
+    "name": "Mobile",
+    "team": "angels-of-death",
+    "choiceGroup": "chapter-tactic",
+    "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" },
+    "effect": [{ "costDelta": { "actions": ["fall-back"], "delta": -1 } }, { "code": "ctMobileCharge" }],
+    "text": "Fall Back costs 1 less AP, and the operative may Charge out of an enemy control range as long as the rest of the charge rules are met.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.16"
+  },
+  {
+    "id": "aod.a.ct-hardy",
+    "kind": "ability",
+    "name": "Hardy",
+    "team": "angels-of-death",
+    "choiceGroup": "chapter-tactic",
+    "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" },
+    "effect": { "code": "ctHardy" },
+    "text": "When this operative is shot, defence results of 5 or more count as crits.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.16"
+  },
+  {
+    "id": "aod.a.ct-sharpshooter",
+    "kind": "ability",
+    "name": "Sharpshooter",
+    "team": "angels-of-death",
+    "choiceGroup": "chapter-tactic",
+    "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" },
+    "effect": [
+      {
+        "grantWeaponRule": { "rule": "core.wr.accurate", "x": 1, "filter": { "weaponType": "ranged", "nameContains": "bolt" } }
+      },
+      {
+        "grantWeaponRule": { "rule": "core.wr.severe", "filter": { "weaponType": "ranged", "nameContains": "bolt" } }
+      }
+    ],
+    "when": { "action": "shoot", "activationExcludes": ["charge", "fall-back", "reposition"] },
+    "text": "Shooting in an activation without Charge, Fall Back or Reposition, bolt weapons gain Accurate 1 and Severe.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.16"
+  },
+  {
+    "id": "aod.a.ct-siege-specialist",
+    "kind": "ability",
+    "name": "Siege Specialist",
+    "team": "angels-of-death",
+    "choiceGroup": "chapter-tactic",
+    "scope": { "side": "friendly", "keyword": "ANGEL OF DEATH" },
+    "effect": [
+      { "grantWeaponRule": { "rule": "core.wr.saturate", "filter": { "weaponType": "ranged" } } },
+      { "code": "ctSiegeNoAssist" }
+    ],
+    "text": "Ranged weapons gain Saturate, and enemy operatives cannot assist against this operative when it fights or retaliates.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.16"
+  },
+  {
+    "id": "aod.a.iron-halo",
+    "kind": "ability",
+    "name": "Iron Halo",
+    "team": "angels-of-death",
+    "limit": "oncePerBattle",
+    "effect": { "ignoreDamage": { "kind": "normal", "once": true } },
+    "text": "Once per battle, ignore the damage of one attack die that would deal normal damage to this operative.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.8"
+  },
+  {
+    "id": "aod.a.grenadier",
+    "kind": "ability",
+    "name": "Grenadier",
+    "team": "angels-of-death",
+    "effect": {
+      "modifyStat": {
+        "stat": "hit",
+        "value": -1,
+        "filter": { "weaponIds": ["core.w.frag-grenade", "core.w.krak-grenade"] }
+      },
+      "code": "grenadier",
+      "params": { "weapons": ["core.w.frag-grenade", "core.w.krak-grenade"], "separateLimits": true }
+    },
+    "text": "Can use frag and krak grenades with their Hit improved by 1 (to 3+). These uses are separate from any grenades the team picked as equipment.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.9"
+  },
+  {
+    "id": "aod.a.heroic-leader",
+    "kind": "ability",
+    "name": "Heroic Leader",
+    "team": "angels-of-death",
+    "limit": "oncePerTurningPoint",
+    "effect": {
+      "code": "heroicLeader",
+      "params": {
+        "freePloysExcluding": ["core.p.command-re-roll"],
+        "combatDoctrine": "aod.p.combat-doctrine",
+        "adjustDoctrine": "aod.p.adjust-doctrine"
+      }
+    },
+    "text": "Once per turning point choose one: use a firefight ploy that names this Captain for 0 CP (not Command Re-roll); use Combat Doctrine as you activate a friendly Angel of Death operative while the Captain is in the killzone and out of enemy control range (normal cost, once per turning point); or use Adjust Doctrine for 0 CP under the same conditions.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.10"
+  },
+  {
+    "id": "aod.a.doctrine-warfare-assault",
+    "kind": "ability",
+    "name": "Doctrine Warfare",
+    "team": "angels-of-death",
+    "effect": {
+      "code": "doctrineWarfare",
+      "params": { "ploy": "aod.p.combat-doctrine", "doctrines": ["assault", "tactical"], "oncePerBattleEach": true }
+    },
+    "text": "Once per battle each, while this operative is in the killzone, Combat Doctrine costs 0 CP when you pick the Assault doctrine, and separately 0 CP when you pick the Tactical doctrine.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.11"
+  },
+  {
+    "id": "aod.a.doctrine-warfare-devastator",
+    "kind": "ability",
+    "name": "Doctrine Warfare",
+    "team": "angels-of-death",
+    "effect": {
+      "code": "doctrineWarfare",
+      "params": { "ploy": "aod.p.combat-doctrine", "doctrines": ["devastator", "tactical"], "oncePerBattleEach": true }
+    },
+    "text": "Once per battle each, while this operative is in the killzone, Combat Doctrine costs 0 CP when you pick the Devastator doctrine, and separately 0 CP when you pick the Tactical doctrine.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.11"
+  },
+  {
+    "id": "aod.a.chapter-veteran",
+    "kind": "ability",
+    "name": "Chapter Veteran",
+    "team": "angels-of-death",
+    "window": "setup.rosterLocked",
+    "effect": { "code": "chapterVeteran", "params": { "group": "chapter-tactic", "scope": "self" } },
+    "text": "After operatives are selected, if this operative is on your roster, pick one extra Chapter Tactic for it for this battle. The pick may change from battle to battle.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.12"
+  },
+  {
+    "id": "aod.a.camo-cloak",
+    "kind": "ability",
+    "name": "Camo Cloak",
+    "team": "angels-of-death",
+    "effect": {
+      "code": "camoCloak",
+      "params": { "ignoreSaturate": true, "tactic": "aod.a.ct-stealthy", "stackBoth": true }
+    },
+    "text": "Shooters ignore Saturate against this operative. It always has the Stealthy tactic; if your team also chose Stealthy it gets both of its options at once, one ordinary cover save and one as a crit.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.13"
+  },
+  {
+    "id": "aod.a.optics",
+    "kind": "uniqueAction",
+    "name": "OPTICS",
+    "team": "angels-of-death",
+    "ap": 1,
+    "conditions": { "notInEnemyControlRange": true },
+    "effect": { "code": "optics", "params": { "until": "startOfNextActivation", "noObscured": true } },
+    "text": "Until the start of its next activation, enemies this operative shoots cannot be obscured.",
+    "source": "team-angels-of-death.pdf; docs/spec/13-teams.md T-AOD.14"
+  }
+]

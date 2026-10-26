@@ -1,0 +1,54 @@
+{
+  "id": "angels-of-death",
+  "name": "Angels of Death",
+  "factionKeyword": "ANGEL OF DEATH",
+  "archetypes": ["seek-and-destroy", "security"],
+  "selection": {
+    "slots": [
+      {
+        "id": "leader",
+        "label": "Leader",
+        "count": 1,
+        "from": ["aod.assault-intercessor-sergeant", "aod.intercessor-sergeant", "aod.space-marine-captain"]
+      },
+      {
+        "id": "main",
+        "label": "Operatives",
+        "count": 5,
+        "from": [
+          "aod.assault-intercessor-grenadier",
+          "aod.assault-intercessor-warrior",
+          "aod.eliminator-sniper",
+          "aod.heavy-intercessor-gunner",
+          "aod.intercessor-gunner",
+          "aod.intercessor-warrior"
+        ],
+        "repeatable": ["aod.assault-intercessor-warrior", "aod.intercessor-warrior"]
+      }
+    ]
+  },
+  "teamChoices": [
+    { "id": "primary-tactic", "label": "Primary Chapter Tactic", "group": "chapter-tactic" },
+    {
+      "id": "secondary-tactic",
+      "label": "Secondary Chapter Tactic",
+      "group": "chapter-tactic",
+      "distinctFrom": ["primary-tactic"]
+    }
+  ],
+  "factionRules": ["aod.a.astartes", "aod.a.chapter-tactics"],
+  "ploys": [
+    "aod.p.combat-doctrine",
+    "aod.p.indomitus",
+    "aod.p.and-they-shall-know-no-fear",
+    "aod.p.adaptive-tactics",
+    "aod.p.adjust-doctrine",
+    "aod.p.wrath-of-vengeance",
+    "aod.p.transhuman-physiology",
+    "aod.p.shock-assault"
+  ],
+  "equipment": ["aod.e.purity-seals", "aod.e.auspex", "aod.e.chapter-reliquaries", "aod.e.tilting-shields"],
+  "paint": { "major": { "h": 0.6, "s": 0.6, "l": 0.35 }, "minor": { "h": 0.12, "s": 0.7, "l": 0.45 } },
+  "text": "Elite power-armoured veterans: six operatives, a choice of two Chapter Tactics, and a doctrine system that rewards disciplined firing and decisive assaults.",
+  "source": "team-angels-of-death.pdf; docs/spec/13-teams.md 1.1"
+}

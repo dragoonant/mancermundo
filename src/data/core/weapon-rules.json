@@ -1,0 +1,189 @@
+[
+  {
+    "id": "core.wr.accurate",
+    "name": "Accurate",
+    "param": "count",
+    "ref": "R-10.1",
+    "text": "Keep up to x of the attack dice as normal successes without rolling them. Several instances combine into Accurate 2.",
+    "source": "docs/spec/10-rules-core.md R-10.1"
+  },
+  {
+    "id": "core.wr.balanced",
+    "name": "Balanced",
+    "param": "none",
+    "ref": "R-10.2",
+    "text": "The attacker may re-roll one attack die.",
+    "source": "docs/spec/10-rules-core.md R-10.2"
+  },
+  {
+    "id": "core.wr.blast",
+    "name": "Blast",
+    "param": "inches",
+    "ref": "R-10.3",
+    "text": "After the primary target, the same weapon attacks every other operative visible to and within x of it, friend or foe, as separate sequences.",
+    "source": "docs/spec/10-rules-core.md R-10.3"
+  },
+  {
+    "id": "core.wr.brutal",
+    "name": "Brutal",
+    "param": "none",
+    "ref": "R-10.4",
+    "text": "The defender may only block with crit successes.",
+    "source": "docs/spec/10-rules-core.md R-10.4"
+  },
+  {
+    "id": "core.wr.ceaseless",
+    "name": "Ceaseless",
+    "param": "none",
+    "ref": "R-10.5",
+    "text": "The attacker may re-roll every attack die showing one chosen result.",
+    "source": "docs/spec/10-rules-core.md R-10.5"
+  },
+  {
+    "id": "core.wr.devastating",
+    "name": "Devastating",
+    "param": "count",
+    "distanceVariant": true,
+    "ref": "R-10.6",
+    "text": "Each retained crit immediately deals x damage to the target; with a distance, other operatives visible to and within it of the target take it too.",
+    "source": "docs/spec/10-rules-core.md R-10.6"
+  },
+  {
+    "id": "core.wr.hot",
+    "name": "Hot",
+    "param": "none",
+    "ref": "R-10.7",
+    "text": "After the action roll a D6; if it is lower than the weapon Hit stat the user takes twice the roll as damage.",
+    "source": "docs/spec/10-rules-core.md R-10.7"
+  },
+  {
+    "id": "core.wr.heavy",
+    "name": "Heavy",
+    "param": "none",
+    "moveRestriction": true,
+    "ref": "R-10.9",
+    "text": "The weapon cannot be used in an activation where the operative moved, and the operative cannot move after using it. A named exception (Dash only, Reposition only) is allowed.",
+    "source": "docs/spec/10-rules-core.md R-10.9"
+  },
+  {
+    "id": "core.wr.lethal",
+    "name": "Lethal",
+    "param": "target",
+    "ref": "R-10.10",
+    "text": "Successes rolled at or above x count as crits.",
+    "source": "docs/spec/10-rules-core.md R-10.10"
+  },
+  {
+    "id": "core.wr.limited",
+    "name": "Limited",
+    "param": "count",
+    "ref": "R-10.11",
+    "text": "After x uses in the battle the operative loses the weapon.",
+    "source": "docs/spec/10-rules-core.md R-10.11"
+  },
+  {
+    "id": "core.wr.piercing",
+    "name": "Piercing",
+    "param": "count",
+    "critsVariant": true,
+    "ref": "R-10.12",
+    "text": "The defender collects x fewer defence dice. The Crits variant applies only if a crit was retained.",
+    "source": "docs/spec/10-rules-core.md R-10.12"
+  },
+  {
+    "id": "core.wr.punishing",
+    "name": "Punishing",
+    "param": "none",
+    "ref": "R-10.13",
+    "text": "If at least one crit is retained, one failed die is retained as a normal success.",
+    "source": "docs/spec/10-rules-core.md R-10.13"
+  },
+  {
+    "id": "core.wr.range",
+    "name": "Range",
+    "param": "inches",
+    "ref": "R-10.14",
+    "text": "Only operatives within x of the shooter can be valid targets.",
+    "source": "docs/spec/10-rules-core.md R-10.14"
+  },
+  {
+    "id": "core.wr.relentless",
+    "name": "Relentless",
+    "param": "none",
+    "ref": "R-10.15",
+    "text": "The attacker may re-roll any of the attack dice.",
+    "source": "docs/spec/10-rules-core.md R-10.15"
+  },
+  {
+    "id": "core.wr.rending",
+    "name": "Rending",
+    "param": "none",
+    "ref": "R-10.16",
+    "text": "If at least one crit is retained, one rolled normal success is retained as a crit.",
+    "source": "docs/spec/10-rules-core.md R-10.16"
+  },
+  {
+    "id": "core.wr.saturate",
+    "name": "Saturate",
+    "param": "none",
+    "ref": "R-10.17",
+    "text": "The defender cannot retain cover saves.",
+    "source": "docs/spec/10-rules-core.md R-10.17"
+  },
+  {
+    "id": "core.wr.seek",
+    "name": "Seek",
+    "param": "none",
+    "ref": "R-10.18",
+    "text": "When choosing a valid target, enemies cannot use any terrain as cover.",
+    "source": "docs/spec/10-rules-core.md R-10.18"
+  },
+  {
+    "id": "core.wr.seek-light",
+    "name": "Seek Light",
+    "param": "none",
+    "ref": "R-10.18",
+    "text": "When choosing a valid target, enemies cannot use Light terrain as cover.",
+    "source": "docs/spec/10-rules-core.md R-10.18"
+  },
+  {
+    "id": "core.wr.severe",
+    "name": "Severe",
+    "param": "none",
+    "ref": "R-10.19",
+    "text": "If no crit was retained, one retained normal success becomes a crit.",
+    "source": "docs/spec/10-rules-core.md R-10.19"
+  },
+  {
+    "id": "core.wr.shock",
+    "name": "Shock",
+    "param": "none",
+    "ref": "R-10.20",
+    "text": "The first time you strike with a crit in a sequence, also discard one unresolved normal success of the enemy (or a crit if it has no normal).",
+    "source": "docs/spec/10-rules-core.md R-10.20"
+  },
+  {
+    "id": "core.wr.silent",
+    "name": "Silent",
+    "param": "none",
+    "ref": "R-10.21",
+    "text": "The Shoot action may use this weapon while the operative has a Conceal order.",
+    "source": "docs/spec/10-rules-core.md R-10.21"
+  },
+  {
+    "id": "core.wr.stun",
+    "name": "Stun",
+    "param": "none",
+    "ref": "R-10.22",
+    "text": "If at least one crit is retained, the defender loses 1 APL until the end of its next activation.",
+    "source": "docs/spec/10-rules-core.md R-10.22"
+  },
+  {
+    "id": "core.wr.torrent",
+    "name": "Torrent",
+    "param": "inches",
+    "ref": "R-10.23",
+    "text": "After the primary target, attack any other valid targets within x of it that have no friendly operative in their control range. Torrent 0 gives no secondary targets but still counts as Torrent.",
+    "source": "docs/spec/10-rules-core.md R-10.23"
+  }
+]

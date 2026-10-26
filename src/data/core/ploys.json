@@ -1,0 +1,13 @@
+[
+  {
+    "id": "core.p.command-re-roll",
+    "name": "Command Re-roll",
+    "type": "firefight",
+    "cost": 1,
+    "window": ["shoot.attackRolled", "shoot.defenceRolled", "fight.rolled"],
+    "effect": { "reroll": { "dice": "own", "which": "one" } },
+    "limit": "unlimited",
+    "text": "Spend a command point to re-roll one of your own dice in an attack, defence or fight roll. Can be used as often as you can pay.",
+    "source": "docs/spec/10-rules-core.md R-2.4"
+  }
+]
