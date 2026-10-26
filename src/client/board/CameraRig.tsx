@@ -1,6 +1,6 @@
 // Orbit camera clamped above the mat: right-drag orbit, middle-drag / WASD pan, wheel zoom. Left-drag only moves the
-// camera with Alt (orbit) or Shift (pan) held, so a plain left click is always the game's. Touch: ONE finger pans the
-// board over the ground plane (not while the measure tool is open: then the finger belongs to the tool); TWO fingers
+// camera with Alt (orbit) or Shift (pan) held, so a plain left click is always the game's (the lab sets `leftDrag`: plain left-drag orbits). Touch: ONE finger pans the
+// board over the ground plane ; TWO fingers
 // pinch to zoom, twist to turn the view around the board, and drag the midpoint up / down to tilt (the midpoint's
 // horizontal drag is ignored, twist owns the azimuth). OrbitControls only handles the one-finger pan; the two-finger
 // gesture is ours (touchCamera.ts holds the maths). A one-finger tap must still reach the game, so a finger that stays
@@ -12,17 +12,23 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { MathUtils, MOUSE, TOUCH, Vector3 } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
-import { useSight } from '../interaction/sightStore'
-import { useUi } from '../ui/uiStore'
-import { setDirectorBotSeats } from '../presentation/director'
-import { useGame } from '../store/game'
 import { cameraApi, type CameraView } from './cameraApi'
 import { createTapGuard, TILT_DEADZONE, tiltFromDrag, twoFingerOffset } from './touchCamera'
 
 export { TAP_SLOP, createTapGuard } from './touchCamera'
 
-const HOME_POS: [number, number, number] = [0, 25, 21]
-const TOP_POS: [number, number, number] = [0, 36, 0.01]
+/** Camera pose for the overview presets, scaled to the board half-extents (the legacy 24 x 36 pose was [0, 25, 21]; this one frames the whole board with the lab panel open). */
+export function homePose(halfX: number, halfZ: number): [number, number, number] {
+  return [0, 1.5 * Math.max(halfZ, halfX * 1.5) + 13, 0.95 * halfZ + 9]
+}
+function topPose(halfX: number, halfZ: number): [number, number, number] {
+  return [0, Math.min(MAX_DIST, 2.7 * Math.max(halfZ, halfX * 1.2) + 2), 0.01]
+}
+export interface CameraPreset {
+  id: 'home' | 'top' | 'left' | 'right'
+  /** bump to re-apply the same preset */
+  n: number
+}
 const MARGIN = 4
 const PAN_SPEED = 20
 const TURN_STEP = Math.PI / 4
@@ -53,7 +59,7 @@ const CINE_MIN_DIST = 0.6
 const MAX_POLAR = Math.PI / 2.05
 const CINE_MAX_POLAR = Math.PI * 0.98
 
-export function CameraRig({ halfX, halfZ }: { halfX: number; halfZ: number }) {
+export function CameraRig({ halfX, halfZ, preset, leftDrag = false }: { halfX: number; halfZ: number; preset?: CameraPreset | null; leftDrag?: boolean }) {
   const controls = useRef<OrbitControlsImpl | null>(null)
   const tween = useRef<Tween | null>(null)
   const keys = useRef(new Set<string>())
@@ -88,26 +94,19 @@ export function CameraRig({ halfX, halfZ }: { halfX: number; halfZ: number }) {
   takeOverRef.current = takeOver
   const { camera, gl } = useThree()
   const invalidate = useThree((s) => s.invalidate)
-  const preset = useUi((s) => s.cameraPreset)
-  const measureOn = useSight((s) => s.measureOn)
-
-  useEffect(() => {
-    const c = controls.current
-    if (c) (c.touches as { ONE: number; TWO: number }).ONE = measureOn ? -1 : TOUCH.PAN
-  }, [measureOn])
 
   useEffect(() => {
     const c = controls.current
     if (!c) return
     c.mouseButtons.MIDDLE = MOUSE.PAN
     c.mouseButtons.RIGHT = MOUSE.ROTATE
-    c.mouseButtons.LEFT = undefined
-    // one finger pans (unless the measure tool owns it); the two-finger gesture is ours, so OrbitControls ignores it
-    ;(c.touches as { ONE: number; TWO: number }).ONE = useSight.getState().measureOn ? -1 : TOUCH.PAN
+    c.mouseButtons.LEFT = leftDrag ? MOUSE.ROTATE : undefined
+    // one finger pans; the two-finger gesture is ours, so OrbitControls ignores it
+    ;(c.touches as { ONE: number; TWO: number }).ONE = TOUCH.PAN
     ;(c.touches as { ONE: number; TWO: number }).TWO = -1
     const onDown = (e: PointerEvent) => {
       if (e.button !== 0 || !controls.current) return
-      controls.current.mouseButtons.LEFT = e.shiftKey ? MOUSE.PAN : e.altKey ? MOUSE.ROTATE : undefined
+      controls.current.mouseButtons.LEFT = e.shiftKey ? MOUSE.PAN : e.altKey || leftDrag ? MOUSE.ROTATE : undefined
     }
     window.addEventListener('pointerdown', onDown, { capture: true })
     const onStart = () => takeOverRef.current()
@@ -226,7 +225,7 @@ export function CameraRig({ halfX, halfZ }: { halfX: number; halfZ: number }) {
       window.removeEventListener('pointercancel', onTouchUp, cap)
       window.removeEventListener('click', onClick, cap)
     }
-  }, [invalidate, camera, gl])
+  }, [invalidate, camera, gl, leftDrag])
 
   useEffect(() => {
     if (!preset) return
@@ -241,7 +240,7 @@ export function CameraRig({ halfX, halfZ }: { halfX: number; halfZ: number }) {
       invalidate()
       return
     }
-    const pos = preset.id === 'top' ? TOP_POS : HOME_POS
+    const pos = preset.id === 'top' ? topPose(halfX, halfZ) : homePose(halfX, halfZ)
     setTweenRef.current({
       t0: performance.now(),
       fromP: camera.position.clone(),
@@ -250,17 +249,7 @@ export function CameraRig({ halfX, halfZ }: { halfX: number; halfZ: number }) {
       toT: new Vector3(0, 0, preset.id === 'top' ? 0 : 1),
     })
     invalidate()
-  }, [preset, camera, invalidate])
-
-  // the director needs to know which seats are bots (it visits their deployments); the store cannot call it from here
-  useEffect(() => {
-    const push = () => {
-      const seats = useGame.getState().seats
-      setDirectorBotSeats((['A', 'B'] as const).filter((x) => seats[x] === 'bot'))
-    }
-    push()
-    return useGame.subscribe(push)
-  }, [])
+  }, [preset, camera, invalidate, halfX, halfZ])
 
   useEffect(() => {
     const typing = (e: KeyboardEvent) => {

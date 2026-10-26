@@ -1,10 +1,11 @@
-// Procedural stand-in for an operative: MGSD-ish capsule body with a big head, a box weapon chosen by hold
-// class, the team's two paint hues and a black base disc. Used while a body GLB is missing or loading, and
+// Procedural stand-in for a fighter: MGSD-ish capsule body with a big head, a box weapon chosen by hold
+// class, the house's two paint hues and a black base disc. Used while a body GLB is missing or loading, and
 // in the gallery. Origin at base centre, y up, front +Z, 1 unit = 1 inch (same contract as a GLB body).
 import { useMemo } from 'react'
 import { Color } from 'three'
-import type { HoldClass } from './manifest'
-import { BaseRing, FrontMark, baseAxes, isOvalBase } from './OvalBase'
+
+/** Weapon silhouette classes of the stand-in's weapon boxes (the attachment hold classes of the figure pipeline). */
+export type HoldClass = 'pistol' | 'rifle' | 'long' | 'heavy' | 'melee1h' | 'melee2h' | 'shield' | 'pack' | 'grenade' | 'tool'
 
 export interface HslLike {
   h: number
@@ -43,15 +44,11 @@ export interface ProceduralProps {
   dim?: boolean
   /** seat colour for the base rim */
   seatColor: string
-  /** oval bases (engine `ovalHalfAxis`): the base is an ellipse with its long axis along the front (+Z) */
-  ovalHalfAxis?: number
 }
 
 const hsl = (c: HslLike) => new Color().setHSL(c.h, c.s, c.l)
 
-export function Procedural({ height: h, baseRadius: R, major, minor, ranged, melee, dim, seatColor, ovalHalfAxis }: ProceduralProps) {
-  const oval = isOvalBase(ovalHalfAxis)
-  const stretch = oval ? baseAxes(R, ovalHalfAxis).rz / R : 1
+export function Procedural({ height: h, baseRadius: R, major, minor, ranged, melee, dim, seatColor }: ProceduralProps) {
   const cols = useMemo(
     () => ({
       major: hsl(major),
@@ -73,21 +70,14 @@ export function Procedural({ height: h, baseRadius: R, major, minor, ranged, mel
   return (
     <group>
       {/* base disc + seat rim */}
-      <mesh position={[0, 0.03, 0]} scale={[1, 1, stretch]} castShadow>
+      <mesh position={[0, 0.03, 0]} castShadow>
         <cylinderGeometry args={[R, R, 0.06, 28]} />
         <meshStandardMaterial color={cols.dark} roughness={0.9} />
       </mesh>
-      {oval ? (
-        <>
-          <BaseRing baseRadius={R} ovalHalfAxis={ovalHalfAxis} inner={-R * 0.1} outer={0} color={seatColor} y={0.062} />
-          <FrontMark baseRadius={R} ovalHalfAxis={ovalHalfAxis} color={seatColor} y={0.064} />
-        </>
-      ) : (
-        <mesh position={[0, 0.062, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[R * 0.9, R, 28]} />
-          <meshBasicMaterial color={seatColor} />
-        </mesh>
-      )}
+      <mesh position={[0, 0.062, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[R * 0.9, R, 28]} />
+        <meshBasicMaterial color={seatColor} />
+      </mesh>
       {/* legs */}
       {[-1, 1].map((s) => (
         <mesh key={s} position={[s * bodyR * 0.45, 0.06 + legH / 2, 0.02]} castShadow>
