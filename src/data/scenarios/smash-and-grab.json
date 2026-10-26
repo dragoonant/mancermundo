@@ -1,0 +1,15 @@
+{
+  "id": "scn.smash-and-grab",
+  "name": "Smash & Grab",
+  "layouts": [ "2x3" ],
+  "roles": true,
+  "crews": { "attacker": { "method": "custom", "x": 8 }, "defender": { "method": "hybrid", "x": 3, "y": "D6" } },
+  "crewCap": null,
+  "deployment": { "kind": "standard", "minFromCentreline": 12, "defenderFirst": true },
+  "caskets": { "count": 5, "placer": "defender", "region": "ownHalf", "minFromEdge": 4, "minApart": 6, "openBy": "attacker", "contents": "scn.smash-and-grab" },
+  "scoring": [ { "on": "casketOpened", "seat": "attacker", "count": true } ],
+  "victory": { "code": "smashAndGrabVictory" },
+  "special": [],
+  "text": "A raiding party hits a stash of sealed crates. The defenders set five crates down in their half of the board before anyone deploys, then set up first. Only the raiders may crack a crate open, though anyone can drag one. Each crate cracked counts for the raiders whatever it held, and some are rigged to blow. Three cracked crates by the end of the battle and the raiders win; otherwise the defenders hold.",
+  "source": "Necrodamus N23 p306; 11-scenarios.md M-3"
+}

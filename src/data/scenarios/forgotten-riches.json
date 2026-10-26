@@ -1,0 +1,26 @@
+{
+  "id": "scn.forgotten-riches",
+  "name": "Forgotten Riches",
+  "layouts": [ "brick7" ],
+  "roles": false,
+  "crews": { "both": { "method": "custom", "x": 9 } },
+  "crewCap": [
+    { "min": 2, "max": 3, "cap": 5 },
+    { "min": 4, "max": 5, "cap": 6 },
+    { "min": 6, "max": 8, "cap": 7 },
+    { "min": 9, "max": 10, "cap": 8 },
+    { "min": 11, "max": 12, "cap": 9 }
+  ],
+  "deployment": { "kind": "tile", "withinOfEdge": 3, "enemyClearance": 6 },
+  "caskets": { "count": 5, "placer": "alternate", "region": "centreTileFirst", "minFromEdge": 6, "minApart": 6, "contents": "core" },
+  "scoring": [
+    { "on": "fighterOutOfAction", "points": 1 },
+    { "on": "fighterFled", "points": 1 },
+    { "on": "casketSecured", "points": 2, "count": true },
+    { "on": "lastGangStanding", "points": "D3" }
+  ],
+  "victory": { "by": "caskets" },
+  "special": [ { "code": "horrorsInTheDark" } ],
+  "text": "Both gangs creep into a sunken sector to strip it of loot that was left behind. Five crates are placed one at a time, the first in the middle tile and each in a tile of its own. Each side then picks an outer tile without a crate and sets up along its outer edge. Cracking crates and hauling them home is the point: the gang with the most crates on its own deployment tile when the fight ends wins. Wandering alone in the dark is dangerous, because a fighter far from every other fighter may be caught out by whatever lives there.",
+  "source": "Necrodamus N23 p303; 11-scenarios.md M-4"
+}

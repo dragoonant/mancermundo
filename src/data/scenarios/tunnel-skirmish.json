@@ -1,0 +1,17 @@
+{
+  "id": "scn.tunnel-skirmish",
+  "name": "Tunnel Skirmish",
+  "layouts": [ "2x3" ],
+  "roles": false,
+  "crews": { "both": { "method": "custom", "x": 10 } },
+  "crewCap": null,
+  "deployment": { "kind": "standard", "minFromCentreline": 12, "defenderFirst": false },
+  "scoring": [
+    { "on": "fighterOutOfAction", "points": { "byRole": { "leader": 3, "champion": 2, "ganger": 1, "juve": 1, "specialist": 1, "prospect": 1 } } },
+    { "on": "fighterFled", "points": { "byRole": { "leader": 3, "champion": 2, "ganger": 1, "juve": 1, "specialist": 1, "prospect": 1 } } }
+  ],
+  "victory": { "by": "points" },
+  "special": [],
+  "text": "Two gangs meet in the dark tunnels with nothing to fight over but each other. Each side fields ten fighters, set up in its own end of the board, and scores every enemy that is put down or runs: three for a leader, two for a champion, one for anyone else. The round ends the fight when only one gang is left standing. More points wins; level points is a draw.",
+  "source": "Necrodamus N23 p301; 11-scenarios.md M-2"
+}

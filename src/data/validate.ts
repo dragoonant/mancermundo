@@ -34,6 +34,7 @@ import { SCHEMAS, schemaId } from './schema'
 import { buildIndex, checkRefs, recordCodes, type RecordIndex } from './refs'
 import { bundleFromIndex } from './index'
 import { starterGangProblems } from './roster'
+import { checkZm } from './zm/checks'
 
 const DATA_ROOT = path.dirname(fileURLToPath(import.meta.url))
 const DEFAULT_SOURCES = path.resolve(DATA_ROOT, '../../docs/sources')
@@ -428,6 +429,9 @@ export function validateAll(options: ValidateOptions = {}): ValidationResult {
       if (s && !s.layouts.includes(b.layout)) errors.push(`${where(b.id)}: ${b.id} (${b.layout}) lists ${sid}, which does not play on that layout`)
     }
   }
+
+  // 8b. Zone Mortalis tile and board geometry (ZM-001, ZM-012; src/data/zm/checks.ts)
+  checkZm(index, errors)
 
   // 9. code hooks
   const usage = new Map<string, Set<string>>()

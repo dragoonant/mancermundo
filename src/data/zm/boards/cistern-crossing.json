@@ -1,0 +1,16 @@
+{
+  "id": "zm.b.cistern-crossing",
+  "name": "Cistern Crossing",
+  "layout": "2x3",
+  "tiles": [
+    { "tile": "zm.t.loading-bay", "at": { "x": -6, "z": -12 }, "rot": 0 },
+    { "tile": "zm.t.chamber", "at": { "x": 6, "z": -12 }, "rot": 0 },
+    { "tile": "zm.t.duct-room", "at": { "x": -6, "z": 0 }, "rot": 270 },
+    { "tile": "zm.t.duct-room", "at": { "x": 6, "z": 0 }, "rot": 90 },
+    { "tile": "zm.t.chamber", "at": { "x": -6, "z": 12 }, "rot": 180 },
+    { "tile": "zm.t.loading-bay", "at": { "x": 6, "z": 12 }, "rot": 180 }
+  ],
+  "extra": { "walls": [], "doors": [], "terminals": [], "ducts": [], "obstacles": [], "caskets": [] },
+  "scenarios": [ "scn.tunnel-skirmish", "scn.smash-and-grab" ],
+  "source": "own design"
+}

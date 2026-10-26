@@ -1,0 +1,24 @@
+{
+  "id": "zm.b.sump-warren",
+  "name": "Sump Warren",
+  "layout": "brick7",
+  "tiles": [
+    { "tile": "zm.t.duct-room", "at": { "x": -6, "z": -12 }, "rot": 180 },
+    { "tile": "zm.t.loading-bay", "at": { "x": 6, "z": -12 }, "rot": 180 },
+    { "tile": "zm.t.junction", "at": { "x": -12, "z": 0 }, "rot": 180 },
+    { "tile": "zm.t.chamber", "at": { "x": 0, "z": 0 }, "rot": 0 },
+    { "tile": "zm.t.junction", "at": { "x": 12, "z": 0 }, "rot": 0 },
+    { "tile": "zm.t.loading-bay", "at": { "x": -6, "z": 12 }, "rot": 0 },
+    { "tile": "zm.t.duct-room", "at": { "x": 6, "z": 12 }, "rot": 0 }
+  ],
+  "extra": {
+    "walls": [],
+    "doors": [],
+    "terminals": [],
+    "ducts": [],
+    "obstacles": [],
+    "caskets": [ { "x": -6, "z": -10 }, { "x": -12, "z": 0 }, { "x": 12, "z": 0 }, { "x": 6, "z": 10 } ]
+  },
+  "scenarios": [ "scn.forgotten-riches" ],
+  "source": "own design"
+}
