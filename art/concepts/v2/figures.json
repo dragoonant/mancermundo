@@ -1,0 +1,298 @@
+[
+ {
+  "slug": "goliath-forge-tyrant-chainaxe",
+  "house": "goliath",
+  "fighterType": "Forge Tyrant",
+  "loadout": [
+   "Chainaxe",
+   "Stub gun"
+  ],
+  "height_in": 1.45,
+  "base_mm": 25
+ },
+ {
+  "slug": "goliath-forge-tyrant-renderizer",
+  "house": "goliath",
+  "fighterType": "Forge Tyrant",
+  "loadout": [
+   "'Renderizer' serrated axe",
+   "Stub gun"
+  ],
+  "height_in": 1.45,
+  "base_mm": 25
+ },
+ {
+  "slug": "goliath-stimmer-pulveriser-paired",
+  "house": "goliath",
+  "fighterType": "Stimmer",
+  "loadout": [
+   "Paired 'Pulveriser' serrated axe",
+   "Stub gun"
+  ],
+  "height_in": 1.4,
+  "base_mm": 25
+ },
+ {
+  "slug": "goliath-forge-boss-combat-shotgun",
+  "house": "goliath",
+  "fighterType": "Forge Boss",
+  "loadout": [
+   "Combat shotgun (salvo & shredder)",
+   "Axe"
+  ],
+  "height_in": 1.4,
+  "base_mm": 25
+ },
+ {
+  "slug": "goliath-forge-boss-boltgun",
+  "house": "goliath",
+  "fighterType": "Forge Boss",
+  "loadout": [
+   "Boltgun",
+   "Chainaxe"
+  ],
+  "height_in": 1.4,
+  "base_mm": 25
+ },
+ {
+  "slug": "goliath-bruiser-boltgun",
+  "house": "goliath",
+  "fighterType": "Bruiser",
+  "loadout": [
+   "Boltgun",
+   "Knife"
+  ],
+  "height_in": 1.35,
+  "base_mm": 25
+ },
+ {
+  "slug": "goliath-bruiser-stub-cannon",
+  "house": "goliath",
+  "fighterType": "Bruiser",
+  "loadout": [
+   "Stub cannon",
+   "Axe"
+  ],
+  "height_in": 1.35,
+  "base_mm": 25
+ },
+ {
+  "slug": "goliath-bruiser-combat-shotgun",
+  "house": "goliath",
+  "fighterType": "Bruiser",
+  "loadout": [
+   "Combat shotgun (salvo & shredder)"
+  ],
+  "height_in": 1.35,
+  "base_mm": 25
+ },
+ {
+  "slug": "goliath-bruiser-specialist-grenade-launcher",
+  "house": "goliath",
+  "fighterType": "Bruiser (Specialist)",
+  "loadout": [
+   "Grenade launcher (frag & krak)",
+   "Stub gun"
+  ],
+  "height_in": 1.35,
+  "base_mm": 25
+ },
+ {
+  "slug": "goliath-bully-brute-cleaver",
+  "house": "goliath",
+  "fighterType": "Bully",
+  "loadout": [
+   "Brute cleaver",
+   "Stub gun"
+  ],
+  "height_in": 0.95,
+  "base_mm": 25
+ },
+ {
+  "slug": "goliath-bully-brute-cleaver-b",
+  "house": "goliath",
+  "fighterType": "Bully",
+  "loadout": [
+   "Brute cleaver",
+   "Stub gun"
+  ],
+  "height_in": 0.95,
+  "base_mm": 25
+ },
+ {
+  "slug": "goliath-bully-axe",
+  "house": "goliath",
+  "fighterType": "Bully",
+  "loadout": [
+   "Axe",
+   "Stub gun"
+  ],
+  "height_in": 0.95,
+  "base_mm": 25
+ },
+ {
+  "slug": "goliath-forge-born-knife",
+  "house": "goliath",
+  "fighterType": "Forge-born",
+  "loadout": [
+   "Knife",
+   "Stub gun"
+  ],
+  "height_in": 0.95,
+  "base_mm": 25
+ },
+ {
+  "slug": "goliath-forge-born-knife-b",
+  "house": "goliath",
+  "fighterType": "Forge-born",
+  "loadout": [
+   "Knife",
+   "Stub gun"
+  ],
+  "height_in": 0.95,
+  "base_mm": 25
+ },
+ {
+  "slug": "escher-queen-plasma-pistol",
+  "house": "escher",
+  "fighterType": "Queen",
+  "loadout": [
+   "Plasma pistol",
+   "Power sword"
+  ],
+  "height_in": 1.25,
+  "base_mm": 25
+ },
+ {
+  "slug": "escher-queen-lasgun-shock-whip",
+  "house": "escher",
+  "fighterType": "Queen",
+  "loadout": [
+   "Lasgun",
+   "Shock whip"
+  ],
+  "height_in": 1.25,
+  "base_mm": 25
+ },
+ {
+  "slug": "escher-matriarch-lasgun",
+  "house": "escher",
+  "fighterType": "Matriarch",
+  "loadout": [
+   "Lasgun",
+   "Shock whip"
+  ],
+  "height_in": 1.2,
+  "base_mm": 25
+ },
+ {
+  "slug": "escher-matriarch-boltgun",
+  "house": "escher",
+  "fighterType": "Matriarch",
+  "loadout": [
+   "Boltgun",
+   "Stiletto sword"
+  ],
+  "height_in": 1.2,
+  "base_mm": 25
+ },
+ {
+  "slug": "escher-death-maiden-needle-pistol",
+  "house": "escher",
+  "fighterType": "Death-Maiden",
+  "loadout": [
+   "Needle pistol",
+   "Stiletto sword"
+  ],
+  "height_in": 1.2,
+  "base_mm": 25
+ },
+ {
+  "slug": "escher-sister-specialist-grenade-launcher",
+  "house": "escher",
+  "fighterType": "Sister (Specialist)",
+  "loadout": [
+   "Grenade launcher (frag & krak)",
+   "Stub gun"
+  ],
+  "height_in": 1.15,
+  "base_mm": 25
+ },
+ {
+  "slug": "escher-sister-specialist-needle-rifle",
+  "house": "escher",
+  "fighterType": "Sister (Specialist)",
+  "loadout": [
+   "Needle rifle",
+   "Stub gun"
+  ],
+  "height_in": 1.15,
+  "base_mm": 25
+ },
+ {
+  "slug": "escher-sister-lasgun",
+  "house": "escher",
+  "fighterType": "Sister",
+  "loadout": [
+   "Lasgun",
+   "Flak armour"
+  ],
+  "height_in": 1.15,
+  "base_mm": 25
+ },
+ {
+  "slug": "escher-sister-lasgun-b",
+  "house": "escher",
+  "fighterType": "Sister",
+  "loadout": [
+   "Lasgun",
+   "Flak armour"
+  ],
+  "height_in": 1.15,
+  "base_mm": 25
+ },
+ {
+  "slug": "escher-wyld-runner-wyld-bow",
+  "house": "escher",
+  "fighterType": "Wyld Runner",
+  "loadout": [
+   "Wyld bow",
+   "Chainsword"
+  ],
+  "height_in": 0.95,
+  "base_mm": 25
+ },
+ {
+  "slug": "escher-wyld-runner-wyld-bow-b",
+  "house": "escher",
+  "fighterType": "Wyld Runner",
+  "loadout": [
+   "Wyld bow",
+   "Chainsword"
+  ],
+  "height_in": 0.95,
+  "base_mm": 25
+ },
+ {
+  "slug": "escher-little-sister-stub-gun-knife",
+  "house": "escher",
+  "fighterType": "Little Sister",
+  "loadout": [
+   "Stub gun",
+   "Knife"
+  ],
+  "height_in": 0.95,
+  "base_mm": 25
+ },
+ {
+  "slug": "escher-little-sister-stub-gun-knife-b",
+  "house": "escher",
+  "fighterType": "Little Sister",
+  "loadout": [
+   "Stub gun",
+   "Knife"
+  ],
+  "height_in": 0.95,
+  "base_mm": 25
+ }
+]
