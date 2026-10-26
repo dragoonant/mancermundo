@@ -1,0 +1,90 @@
+{
+  "id": "core.constants",
+  "radii": {
+    "nerve": 3,
+    "nerveSupport": 3,
+    "groupActivation": 3,
+    "leadingByExampleLeader": 12,
+    "leadingByExampleChampion": 6,
+    "assist": 1,
+    "rally": 3,
+    "rallySupport": 3,
+    "interact": 1,
+    "oneInchRule": 1,
+    "rapidFireExtraHit": 3
+  },
+  "retreat": { "moveDice": "D6", "brokenMoveDice": "2D6" },
+  "runForCover": { "moveDice": "2D6", "proneMoveFraction": 0.5, "clearOfEnemies": 3 },
+  "strayShot": { "radius": 1, "hitOnAtMost": 3 },
+  "hitModifiers": {
+    "partialCover": -1,
+    "fullCover": -2,
+    "targetEngaged": -1,
+    "targetProneAtLong": -1,
+    "aim": 1,
+    "blastAtPoint": -2,
+    "blindFire": -2,
+    "twinSidearm": -1,
+    "assist": 1,
+    "interference": -1,
+    "turnedToFace": -1,
+    "chargeWithoutSight": -1,
+    "brokenReaction": -2,
+    "ductway": "5+"
+  },
+  "coverSave": { "partial": 1, "full": 2, "noArmourSave": "7+" },
+  "closeDoor": { "test": "I", "clearMove": 2, "strength": 3, "ap": 0, "damage": 2 },
+  "door": { "toughness": 5, "wounds": 4 },
+  "forceDoor": { "die": "D6", "stat": "S", "target": 9, "helperBonus": 2 },
+  "terminal": { "stat": "Int", "modifier": -2 },
+  "duct": { "maxLength": 2, "hitOn": "5+", "templateRadius": 2, "exitRadius": 1 },
+  "casket": {
+    "smash": { "die": "D6", "stat": "S", "target": 6, "contentsModifier": -1 },
+    "contents": [
+      { "min": 1, "max": 1, "result": "fragTrap" },
+      { "min": 2, "max": 3, "result": "nothing" },
+      { "min": 4, "max": 6, "result": "ammoCache" }
+    ],
+    "ammoCache": { "radius": 1, "ammoBonus": 2, "exhaustedOn": 6 }
+  },
+  "smoke": { "radius": 2.5, "clearDie": "D6", "clearOnAtMost": 4 },
+  "blaze": {
+    "igniteOn": "4+",
+    "strength": 3,
+    "ap": -1,
+    "damage": 1,
+    "moveDice": "2D6",
+    "extinguishTarget": 6,
+    "pinnedBonus": 2,
+    "friendBonus": 1,
+    "friendRadius": 1
+  },
+  "concussion": { "initiativeModifier": -2, "worstInitiative": "6+" },
+  "knockback": { "distance": 1, "blockedDamageBonus": 1 },
+  "unarmed": { "strength": "S", "ap": 0, "damage": 1 },
+  "obstacle": { "height": 1 },
+  "template": { "length": 8, "narrowWidth": 0.5, "wideWidth": 2.4 },
+  "loadout": { "maxWeapons": 3, "unwieldySlots": 2 },
+  "statLimits": {
+    "M": { "min": 1, "max": 8 },
+    "WS": { "min": 2, "max": 6 },
+    "BS": { "min": 2, "max": 6 },
+    "S": { "min": 1, "max": 6 },
+    "T": { "min": 1, "max": 6 },
+    "W": { "min": 1, "max": 6 },
+    "I": { "min": 2, "max": 6 },
+    "A": { "min": 1, "max": 10 },
+    "Ld": { "min": 3, "max": 10 },
+    "Cl": { "min": 3, "max": 10 },
+    "Wil": { "min": 3, "max": 10 },
+    "Int": { "min": 3, "max": 10 }
+  },
+  "crewCap": [
+    { "min": 2, "max": 3, "cap": 5 },
+    { "min": 4, "max": 5, "cap": 6 },
+    { "min": 6, "max": 8, "cap": 7 },
+    { "min": 9, "max": 10, "cap": 8 },
+    { "min": 11, "max": 12, "cap": 9 }
+  ],
+  "source": "10-rules-core.md R-2.7, R-3.12, R-3.13, R-5.5, R-7.9, R-8.5, R-8.8, R-9.6, R-9.7, R-10.6, R-12, R-13.3, R-13.6, R-14.3, R-15; 11-scenarios.md M-4.2; 20-data-schema.md 8"
+}

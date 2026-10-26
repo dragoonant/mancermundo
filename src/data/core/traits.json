@@ -1,0 +1,522 @@
+[
+  {
+    "id": "core.t.backstab",
+    "name": "Backstab",
+    "param": "none",
+    "implemented": true,
+    "text": "An attacker outside the target's vision arc gains +1 Strength.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.blast",
+    "name": "Blast",
+    "param": "inches",
+    "implemented": true,
+    "text": "Hits every fighter under a marker of the stated size, placed on a target or a floor point.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.blaze",
+    "name": "Blaze",
+    "param": "none",
+    "implemented": true,
+    "text": "A fighter hit and not taken Out of Action catches fire on a 4+.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.burrowing",
+    "name": "Burrowing",
+    "param": "none",
+    "implemented": false,
+    "text": "Burrowing is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.chem-delivery",
+    "name": "Chem Delivery",
+    "param": "none",
+    "implemented": false,
+    "text": "Chem Delivery is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.combi",
+    "name": "Combi",
+    "param": "none",
+    "implemented": false,
+    "text": "Combi is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.concussion",
+    "name": "Concussion",
+    "param": "none",
+    "implemented": true,
+    "text": "A hit target suffers an Initiative penalty until the end of the round.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.cursed",
+    "name": "Cursed",
+    "param": "none",
+    "implemented": false,
+    "text": "Cursed is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.defoliate",
+    "name": "Defoliate",
+    "param": "none",
+    "implemented": false,
+    "text": "Defoliate is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.demolition",
+    "name": "Demolition",
+    "param": "none",
+    "implemented": false,
+    "text": "Demolition is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.digi",
+    "name": "Digi",
+    "param": "none",
+    "implemented": false,
+    "text": "Digi is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.disarm",
+    "name": "Disarm",
+    "param": "none",
+    "implemented": true,
+    "text": "A natural 6 to hit leaves the target able to make only unarmed reaction attacks for the rest of the round.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.drag",
+    "name": "Drag",
+    "param": "none",
+    "implemented": false,
+    "text": "Drag is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.entangle",
+    "name": "Entangle",
+    "param": "none",
+    "implemented": true,
+    "text": "Hits cannot be parried, and a natural 6 to hit penalises the target's reaction attacks.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.esoteric",
+    "name": "Esoteric",
+    "param": "none",
+    "implemented": false,
+    "text": "Esoteric is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.fear",
+    "name": "Fear",
+    "param": "none",
+    "implemented": false,
+    "text": "Fear is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.fixed",
+    "name": "Fixed",
+    "param": "none",
+    "implemented": false,
+    "text": "Fixed is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.flare",
+    "name": "Flare",
+    "param": "none",
+    "implemented": false,
+    "text": "Flare is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.flash",
+    "name": "Flash",
+    "param": "none",
+    "implemented": true,
+    "text": "No wound roll; the target tests Initiative or is blinded.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.gas",
+    "name": "Gas",
+    "param": "none",
+    "implemented": true,
+    "text": "No wound roll; a Toughness-based roll can cause Injury dice; no save and no pinning.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.graviton-pulse",
+    "name": "Graviton Pulse",
+    "param": "none",
+    "implemented": false,
+    "text": "Graviton Pulse is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.grenade",
+    "name": "Grenade",
+    "param": "none",
+    "implemented": true,
+    "text": "Thrown with a Shoot action; range is the wielder's Strength times a multiplier; an Ammo test follows every use and it cannot be reloaded.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.gunk",
+    "name": "Gunk",
+    "param": "none",
+    "implemented": false,
+    "text": "Gunk is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.haemophagic",
+    "name": "Haemophagic",
+    "param": "none",
+    "implemented": false,
+    "text": "Haemophagic is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.hexagrammatic",
+    "name": "Hexagrammatic",
+    "param": "none",
+    "implemented": false,
+    "text": "Hexagrammatic is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.impale",
+    "name": "Impale",
+    "param": "none",
+    "implemented": false,
+    "text": "Impale is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.knockback",
+    "name": "Knockback",
+    "param": "none",
+    "implemented": true,
+    "text": "A hit that meets the target's Strength pushes it 1 inch away; a blocked push adds Damage.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.lance",
+    "name": "Lance",
+    "param": "none",
+    "implemented": false,
+    "text": "Lance is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.limited",
+    "name": "Limited",
+    "param": "none",
+    "implemented": true,
+    "text": "When the ammo of this profile runs out it is lost for the rest of the battle.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.melee",
+    "name": "Melee",
+    "param": "none",
+    "implemented": true,
+    "text": "The weapon can be used in close combat.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.melta",
+    "name": "Melta",
+    "param": "none",
+    "implemented": true,
+    "text": "At short range, a target brought to 0 Wounds suffers only Out of Action Injury dice.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.paired",
+    "name": "Paired",
+    "param": "none",
+    "implemented": true,
+    "text": "Counts as dual weapons; charging doubles the base Attacks.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.parry",
+    "name": "Parry",
+    "param": "none",
+    "implemented": true,
+    "text": "Forces an attacker to re-roll one successful close combat hit.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.phase",
+    "name": "Phase",
+    "param": "none",
+    "implemented": false,
+    "text": "Phase is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.plentiful",
+    "name": "Plentiful",
+    "param": "none",
+    "implemented": true,
+    "text": "Reload Ammo tests pass automatically.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.power",
+    "name": "Power",
+    "param": "none",
+    "implemented": true,
+    "text": "Only Power weapons can parry it; a natural 6 to hit ignores saves and adds +1 Damage.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.power-pack",
+    "name": "Power Pack",
+    "param": "none",
+    "implemented": false,
+    "text": "Power Pack is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.pulverise",
+    "name": "Pulverise",
+    "param": "none",
+    "implemented": true,
+    "text": "After Injury dice, a Toughness-based roll can upgrade a Flesh Wound to Seriously Injured.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.rad-phage",
+    "name": "Rad-phage",
+    "param": "none",
+    "implemented": false,
+    "text": "Rad-phage is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.rapid-fire",
+    "name": "Rapid Fire",
+    "param": "count",
+    "implemented": true,
+    "text": "After a successful hit roll, up to X Firepower dice are rolled and their bullet holes become hits.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.reckless",
+    "name": "Reckless",
+    "param": "none",
+    "implemented": false,
+    "text": "Reckless is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.rending",
+    "name": "Rending",
+    "param": "none",
+    "implemented": true,
+    "text": "A natural 6 to wound adds +1 Damage.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.scarce",
+    "name": "Scarce",
+    "param": "none",
+    "implemented": true,
+    "text": "The weapon can never be reloaded.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.scattershot",
+    "name": "Scattershot",
+    "param": "none",
+    "implemented": true,
+    "text": "A hit makes D6 wound rolls instead of one.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.seismic",
+    "name": "Seismic",
+    "param": "none",
+    "implemented": false,
+    "text": "Seismic is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.sever",
+    "name": "Sever",
+    "param": "none",
+    "implemented": true,
+    "text": "Every Injury die from this weapon is Out of Action.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.shield",
+    "name": "Shield",
+    "param": "none",
+    "implemented": false,
+    "text": "Shield is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.shield-breaker",
+    "name": "Shield Breaker",
+    "param": "none",
+    "implemented": false,
+    "text": "Shield Breaker is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.shock",
+    "name": "Shock",
+    "param": "none",
+    "implemented": true,
+    "text": "A natural 6 to hit wounds automatically.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.shred",
+    "name": "Shred",
+    "param": "none",
+    "implemented": true,
+    "text": "A natural 6 to wound doubles the weapon's AP.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.sidearm",
+    "name": "Sidearm",
+    "param": "none",
+    "implemented": true,
+    "text": "Usable in close combat, one attack die per sidearm, and can be fired twin.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.silent",
+    "name": "Silent",
+    "param": "none",
+    "implemented": true,
+    "text": "Matters only to sneak attacks, which v1 does not use.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.single-shot",
+    "name": "Single Shot",
+    "param": "none",
+    "implemented": true,
+    "text": "One use per battle; afterwards it counts as a failed Ammo test.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.smoke",
+    "name": "Smoke",
+    "param": "none",
+    "implemented": true,
+    "text": "No hit, wound or pin; leaves a cloud that blocks line of sight and may clear each End phase.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.template",
+    "name": "Template",
+    "param": "none",
+    "implemented": true,
+    "text": "No hit roll; every fighter under the flame template is hit.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.toxin",
+    "name": "Toxin",
+    "param": "none",
+    "implemented": true,
+    "text": "No wound roll; a Toughness-based roll can cause Injury dice; saves are allowed.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.unstable",
+    "name": "Unstable",
+    "param": "none",
+    "implemented": true,
+    "text": "Rolling the Ammo symbol risks the shooter going Out of Action.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.unwieldy",
+    "name": "Unwieldy",
+    "param": "none",
+    "implemented": true,
+    "text": "Takes two weapon slots; shooting with it is a Double action and it cannot be paired in melee.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.versatile",
+    "name": "Versatile",
+    "param": "none",
+    "implemented": true,
+    "text": "Can fight at the weapon's reach, and the target is engaged only for that attack; only fighters in base contact assist.",
+    "source": "10-rules-core.md R-14.2, R-14.3"
+  },
+  {
+    "id": "core.t.vortex",
+    "name": "Vortex",
+    "param": "none",
+    "implemented": false,
+    "text": "Vortex is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.web",
+    "name": "Web",
+    "param": "none",
+    "implemented": false,
+    "text": "Web is named by the core rules but has no behaviour in v1; a weapon carrying it is refused until it is specified (R-16.2).",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.master-crafted",
+    "name": "Master-crafted",
+    "param": "none",
+    "implemented": false,
+    "text": "Master-crafted is a weapon variant named by the core rules; its behaviour is not specified for v1.",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.twin-linked",
+    "name": "Twin-linked",
+    "param": "none",
+    "implemented": false,
+    "text": "Twin-linked is a weapon variant named by the core rules; its behaviour is not specified for v1.",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.ironhead",
+    "name": "Ironhead",
+    "param": "none",
+    "implemented": false,
+    "text": "Ironhead is a weapon variant named by the core rules; its behaviour is not specified for v1.",
+    "source": "10-rules-core.md R-14.2"
+  },
+  {
+    "id": "core.t.reclaimed-scavenged",
+    "name": "Reclaimed/Scavenged",
+    "param": "none",
+    "implemented": false,
+    "text": "Reclaimed/Scavenged is a weapon variant named by the core rules; its behaviour is not specified for v1.",
+    "source": "10-rules-core.md R-14.2"
+  }
+]

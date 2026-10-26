@@ -1,24 +1,19 @@
 import common from './common.schema.json'
-import datacard from './datacard.schema.json'
-import weapon from './weapon.schema.json'
-import ability from './ability.schema.json'
-import ploy from './ploy.schema.json'
-import equipment from './equipment.schema.json'
-import team from './team.schema.json'
-import weaponRule from './weapon-rule.schema.json'
-import mission from './mission.schema.json'
-import killzoneLayout from './killzone-layout.schema.json'
+import core from './core.schema.json'
+import item from './item.schema.json'
+import gang from './gang.schema.json'
+import zm from './zm.schema.json'
+import scenario from './scenario.schema.json'
 
-/** Mirror of docs/spec/schemas (the validator checks the two stay identical). */
+/** The six JSON Schema 2020-12 files (one copy only). `common` is referenced by `$ref` from the others. */
 export const SCHEMAS: Record<string, object> = {
   common,
-  datacard,
-  weapon,
-  ability,
-  ploy,
-  equipment,
-  team,
-  'weapon-rule': weaponRule,
-  mission,
-  'killzone-layout': killzoneLayout,
+  core,
+  item,
+  gang,
+  zm,
+  scenario,
 }
+
+export const SCHEMA_ID_BASE = 'https://mancermundo.dev/schemas/'
+export const schemaId = (name: string): string => `${SCHEMA_ID_BASE}${name}.schema.json`

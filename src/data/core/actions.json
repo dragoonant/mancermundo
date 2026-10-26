@@ -1,0 +1,346 @@
+[
+  {
+    "id": "core.a.move",
+    "key": "move",
+    "name": "Move",
+    "cost": "simple",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken"
+    ],
+    "text": "Walk up to the fighter's Movement along any path. Two Moves in one activation make a run.",
+    "source": "10-rules-core.md R-6.3, R-7.1"
+  },
+  {
+    "id": "core.a.charge",
+    "key": "charge",
+    "name": "Charge",
+    "cost": "double",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken"
+    ],
+    "text": "Move the Movement allowance plus a D3 roll and finish in base contact with an enemy; a free Fight follows.",
+    "source": "10-rules-core.md R-6.3, R-7.6"
+  },
+  {
+    "id": "core.a.shoot",
+    "key": "shoot",
+    "name": "Shoot",
+    "cost": "basic",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken",
+      "rangedWeapon"
+    ],
+    "text": "Make one ranged attack with a chosen weapon at an eligible enemy.",
+    "source": "10-rules-core.md R-6.3, R-8"
+  },
+  {
+    "id": "core.a.aim",
+    "key": "aim",
+    "name": "Aim",
+    "cost": "basic",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken",
+      "rangedWeapon"
+    ],
+    "text": "Steady a ranged weapon for a bonus to hit on a later Shoot in the same activation.",
+    "source": "10-rules-core.md R-6.3, R-8.5"
+  },
+  {
+    "id": "core.a.take-cover",
+    "key": "takeCover",
+    "name": "Take Cover",
+    "cost": "basic",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken"
+    ],
+    "text": "Move up to half Movement, then drop Pinned.",
+    "source": "10-rules-core.md R-6.3, R-7.7"
+  },
+  {
+    "id": "core.a.reload",
+    "key": "reload",
+    "name": "Reload",
+    "cost": "simple",
+    "statuses": [
+      "standingActive",
+      "pronePinned"
+    ],
+    "requires": [
+      "notBroken",
+      "outOfAmmoWeapon"
+    ],
+    "text": "Make an Ammo test to bring one empty weapon back into use.",
+    "source": "10-rules-core.md R-6.3, R-8.11"
+  },
+  {
+    "id": "core.a.coup-de-grace",
+    "key": "coupDeGrace",
+    "name": "Coup de Grace",
+    "cost": "simple",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken",
+      "seriouslyInjuredEnemyNear"
+    ],
+    "text": "Finish a Seriously Injured enemy within 1 inch, taking it Out of Action.",
+    "source": "10-rules-core.md R-6.3, R-10.11"
+  },
+  {
+    "id": "core.a.operate-door",
+    "key": "operateDoor",
+    "name": "Operate Door",
+    "cost": "simple",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken",
+      "nearDoor"
+    ],
+    "text": "Open or close an unlocked door within 1 inch.",
+    "source": "10-rules-core.md R-6.3, R-15.6"
+  },
+  {
+    "id": "core.a.access-terminal",
+    "key": "accessTerminal",
+    "name": "Access Terminal",
+    "cost": "basic",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken",
+      "nearTerminal"
+    ],
+    "text": "Test Intelligence at a penalty at a door terminal; a pass operates that door for free.",
+    "source": "10-rules-core.md R-6.3, R-15.7"
+  },
+  {
+    "id": "core.a.force-door",
+    "key": "forceDoor",
+    "name": "Force Door",
+    "cost": "basic",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken",
+      "nearLockedDoor"
+    ],
+    "text": "Heave on a locked door within 1 inch; strength plus a die decides, and helpers add to the roll.",
+    "source": "10-rules-core.md R-6.3, R-15.7"
+  },
+  {
+    "id": "core.a.crawl-duct",
+    "key": "crawlDuct",
+    "name": "Crawl Through Ductway",
+    "cost": "double",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken",
+      "nearDuct"
+    ],
+    "text": "Squeeze through a ductway and come out at its far end.",
+    "source": "10-rules-core.md R-6.3, R-15.9"
+  },
+  {
+    "id": "core.a.fire-duct",
+    "key": "fireDuct",
+    "name": "Fire Through Ductway",
+    "cost": "basic",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken",
+      "nearDuct",
+      "enemyNearDuctExit",
+      "rangedWeapon"
+    ],
+    "text": "Shoot along a ductway at an enemy near its far end; only a high roll hits.",
+    "source": "10-rules-core.md R-6.3, R-15.9"
+  },
+  {
+    "id": "core.a.smash-casket",
+    "key": "smashCasket",
+    "name": "Smash Open Loot Casket",
+    "cost": "basic",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken",
+      "nearCasket"
+    ],
+    "text": "Break a loot casket open by force, at a penalty to what it holds.",
+    "source": "10-rules-core.md R-6.3, R-15.11"
+  },
+  {
+    "id": "core.a.bypass-casket",
+    "key": "bypassCasket",
+    "name": "Bypass Loot Casket Lock",
+    "cost": "basic",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken",
+      "nearCasket"
+    ],
+    "text": "Pick a loot casket lock with an Intelligence test.",
+    "source": "10-rules-core.md R-6.3, R-15.11"
+  },
+  {
+    "id": "core.a.carry-casket",
+    "key": "carryCasket",
+    "name": "Carry Loot Casket / Ammo Cache",
+    "cost": "simple",
+    "statuses": [
+      "standingActive"
+    ],
+    "requires": [
+      "notBroken",
+      "nearCasket"
+    ],
+    "text": "Move while hauling a casket or cache, setting it down in base contact at the end.",
+    "source": "10-rules-core.md R-6.3, R-15.11"
+  },
+  {
+    "id": "core.a.fight",
+    "key": "fight",
+    "name": "Fight",
+    "cost": "basic",
+    "statuses": [
+      "standingEngaged"
+    ],
+    "requires": [
+      "notBroken"
+    ],
+    "text": "Close combat against engaged enemies.",
+    "source": "10-rules-core.md R-6.3, R-10"
+  },
+  {
+    "id": "core.a.retreat",
+    "key": "retreat",
+    "name": "Retreat",
+    "cost": "basic",
+    "statuses": [
+      "standingEngaged"
+    ],
+    "requires": [
+      "notBroken"
+    ],
+    "text": "Break away from close combat; enemies may strike back first.",
+    "source": "10-rules-core.md R-6.3, R-7.9"
+  },
+  {
+    "id": "core.a.stand-up",
+    "key": "standUp",
+    "name": "Stand Up",
+    "cost": "basic",
+    "statuses": [
+      "pronePinned"
+    ],
+    "requires": [
+      "notBroken"
+    ],
+    "text": "Get back on both feet, becoming Standing Active, and choose a facing.",
+    "source": "10-rules-core.md R-6.3"
+  },
+  {
+    "id": "core.a.crawl",
+    "key": "crawl",
+    "name": "Crawl",
+    "cost": "double",
+    "statuses": [
+      "pronePinned",
+      "proneSeriouslyInjured"
+    ],
+    "requires": [
+      "notBroken"
+    ],
+    "text": "Crawl up to half Movement and stay prone.",
+    "source": "10-rules-core.md R-6.3, R-7.8"
+  },
+  {
+    "id": "core.a.blind-fire",
+    "key": "blindFire",
+    "name": "Blind Fire",
+    "cost": "double",
+    "statuses": [
+      "pronePinned"
+    ],
+    "requires": [
+      "notBroken",
+      "rangedWeapon"
+    ],
+    "text": "Shoot over cover without looking: any direction, at a penalty to hit.",
+    "source": "10-rules-core.md R-6.3, R-8.12"
+  },
+  {
+    "id": "core.a.run-for-cover",
+    "key": "runForCover",
+    "name": "Running for Cover",
+    "cost": "double",
+    "statuses": [
+      "standingActive",
+      "standingEngaged",
+      "pronePinned",
+      "proneSeriouslyInjured"
+    ],
+    "requires": [
+      "broken"
+    ],
+    "text": "The only thing a Broken fighter can do: run for safety, as far from the enemy as it can get.",
+    "source": "10-rules-core.md R-6.3, R-12.4"
+  },
+  {
+    "id": "core.a.turn",
+    "key": "turn",
+    "name": "Turn",
+    "cost": "free",
+    "statuses": [
+      "standingActive",
+      "standingEngaged"
+    ],
+    "requires": [
+      "notBroken"
+    ],
+    "text": "Face a new direction before acting or after a move.",
+    "source": "10-rules-core.md R-5.4, R-7.1"
+  },
+  {
+    "id": "core.a.end",
+    "key": "end",
+    "name": "End Activation",
+    "cost": "free",
+    "statuses": [
+      "standingActive",
+      "standingEngaged",
+      "pronePinned",
+      "proneSeriouslyInjured"
+    ],
+    "requires": [],
+    "text": "Stop acting; any remaining actions are forgone.",
+    "source": "10-rules-core.md R-5.4"
+  }
+]

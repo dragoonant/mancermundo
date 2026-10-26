@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mancermundo.dev/schemas/zm.schema.json",
+  "title": "Zone Mortalis tiles and boards",
+  "description": "docs/spec/20-data-schema.md section 9. Tile-local coordinates lie in [-6, 6] (checked by the validator); board extras use board coordinates.",
+  "$defs": {
+    "wall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "a", "b", "thickness"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Slug" },
+        "a": { "$ref": "common.schema.json#/$defs/Vec2" },
+        "b": { "$ref": "common.schema.json#/$defs/Vec2" },
+        "thickness": { "type": "number", "exclusiveMinimum": 0, "maximum": 2 }
+      }
+    },
+    "door": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "a", "b", "locked"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Slug" },
+        "a": { "$ref": "common.schema.json#/$defs/Vec2" },
+        "b": { "$ref": "common.schema.json#/$defs/Vec2" },
+        "locked": { "type": "boolean" }
+      }
+    },
+    "terminal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "door", "pos"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Slug" },
+        "door": { "$ref": "common.schema.json#/$defs/Slug" },
+        "pos": { "$ref": "common.schema.json#/$defs/Vec2" }
+      }
+    },
+    "duct": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "a", "b"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Slug" },
+        "a": { "$ref": "common.schema.json#/$defs/Vec2" },
+        "b": { "$ref": "common.schema.json#/$defs/Vec2" }
+      }
+    },
+    "obstacle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "footprint"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Slug" },
+        "kind": { "$ref": "common.schema.json#/$defs/Slug" },
+        "footprint": { "$ref": "common.schema.json#/$defs/Polygon" }
+      }
+    },
+    "prop": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model", "pos", "yaw"],
+      "properties": {
+        "model": { "$ref": "common.schema.json#/$defs/Slug" },
+        "pos": { "$ref": "common.schema.json#/$defs/Vec2" },
+        "yaw": { "type": "number" }
+      }
+    },
+    "tile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "walls", "doors", "terminals", "ducts", "obstacles", "casketSpots", "floor", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "name": { "type": "string", "minLength": 1 },
+        "walls": { "type": "array", "items": { "$ref": "#/$defs/wall" } },
+        "doors": { "type": "array", "items": { "$ref": "#/$defs/door" } },
+        "terminals": { "type": "array", "items": { "$ref": "#/$defs/terminal" } },
+        "ducts": { "type": "array", "items": { "$ref": "#/$defs/duct" } },
+        "obstacles": { "type": "array", "items": { "$ref": "#/$defs/obstacle" } },
+        "casketSpots": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Vec2" } },
+        "floor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["style", "props"],
+          "properties": {
+            "style": { "enum": ["grate", "plate", "hazard"] },
+            "props": { "type": "array", "items": { "$ref": "#/$defs/prop" } }
+          }
+        },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    },
+    "board": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "layout", "tiles", "extra", "scenarios", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "name": { "type": "string", "minLength": 1 },
+        "layout": { "enum": ["2x3", "brick7"] },
+        "tiles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["tile", "at", "rot"],
+            "properties": {
+              "tile": { "$ref": "common.schema.json#/$defs/Id" },
+              "at": { "$ref": "common.schema.json#/$defs/Vec2" },
+              "rot": { "enum": [0, 90, 180, 270] }
+            }
+          }
+        },
+        "extra": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["walls", "doors", "terminals", "ducts", "obstacles", "caskets"],
+          "properties": {
+            "walls": { "type": "array", "items": { "$ref": "#/$defs/wall" } },
+            "doors": { "type": "array", "items": { "$ref": "#/$defs/door" } },
+            "terminals": { "type": "array", "items": { "$ref": "#/$defs/terminal" } },
+            "ducts": { "type": "array", "items": { "$ref": "#/$defs/duct" } },
+            "obstacles": { "type": "array", "items": { "$ref": "#/$defs/obstacle" } },
+            "caskets": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Vec2" } }
+          }
+        },
+        "scenarios": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Id" } },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    }
+  }
+}

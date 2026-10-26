@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mancermundo.dev/schemas/common.schema.json",
+  "title": "Common primitives",
+  "description": "Shared definitions referenced by every other schema (docs/spec/20-data-schema.md section 2). Not used to validate a file directly.",
+  "$defs": {
+    "Id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9][a-z0-9-]*)*$",
+      "description": "Lowercase kebab, dot-namespaced by owner: core.a.move, core.t.rapid-fire, gol.forge-tyrant, zm.b.foundry-run."
+    },
+    "Slug": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "ActionKey": { "type": "string", "pattern": "^[a-z][a-zA-Z0-9]*$", "description": "Engine action key (move, takeCover, crawlDuct ...); skill actions add their own." },
+    "Source": { "type": "string", "minLength": 1, "description": "Where the record comes from, for example 'House of Chains p34' or 'own design'." },
+    "Text": { "type": "string", "minLength": 1, "description": "Own-words summary; never Games Workshop sentences." },
+    "Inches": { "type": "number", "minimum": 0, "multipleOf": 0.25 },
+    "Target": { "type": "string", "pattern": "^([2-9]|1[0-2])\\+$", "description": "A target number such as 4+ (parsed to the number before the +)." },
+    "Stat": { "enum": ["M", "WS", "BS", "S", "T", "W", "I", "A", "Ld", "Cl", "Wil", "Int"] },
+    "DiceExpr": {
+      "anyOf": [
+        { "type": "integer", "minimum": 0 },
+        { "type": "string", "pattern": "^(\\d*D[36](\\+\\d+)?)$", "description": "D3, D6, 2D6 or D3+1." }
+      ]
+    },
+    "Vec2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "z"],
+      "properties": { "x": { "type": "number" }, "z": { "type": "number" } }
+    },
+    "Segment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["a", "b"],
+      "properties": { "a": { "$ref": "#/$defs/Vec2" }, "b": { "$ref": "#/$defs/Vec2" } }
+    },
+    "Polygon": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/Vec2" }, "description": "Counter-clockwise." },
+    "Seat": { "enum": ["A", "B"] },
+    "Hsl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["h", "s", "l"],
+      "properties": {
+        "h": { "type": "number", "minimum": 0, "maximum": 1 },
+        "s": { "type": "number", "minimum": 0, "maximum": 1 },
+        "l": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "Role": { "enum": ["leader", "champion", "ganger", "juve", "specialist", "prospect"] },
+    "WeaponClass": { "enum": ["pistol", "basic", "special", "heavy", "close", "grenade"] },
+    "Status": {
+      "enum": ["standingActive", "standingEngaged", "pronePinned", "proneSeriouslyInjured"],
+      "description": "The four derived statuses of R-3 (Broken is a condition, not a status)."
+    },
+    "ActionType": { "enum": ["simple", "basic", "double", "free"] },
+    "Phase": { "enum": ["priority", "action", "end"] },
+    "CodeName": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9]*$", "description": "Code hook registered in the engine." },
+    "TimingWindowId": {
+      "anyOf": [
+        {
+          "enum": [
+            "round.start",
+            "priority.decided",
+            "action.phaseStart",
+            "activation.start",
+            "activation.groupNominated",
+            "action.declared",
+            "move.ended",
+            "action.resolved",
+            "shoot.targetDeclared",
+            "shoot.hitRolled",
+            "shoot.firepowerRolled",
+            "shoot.resolved",
+            "fight.weaponsChosen",
+            "fight.hitRolled",
+            "fight.resolved",
+            "fight.reactions",
+            "hit.woundRolled",
+            "hit.saveRolled",
+            "hit.damage",
+            "injury.rolled",
+            "fighter.seriouslyInjured",
+            "fighter.outOfAction",
+            "nerve.test",
+            "activation.end",
+            "end.bottle",
+            "end.flee",
+            "end.recovery",
+            "end.rally",
+            "round.end",
+            "battle.end"
+          ]
+        },
+        { "type": "string", "pattern": "^setup\\.[a-zA-Z]+$" }
+      ]
+    },
+    "Limit": { "enum": ["oncePerActivation", "oncePerRound", "oncePerBattle", "unlimited"] },
+    "CodeRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code"],
+      "properties": {
+        "code": { "$ref": "#/$defs/CodeName" },
+        "params": { "type": "object" }
+      }
+    },
+    "WeaponFilter": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "ids": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Id" } },
+        "classes": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/WeaponClass" } },
+        "traits": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Id" } }
+      }
+    },
+    "Condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Declarative predicate; every key present must hold (all ANDed).",
+      "properties": {
+        "status": { "$ref": "#/$defs/Status" },
+        "action": { "$ref": "#/$defs/ActionKey" },
+        "repeatInActivation": { "type": "boolean" },
+        "charging": { "type": "boolean" },
+        "engaged": { "type": "boolean" },
+        "targetStatus": { "$ref": "#/$defs/Status" },
+        "inVisionArcOfTarget": { "type": "boolean" },
+        "weaponClass": { "$ref": "#/$defs/WeaponClass" },
+        "weaponTrait": { "$ref": "#/$defs/Id" },
+        "withinOfFriend": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["inches"],
+          "properties": { "inches": { "$ref": "#/$defs/Inches" }, "role": { "$ref": "#/$defs/Role" } }
+        },
+        "role": { "$ref": "#/$defs/Role" },
+        "phase": { "$ref": "#/$defs/Phase" },
+        "roundAtLeast": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "Effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "modifyStat": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stat"],
+          "properties": { "stat": { "$ref": "#/$defs/Stat" }, "value": { "type": "number" }, "mult": { "type": "number" } }
+        },
+        "modifyTest": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["test", "value"],
+          "properties": {
+            "test": { "enum": ["nerve", "cool", "willpower", "leadership", "intelligence", "initiative", "strength", "toughness"] },
+            "value": { "type": "number" }
+          }
+        },
+        "modifyHit": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": { "kind": { "enum": ["shoot", "fight"] }, "value": { "type": "number" } }
+        },
+        "modifyWound": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": { "value": { "type": "number" } }
+        },
+        "modifySave": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": { "value": { "type": "number" } }
+        },
+        "extraAttackDice": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value"],
+          "properties": { "value": { "type": "integer" } }
+        },
+        "grantTrait": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["trait"],
+          "properties": {
+            "trait": { "$ref": "#/$defs/Id" },
+            "x": { "type": "integer", "minimum": 1 },
+            "weapons": { "$ref": "#/$defs/WeaponFilter" }
+          }
+        },
+        "grantAction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action"],
+          "properties": { "action": { "$ref": "#/$defs/ActionKey" } }
+        },
+        "actionType": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "type"],
+          "properties": { "action": { "$ref": "#/$defs/ActionKey" }, "type": { "$ref": "#/$defs/ActionType" } }
+        },
+        "reroll": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["roll", "which", "grant"],
+          "properties": {
+            "roll": { "enum": ["hit", "wound", "save", "injury", "test", "charge"] },
+            "which": { "enum": ["one", "fails", "all"] },
+            "grant": { "const": true }
+          }
+        },
+        "ignore": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["what"],
+          "properties": { "what": { "$ref": "#/$defs/CodeName" } }
+        },
+        "injuryDice": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["delta"],
+          "properties": { "delta": { "type": "integer" } }
+        },
+        "code": { "$ref": "#/$defs/CodeRef" }
+      }
+    },
+    "EffectList": {
+      "anyOf": [
+        { "$ref": "#/$defs/Effect" },
+        { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Effect" } }
+      ]
+    },
+    "SkillAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "statuses"],
+      "properties": {
+        "id": { "$ref": "#/$defs/ActionKey" },
+        "type": { "$ref": "#/$defs/ActionType" },
+        "statuses": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/Status" } },
+        "requires": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/ActionKey" } }
+      }
+    }
+  }
+}

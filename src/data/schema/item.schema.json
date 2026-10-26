@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mancermundo.dev/schemas/item.schema.json",
+  "title": "Weapons and wargear",
+  "description": "docs/spec/20-data-schema.md sections 4 and 6.",
+  "$defs": {
+    "traitUse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trait"],
+      "properties": {
+        "trait": { "$ref": "common.schema.json#/$defs/Id" },
+        "x": { "type": "integer", "minimum": 1 },
+        "inches": { "$ref": "common.schema.json#/$defs/Inches" },
+        "target": { "$ref": "common.schema.json#/$defs/Target" }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "range", "acc", "str", "ap", "dmg", "ammo", "traits"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Slug" },
+        "name": { "type": ["string", "null"], "minLength": 1 },
+        "range": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["short", "long"],
+          "properties": {
+            "short": { "anyOf": [{ "$ref": "common.schema.json#/$defs/Inches" }, { "type": "null" }] },
+            "long": {
+              "anyOf": [
+                { "$ref": "common.schema.json#/$defs/Inches" },
+                { "enum": ["E", "T"] },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["strMultiplier"],
+                  "properties": { "strMultiplier": { "type": "integer", "minimum": 1 } }
+                }
+              ]
+            }
+          }
+        },
+        "acc": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["short", "long"],
+          "properties": {
+            "short": { "anyOf": [{ "type": "integer" }, { "type": "null" }] },
+            "long": { "anyOf": [{ "type": "integer" }, { "type": "null" }] }
+          }
+        },
+        "str": {
+          "anyOf": [
+            { "type": "integer", "minimum": 0 },
+            { "type": "string", "pattern": "^S([+-][0-9]+)?$", "description": "The wielder's S, optionally plus or minus a number: S, S+1, S-1." }
+          ]
+        },
+        "ap": { "type": "integer", "maximum": 0, "description": "0 for '-' in the books; AP -1 is -1." },
+        "dmg": {
+          "anyOf": [
+            { "$ref": "common.schema.json#/$defs/DiceExpr" },
+            { "const": "-" }
+          ]
+        },
+        "ammo": { "anyOf": [{ "$ref": "common.schema.json#/$defs/Target" }, { "const": "-" }] },
+        "traits": { "type": "array", "items": { "$ref": "#/$defs/traitUse" } }
+      }
+    },
+    "weapon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "class", "cost", "rarity", "profiles", "flavour", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "name": { "type": "string", "minLength": 1 },
+        "class": { "$ref": "common.schema.json#/$defs/WeaponClass" },
+        "cost": { "type": "integer", "minimum": 0 },
+        "rarity": { "type": ["string", "null"], "minLength": 1 },
+        "profiles": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/profile" } },
+        "flavour": { "enum": ["stub", "las", "bolter", "flamer", "plasma", "melta", "grenade", "chain", "blade", "maul", "whip", "crush"] },
+        "text": { "$ref": "common.schema.json#/$defs/Text" },
+        "code": { "$ref": "common.schema.json#/$defs/CodeRef" },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    },
+    "wargear": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "kind", "cost", "text", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "name": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["armour", "fieldArmour", "equipment", "chem"] },
+        "cost": { "type": "integer", "minimum": 0 },
+        "save": { "$ref": "common.schema.json#/$defs/Target" },
+        "saveMods": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["vs", "value"],
+            "properties": {
+              "vs": { "enum": ["front", "template", "blast"] },
+              "value": { "type": "integer" }
+            }
+          }
+        },
+        "effect": { "$ref": "common.schema.json#/$defs/EffectList" },
+        "code": { "$ref": "common.schema.json#/$defs/CodeRef" },
+        "text": { "$ref": "common.schema.json#/$defs/Text" },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    }
+  }
+}

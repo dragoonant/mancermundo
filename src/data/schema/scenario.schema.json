@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mancermundo.dev/schemas/scenario.schema.json",
+  "title": "Scenario",
+  "description": "docs/spec/20-data-schema.md section 10.",
+  "$defs": {
+    "crew": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "x"],
+      "properties": {
+        "method": { "enum": ["custom", "random", "hybrid"] },
+        "x": { "type": "integer", "minimum": 0 },
+        "y": { "$ref": "common.schema.json#/$defs/DiceExpr" }
+      }
+    },
+    "points": {
+      "anyOf": [
+        { "type": "integer", "minimum": 0 },
+        { "type": "string", "pattern": "^(\\d*D[36](\\+\\d+)?)$" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["byRole"],
+          "properties": {
+            "byRole": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "leader": { "type": "integer", "minimum": 0 },
+                "champion": { "type": "integer", "minimum": 0 },
+                "ganger": { "type": "integer", "minimum": 0 },
+                "juve": { "type": "integer", "minimum": 0 },
+                "specialist": { "type": "integer", "minimum": 0 },
+                "prospect": { "type": "integer", "minimum": 0 }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "layouts", "roles", "crews", "crewCap", "deployment", "scoring", "victory", "special", "text", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "name": { "type": "string", "minLength": 1 },
+        "layouts": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["2x3", "brick7"] } },
+        "roles": { "type": "boolean" },
+        "crews": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "properties": {
+            "attacker": { "$ref": "#/$defs/crew" },
+            "defender": { "$ref": "#/$defs/crew" },
+            "both": { "$ref": "#/$defs/crew" }
+          }
+        },
+        "crewCap": {
+          "anyOf": [
+            { "type": "null" },
+            {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["min", "max", "cap"],
+                "properties": {
+                  "min": { "type": "integer", "minimum": 2, "maximum": 12 },
+                  "max": { "type": "integer", "minimum": 2, "maximum": 12 },
+                  "cap": { "type": "integer", "minimum": 1 }
+                }
+              }
+            }
+          ]
+        },
+        "deployment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": {
+            "kind": { "enum": ["standard", "tile"] },
+            "minFromCentreline": { "$ref": "common.schema.json#/$defs/Inches" },
+            "defenderFirst": { "type": "boolean" },
+            "withinOfEdge": { "$ref": "common.schema.json#/$defs/Inches" },
+            "enemyClearance": { "$ref": "common.schema.json#/$defs/Inches" }
+          }
+        },
+        "caskets": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["count", "region", "minFromEdge", "minApart", "contents"],
+          "properties": {
+            "count": { "type": "integer", "minimum": 0 },
+            "placer": { "enum": ["attacker", "defender", "alternate", "board"] },
+            "region": { "enum": ["ownHalf", "centreTileFirst", "anyTile"] },
+            "minFromEdge": { "$ref": "common.schema.json#/$defs/Inches" },
+            "minApart": { "$ref": "common.schema.json#/$defs/Inches" },
+            "openBy": { "enum": ["attacker", "defender", "either"] },
+            "contents": {
+              "anyOf": [
+                { "$ref": "common.schema.json#/$defs/Id" },
+                { "$ref": "common.schema.json#/$defs/CodeRef" }
+              ],
+              "description": "'core' (R-15.11), a scenario table id handled by a code hook, or a CodeRef."
+            }
+          }
+        },
+        "scoring": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["on"],
+            "properties": {
+              "on": { "enum": ["fighterOutOfAction", "fighterFled", "casketOpened", "casketSecured", "lastGangStanding"] },
+              "seat": { "enum": ["attacker", "defender", "A", "B"] },
+              "points": { "$ref": "#/$defs/points" },
+              "count": { "type": "boolean" }
+            }
+          }
+        },
+        "victory": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["by"],
+              "properties": { "by": { "enum": ["points", "caskets"] } }
+            },
+            { "$ref": "common.schema.json#/$defs/CodeRef" }
+          ]
+        },
+        "special": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/CodeRef" } },
+        "text": { "$ref": "common.schema.json#/$defs/Text" },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    }
+  }
+}

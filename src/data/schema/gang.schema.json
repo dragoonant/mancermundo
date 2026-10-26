@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mancermundo.dev/schemas/gang.schema.json",
+  "title": "Gang data",
+  "description": "House, fighter type, equipment list, starter gang, skill and rule (docs/spec/20-data-schema.md sections 3, 7 and 8).",
+  "$defs": {
+    "ruleUse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule"],
+      "properties": {
+        "rule": { "$ref": "common.schema.json#/$defs/Id" },
+        "x": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "fighterType": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "house", "role", "cost", "stats", "base", "rules", "skillAccess", "equipmentList", "figure", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "name": { "type": "string", "minLength": 1 },
+        "house": { "$ref": "common.schema.json#/$defs/Id" },
+        "role": { "$ref": "common.schema.json#/$defs/Role" },
+        "cost": { "type": "integer", "minimum": 0 },
+        "stats": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["M", "WS", "BS", "S", "T", "W", "I", "A", "Ld", "Cl", "Wil", "Int"],
+          "properties": {
+            "M": { "type": "integer", "minimum": 1 },
+            "WS": { "$ref": "common.schema.json#/$defs/Target" },
+            "BS": { "$ref": "common.schema.json#/$defs/Target" },
+            "S": { "type": "integer", "minimum": 1 },
+            "T": { "type": "integer", "minimum": 1 },
+            "W": { "type": "integer", "minimum": 1 },
+            "I": { "$ref": "common.schema.json#/$defs/Target" },
+            "A": { "type": "integer", "minimum": 0 },
+            "Ld": { "$ref": "common.schema.json#/$defs/Target" },
+            "Cl": { "$ref": "common.schema.json#/$defs/Target" },
+            "Wil": { "$ref": "common.schema.json#/$defs/Target" },
+            "Int": { "$ref": "common.schema.json#/$defs/Target" }
+          }
+        },
+        "base": { "type": "integer", "minimum": 20, "description": "Base diameter in mm." },
+        "rules": { "type": "array", "items": { "$ref": "#/$defs/ruleUse" } },
+        "skillAccess": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["primary", "secondary"],
+          "properties": {
+            "primary": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Slug" } },
+            "secondary": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Slug" } }
+          }
+        },
+        "equipmentList": { "$ref": "common.schema.json#/$defs/Id" },
+        "limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "min": { "type": "integer", "minimum": 0 }, "max": { "type": "integer", "minimum": 0 } }
+        },
+        "figure": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["archetype"],
+          "properties": {
+            "archetype": { "$ref": "common.schema.json#/$defs/Slug" },
+            "variant": { "$ref": "common.schema.json#/$defs/Slug" }
+          }
+        },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    },
+    "house": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "prefix", "houseRules", "fighterTypes", "skillSets", "composition", "paint", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Slug" },
+        "name": { "type": "string", "minLength": 1 },
+        "prefix": { "$ref": "common.schema.json#/$defs/Slug" },
+        "houseRules": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Id" } },
+        "fighterTypes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Id" } },
+        "skillSets": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Slug" } },
+        "composition": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["minFighters", "roles"],
+          "properties": {
+            "minFighters": { "type": "integer", "minimum": 1 },
+            "maxFighters": { "type": "integer", "minimum": 1 },
+            "roles": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "leader": { "$ref": "#/$defs/roleCount" },
+                "champion": { "$ref": "#/$defs/roleCount" },
+                "ganger": { "$ref": "#/$defs/roleCount" },
+                "juve": { "$ref": "#/$defs/roleCount" },
+                "specialist": { "$ref": "#/$defs/roleCount" },
+                "prospect": { "$ref": "#/$defs/roleCount" }
+              }
+            },
+            "ratio": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["roles", "atLeastHalf"],
+                "properties": {
+                  "roles": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/Role" } },
+                  "atLeastHalf": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        },
+        "paint": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["major", "minor"],
+          "properties": { "major": { "$ref": "common.schema.json#/$defs/Hsl" }, "minor": { "$ref": "common.schema.json#/$defs/Hsl" } }
+        },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    },
+    "roleCount": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "min": { "type": "integer", "minimum": 0 }, "max": { "type": "integer", "minimum": 0 } }
+    },
+    "equipmentList": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "house", "forTypes", "weapons", "wargear", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "house": { "$ref": "common.schema.json#/$defs/Id" },
+        "forTypes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Id" } },
+        "weapons": { "type": "array", "items": { "$ref": "#/$defs/priced" } },
+        "wargear": { "type": "array", "items": { "$ref": "#/$defs/priced" } },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    },
+    "priced": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "cost"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "cost": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "starterGang": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "house", "name", "credits", "fighters", "text", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "house": { "$ref": "common.schema.json#/$defs/Id" },
+        "name": { "type": "string", "minLength": 1 },
+        "credits": { "type": "integer", "minimum": 0, "maximum": 1000 },
+        "fighters": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "type", "weapons", "wargear", "skills"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "type": { "$ref": "common.schema.json#/$defs/Id" },
+              "weapons": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
+              "wargear": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } },
+              "skills": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/Id" } }
+            }
+          }
+        },
+        "text": { "$ref": "common.schema.json#/$defs/Text" },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "set", "text", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "name": { "type": "string", "minLength": 1 },
+        "set": { "$ref": "common.schema.json#/$defs/Slug" },
+        "window": { "$ref": "common.schema.json#/$defs/TimingWindowId" },
+        "when": { "$ref": "common.schema.json#/$defs/Condition" },
+        "effect": { "$ref": "common.schema.json#/$defs/EffectList" },
+        "limit": { "$ref": "common.schema.json#/$defs/Limit" },
+        "action": { "$ref": "common.schema.json#/$defs/SkillAction" },
+        "text": { "$ref": "common.schema.json#/$defs/Text" },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "kind", "text", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "name": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["houseRule", "fighterRule"] },
+        "window": { "$ref": "common.schema.json#/$defs/TimingWindowId" },
+        "when": { "$ref": "common.schema.json#/$defs/Condition" },
+        "effect": { "$ref": "common.schema.json#/$defs/EffectList" },
+        "limit": { "$ref": "common.schema.json#/$defs/Limit" },
+        "action": { "$ref": "common.schema.json#/$defs/SkillAction" },
+        "text": { "$ref": "common.schema.json#/$defs/Text" },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    }
+  }
+}

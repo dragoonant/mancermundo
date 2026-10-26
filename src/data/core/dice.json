@@ -1,0 +1,36 @@
+{
+  "id": "core.dice",
+  "d3": { "faces": [1, 1, 2, 2, 3, 3] },
+  "firepower": {
+    "faces": [
+      { "face": 1, "hits": 1, "ammo": true },
+      { "face": 2, "hits": 1, "ammo": false },
+      { "face": 3, "hits": 1, "ammo": false },
+      { "face": 4, "hits": 2, "ammo": false },
+      { "face": 5, "hits": 2, "ammo": false },
+      { "face": 6, "hits": 3, "ammo": false }
+    ]
+  },
+  "injury": {
+    "faces": [
+      { "face": 1, "result": "fleshWound" },
+      { "face": 2, "result": "fleshWound" },
+      { "face": 3, "result": "seriouslyInjured" },
+      { "face": 4, "result": "seriouslyInjured" },
+      { "face": 5, "result": "seriouslyInjured" },
+      { "face": 6, "result": "outOfAction" }
+    ]
+  },
+  "scatter": {
+    "faces": [
+      { "face": 1, "kind": "arrow" },
+      { "face": 2, "kind": "arrow" },
+      { "face": 3, "kind": "arrow" },
+      { "face": 4, "kind": "arrow" },
+      { "face": 5, "kind": "hit" },
+      { "face": 6, "kind": "hit" }
+    ],
+    "distance": "D6"
+  },
+  "source": "10-rules-core.md R-1.1 to R-1.4, R-9.3"
+}

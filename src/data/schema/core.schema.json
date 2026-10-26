@@ -1,0 +1,446 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mancermundo.dev/schemas/core.schema.json",
+  "title": "Core rules data",
+  "description": "Action catalogue, special dice, rule constants and weapon traits (docs/spec/20-data-schema.md sections 1 and 5).",
+  "$defs": {
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "key", "name", "cost", "statuses", "requires", "text", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "key": { "$ref": "common.schema.json#/$defs/ActionKey" },
+        "name": { "type": "string", "minLength": 1 },
+        "cost": { "$ref": "common.schema.json#/$defs/ActionType" },
+        "statuses": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/Status" } },
+        "requires": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "broken",
+              "notBroken",
+              "rangedWeapon",
+              "outOfAmmoWeapon",
+              "nearDoor",
+              "nearLockedDoor",
+              "nearTerminal",
+              "nearDuct",
+              "enemyNearDuctExit",
+              "nearCasket",
+              "seriouslyInjuredEnemyNear",
+              "enemyInVisionArc"
+            ]
+          }
+        },
+        "text": { "$ref": "common.schema.json#/$defs/Text" },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    },
+    "dice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "d3", "firepower", "injury", "scatter", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "d3": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["faces"],
+          "properties": { "faces": { "type": "array", "minItems": 6, "maxItems": 6, "items": { "type": "integer", "minimum": 1, "maximum": 3 } } }
+        },
+        "firepower": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["faces"],
+          "properties": {
+            "faces": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["face", "hits", "ammo"],
+                "properties": {
+                  "face": { "type": "integer", "minimum": 1, "maximum": 6 },
+                  "hits": { "type": "integer", "minimum": 1, "maximum": 3 },
+                  "ammo": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        },
+        "injury": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["faces"],
+          "properties": {
+            "faces": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["face", "result"],
+                "properties": {
+                  "face": { "type": "integer", "minimum": 1, "maximum": 6 },
+                  "result": { "enum": ["fleshWound", "seriouslyInjured", "outOfAction"] }
+                }
+              }
+            }
+          }
+        },
+        "scatter": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["faces", "distance"],
+          "properties": {
+            "faces": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["face", "kind"],
+                "properties": {
+                  "face": { "type": "integer", "minimum": 1, "maximum": 6 },
+                  "kind": { "enum": ["arrow", "hit"] }
+                }
+              }
+            },
+            "distance": { "$ref": "common.schema.json#/$defs/DiceExpr" }
+          }
+        },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    },
+    "constants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "radii",
+        "retreat",
+        "runForCover",
+        "strayShot",
+        "hitModifiers",
+        "coverSave",
+        "closeDoor",
+        "door",
+        "forceDoor",
+        "terminal",
+        "duct",
+        "casket",
+        "smoke",
+        "blaze",
+        "concussion",
+        "knockback",
+        "unarmed",
+        "obstacle",
+        "template",
+        "loadout",
+        "statLimits",
+        "crewCap",
+        "source"
+      ],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "radii": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["nerve", "nerveSupport", "groupActivation", "leadingByExampleLeader", "leadingByExampleChampion", "assist", "rally", "rallySupport", "interact", "oneInchRule", "rapidFireExtraHit"],
+          "properties": {
+            "nerve": { "$ref": "common.schema.json#/$defs/Inches" },
+            "nerveSupport": { "$ref": "common.schema.json#/$defs/Inches" },
+            "groupActivation": { "$ref": "common.schema.json#/$defs/Inches" },
+            "leadingByExampleLeader": { "$ref": "common.schema.json#/$defs/Inches" },
+            "leadingByExampleChampion": { "$ref": "common.schema.json#/$defs/Inches" },
+            "assist": { "$ref": "common.schema.json#/$defs/Inches" },
+            "rally": { "$ref": "common.schema.json#/$defs/Inches" },
+            "rallySupport": { "$ref": "common.schema.json#/$defs/Inches" },
+            "interact": { "$ref": "common.schema.json#/$defs/Inches" },
+            "oneInchRule": { "$ref": "common.schema.json#/$defs/Inches" },
+            "rapidFireExtraHit": { "$ref": "common.schema.json#/$defs/Inches" }
+          }
+        },
+        "retreat": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["moveDice", "brokenMoveDice"],
+          "properties": {
+            "moveDice": { "$ref": "common.schema.json#/$defs/DiceExpr" },
+            "brokenMoveDice": { "$ref": "common.schema.json#/$defs/DiceExpr" }
+          }
+        },
+        "runForCover": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["moveDice", "proneMoveFraction", "clearOfEnemies"],
+          "properties": {
+            "moveDice": { "$ref": "common.schema.json#/$defs/DiceExpr" },
+            "proneMoveFraction": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+            "clearOfEnemies": { "$ref": "common.schema.json#/$defs/Inches" }
+          }
+        },
+        "strayShot": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["radius", "hitOnAtMost"],
+          "properties": {
+            "radius": { "$ref": "common.schema.json#/$defs/Inches" },
+            "hitOnAtMost": { "type": "integer", "minimum": 1, "maximum": 5 }
+          }
+        },
+        "hitModifiers": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["partialCover", "fullCover", "targetEngaged", "targetProneAtLong", "aim", "blastAtPoint", "blindFire", "twinSidearm", "assist", "interference", "turnedToFace", "chargeWithoutSight", "brokenReaction", "ductway"],
+          "properties": {
+            "partialCover": { "type": "integer" },
+            "fullCover": { "type": "integer" },
+            "targetEngaged": { "type": "integer" },
+            "targetProneAtLong": { "type": "integer" },
+            "aim": { "type": "integer" },
+            "blastAtPoint": { "type": "integer" },
+            "blindFire": { "type": "integer" },
+            "twinSidearm": { "type": "integer" },
+            "assist": { "type": "integer" },
+            "interference": { "type": "integer" },
+            "turnedToFace": { "type": "integer" },
+            "chargeWithoutSight": { "type": "integer" },
+            "brokenReaction": { "type": "integer" },
+            "ductway": { "$ref": "common.schema.json#/$defs/Target" }
+          }
+        },
+        "coverSave": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["partial", "full", "noArmourSave"],
+          "properties": {
+            "partial": { "type": "integer" },
+            "full": { "type": "integer" },
+            "noArmourSave": { "$ref": "common.schema.json#/$defs/Target" }
+          }
+        },
+        "closeDoor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["test", "clearMove", "strength", "ap", "damage"],
+          "properties": {
+            "test": { "$ref": "common.schema.json#/$defs/Stat" },
+            "clearMove": { "$ref": "common.schema.json#/$defs/Inches" },
+            "strength": { "type": "integer", "minimum": 1 },
+            "ap": { "type": "integer" },
+            "damage": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "door": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["toughness", "wounds"],
+          "properties": {
+            "toughness": { "type": "integer", "minimum": 1 },
+            "wounds": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "forceDoor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["die", "stat", "target", "helperBonus"],
+          "properties": {
+            "die": { "$ref": "common.schema.json#/$defs/DiceExpr" },
+            "stat": { "$ref": "common.schema.json#/$defs/Stat" },
+            "target": { "type": "integer", "minimum": 2 },
+            "helperBonus": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "terminal": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stat", "modifier"],
+          "properties": {
+            "stat": { "$ref": "common.schema.json#/$defs/Stat" },
+            "modifier": { "type": "integer" }
+          }
+        },
+        "duct": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["maxLength", "hitOn", "templateRadius", "exitRadius"],
+          "properties": {
+            "maxLength": { "$ref": "common.schema.json#/$defs/Inches" },
+            "hitOn": { "$ref": "common.schema.json#/$defs/Target" },
+            "templateRadius": { "$ref": "common.schema.json#/$defs/Inches" },
+            "exitRadius": { "$ref": "common.schema.json#/$defs/Inches" }
+          }
+        },
+        "casket": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["smash", "contents", "ammoCache"],
+          "properties": {
+            "smash": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["die", "stat", "target", "contentsModifier"],
+              "properties": {
+                "die": { "$ref": "common.schema.json#/$defs/DiceExpr" },
+                "stat": { "$ref": "common.schema.json#/$defs/Stat" },
+                "target": { "type": "integer", "minimum": 2 },
+                "contentsModifier": { "type": "integer" }
+              }
+            },
+            "contents": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["min", "max", "result"],
+                "properties": {
+                  "min": { "type": "integer", "minimum": 1, "maximum": 6 },
+                  "max": { "type": "integer", "minimum": 1, "maximum": 6 },
+                  "result": { "enum": ["fragTrap", "nothing", "ammoCache"] }
+                }
+              }
+            },
+            "ammoCache": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["radius", "ammoBonus", "exhaustedOn"],
+              "properties": {
+                "radius": { "$ref": "common.schema.json#/$defs/Inches" },
+                "ammoBonus": { "type": "integer" },
+                "exhaustedOn": { "type": "integer", "minimum": 1, "maximum": 6 }
+              }
+            }
+          }
+        },
+        "smoke": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["radius", "clearDie", "clearOnAtMost"],
+          "properties": {
+            "radius": { "$ref": "common.schema.json#/$defs/Inches" },
+            "clearDie": { "$ref": "common.schema.json#/$defs/DiceExpr" },
+            "clearOnAtMost": { "type": "integer", "minimum": 1, "maximum": 6 }
+          }
+        },
+        "blaze": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["igniteOn", "strength", "ap", "damage", "moveDice", "extinguishTarget", "pinnedBonus", "friendBonus", "friendRadius"],
+          "properties": {
+            "igniteOn": { "$ref": "common.schema.json#/$defs/Target" },
+            "strength": { "type": "integer", "minimum": 1 },
+            "ap": { "type": "integer" },
+            "damage": { "type": "integer", "minimum": 1 },
+            "moveDice": { "$ref": "common.schema.json#/$defs/DiceExpr" },
+            "extinguishTarget": { "type": "integer", "minimum": 2 },
+            "pinnedBonus": { "type": "integer" },
+            "friendBonus": { "type": "integer" },
+            "friendRadius": { "$ref": "common.schema.json#/$defs/Inches" }
+          }
+        },
+        "concussion": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["initiativeModifier", "worstInitiative"],
+          "properties": {
+            "initiativeModifier": { "type": "integer" },
+            "worstInitiative": { "$ref": "common.schema.json#/$defs/Target" }
+          }
+        },
+        "knockback": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["distance", "blockedDamageBonus"],
+          "properties": {
+            "distance": { "$ref": "common.schema.json#/$defs/Inches" },
+            "blockedDamageBonus": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "unarmed": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["strength", "ap", "damage"],
+          "properties": {
+            "strength": { "const": "S" },
+            "ap": { "type": "integer" },
+            "damage": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "obstacle": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["height"],
+          "properties": { "height": { "$ref": "common.schema.json#/$defs/Inches" } }
+        },
+        "template": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["length", "narrowWidth", "wideWidth"],
+          "properties": {
+            "length": { "$ref": "common.schema.json#/$defs/Inches" },
+            "narrowWidth": { "type": "number", "exclusiveMinimum": 0 },
+            "wideWidth": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        "loadout": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["maxWeapons", "unwieldySlots"],
+          "properties": {
+            "maxWeapons": { "type": "integer", "minimum": 1 },
+            "unwieldySlots": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "statLimits": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["M", "WS", "BS", "S", "T", "W", "I", "A", "Ld", "Cl", "Wil", "Int"],
+          "patternProperties": {
+            "^.*$": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["min", "max"],
+              "properties": { "min": { "type": "integer" }, "max": { "type": "integer" } }
+            }
+          }
+        },
+        "crewCap": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["min", "max", "cap"],
+            "properties": {
+              "min": { "type": "integer", "minimum": 2, "maximum": 12 },
+              "max": { "type": "integer", "minimum": 2, "maximum": 12 },
+              "cap": { "type": "integer", "minimum": 1 }
+            }
+          }
+        },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    },
+    "trait": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "param", "implemented", "text", "source"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/Id" },
+        "name": { "type": "string", "minLength": 1 },
+        "param": { "enum": ["none", "count", "inches", "target"] },
+        "implemented": { "type": "boolean" },
+        "text": { "$ref": "common.schema.json#/$defs/Text" },
+        "source": { "$ref": "common.schema.json#/$defs/Source" }
+      }
+    }
+  }
+}
