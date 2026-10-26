@@ -1,0 +1,1095 @@
+[
+  {
+    "id": "gol.w.bolt-pistol",
+    "name": "Bolt pistol",
+    "class": "pistol",
+    "cost": 45,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 6,
+          "long": 12
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 4,
+        "ap": -1,
+        "dmg": 2,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.sidearm"
+          }
+        ]
+      }
+    ],
+    "flavour": "bolter",
+    "source": "13-gangs.md 4.1"
+  },
+  {
+    "id": "gol.w.combat-shotgun",
+    "name": "Combat shotgun (salvo & shredder)",
+    "class": "basic",
+    "cost": 60,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "salvo",
+        "name": "Salvo",
+        "range": {
+          "short": 4,
+          "long": 12
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 4,
+        "ap": 0,
+        "dmg": 2,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.knockback"
+          },
+          {
+            "trait": "core.t.rapid-fire",
+            "x": 1
+          }
+        ]
+      },
+      {
+        "id": "shredder",
+        "name": "Shredder",
+        "range": {
+          "short": null,
+          "long": "T"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 2,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.scattershot"
+          },
+          {
+            "trait": "core.t.template"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "gol.w.combat-shotgun.firestorm",
+    "name": "Firestorm shells (combat shotgun)",
+    "class": "basic",
+    "cost": 0,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "firestorm",
+        "name": "Firestorm shells",
+        "range": {
+          "short": null,
+          "long": "T"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 5,
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.blaze"
+          },
+          {
+            "trait": "core.t.limited"
+          },
+          {
+            "trait": "core.t.template"
+          }
+        ]
+      }
+    ],
+    "flavour": "flamer",
+    "text": "Ammunition upgrade for gol.w.combat-shotgun: adds this profile to the weapon, takes no weapon slot of its own, and is bought in addition to the weapon. Printed without a price on either Goliath list, so no equipment list offers it; cost 0 is a placeholder.",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "gol.w.stub-cannon",
+    "name": "Stub cannon",
+    "class": "basic",
+    "cost": 20,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 9,
+          "long": 18
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 5,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "3+",
+        "traits": [
+          {
+            "trait": "core.t.knockback"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "gol.w.heavy-bolter",
+    "name": "Heavy bolter",
+    "class": "heavy",
+    "cost": 160,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 18,
+          "long": 36
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 5,
+        "ap": -2,
+        "dmg": 2,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.rapid-fire",
+            "x": 2
+          },
+          {
+            "trait": "core.t.unwieldy"
+          }
+        ]
+      }
+    ],
+    "flavour": "bolter",
+    "source": "13-gangs.md 4.4"
+  },
+  {
+    "id": "gol.w.heavy-flamer",
+    "name": "Heavy flamer",
+    "class": "heavy",
+    "cost": 195,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "T"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 5,
+        "ap": -2,
+        "dmg": 1,
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.blaze"
+          },
+          {
+            "trait": "core.t.template"
+          },
+          {
+            "trait": "core.t.unwieldy"
+          }
+        ]
+      }
+    ],
+    "flavour": "flamer",
+    "source": "13-gangs.md 4.4"
+  },
+  {
+    "id": "gol.w.krumper-rivet-cannon",
+    "name": "'Krumper' rivet cannon",
+    "class": "heavy",
+    "cost": 70,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "rapid-fire",
+        "name": "Rapid-fire",
+        "range": {
+          "short": 3,
+          "long": 9
+        },
+        "acc": {
+          "short": 2,
+          "long": null
+        },
+        "str": 4,
+        "ap": -1,
+        "dmg": 2,
+        "ammo": "3+",
+        "traits": [
+          {
+            "trait": "core.t.rapid-fire",
+            "x": 1
+          },
+          {
+            "trait": "core.t.rending"
+          }
+        ]
+      },
+      {
+        "id": "super-heated",
+        "name": "Super-heated",
+        "range": {
+          "short": 3,
+          "long": 9
+        },
+        "acc": {
+          "short": 2,
+          "long": null
+        },
+        "str": 6,
+        "ap": -2,
+        "dmg": 2,
+        "ammo": "3+",
+        "traits": [
+          {
+            "trait": "core.t.blaze"
+          },
+          {
+            "trait": "core.t.rending"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "text": "Marked with an asterisk in the lists: takes two weapon slots, although it carries no Unwieldy trait.",
+    "source": "13-gangs.md 4.4"
+  },
+  {
+    "id": "gol.w.missile-launcher",
+    "name": "Missile launcher (frag & krak)",
+    "class": "heavy",
+    "cost": 165,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "frag",
+        "name": "Frag",
+        "range": {
+          "short": 24,
+          "long": 48
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 4,
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 5
+          },
+          {
+            "trait": "core.t.knockback"
+          },
+          {
+            "trait": "core.t.unwieldy"
+          }
+        ]
+      },
+      {
+        "id": "krak",
+        "name": "Krak",
+        "range": {
+          "short": 24,
+          "long": 48
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 6,
+        "ap": -2,
+        "dmg": 3,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.unwieldy"
+          }
+        ]
+      }
+    ],
+    "flavour": "grenade",
+    "source": "13-gangs.md 4.4"
+  },
+  {
+    "id": "gol.w.multi-melta",
+    "name": "Multi-melta",
+    "class": "heavy",
+    "cost": 180,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 12,
+          "long": 24
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 8,
+        "ap": -4,
+        "dmg": 3,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 3
+          },
+          {
+            "trait": "core.t.melta"
+          },
+          {
+            "trait": "core.t.scarce"
+          },
+          {
+            "trait": "core.t.unwieldy"
+          }
+        ]
+      }
+    ],
+    "flavour": "melta",
+    "source": "13-gangs.md 4.4"
+  },
+  {
+    "id": "gol.w.assault-grenade-launchers",
+    "name": "Twin-linked assault grenade launchers (frag & stun)",
+    "class": "heavy",
+    "cost": 65,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "frag",
+        "name": "Frag",
+        "range": {
+          "short": 6,
+          "long": 24
+        },
+        "acc": {
+          "short": -1,
+          "long": null
+        },
+        "str": 3,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 3
+          },
+          {
+            "trait": "core.t.knockback"
+          },
+          {
+            "trait": "core.t.rapid-fire",
+            "x": 1
+          },
+          {
+            "trait": "core.t.unstable"
+          }
+        ]
+      },
+      {
+        "id": "stun",
+        "name": "Stun",
+        "range": {
+          "short": 6,
+          "long": 18
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 2,
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.concussion"
+          },
+          {
+            "trait": "core.t.rapid-fire",
+            "x": 1
+          }
+        ]
+      }
+    ],
+    "flavour": "grenade",
+    "text": "A matched pair, not a Twin-linked weapon (FAQ). Marked with an asterisk in the lists: takes two weapon slots, although it carries no Unwieldy trait.",
+    "source": "13-gangs.md 4.4"
+  },
+  {
+    "id": "gol.w.assault-grenade-launchers.krak",
+    "name": "Krak rounds (assault grenade launchers)",
+    "class": "heavy",
+    "cost": 30,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "krak",
+        "name": "Krak rounds",
+        "range": {
+          "short": 6,
+          "long": 24
+        },
+        "acc": {
+          "short": -1,
+          "long": null
+        },
+        "str": 6,
+        "ap": -2,
+        "dmg": 2,
+        "ammo": "6+",
+        "traits": []
+      }
+    ],
+    "flavour": "grenade",
+    "text": "Ammunition upgrade for gol.w.assault-grenade-launchers: adds this profile to the weapon, takes no weapon slot of its own, and is bought in addition to the weapon.",
+    "source": "13-gangs.md 4.4"
+  },
+  {
+    "id": "gol.w.assault-grenade-launchers.smoke",
+    "name": "Smoke rounds (assault grenade launchers)",
+    "class": "heavy",
+    "cost": 20,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "smoke",
+        "name": "Smoke rounds",
+        "range": {
+          "short": 6,
+          "long": 24
+        },
+        "acc": {
+          "short": -1,
+          "long": null
+        },
+        "str": 0,
+        "ap": 0,
+        "dmg": "-",
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 5
+          },
+          {
+            "trait": "core.t.smoke"
+          }
+        ]
+      }
+    ],
+    "flavour": "grenade",
+    "text": "Ammunition upgrade for gol.w.assault-grenade-launchers: adds this profile to the weapon, takes no weapon slot of its own, and is bought in addition to the weapon.",
+    "source": "13-gangs.md 4.4"
+  },
+  {
+    "id": "gol.w.axe",
+    "name": "Axe",
+    "class": "close",
+    "cost": 10,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": "S+1",
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.disarm"
+          },
+          {
+            "trait": "core.t.melee"
+          }
+        ]
+      }
+    ],
+    "flavour": "blade",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "gol.w.brute-cleaver",
+    "name": "Brute cleaver",
+    "class": "close",
+    "cost": 20,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": "S",
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.disarm"
+          },
+          {
+            "trait": "core.t.melee"
+          }
+        ]
+      }
+    ],
+    "flavour": "blade",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "gol.w.heavy-rock-saw",
+    "name": "Heavy rock saw",
+    "class": "close",
+    "cost": 120,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": "S+3",
+        "ap": -3,
+        "dmg": 2,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.rending"
+          },
+          {
+            "trait": "core.t.unwieldy"
+          }
+        ]
+      }
+    ],
+    "flavour": "chain",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "gol.w.maul",
+    "name": "Maul (club)",
+    "class": "close",
+    "cost": 10,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": "S",
+        "ap": 0,
+        "dmg": 2,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.melee"
+          }
+        ]
+      }
+    ],
+    "flavour": "maul",
+    "text": "The source table prints AP +1 for this weapon, which the schema cannot hold (AP is 0 or negative); encoded as AP 0. See docs/needs-rules-check.md.",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "gol.w.power-axe",
+    "name": "Power axe",
+    "class": "close",
+    "cost": 35,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": "S+2",
+        "ap": -2,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.disarm"
+          },
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.power"
+          }
+        ]
+      }
+    ],
+    "flavour": "blade",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "gol.w.pulveriser-serrated-axe",
+    "name": "'Pulveriser' serrated axe",
+    "class": "close",
+    "cost": 30,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": "S+1",
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.pulverise"
+          }
+        ]
+      }
+    ],
+    "flavour": "blade",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "gol.w.renderizer-serrated-axe",
+    "name": "'Renderizer' serrated axe",
+    "class": "close",
+    "cost": 40,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": "S+2",
+        "ap": -1,
+        "dmg": 2,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.pulverise"
+          },
+          {
+            "trait": "core.t.unwieldy"
+          }
+        ]
+      }
+    ],
+    "flavour": "blade",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "gol.w.spud-jacker",
+    "name": "Spud-jacker",
+    "class": "close",
+    "cost": 15,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": "S+1",
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.knockback"
+          },
+          {
+            "trait": "core.t.melee"
+          }
+        ]
+      }
+    ],
+    "flavour": "maul",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "gol.w.two-handed-axe",
+    "name": "Two-handed axe",
+    "class": "close",
+    "cost": 25,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": -1,
+          "long": null
+        },
+        "str": "S+2",
+        "ap": 0,
+        "dmg": 2,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.unwieldy"
+          }
+        ]
+      }
+    ],
+    "flavour": "blade",
+    "source": "13-gangs.md 4.5, 9"
+  },
+  {
+    "id": "gol.w.two-handed-hammer",
+    "name": "Two-handed hammer",
+    "class": "close",
+    "cost": 35,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": -1,
+          "long": null
+        },
+        "str": "S+1",
+        "ap": 0,
+        "dmg": 3,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.knockback"
+          },
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.unwieldy"
+          }
+        ]
+      }
+    ],
+    "flavour": "maul",
+    "source": "13-gangs.md 4.5, 9"
+  },
+  {
+    "id": "gol.w.paired-pulverisers",
+    "name": "Paired 'Pulveriser' serrated axes",
+    "class": "close",
+    "cost": 50,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": "S+1",
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.paired"
+          },
+          {
+            "trait": "core.t.pulverise"
+          }
+        ]
+      }
+    ],
+    "flavour": "blade",
+    "text": "Marked with an asterisk in the lists: takes two weapon slots (a Paired set is two weapons).",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "gol.w.paired-spud-jackers",
+    "name": "Paired spud-jackers",
+    "class": "close",
+    "cost": 25,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": "S+1",
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.knockback"
+          },
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.paired"
+          }
+        ]
+      }
+    ],
+    "flavour": "maul",
+    "text": "Marked with an asterisk in the lists: takes two weapon slots (a Paired set is two weapons).",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "gol.w.blasting-charges",
+    "name": "Blasting charges",
+    "class": "grenade",
+    "cost": 35,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": {
+            "strMultiplier": 2
+          }
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 5,
+        "ap": -1,
+        "dmg": 2,
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 5
+          },
+          {
+            "trait": "core.t.grenade"
+          },
+          {
+            "trait": "core.t.knockback"
+          }
+        ]
+      }
+    ],
+    "flavour": "grenade",
+    "source": "13-gangs.md 4.6"
+  },
+  {
+    "id": "gol.w.incendiary-charges",
+    "name": "Incendiary charges",
+    "class": "grenade",
+    "cost": 40,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": {
+            "strMultiplier": 3
+          }
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 3,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 5
+          },
+          {
+            "trait": "core.t.blaze"
+          },
+          {
+            "trait": "core.t.grenade"
+          }
+        ]
+      }
+    ],
+    "flavour": "grenade",
+    "source": "13-gangs.md 4.6"
+  },
+  {
+    "id": "gol.w.melta-bombs",
+    "name": "Melta bombs",
+    "class": "grenade",
+    "cost": 60,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": {
+            "strMultiplier": 3
+          }
+        },
+        "acc": {
+          "short": null,
+          "long": -1
+        },
+        "str": 8,
+        "ap": -4,
+        "dmg": 3,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.grenade"
+          },
+          {
+            "trait": "core.t.melta"
+          }
+        ]
+      }
+    ],
+    "flavour": "melta",
+    "text": "Printed with the Demolition trait (usable against doors and scenery in close combat); that trait is not implemented for v1, so it is left off the profile. See docs/needs-rules-check.md.",
+    "source": "13-gangs.md 4.6"
+  }
+]

@@ -1,0 +1,910 @@
+[
+  {
+    "id": "gol.el.forge-tyrant",
+    "house": "goliath",
+    "forTypes": [
+      "gol.forge-tyrant"
+    ],
+    "weapons": [
+      {
+        "id": "gol.w.bolt-pistol",
+        "cost": 45
+      },
+      {
+        "id": "core.w.hand-flamer",
+        "cost": 75
+      },
+      {
+        "id": "core.w.stub-gun",
+        "cost": 5
+      },
+      {
+        "id": "core.w.stub-gun.dumdum",
+        "cost": 5
+      },
+      {
+        "id": "core.w.boltgun",
+        "cost": 55
+      },
+      {
+        "id": "gol.w.combat-shotgun",
+        "cost": 60
+      },
+      {
+        "id": "core.w.shotgun",
+        "cost": 30
+      },
+      {
+        "id": "gol.w.stub-cannon",
+        "cost": 20
+      },
+      {
+        "id": "core.w.shotgun.executioner",
+        "cost": 20
+      },
+      {
+        "id": "core.w.shotgun.inferno",
+        "cost": 15
+      },
+      {
+        "id": "core.w.flamer",
+        "cost": 140
+      },
+      {
+        "id": "core.w.grenade-launcher",
+        "cost": 55
+      },
+      {
+        "id": "core.w.grenade-launcher.smoke",
+        "cost": 15
+      },
+      {
+        "id": "core.w.grenade-launcher.stun-rounds",
+        "cost": 15
+      },
+      {
+        "id": "core.w.meltagun",
+        "cost": 135
+      },
+      {
+        "id": "gol.w.heavy-bolter",
+        "cost": 160
+      },
+      {
+        "id": "gol.w.heavy-flamer",
+        "cost": 195
+      },
+      {
+        "id": "core.w.heavy-stubber",
+        "cost": 130
+      },
+      {
+        "id": "gol.w.krumper-rivet-cannon",
+        "cost": 70
+      },
+      {
+        "id": "gol.w.missile-launcher",
+        "cost": 165
+      },
+      {
+        "id": "gol.w.multi-melta",
+        "cost": 180
+      },
+      {
+        "id": "gol.w.axe",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.brute-cleaver",
+        "cost": 20
+      },
+      {
+        "id": "core.w.chainaxe",
+        "cost": 25
+      },
+      {
+        "id": "core.w.chainsword",
+        "cost": 25
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.maul",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.power-axe",
+        "cost": 35
+      },
+      {
+        "id": "core.w.power-hammer",
+        "cost": 45
+      },
+      {
+        "id": "gol.w.renderizer-serrated-axe",
+        "cost": 40
+      },
+      {
+        "id": "core.w.servo-claw",
+        "cost": 35
+      },
+      {
+        "id": "gol.w.spud-jacker",
+        "cost": 15
+      },
+      {
+        "id": "gol.w.two-handed-axe",
+        "cost": 25
+      },
+      {
+        "id": "gol.w.two-handed-hammer",
+        "cost": 35
+      },
+      {
+        "id": "gol.w.blasting-charges",
+        "cost": 35
+      },
+      {
+        "id": "core.w.frag-grenades",
+        "cost": 30
+      },
+      {
+        "id": "core.w.krak-grenades",
+        "cost": 45
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      },
+      {
+        "id": "core.w.stun-grenades",
+        "cost": 25
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.armoured-undersuit",
+        "cost": 25
+      },
+      {
+        "id": "core.g.light-carapace",
+        "cost": 80
+      },
+      {
+        "id": "gol.g.heavy-carapace",
+        "cost": 100
+      },
+      {
+        "id": "gol.g.furnace-plates",
+        "cost": 5
+      },
+      {
+        "id": "gol.g.bio-booster",
+        "cost": 35
+      },
+      {
+        "id": "core.g.drop-rig",
+        "cost": 10
+      },
+      {
+        "id": "core.g.filter-plugs",
+        "cost": 10
+      },
+      {
+        "id": "core.g.photo-goggles",
+        "cost": 35
+      },
+      {
+        "id": "core.g.respirator",
+        "cost": 15
+      },
+      {
+        "id": "core.g.skinblade",
+        "cost": 10
+      },
+      {
+        "id": "gol.g.stimm-slug-stash",
+        "cost": 25
+      }
+    ],
+    "source": "13-gangs.md 2.7"
+  },
+  {
+    "id": "gol.el.stimmer",
+    "house": "goliath",
+    "forTypes": [
+      "gol.stimmer"
+    ],
+    "weapons": [
+      {
+        "id": "core.w.stub-gun",
+        "cost": 5
+      },
+      {
+        "id": "core.w.stub-gun.dumdum",
+        "cost": 5
+      },
+      {
+        "id": "gol.w.assault-grenade-launchers",
+        "cost": 65
+      },
+      {
+        "id": "gol.w.assault-grenade-launchers.krak",
+        "cost": 30
+      },
+      {
+        "id": "gol.w.assault-grenade-launchers.smoke",
+        "cost": 20
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.pulveriser-serrated-axe",
+        "cost": 30
+      },
+      {
+        "id": "gol.w.paired-pulverisers",
+        "cost": 50
+      },
+      {
+        "id": "gol.w.renderizer-serrated-axe",
+        "cost": 40
+      },
+      {
+        "id": "gol.w.spud-jacker",
+        "cost": 15
+      },
+      {
+        "id": "gol.w.paired-spud-jackers",
+        "cost": 25
+      },
+      {
+        "id": "core.w.frag-grenades",
+        "cost": 30
+      },
+      {
+        "id": "gol.w.incendiary-charges",
+        "cost": 40
+      },
+      {
+        "id": "core.w.krak-grenades",
+        "cost": 45
+      },
+      {
+        "id": "gol.w.melta-bombs",
+        "cost": 60
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      },
+      {
+        "id": "core.w.stun-grenades",
+        "cost": 25
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.armoured-undersuit",
+        "cost": 25
+      },
+      {
+        "id": "gol.g.furnace-plates",
+        "cost": 5
+      },
+      {
+        "id": "gol.g.bio-booster",
+        "cost": 35
+      },
+      {
+        "id": "core.g.drop-rig",
+        "cost": 10
+      },
+      {
+        "id": "core.g.respirator",
+        "cost": 15
+      },
+      {
+        "id": "core.g.skinblade",
+        "cost": 10
+      },
+      {
+        "id": "gol.g.stimm-slug-stash",
+        "cost": 25
+      }
+    ],
+    "source": "13-gangs.md 2.7"
+  },
+  {
+    "id": "gol.el.forge-boss",
+    "house": "goliath",
+    "forTypes": [
+      "gol.forge-boss"
+    ],
+    "weapons": [
+      {
+        "id": "gol.w.bolt-pistol",
+        "cost": 45
+      },
+      {
+        "id": "core.w.hand-flamer",
+        "cost": 75
+      },
+      {
+        "id": "core.w.stub-gun",
+        "cost": 5
+      },
+      {
+        "id": "core.w.stub-gun.dumdum",
+        "cost": 5
+      },
+      {
+        "id": "core.w.boltgun",
+        "cost": 55
+      },
+      {
+        "id": "gol.w.combat-shotgun",
+        "cost": 60
+      },
+      {
+        "id": "core.w.shotgun",
+        "cost": 30
+      },
+      {
+        "id": "gol.w.stub-cannon",
+        "cost": 20
+      },
+      {
+        "id": "core.w.flamer",
+        "cost": 140
+      },
+      {
+        "id": "core.w.grenade-launcher",
+        "cost": 55
+      },
+      {
+        "id": "core.w.grenade-launcher.smoke",
+        "cost": 15
+      },
+      {
+        "id": "core.w.grenade-launcher.stun-rounds",
+        "cost": 15
+      },
+      {
+        "id": "core.w.meltagun",
+        "cost": 135
+      },
+      {
+        "id": "gol.w.heavy-bolter",
+        "cost": 160
+      },
+      {
+        "id": "gol.w.heavy-flamer",
+        "cost": 195
+      },
+      {
+        "id": "core.w.heavy-stubber",
+        "cost": 130
+      },
+      {
+        "id": "gol.w.krumper-rivet-cannon",
+        "cost": 70
+      },
+      {
+        "id": "gol.w.missile-launcher",
+        "cost": 165
+      },
+      {
+        "id": "gol.w.multi-melta",
+        "cost": 180
+      },
+      {
+        "id": "gol.w.axe",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.brute-cleaver",
+        "cost": 20
+      },
+      {
+        "id": "core.w.chainaxe",
+        "cost": 25
+      },
+      {
+        "id": "core.w.chainsword",
+        "cost": 25
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.maul",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.power-axe",
+        "cost": 35
+      },
+      {
+        "id": "core.w.power-hammer",
+        "cost": 45
+      },
+      {
+        "id": "gol.w.renderizer-serrated-axe",
+        "cost": 40
+      },
+      {
+        "id": "core.w.servo-claw",
+        "cost": 35
+      },
+      {
+        "id": "gol.w.spud-jacker",
+        "cost": 15
+      },
+      {
+        "id": "gol.w.two-handed-axe",
+        "cost": 25
+      },
+      {
+        "id": "gol.w.two-handed-hammer",
+        "cost": 35
+      },
+      {
+        "id": "gol.w.blasting-charges",
+        "cost": 35
+      },
+      {
+        "id": "core.w.frag-grenades",
+        "cost": 30
+      },
+      {
+        "id": "core.w.krak-grenades",
+        "cost": 45
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      },
+      {
+        "id": "core.w.stun-grenades",
+        "cost": 15
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.armoured-undersuit",
+        "cost": 25
+      },
+      {
+        "id": "core.g.light-carapace",
+        "cost": 80
+      },
+      {
+        "id": "gol.g.furnace-plates",
+        "cost": 5
+      },
+      {
+        "id": "gol.g.bio-booster",
+        "cost": 35
+      },
+      {
+        "id": "core.g.drop-rig",
+        "cost": 10
+      },
+      {
+        "id": "core.g.filter-plugs",
+        "cost": 10
+      },
+      {
+        "id": "core.g.photo-goggles",
+        "cost": 35
+      },
+      {
+        "id": "core.g.respirator",
+        "cost": 15
+      },
+      {
+        "id": "core.g.skinblade",
+        "cost": 10
+      },
+      {
+        "id": "gol.g.stimm-slug-stash",
+        "cost": 25
+      }
+    ],
+    "source": "13-gangs.md 2.7"
+  },
+  {
+    "id": "gol.el.bruiser",
+    "house": "goliath",
+    "forTypes": [
+      "gol.bruiser"
+    ],
+    "weapons": [
+      {
+        "id": "gol.w.bolt-pistol",
+        "cost": 45
+      },
+      {
+        "id": "core.w.hand-flamer",
+        "cost": 75
+      },
+      {
+        "id": "core.w.stub-gun",
+        "cost": 5
+      },
+      {
+        "id": "core.w.stub-gun.dumdum",
+        "cost": 5
+      },
+      {
+        "id": "core.w.boltgun",
+        "cost": 55
+      },
+      {
+        "id": "gol.w.combat-shotgun",
+        "cost": 60
+      },
+      {
+        "id": "core.w.shotgun",
+        "cost": 30
+      },
+      {
+        "id": "gol.w.stub-cannon",
+        "cost": 20
+      },
+      {
+        "id": "gol.w.axe",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.brute-cleaver",
+        "cost": 20
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.maul",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.spud-jacker",
+        "cost": 15
+      },
+      {
+        "id": "gol.w.two-handed-axe",
+        "cost": 25
+      },
+      {
+        "id": "gol.w.two-handed-hammer",
+        "cost": 35
+      },
+      {
+        "id": "core.w.frag-grenades",
+        "cost": 30
+      },
+      {
+        "id": "gol.w.incendiary-charges",
+        "cost": 40
+      },
+      {
+        "id": "core.w.krak-grenades",
+        "cost": 45
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.armoured-undersuit",
+        "cost": 25
+      },
+      {
+        "id": "gol.g.furnace-plates",
+        "cost": 5
+      },
+      {
+        "id": "core.g.drop-rig",
+        "cost": 10
+      },
+      {
+        "id": "core.g.filter-plugs",
+        "cost": 10
+      },
+      {
+        "id": "core.g.photo-goggles",
+        "cost": 35
+      },
+      {
+        "id": "core.g.respirator",
+        "cost": 15
+      },
+      {
+        "id": "gol.g.stimm-slug-stash",
+        "cost": 25
+      }
+    ],
+    "source": "13-gangs.md 2.7"
+  },
+  {
+    "id": "gol.el.bruiser-specialist",
+    "house": "goliath",
+    "forTypes": [
+      "gol.bruiser-specialist"
+    ],
+    "weapons": [
+      {
+        "id": "gol.w.bolt-pistol",
+        "cost": 45
+      },
+      {
+        "id": "core.w.hand-flamer",
+        "cost": 75
+      },
+      {
+        "id": "core.w.stub-gun",
+        "cost": 5
+      },
+      {
+        "id": "core.w.stub-gun.dumdum",
+        "cost": 5
+      },
+      {
+        "id": "core.w.boltgun",
+        "cost": 55
+      },
+      {
+        "id": "gol.w.combat-shotgun",
+        "cost": 60
+      },
+      {
+        "id": "core.w.shotgun",
+        "cost": 30
+      },
+      {
+        "id": "gol.w.stub-cannon",
+        "cost": 20
+      },
+      {
+        "id": "core.w.flamer",
+        "cost": 140
+      },
+      {
+        "id": "core.w.grenade-launcher",
+        "cost": 55
+      },
+      {
+        "id": "core.w.grenade-launcher.smoke",
+        "cost": 15
+      },
+      {
+        "id": "core.w.grenade-launcher.stun-rounds",
+        "cost": 15
+      },
+      {
+        "id": "core.w.meltagun",
+        "cost": 135
+      },
+      {
+        "id": "gol.w.axe",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.brute-cleaver",
+        "cost": 20
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.maul",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.spud-jacker",
+        "cost": 15
+      },
+      {
+        "id": "gol.w.two-handed-axe",
+        "cost": 25
+      },
+      {
+        "id": "gol.w.two-handed-hammer",
+        "cost": 35
+      },
+      {
+        "id": "core.w.frag-grenades",
+        "cost": 30
+      },
+      {
+        "id": "gol.w.incendiary-charges",
+        "cost": 40
+      },
+      {
+        "id": "core.w.krak-grenades",
+        "cost": 45
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.armoured-undersuit",
+        "cost": 25
+      },
+      {
+        "id": "gol.g.furnace-plates",
+        "cost": 5
+      },
+      {
+        "id": "core.g.drop-rig",
+        "cost": 10
+      },
+      {
+        "id": "core.g.filter-plugs",
+        "cost": 10
+      },
+      {
+        "id": "core.g.photo-goggles",
+        "cost": 35
+      },
+      {
+        "id": "core.g.respirator",
+        "cost": 15
+      },
+      {
+        "id": "gol.g.stimm-slug-stash",
+        "cost": 25
+      }
+    ],
+    "source": "13-gangs.md 2.7"
+  },
+  {
+    "id": "gol.el.bully",
+    "house": "goliath",
+    "forTypes": [
+      "gol.bully"
+    ],
+    "weapons": [
+      {
+        "id": "core.w.stub-gun",
+        "cost": 5
+      },
+      {
+        "id": "core.w.stub-gun.dumdum",
+        "cost": 5
+      },
+      {
+        "id": "gol.w.axe",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.brute-cleaver",
+        "cost": 20
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.maul",
+        "cost": 10
+      },
+      {
+        "id": "gol.w.spud-jacker",
+        "cost": 15
+      },
+      {
+        "id": "core.w.frag-grenades",
+        "cost": 30
+      },
+      {
+        "id": "gol.w.incendiary-charges",
+        "cost": 40
+      },
+      {
+        "id": "core.w.krak-grenades",
+        "cost": 45
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.armoured-undersuit",
+        "cost": 25
+      },
+      {
+        "id": "gol.g.furnace-plates",
+        "cost": 5
+      },
+      {
+        "id": "core.g.drop-rig",
+        "cost": 10
+      },
+      {
+        "id": "core.g.filter-plugs",
+        "cost": 10
+      },
+      {
+        "id": "gol.g.stimm-slug-stash",
+        "cost": 25
+      }
+    ],
+    "source": "13-gangs.md 2.7"
+  },
+  {
+    "id": "gol.el.forge-born",
+    "house": "goliath",
+    "forTypes": [
+      "gol.forge-born"
+    ],
+    "weapons": [
+      {
+        "id": "core.w.stub-gun",
+        "cost": 5
+      },
+      {
+        "id": "core.w.stub-gun.dumdum",
+        "cost": 5
+      },
+      {
+        "id": "gol.w.heavy-rock-saw",
+        "cost": 120
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 10
+      },
+      {
+        "id": "core.w.frag-grenades",
+        "cost": 30
+      },
+      {
+        "id": "gol.w.incendiary-charges",
+        "cost": 40
+      },
+      {
+        "id": "core.w.krak-grenades",
+        "cost": 45
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.armoured-undersuit",
+        "cost": 25
+      },
+      {
+        "id": "gol.g.furnace-plates",
+        "cost": 5
+      },
+      {
+        "id": "gol.g.bio-booster",
+        "cost": 35
+      },
+      {
+        "id": "core.g.filter-plugs",
+        "cost": 10
+      }
+    ],
+    "source": "13-gangs.md 2.7"
+  }
+]

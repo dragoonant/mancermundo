@@ -1,0 +1,360 @@
+[
+  {
+    "id": "gol.forge-tyrant",
+    "name": "Forge Tyrant",
+    "house": "goliath",
+    "role": "leader",
+    "cost": 135,
+    "stats": {
+      "M": 4,
+      "WS": "3+",
+      "BS": "3+",
+      "S": 4,
+      "T": 4,
+      "W": 2,
+      "I": "3+",
+      "A": 3,
+      "Ld": "5+",
+      "Cl": "4+",
+      "Wil": "8+",
+      "Int": "7+"
+    },
+    "base": 32,
+    "rules": [
+      {
+        "rule": "core.r.gang-hierarchy"
+      },
+      {
+        "rule": "core.r.leading-by-example"
+      },
+      {
+        "rule": "core.r.gang-leader"
+      },
+      {
+        "rule": "core.r.group-activation",
+        "x": 2
+      },
+      {
+        "rule": "core.r.tools-of-the-trade"
+      }
+    ],
+    "skillAccess": {
+      "primary": [
+        "brawn",
+        "ferocity",
+        "leadership"
+      ],
+      "secondary": [
+        "combat",
+        "shooting",
+        "muscle"
+      ]
+    },
+    "equipmentList": "gol.el.forge-tyrant",
+    "limits": {
+      "min": 1,
+      "max": 1
+    },
+    "figure": {
+      "archetype": "goliath-leader"
+    },
+    "source": "13-gangs.md 2.1, 2.3"
+  },
+  {
+    "id": "gol.stimmer",
+    "name": "Stimmer",
+    "house": "goliath",
+    "role": "champion",
+    "cost": 125,
+    "stats": {
+      "M": 4,
+      "WS": "2+",
+      "BS": "4+",
+      "S": 4,
+      "T": 4,
+      "W": 2,
+      "I": "3+",
+      "A": 3,
+      "Ld": "8+",
+      "Cl": "4+",
+      "Wil": "7+",
+      "Int": "8+"
+    },
+    "base": 32,
+    "rules": [
+      {
+        "rule": "gol.r.combat-chems-stash"
+      },
+      {
+        "rule": "core.r.gang-hierarchy"
+      },
+      {
+        "rule": "core.r.leading-by-example"
+      },
+      {
+        "rule": "core.r.tools-of-the-trade"
+      }
+    ],
+    "skillAccess": {
+      "primary": [
+        "ferocity",
+        "muscle"
+      ],
+      "secondary": [
+        "brawn",
+        "combat"
+      ]
+    },
+    "equipmentList": "gol.el.stimmer",
+    "figure": {
+      "archetype": "goliath-stimmer"
+    },
+    "source": "13-gangs.md 2.1, 2.3"
+  },
+  {
+    "id": "gol.forge-boss",
+    "name": "Forge Boss",
+    "house": "goliath",
+    "role": "champion",
+    "cost": 100,
+    "stats": {
+      "M": 4,
+      "WS": "3+",
+      "BS": "4+",
+      "S": 4,
+      "T": 4,
+      "W": 2,
+      "I": "4+",
+      "A": 2,
+      "Ld": "6+",
+      "Cl": "5+",
+      "Wil": "8+",
+      "Int": "8+"
+    },
+    "base": 32,
+    "rules": [
+      {
+        "rule": "core.r.gang-hierarchy"
+      },
+      {
+        "rule": "core.r.leading-by-example"
+      },
+      {
+        "rule": "core.r.group-activation",
+        "x": 1
+      },
+      {
+        "rule": "core.r.tools-of-the-trade"
+      }
+    ],
+    "skillAccess": {
+      "primary": [
+        "brawn",
+        "ferocity"
+      ],
+      "secondary": [
+        "combat",
+        "leadership",
+        "shooting",
+        "muscle"
+      ]
+    },
+    "equipmentList": "gol.el.forge-boss",
+    "figure": {
+      "archetype": "goliath-champion"
+    },
+    "source": "13-gangs.md 2.1, 2.3"
+  },
+  {
+    "id": "gol.bruiser",
+    "name": "Bruiser",
+    "house": "goliath",
+    "role": "ganger",
+    "cost": 55,
+    "stats": {
+      "M": 4,
+      "WS": "4+",
+      "BS": "4+",
+      "S": 4,
+      "T": 4,
+      "W": 1,
+      "I": "4+",
+      "A": 1,
+      "Ld": "8+",
+      "Cl": "5+",
+      "Wil": "9+",
+      "Int": "8+"
+    },
+    "base": 32,
+    "rules": [
+      {
+        "rule": "core.r.gang-fighter"
+      },
+      {
+        "rule": "core.r.promotion"
+      }
+    ],
+    "skillAccess": {
+      "primary": [],
+      "secondary": []
+    },
+    "equipmentList": "gol.el.bruiser",
+    "figure": {
+      "archetype": "goliath-ganger"
+    },
+    "source": "13-gangs.md 2.1, 2.3"
+  },
+  {
+    "id": "gol.bruiser-specialist",
+    "name": "Bruiser (Specialist)",
+    "house": "goliath",
+    "role": "specialist",
+    "cost": 55,
+    "stats": {
+      "M": 4,
+      "WS": "4+",
+      "BS": "4+",
+      "S": 4,
+      "T": 4,
+      "W": 1,
+      "I": "4+",
+      "A": 1,
+      "Ld": "8+",
+      "Cl": "5+",
+      "Wil": "9+",
+      "Int": "8+"
+    },
+    "base": 32,
+    "rules": [
+      {
+        "rule": "core.r.gang-fighter"
+      },
+      {
+        "rule": "core.r.promotion"
+      },
+      {
+        "rule": "core.r.tools-of-the-trade"
+      }
+    ],
+    "skillAccess": {
+      "primary": [
+        "brawn",
+        "ferocity"
+      ],
+      "secondary": [
+        "combat",
+        "shooting"
+      ]
+    },
+    "equipmentList": "gol.el.bruiser-specialist",
+    "limits": {
+      "min": 0,
+      "max": 1
+    },
+    "figure": {
+      "archetype": "goliath-ganger",
+      "variant": "specialist"
+    },
+    "source": "13-gangs.md 2.1, 2.3"
+  },
+  {
+    "id": "gol.bully",
+    "name": "Bully",
+    "house": "goliath",
+    "role": "juve",
+    "cost": 35,
+    "stats": {
+      "M": 4,
+      "WS": "4+",
+      "BS": "5+",
+      "S": 4,
+      "T": 4,
+      "W": 1,
+      "I": "4+",
+      "A": 1,
+      "Ld": "9+",
+      "Cl": "7+",
+      "Wil": "9+",
+      "Int": "9+"
+    },
+    "base": 32,
+    "rules": [
+      {
+        "rule": "core.r.fast-learner"
+      },
+      {
+        "rule": "core.r.gang-fighter"
+      },
+      {
+        "rule": "core.r.promotion"
+      }
+    ],
+    "skillAccess": {
+      "primary": [
+        "ferocity"
+      ],
+      "secondary": [
+        "agility",
+        "brawn"
+      ]
+    },
+    "equipmentList": "gol.el.bully",
+    "figure": {
+      "archetype": "goliath-juve"
+    },
+    "source": "13-gangs.md 2.1, 2.3"
+  },
+  {
+    "id": "gol.forge-born",
+    "name": "Forge-born",
+    "house": "goliath",
+    "role": "prospect",
+    "cost": 35,
+    "stats": {
+      "M": 5,
+      "WS": "4+",
+      "BS": "5+",
+      "S": 3,
+      "T": 4,
+      "W": 1,
+      "I": "4+",
+      "A": 1,
+      "Ld": "9+",
+      "Cl": "7+",
+      "Wil": "9+",
+      "Int": "9+"
+    },
+    "base": 32,
+    "rules": [
+      {
+        "rule": "core.r.fast-learner"
+      },
+      {
+        "rule": "core.r.gang-fighter"
+      },
+      {
+        "rule": "core.r.hot-headed"
+      },
+      {
+        "rule": "core.r.promotion"
+      },
+      {
+        "rule": "core.r.tools-of-the-trade"
+      }
+    ],
+    "skillAccess": {
+      "primary": [
+        "combat"
+      ],
+      "secondary": [
+        "agility",
+        "shooting"
+      ]
+    },
+    "equipmentList": "gol.el.forge-born",
+    "figure": {
+      "archetype": "goliath-prospect"
+    },
+    "source": "13-gangs.md 2.1, 2.3"
+  }
+]

@@ -1,1 +1,874 @@
-[]
+[
+  {
+    "id": "core.w.stub-gun",
+    "name": "Stub gun",
+    "class": "pistol",
+    "cost": 5,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 6,
+          "long": 12
+        },
+        "acc": {
+          "short": 2,
+          "long": null
+        },
+        "str": 3,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.plentiful"
+          },
+          {
+            "trait": "core.t.sidearm"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "source": "13-gangs.md 4.1"
+  },
+  {
+    "id": "core.w.stub-gun.dumdum",
+    "name": "Dumdum rounds (stub gun)",
+    "class": "pistol",
+    "cost": 5,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "dumdum",
+        "name": "Dumdum rounds",
+        "range": {
+          "short": 5,
+          "long": 10
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 4,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.limited"
+          },
+          {
+            "trait": "core.t.sidearm"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "text": "Ammunition upgrade for core.w.stub-gun: adds this profile to the weapon, takes no weapon slot of its own, and is bought in addition to the weapon.",
+    "source": "13-gangs.md 4.1"
+  },
+  {
+    "id": "core.w.hand-flamer",
+    "name": "Hand flamer",
+    "class": "pistol",
+    "cost": 75,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "T"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 3,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.blaze"
+          },
+          {
+            "trait": "core.t.template"
+          }
+        ]
+      }
+    ],
+    "flavour": "flamer",
+    "source": "13-gangs.md 4.1"
+  },
+  {
+    "id": "core.w.boltgun",
+    "name": "Boltgun",
+    "class": "basic",
+    "cost": 55,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 12,
+          "long": 24
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 4,
+        "ap": -1,
+        "dmg": 2,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.rapid-fire",
+            "x": 1
+          }
+        ]
+      }
+    ],
+    "flavour": "bolter",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "core.w.shotgun",
+    "name": "Shotgun (solid & scatter)",
+    "class": "basic",
+    "cost": 30,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "solid",
+        "name": "Solid",
+        "range": {
+          "short": 8,
+          "long": 16
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 4,
+        "ap": 0,
+        "dmg": 2,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.knockback"
+          }
+        ]
+      },
+      {
+        "id": "scatter",
+        "name": "Scatter",
+        "range": {
+          "short": 4,
+          "long": 8
+        },
+        "acc": {
+          "short": 2,
+          "long": null
+        },
+        "str": 2,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.scattershot"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "core.w.shotgun.acid-rounds",
+    "name": "Acid rounds (shotgun)",
+    "class": "basic",
+    "cost": 15,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "acid",
+        "name": "Acid rounds",
+        "range": {
+          "short": 4,
+          "long": 8
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 3,
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.blaze"
+          },
+          {
+            "trait": "core.t.scattershot"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "text": "Ammunition upgrade for core.w.shotgun: adds this profile to the weapon, takes no weapon slot of its own, and is bought in addition to the weapon.",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "core.w.shotgun.executioner",
+    "name": "Executioner rounds (shotgun)",
+    "class": "basic",
+    "cost": 20,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "executioner",
+        "name": "Executioner rounds",
+        "range": {
+          "short": 4,
+          "long": 16
+        },
+        "acc": {
+          "short": -1,
+          "long": 1
+        },
+        "str": 4,
+        "ap": -2,
+        "dmg": 2,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.knockback"
+          },
+          {
+            "trait": "core.t.limited"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "text": "Ammunition upgrade for core.w.shotgun: adds this profile to the weapon, takes no weapon slot of its own, and is bought in addition to the weapon.",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "core.w.shotgun.inferno",
+    "name": "Inferno rounds (shotgun)",
+    "class": "basic",
+    "cost": 15,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "inferno",
+        "name": "Inferno rounds",
+        "range": {
+          "short": 4,
+          "long": 16
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 4,
+        "ap": 0,
+        "dmg": 2,
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.blaze"
+          },
+          {
+            "trait": "core.t.limited"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "text": "Ammunition upgrade for core.w.shotgun: adds this profile to the weapon, takes no weapon slot of its own, and is bought in addition to the weapon.",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "core.w.flamer",
+    "name": "Flamer",
+    "class": "special",
+    "cost": 140,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "T"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 4,
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.blaze"
+          },
+          {
+            "trait": "core.t.template"
+          }
+        ]
+      }
+    ],
+    "flavour": "flamer",
+    "source": "13-gangs.md 4.3"
+  },
+  {
+    "id": "core.w.grenade-launcher",
+    "name": "Grenade launcher (frag & krak)",
+    "class": "special",
+    "cost": 55,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "frag",
+        "name": "Frag",
+        "range": {
+          "short": 6,
+          "long": 24
+        },
+        "acc": {
+          "short": -1,
+          "long": null
+        },
+        "str": 3,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 3
+          },
+          {
+            "trait": "core.t.knockback"
+          }
+        ]
+      },
+      {
+        "id": "krak",
+        "name": "Krak",
+        "range": {
+          "short": 6,
+          "long": 24
+        },
+        "acc": {
+          "short": -1,
+          "long": null
+        },
+        "str": 6,
+        "ap": -2,
+        "dmg": 2,
+        "ammo": "6+",
+        "traits": []
+      }
+    ],
+    "flavour": "grenade",
+    "source": "13-gangs.md 4.3"
+  },
+  {
+    "id": "core.w.grenade-launcher.smoke",
+    "name": "Smoke rounds (grenade launcher)",
+    "class": "special",
+    "cost": 15,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "smoke",
+        "name": "Smoke rounds",
+        "range": {
+          "short": 6,
+          "long": 24
+        },
+        "acc": {
+          "short": -1,
+          "long": null
+        },
+        "str": 0,
+        "ap": 0,
+        "dmg": "-",
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 5
+          },
+          {
+            "trait": "core.t.smoke"
+          }
+        ]
+      }
+    ],
+    "flavour": "grenade",
+    "text": "Ammunition upgrade for core.w.grenade-launcher: adds this profile to the weapon, takes no weapon slot of its own, and is bought in addition to the weapon.",
+    "source": "13-gangs.md 4.3"
+  },
+  {
+    "id": "core.w.grenade-launcher.stun-rounds",
+    "name": "Stun rounds (grenade launcher)",
+    "class": "special",
+    "cost": 15,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "stun",
+        "name": "Stun rounds",
+        "range": {
+          "short": 6,
+          "long": 24
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 2,
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.concussion"
+          },
+          {
+            "trait": "core.t.rapid-fire",
+            "x": 1
+          }
+        ]
+      }
+    ],
+    "flavour": "grenade",
+    "text": "Ammunition upgrade for core.w.grenade-launcher: adds this profile to the weapon, takes no weapon slot of its own, and is bought in addition to the weapon. Goliath list only.",
+    "source": "13-gangs.md 4.3"
+  },
+  {
+    "id": "core.w.meltagun",
+    "name": "Meltagun",
+    "class": "special",
+    "cost": 135,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 6,
+          "long": 12
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 8,
+        "ap": -4,
+        "dmg": 3,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.melta"
+          },
+          {
+            "trait": "core.t.scarce"
+          }
+        ]
+      }
+    ],
+    "flavour": "melta",
+    "source": "13-gangs.md 4.3"
+  },
+  {
+    "id": "core.w.heavy-stubber",
+    "name": "Heavy stubber",
+    "class": "heavy",
+    "cost": 130,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 20,
+          "long": 40
+        },
+        "acc": {
+          "short": null,
+          "long": -1
+        },
+        "str": 4,
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.rapid-fire",
+            "x": 2
+          },
+          {
+            "trait": "core.t.unwieldy"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "source": "13-gangs.md 4.4"
+  },
+  {
+    "id": "core.w.chainaxe",
+    "name": "Chainaxe",
+    "class": "close",
+    "cost": 25,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": "S+1",
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.disarm"
+          },
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.parry"
+          },
+          {
+            "trait": "core.t.rending"
+          }
+        ]
+      }
+    ],
+    "flavour": "chain",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "core.w.chainsword",
+    "name": "Chainsword",
+    "class": "close",
+    "cost": 25,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": "S",
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.parry"
+          },
+          {
+            "trait": "core.t.rending"
+          }
+        ]
+      }
+    ],
+    "flavour": "chain",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "core.w.knife",
+    "name": "Knife",
+    "class": "close",
+    "cost": 10,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": "S",
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.backstab"
+          },
+          {
+            "trait": "core.t.melee"
+          }
+        ]
+      }
+    ],
+    "flavour": "blade",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "core.w.power-hammer",
+    "name": "Power hammer",
+    "class": "close",
+    "cost": 45,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": "S+1",
+        "ap": -1,
+        "dmg": 2,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.power"
+          }
+        ]
+      }
+    ],
+    "flavour": "maul",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "core.w.servo-claw",
+    "name": "Servo-claw",
+    "class": "close",
+    "cost": 35,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": "S+2",
+        "ap": 0,
+        "dmg": 2,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.melee"
+          }
+        ]
+      }
+    ],
+    "flavour": "crush",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "core.w.frag-grenades",
+    "name": "Frag grenades",
+    "class": "grenade",
+    "cost": 30,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": {
+            "strMultiplier": 3
+          }
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 3,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 3
+          },
+          {
+            "trait": "core.t.grenade"
+          },
+          {
+            "trait": "core.t.knockback"
+          }
+        ]
+      }
+    ],
+    "flavour": "grenade",
+    "source": "13-gangs.md 4.6"
+  },
+  {
+    "id": "core.w.krak-grenades",
+    "name": "Krak grenades",
+    "class": "grenade",
+    "cost": 45,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": {
+            "strMultiplier": 3
+          }
+        },
+        "acc": {
+          "short": null,
+          "long": -1
+        },
+        "str": 6,
+        "ap": -2,
+        "dmg": 2,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.grenade"
+          }
+        ]
+      }
+    ],
+    "flavour": "grenade",
+    "text": "Printed with the Demolition trait (usable against doors and scenery in close combat); that trait is not implemented for v1, so it is left off the profile. See docs/needs-rules-check.md.",
+    "source": "13-gangs.md 4.6"
+  },
+  {
+    "id": "core.w.smoke-grenades",
+    "name": "Smoke grenades",
+    "class": "grenade",
+    "cost": 15,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": {
+            "strMultiplier": 3
+          }
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 0,
+        "ap": 0,
+        "dmg": "-",
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 5
+          },
+          {
+            "trait": "core.t.grenade"
+          },
+          {
+            "trait": "core.t.smoke"
+          }
+        ]
+      }
+    ],
+    "flavour": "grenade",
+    "source": "13-gangs.md 4.6"
+  },
+  {
+    "id": "core.w.stun-grenades",
+    "name": "Stun grenades",
+    "class": "grenade",
+    "cost": 25,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": {
+            "strMultiplier": 3
+          }
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 2,
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 3
+          },
+          {
+            "trait": "core.t.concussion"
+          },
+          {
+            "trait": "core.t.grenade"
+          }
+        ]
+      }
+    ],
+    "flavour": "grenade",
+    "source": "13-gangs.md 4.6"
+  }
+]

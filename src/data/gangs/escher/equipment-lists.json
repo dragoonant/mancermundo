@@ -1,0 +1,1034 @@
+[
+  {
+    "id": "esc.el.queen",
+    "house": "escher",
+    "forTypes": [
+      "esc.queen"
+    ],
+    "weapons": [
+      {
+        "id": "esc.w.autopistol",
+        "cost": 10
+      },
+      {
+        "id": "core.w.hand-flamer",
+        "cost": 75
+      },
+      {
+        "id": "esc.w.laspistol",
+        "cost": 10
+      },
+      {
+        "id": "esc.w.laspistol-hotshot",
+        "cost": 30
+      },
+      {
+        "id": "esc.w.needle-pistol",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.plasma-pistol",
+        "cost": 50
+      },
+      {
+        "id": "core.w.stub-gun",
+        "cost": 5
+      },
+      {
+        "id": "core.w.stub-gun.dumdum",
+        "cost": 5
+      },
+      {
+        "id": "esc.w.autogun",
+        "cost": 15
+      },
+      {
+        "id": "core.w.boltgun",
+        "cost": 55
+      },
+      {
+        "id": "esc.w.lasgun",
+        "cost": 5
+      },
+      {
+        "id": "esc.w.lasgun-hotshot",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.sawn-off-shotgun",
+        "cost": 15
+      },
+      {
+        "id": "core.w.shotgun",
+        "cost": 30
+      },
+      {
+        "id": "core.w.shotgun.acid-rounds",
+        "cost": 15
+      },
+      {
+        "id": "esc.w.nightshade-chem-thrower",
+        "cost": 135
+      },
+      {
+        "id": "core.w.flamer",
+        "cost": 140
+      },
+      {
+        "id": "core.w.grenade-launcher",
+        "cost": 55
+      },
+      {
+        "id": "core.w.grenade-launcher.smoke",
+        "cost": 15
+      },
+      {
+        "id": "core.w.meltagun",
+        "cost": 135
+      },
+      {
+        "id": "esc.w.needle-rifle",
+        "cost": 35
+      },
+      {
+        "id": "esc.w.plasma-gun",
+        "cost": 100
+      },
+      {
+        "id": "core.w.heavy-stubber",
+        "cost": 130
+      },
+      {
+        "id": "esc.w.plasma-cannon",
+        "cost": 130
+      },
+      {
+        "id": "core.w.chainaxe",
+        "cost": 30
+      },
+      {
+        "id": "core.w.chainsword",
+        "cost": 25
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 15
+      },
+      {
+        "id": "core.w.power-hammer",
+        "cost": 45
+      },
+      {
+        "id": "esc.w.power-knife",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.power-sword",
+        "cost": 45
+      },
+      {
+        "id": "core.w.servo-claw",
+        "cost": 35
+      },
+      {
+        "id": "esc.w.shock-whip",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.stiletto-knife",
+        "cost": 20
+      },
+      {
+        "id": "esc.w.stiletto-sword",
+        "cost": 30
+      },
+      {
+        "id": "esc.w.choke-gas-grenades",
+        "cost": 45
+      },
+      {
+        "id": "core.w.frag-grenades",
+        "cost": 30
+      },
+      {
+        "id": "core.w.krak-grenades",
+        "cost": 45
+      },
+      {
+        "id": "esc.w.photon-flash-flares",
+        "cost": 15
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      },
+      {
+        "id": "core.w.stun-grenades",
+        "cost": 25
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.armoured-undersuit",
+        "cost": 25
+      },
+      {
+        "id": "core.g.light-carapace",
+        "cost": 80
+      },
+      {
+        "id": "core.g.flak-armour",
+        "cost": 10
+      },
+      {
+        "id": "core.g.mesh-armour",
+        "cost": 15
+      },
+      {
+        "id": "esc.g.chem-synth",
+        "cost": 15
+      },
+      {
+        "id": "core.g.drop-rig",
+        "cost": 10
+      },
+      {
+        "id": "core.g.filter-plugs",
+        "cost": 10
+      },
+      {
+        "id": "core.g.photo-goggles",
+        "cost": 35
+      },
+      {
+        "id": "core.g.respirator",
+        "cost": 15
+      },
+      {
+        "id": "core.g.skinblade",
+        "cost": 10
+      }
+    ],
+    "source": "13-gangs.md 3.7"
+  },
+  {
+    "id": "esc.el.matriarch",
+    "house": "escher",
+    "forTypes": [
+      "esc.matriarch"
+    ],
+    "weapons": [
+      {
+        "id": "esc.w.autopistol",
+        "cost": 10
+      },
+      {
+        "id": "core.w.hand-flamer",
+        "cost": 75
+      },
+      {
+        "id": "esc.w.laspistol",
+        "cost": 10
+      },
+      {
+        "id": "esc.w.laspistol-hotshot",
+        "cost": 30
+      },
+      {
+        "id": "esc.w.needle-pistol",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.plasma-pistol",
+        "cost": 50
+      },
+      {
+        "id": "core.w.stub-gun",
+        "cost": 5
+      },
+      {
+        "id": "core.w.stub-gun.dumdum",
+        "cost": 5
+      },
+      {
+        "id": "esc.w.autogun",
+        "cost": 15
+      },
+      {
+        "id": "core.w.boltgun",
+        "cost": 55
+      },
+      {
+        "id": "esc.w.lasgun",
+        "cost": 5
+      },
+      {
+        "id": "esc.w.lasgun-hotshot",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.sawn-off-shotgun",
+        "cost": 15
+      },
+      {
+        "id": "core.w.shotgun",
+        "cost": 30
+      },
+      {
+        "id": "core.w.shotgun.acid-rounds",
+        "cost": 15
+      },
+      {
+        "id": "esc.w.nightshade-chem-thrower",
+        "cost": 135
+      },
+      {
+        "id": "core.w.flamer",
+        "cost": 140
+      },
+      {
+        "id": "core.w.grenade-launcher",
+        "cost": 55
+      },
+      {
+        "id": "core.w.grenade-launcher.smoke",
+        "cost": 15
+      },
+      {
+        "id": "core.w.meltagun",
+        "cost": 135
+      },
+      {
+        "id": "esc.w.needle-rifle",
+        "cost": 35
+      },
+      {
+        "id": "esc.w.plasma-gun",
+        "cost": 100
+      },
+      {
+        "id": "core.w.heavy-stubber",
+        "cost": 130
+      },
+      {
+        "id": "esc.w.plasma-cannon",
+        "cost": 130
+      },
+      {
+        "id": "core.w.chainsword",
+        "cost": 25
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 15
+      },
+      {
+        "id": "core.w.power-hammer",
+        "cost": 45
+      },
+      {
+        "id": "esc.w.power-knife",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.power-sword",
+        "cost": 45
+      },
+      {
+        "id": "core.w.servo-claw",
+        "cost": 35
+      },
+      {
+        "id": "esc.w.shock-whip",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.stiletto-knife",
+        "cost": 20
+      },
+      {
+        "id": "esc.w.stiletto-sword",
+        "cost": 30
+      },
+      {
+        "id": "esc.w.choke-gas-grenades",
+        "cost": 45
+      },
+      {
+        "id": "core.w.frag-grenades",
+        "cost": 30
+      },
+      {
+        "id": "core.w.krak-grenades",
+        "cost": 45
+      },
+      {
+        "id": "esc.w.photon-flash-flares",
+        "cost": 15
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      },
+      {
+        "id": "core.w.stun-grenades",
+        "cost": 25
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.armoured-undersuit",
+        "cost": 25
+      },
+      {
+        "id": "core.g.flak-armour",
+        "cost": 10
+      },
+      {
+        "id": "core.g.mesh-armour",
+        "cost": 15
+      },
+      {
+        "id": "esc.g.chem-synth",
+        "cost": 15
+      },
+      {
+        "id": "core.g.drop-rig",
+        "cost": 10
+      },
+      {
+        "id": "core.g.filter-plugs",
+        "cost": 10
+      },
+      {
+        "id": "core.g.photo-goggles",
+        "cost": 35
+      },
+      {
+        "id": "core.g.respirator",
+        "cost": 15
+      },
+      {
+        "id": "core.g.skinblade",
+        "cost": 10
+      }
+    ],
+    "source": "13-gangs.md 3.7"
+  },
+  {
+    "id": "esc.el.death-maiden",
+    "house": "escher",
+    "forTypes": [
+      "esc.death-maiden"
+    ],
+    "weapons": [
+      {
+        "id": "core.w.hand-flamer",
+        "cost": 75
+      },
+      {
+        "id": "esc.w.laspistol",
+        "cost": 10
+      },
+      {
+        "id": "esc.w.needle-pistol",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.plasma-pistol",
+        "cost": 50
+      },
+      {
+        "id": "core.w.chainsword",
+        "cost": 25
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 15
+      },
+      {
+        "id": "esc.w.power-knife",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.power-sword",
+        "cost": 45
+      },
+      {
+        "id": "esc.w.shock-whip",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.stiletto-knife",
+        "cost": 20
+      },
+      {
+        "id": "esc.w.stiletto-sword",
+        "cost": 30
+      },
+      {
+        "id": "esc.w.venom-claw",
+        "cost": 30
+      },
+      {
+        "id": "esc.w.choke-gas-grenades",
+        "cost": 45
+      },
+      {
+        "id": "esc.w.photon-flash-flares",
+        "cost": 15
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.armoured-undersuit",
+        "cost": 25
+      },
+      {
+        "id": "core.g.flak-armour",
+        "cost": 10
+      },
+      {
+        "id": "core.g.mesh-armour",
+        "cost": 15
+      },
+      {
+        "id": "esc.g.chem-synth",
+        "cost": 15
+      },
+      {
+        "id": "core.g.drop-rig",
+        "cost": 10
+      },
+      {
+        "id": "core.g.filter-plugs",
+        "cost": 10
+      },
+      {
+        "id": "core.g.photo-goggles",
+        "cost": 35
+      },
+      {
+        "id": "core.g.respirator",
+        "cost": 15
+      },
+      {
+        "id": "core.g.skinblade",
+        "cost": 10
+      }
+    ],
+    "source": "13-gangs.md 3.7"
+  },
+  {
+    "id": "esc.el.sister",
+    "house": "escher",
+    "forTypes": [
+      "esc.sister"
+    ],
+    "weapons": [
+      {
+        "id": "esc.w.autopistol",
+        "cost": 10
+      },
+      {
+        "id": "core.w.hand-flamer",
+        "cost": 75
+      },
+      {
+        "id": "esc.w.laspistol",
+        "cost": 10
+      },
+      {
+        "id": "esc.w.laspistol-hotshot",
+        "cost": 30
+      },
+      {
+        "id": "core.w.stub-gun",
+        "cost": 5
+      },
+      {
+        "id": "core.w.stub-gun.dumdum",
+        "cost": 5
+      },
+      {
+        "id": "esc.w.autogun",
+        "cost": 15
+      },
+      {
+        "id": "esc.w.lasgun",
+        "cost": 5
+      },
+      {
+        "id": "esc.w.lasgun-hotshot",
+        "cost": 25
+      },
+      {
+        "id": "core.w.shotgun",
+        "cost": 30
+      },
+      {
+        "id": "core.w.shotgun.acid-rounds",
+        "cost": 15
+      },
+      {
+        "id": "core.w.chainsword",
+        "cost": 25
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 15
+      },
+      {
+        "id": "esc.w.shock-whip",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.stiletto-knife",
+        "cost": 20
+      },
+      {
+        "id": "esc.w.stiletto-sword",
+        "cost": 30
+      },
+      {
+        "id": "esc.w.choke-gas-grenades",
+        "cost": 45
+      },
+      {
+        "id": "core.w.frag-grenades",
+        "cost": 30
+      },
+      {
+        "id": "core.w.krak-grenades",
+        "cost": 45
+      },
+      {
+        "id": "esc.w.photon-flash-flares",
+        "cost": 15
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      },
+      {
+        "id": "core.w.stun-grenades",
+        "cost": 25
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.armoured-undersuit",
+        "cost": 25
+      },
+      {
+        "id": "core.g.flak-armour",
+        "cost": 10
+      },
+      {
+        "id": "core.g.mesh-armour",
+        "cost": 15
+      },
+      {
+        "id": "esc.g.chem-synth",
+        "cost": 15
+      },
+      {
+        "id": "core.g.drop-rig",
+        "cost": 10
+      },
+      {
+        "id": "core.g.filter-plugs",
+        "cost": 10
+      },
+      {
+        "id": "core.g.photo-goggles",
+        "cost": 35
+      },
+      {
+        "id": "core.g.respirator",
+        "cost": 15
+      },
+      {
+        "id": "core.g.skinblade",
+        "cost": 10
+      }
+    ],
+    "source": "13-gangs.md 3.7"
+  },
+  {
+    "id": "esc.el.sister-specialist",
+    "house": "escher",
+    "forTypes": [
+      "esc.sister-specialist"
+    ],
+    "weapons": [
+      {
+        "id": "esc.w.autopistol",
+        "cost": 10
+      },
+      {
+        "id": "core.w.hand-flamer",
+        "cost": 75
+      },
+      {
+        "id": "esc.w.laspistol",
+        "cost": 10
+      },
+      {
+        "id": "esc.w.laspistol-hotshot",
+        "cost": 30
+      },
+      {
+        "id": "core.w.stub-gun",
+        "cost": 5
+      },
+      {
+        "id": "core.w.stub-gun.dumdum",
+        "cost": 5
+      },
+      {
+        "id": "esc.w.autogun",
+        "cost": 15
+      },
+      {
+        "id": "esc.w.lasgun",
+        "cost": 5
+      },
+      {
+        "id": "esc.w.lasgun-hotshot",
+        "cost": 25
+      },
+      {
+        "id": "core.w.shotgun",
+        "cost": 30
+      },
+      {
+        "id": "core.w.shotgun.acid-rounds",
+        "cost": 15
+      },
+      {
+        "id": "esc.w.nightshade-chem-thrower",
+        "cost": 135
+      },
+      {
+        "id": "core.w.flamer",
+        "cost": 140
+      },
+      {
+        "id": "core.w.grenade-launcher",
+        "cost": 55
+      },
+      {
+        "id": "core.w.grenade-launcher.smoke",
+        "cost": 15
+      },
+      {
+        "id": "core.w.meltagun",
+        "cost": 135
+      },
+      {
+        "id": "esc.w.needle-rifle",
+        "cost": 35
+      },
+      {
+        "id": "esc.w.plasma-gun",
+        "cost": 100
+      },
+      {
+        "id": "core.w.chainsword",
+        "cost": 25
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 15
+      },
+      {
+        "id": "esc.w.shock-whip",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.stiletto-knife",
+        "cost": 20
+      },
+      {
+        "id": "esc.w.stiletto-sword",
+        "cost": 30
+      },
+      {
+        "id": "esc.w.choke-gas-grenades",
+        "cost": 45
+      },
+      {
+        "id": "core.w.frag-grenades",
+        "cost": 30
+      },
+      {
+        "id": "core.w.krak-grenades",
+        "cost": 45
+      },
+      {
+        "id": "esc.w.photon-flash-flares",
+        "cost": 15
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      },
+      {
+        "id": "core.w.stun-grenades",
+        "cost": 25
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.armoured-undersuit",
+        "cost": 25
+      },
+      {
+        "id": "core.g.flak-armour",
+        "cost": 10
+      },
+      {
+        "id": "core.g.mesh-armour",
+        "cost": 15
+      },
+      {
+        "id": "esc.g.chem-synth",
+        "cost": 15
+      },
+      {
+        "id": "core.g.drop-rig",
+        "cost": 10
+      },
+      {
+        "id": "core.g.filter-plugs",
+        "cost": 10
+      },
+      {
+        "id": "core.g.photo-goggles",
+        "cost": 35
+      },
+      {
+        "id": "core.g.respirator",
+        "cost": 15
+      },
+      {
+        "id": "core.g.skinblade",
+        "cost": 10
+      }
+    ],
+    "source": "13-gangs.md 3.7"
+  },
+  {
+    "id": "esc.el.wyld-runner",
+    "house": "escher",
+    "forTypes": [
+      "esc.wyld-runner"
+    ],
+    "weapons": [
+      {
+        "id": "esc.w.laspistol",
+        "cost": 10
+      },
+      {
+        "id": "core.w.stub-gun",
+        "cost": 5
+      },
+      {
+        "id": "core.w.stub-gun.dumdum",
+        "cost": 5
+      },
+      {
+        "id": "esc.w.wyld-bow",
+        "cost": 10
+      },
+      {
+        "id": "esc.w.wyld-bow.acid",
+        "cost": 20
+      },
+      {
+        "id": "esc.w.wyld-bow.explosive",
+        "cost": 20
+      },
+      {
+        "id": "esc.w.wyld-bow.poison",
+        "cost": 25
+      },
+      {
+        "id": "core.w.chainsword",
+        "cost": 25
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 15
+      },
+      {
+        "id": "esc.w.power-knife",
+        "cost": 25
+      },
+      {
+        "id": "esc.w.stiletto-knife",
+        "cost": 20
+      },
+      {
+        "id": "esc.w.whip",
+        "cost": 15
+      },
+      {
+        "id": "esc.w.choke-gas-grenades",
+        "cost": 45
+      },
+      {
+        "id": "core.w.frag-grenades",
+        "cost": 30
+      },
+      {
+        "id": "core.w.krak-grenades",
+        "cost": 45
+      },
+      {
+        "id": "esc.w.photon-flash-flares",
+        "cost": 15
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      },
+      {
+        "id": "core.w.stun-grenades",
+        "cost": 25
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.flak-armour",
+        "cost": 10
+      },
+      {
+        "id": "esc.g.chem-synth",
+        "cost": 15
+      },
+      {
+        "id": "core.g.drop-rig",
+        "cost": 10
+      },
+      {
+        "id": "core.g.filter-plugs",
+        "cost": 10
+      },
+      {
+        "id": "core.g.photo-goggles",
+        "cost": 35
+      },
+      {
+        "id": "core.g.respirator",
+        "cost": 15
+      },
+      {
+        "id": "core.g.skinblade",
+        "cost": 10
+      },
+      {
+        "id": "esc.g.phelynx",
+        "cost": 50
+      }
+    ],
+    "source": "13-gangs.md 3.7"
+  },
+  {
+    "id": "esc.el.little-sister",
+    "house": "escher",
+    "forTypes": [
+      "esc.little-sister"
+    ],
+    "weapons": [
+      {
+        "id": "esc.w.autopistol",
+        "cost": 10
+      },
+      {
+        "id": "esc.w.laspistol",
+        "cost": 10
+      },
+      {
+        "id": "esc.w.needle-pistol",
+        "cost": 25
+      },
+      {
+        "id": "core.w.stub-gun",
+        "cost": 5
+      },
+      {
+        "id": "core.w.stub-gun.dumdum",
+        "cost": 5
+      },
+      {
+        "id": "core.w.knife",
+        "cost": 15
+      },
+      {
+        "id": "esc.w.stiletto-knife",
+        "cost": 20
+      },
+      {
+        "id": "esc.w.choke-gas-grenades",
+        "cost": 45
+      },
+      {
+        "id": "core.w.frag-grenades",
+        "cost": 30
+      },
+      {
+        "id": "core.w.krak-grenades",
+        "cost": 45
+      },
+      {
+        "id": "esc.w.photon-flash-flares",
+        "cost": 15
+      },
+      {
+        "id": "core.w.smoke-grenades",
+        "cost": 15
+      },
+      {
+        "id": "core.w.stun-grenades",
+        "cost": 25
+      }
+    ],
+    "wargear": [
+      {
+        "id": "core.g.flak-armour",
+        "cost": 10
+      },
+      {
+        "id": "esc.g.chem-synth",
+        "cost": 15
+      },
+      {
+        "id": "core.g.drop-rig",
+        "cost": 10
+      },
+      {
+        "id": "core.g.filter-plugs",
+        "cost": 10
+      },
+      {
+        "id": "core.g.photo-goggles",
+        "cost": 35
+      },
+      {
+        "id": "core.g.respirator",
+        "cost": 15
+      },
+      {
+        "id": "core.g.skinblade",
+        "cost": 10
+      }
+    ],
+    "source": "13-gangs.md 3.7"
+  }
+]

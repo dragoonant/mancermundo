@@ -1,0 +1,78 @@
+[
+  {
+    "id": "gol.g.furnace-plates",
+    "name": "Furnace plates",
+    "kind": "armour",
+    "cost": 5,
+    "save": "6+",
+    "saveMods": [
+      {
+        "vs": "front",
+        "value": 1
+      }
+    ],
+    "text": "Scrap plating. The save improves by one against attacks from the front arc; a Prone fighter has no front arc.",
+    "source": "13-gangs.md 6.1"
+  },
+  {
+    "id": "gol.g.heavy-carapace",
+    "name": "Heavy carapace",
+    "kind": "armour",
+    "cost": 100,
+    "save": "4+",
+    "saveMods": [
+      {
+        "vs": "front",
+        "value": 1
+      }
+    ],
+    "code": {
+      "code": "heavyCarapace",
+      "params": {
+        "initiativePenalty": 1,
+        "chargeMovePenalty": 1
+      }
+    },
+    "text": "Thick carapace plates, better still from the front. The wearer is slower to react and charges one inch less.",
+    "source": "13-gangs.md 6.1"
+  },
+  {
+    "id": "gol.g.bio-booster",
+    "name": "Bio-booster",
+    "kind": "equipment",
+    "cost": 35,
+    "code": {
+      "code": "bioBooster",
+      "params": {
+        "injuryDiceDelta": -1,
+        "perBattle": 1
+      }
+    },
+    "text": "The first time in a battle the wearer must roll Injury dice, one fewer is rolled (two are rolled and one discarded if it would have been a single die).",
+    "source": "13-gangs.md 6.2"
+  },
+  {
+    "id": "gol.g.stimm-slug-stash",
+    "name": "Stimm-slug stash",
+    "kind": "equipment",
+    "cost": 25,
+    "code": {
+      "code": "stimmSlugStash",
+      "params": {
+        "modifiers": {
+          "M": 2,
+          "S": 2,
+          "T": 2
+        },
+        "removeFleshWounds": 1,
+        "perBattle": 1,
+        "endPhaseRisk": {
+          "die": "D6",
+          "on": 1
+        }
+      }
+    },
+    "text": "Used once per battle at the start of the wearer's activation. For the rest of the round the wearer gets +2 M, +2 S and +2 T and sheds one Flesh Wound. A roll of 1 on a D6 in the End phase forces an Injury roll.",
+    "source": "13-gangs.md 6.2"
+  }
+]

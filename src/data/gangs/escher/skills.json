@@ -1,0 +1,129 @@
+[
+  {
+    "id": "esc.s.acrobatic",
+    "name": "Acrobatic",
+    "set": "finesse",
+    "window": "action.declared",
+    "effect": {
+      "code": {
+        "code": "acrobatic",
+        "params": {
+          "throughEnemies": true,
+          "crossHeight": 2
+        }
+      }
+    },
+    "text": "While Active the fighter can pass through enemy fighters during Move (Simple) and Charge (Double) actions, though the 1 inch rule applies where it stops. Barricades and similar features up to 2 inches high cost it nothing extra to cross.",
+    "source": "13-gangs.md 7.8"
+  },
+  {
+    "id": "esc.s.combat-focus",
+    "name": "Combat Focus",
+    "set": "finesse",
+    "window": "nerve.test",
+    "effect": {
+      "code": {
+        "code": "combatFocus",
+        "params": {
+          "perEnemy": 1,
+          "tests": [
+            "willpower",
+            "cool"
+          ],
+          "counts": [
+            "outOfAction",
+            "seriouslyInjured"
+          ]
+        }
+      }
+    },
+    "text": "+1 Willpower and +1 Cool for each enemy fighter that is Out of Action or Seriously Injured (a natural 2 still fails).",
+    "source": "13-gangs.md 7.8"
+  },
+  {
+    "id": "esc.s.combat-virtuoso",
+    "name": "Combat Virtuoso",
+    "set": "finesse",
+    "window": "fight.weaponsChosen",
+    "effect": {
+      "code": {
+        "code": "combatVirtuoso",
+        "params": {
+          "reach": "S",
+          "weapons": [
+            "core.w.knife",
+            "esc.w.stiletto-knife",
+            "esc.w.stiletto-sword",
+            "esc.w.power-knife",
+            "esc.w.power-sword",
+            "core.w.chainsword"
+          ]
+        }
+      }
+    },
+    "text": "Knives, stiletto knives, stiletto swords, power knives, power swords and chainswords in this fighter's hands gain Versatile, with reach equal to its Strength.",
+    "source": "13-gangs.md 7.8"
+  },
+  {
+    "id": "esc.s.hit-and-run",
+    "name": "Hit and Run",
+    "set": "finesse",
+    "window": "fight.resolved",
+    "effect": {
+      "code": {
+        "code": "hitAndRun",
+        "params": {
+          "freeAction": "retreat",
+          "afterCharge": true
+        }
+      }
+    },
+    "text": "Following a Charge (Double) and ahead of the enemy's reaction attacks, the fighter makes a free Retreat (Basic) action. If that works, the opponent gets only one set of reaction attacks.",
+    "source": "13-gangs.md 7.8"
+  },
+  {
+    "id": "esc.s.lightning-reflexes",
+    "name": "Lightning Reflexes",
+    "set": "finesse",
+    "window": "action.declared",
+    "when": {
+      "engaged": true
+    },
+    "limit": "oncePerRound",
+    "effect": {
+      "code": {
+        "code": "lightningReflexes",
+        "params": {
+          "freeAction": "retreat"
+        }
+      }
+    },
+    "text": "Once each round, while Engaged and before an enemy attacks, the fighter makes a free Retreat (Basic) action. A Ready fighter can still be activated afterwards.",
+    "source": "13-gangs.md 7.8"
+  },
+  {
+    "id": "esc.s.somersault",
+    "name": "Somersault",
+    "set": "finesse",
+    "action": {
+      "id": "somersault",
+      "type": "basic",
+      "statuses": [
+        "standingActive",
+        "standingEngaged"
+      ]
+    },
+    "effect": {
+      "code": {
+        "code": "somersault",
+        "params": {
+          "range": 6,
+          "minEnemyDistance": 1,
+          "countsAsMove": false
+        }
+      }
+    },
+    "text": "Basic action: put the fighter at any spot within 6 inches in line of sight that is more than 1 inch from every enemy. It is not treated as movement for effects that trigger on movement.",
+    "source": "13-gangs.md 7.8, 9"
+  }
+]

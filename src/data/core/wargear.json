@@ -1,1 +1,111 @@
-[]
+[
+  {
+    "id": "core.g.flak-armour",
+    "name": "Flak armour",
+    "kind": "armour",
+    "cost": 10,
+    "save": "6+",
+    "saveMods": [
+      {
+        "vs": "template",
+        "value": 1
+      },
+      {
+        "vs": "blast",
+        "value": 1
+      }
+    ],
+    "text": "Basic body protection. The save improves by one against Blast and flame template attacks.",
+    "source": "13-gangs.md 6.1"
+  },
+  {
+    "id": "core.g.mesh-armour",
+    "name": "Mesh armour",
+    "kind": "armour",
+    "cost": 15,
+    "save": "5+",
+    "text": "Flexible mesh worn over the body.",
+    "source": "13-gangs.md 6.1"
+  },
+  {
+    "id": "core.g.light-carapace",
+    "name": "Light carapace",
+    "kind": "armour",
+    "cost": 80,
+    "save": "4+",
+    "text": "Moulded plates covering most of the body.",
+    "source": "13-gangs.md 6.1"
+  },
+  {
+    "id": "core.g.armoured-undersuit",
+    "name": "Armoured undersuit",
+    "kind": "equipment",
+    "cost": 25,
+    "effect": {
+      "modifySave": {
+        "value": 1
+      }
+    },
+    "text": "Combined armour: adds one to the wearer's armour save and stacks with one standard armour item. A fighter with no armour counts as having a 7+ save.",
+    "source": "13-gangs.md 6.1"
+  },
+  {
+    "id": "core.g.respirator",
+    "name": "Respirator",
+    "kind": "equipment",
+    "cost": 15,
+    "code": {
+      "code": "gasToughnessBonus",
+      "params": {
+        "value": 2
+      }
+    },
+    "text": "Adds two to the wearer's Toughness against Gas weapons.",
+    "source": "13-gangs.md 6.2"
+  },
+  {
+    "id": "core.g.filter-plugs",
+    "name": "Filter plugs",
+    "kind": "equipment",
+    "cost": 10,
+    "code": {
+      "code": "gasToughnessBonus",
+      "params": {
+        "value": 1
+      }
+    },
+    "text": "Adds one to the wearer's Toughness against Gas weapons; single use.",
+    "source": "13-gangs.md 6.2"
+  },
+  {
+    "id": "core.g.photo-goggles",
+    "name": "Photo-goggles",
+    "kind": "equipment",
+    "cost": 35,
+    "code": {
+      "code": "photoGoggles",
+      "params": {
+        "seeThroughSmoke": true,
+        "initiativeVsFlash": 1
+      }
+    },
+    "text": "The wearer can shoot through smoke clouds, ignores low light and gets +1 on Initiative tests against Flash.",
+    "source": "13-gangs.md 6.2"
+  },
+  {
+    "id": "core.g.drop-rig",
+    "name": "Drop-rig",
+    "kind": "equipment",
+    "cost": 10,
+    "text": "Allows a controlled descent from an edge. Zone Mortalis boards are flat, so it has no effect in v1.",
+    "source": "13-gangs.md 6.2"
+  },
+  {
+    "id": "core.g.skinblade",
+    "name": "Skinblade",
+    "kind": "equipment",
+    "cost": 10,
+    "text": "A hidden blade that helps a captured fighter escape. Campaign only, so it has no effect in v1.",
+    "source": "13-gangs.md 6.2"
+  }
+]

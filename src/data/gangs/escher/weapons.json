@@ -1,0 +1,1060 @@
+[
+  {
+    "id": "esc.w.autopistol",
+    "name": "Autopistol",
+    "class": "pistol",
+    "cost": 10,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 4,
+          "long": 12
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 3,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.rapid-fire",
+            "x": 1
+          },
+          {
+            "trait": "core.t.sidearm"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "source": "13-gangs.md 4.1"
+  },
+  {
+    "id": "esc.w.laspistol",
+    "name": "Laspistol",
+    "class": "pistol",
+    "cost": 10,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 8,
+          "long": 12
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 3,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "2+",
+        "traits": [
+          {
+            "trait": "core.t.plentiful"
+          },
+          {
+            "trait": "core.t.sidearm"
+          }
+        ]
+      }
+    ],
+    "flavour": "las",
+    "source": "13-gangs.md 4.1"
+  },
+  {
+    "id": "esc.w.laspistol-hotshot",
+    "name": "Laspistol with hotshot las pack",
+    "class": "pistol",
+    "cost": 30,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 8,
+          "long": 12
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 4,
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.sidearm"
+          }
+        ]
+      }
+    ],
+    "flavour": "las",
+    "text": "Replaces the laspistol profile; bought as a whole weapon at the price shown.",
+    "source": "13-gangs.md 4.1, 6.2"
+  },
+  {
+    "id": "esc.w.needle-pistol",
+    "name": "Needle pistol",
+    "class": "pistol",
+    "cost": 25,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 4,
+          "long": 9
+        },
+        "acc": {
+          "short": 2,
+          "long": null
+        },
+        "str": 0,
+        "ap": -1,
+        "dmg": "-",
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.scarce"
+          },
+          {
+            "trait": "core.t.sidearm"
+          },
+          {
+            "trait": "core.t.silent"
+          },
+          {
+            "trait": "core.t.toxin"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "source": "13-gangs.md 4.1"
+  },
+  {
+    "id": "esc.w.plasma-pistol",
+    "name": "Plasma pistol",
+    "class": "pistol",
+    "cost": 50,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "low",
+        "name": "Low power",
+        "range": {
+          "short": 6,
+          "long": 12
+        },
+        "acc": {
+          "short": 2,
+          "long": null
+        },
+        "str": 5,
+        "ap": -1,
+        "dmg": 2,
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.scarce"
+          },
+          {
+            "trait": "core.t.sidearm"
+          }
+        ]
+      },
+      {
+        "id": "max",
+        "name": "Maximal power",
+        "range": {
+          "short": 6,
+          "long": 12
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 7,
+        "ap": -2,
+        "dmg": 3,
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.scarce"
+          },
+          {
+            "trait": "core.t.sidearm"
+          },
+          {
+            "trait": "core.t.unstable"
+          }
+        ]
+      }
+    ],
+    "flavour": "plasma",
+    "source": "13-gangs.md 4.1"
+  },
+  {
+    "id": "esc.w.autogun",
+    "name": "Autogun",
+    "class": "basic",
+    "cost": 15,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 8,
+          "long": 24
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 3,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.rapid-fire",
+            "x": 1
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "esc.w.lasgun",
+    "name": "Lasgun",
+    "class": "basic",
+    "cost": 5,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 18,
+          "long": 24
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 3,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "2+",
+        "traits": [
+          {
+            "trait": "core.t.plentiful"
+          }
+        ]
+      }
+    ],
+    "flavour": "las",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "esc.w.lasgun-hotshot",
+    "name": "Lasgun with hotshot las pack",
+    "class": "basic",
+    "cost": 25,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 18,
+          "long": 24
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 4,
+        "ap": -1,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": []
+      }
+    ],
+    "flavour": "las",
+    "text": "Replaces the lasgun profile; bought as a whole weapon at the price shown.",
+    "source": "13-gangs.md 4.2, 6.2"
+  },
+  {
+    "id": "esc.w.sawn-off-shotgun",
+    "name": "Sawn-off shotgun (scatter)",
+    "class": "basic",
+    "cost": 15,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "scatter",
+        "name": "Scatter",
+        "range": {
+          "short": 4,
+          "long": 8
+        },
+        "acc": {
+          "short": 2,
+          "long": null
+        },
+        "str": 3,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.plentiful"
+          },
+          {
+            "trait": "core.t.scattershot"
+          }
+        ]
+      },
+      {
+        "id": "solid",
+        "name": "Solid",
+        "range": {
+          "short": 4,
+          "long": 8
+        },
+        "acc": {
+          "short": null,
+          "long": -2
+        },
+        "str": 4,
+        "ap": 0,
+        "dmg": 2,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.knockback"
+          },
+          {
+            "trait": "core.t.plentiful"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "esc.w.wyld-bow",
+    "name": "Wyld bow",
+    "class": "basic",
+    "cost": 10,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 9,
+          "long": 18
+        },
+        "acc": {
+          "short": null,
+          "long": -1
+        },
+        "str": 3,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "4+",
+        "traits": [
+          {
+            "trait": "core.t.silent"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "source": "13-gangs.md 4.2, 9"
+  },
+  {
+    "id": "esc.w.wyld-bow.poison",
+    "name": "Poison arrows (Wyld bow)",
+    "class": "basic",
+    "cost": 25,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "poison",
+        "name": "Poison arrows",
+        "range": {
+          "short": 9,
+          "long": 18
+        },
+        "acc": {
+          "short": null,
+          "long": -1
+        },
+        "str": 0,
+        "ap": 0,
+        "dmg": "-",
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.scarce"
+          },
+          {
+            "trait": "core.t.silent"
+          },
+          {
+            "trait": "core.t.toxin"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "text": "Ammunition upgrade for esc.w.wyld-bow: adds this profile to the weapon, takes no weapon slot of its own, and is bought in addition to the weapon.",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "esc.w.wyld-bow.explosive",
+    "name": "Explosive arrows (Wyld bow)",
+    "class": "basic",
+    "cost": 20,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "explosive",
+        "name": "Explosive arrows",
+        "range": {
+          "short": 9,
+          "long": 18
+        },
+        "acc": {
+          "short": null,
+          "long": -1
+        },
+        "str": 2,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 3
+          },
+          {
+            "trait": "core.t.scarce"
+          },
+          {
+            "trait": "core.t.unstable"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "text": "Ammunition upgrade for esc.w.wyld-bow: adds this profile to the weapon, takes no weapon slot of its own, and is bought in addition to the weapon.",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "esc.w.wyld-bow.acid",
+    "name": "Acid arrows (Wyld bow)",
+    "class": "basic",
+    "cost": 20,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "acid",
+        "name": "Acid arrows",
+        "range": {
+          "short": 9,
+          "long": 18
+        },
+        "acc": {
+          "short": null,
+          "long": -1
+        },
+        "str": 3,
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.blaze"
+          },
+          {
+            "trait": "core.t.scarce"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "text": "Ammunition upgrade for esc.w.wyld-bow: adds this profile to the weapon, takes no weapon slot of its own, and is bought in addition to the weapon.",
+    "source": "13-gangs.md 4.2"
+  },
+  {
+    "id": "esc.w.nightshade-chem-thrower",
+    "name": "'Nightshade' chem-thrower",
+    "class": "special",
+    "cost": 135,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "T"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 0,
+        "ap": 0,
+        "dmg": "-",
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.gas"
+          },
+          {
+            "trait": "core.t.silent"
+          },
+          {
+            "trait": "core.t.template"
+          }
+        ]
+      }
+    ],
+    "flavour": "flamer",
+    "source": "13-gangs.md 4.3"
+  },
+  {
+    "id": "esc.w.needle-rifle",
+    "name": "Needle rifle",
+    "class": "special",
+    "cost": 35,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": 9,
+          "long": 18
+        },
+        "acc": {
+          "short": 2,
+          "long": null
+        },
+        "str": 0,
+        "ap": -2,
+        "dmg": "-",
+        "ammo": "6+",
+        "traits": [
+          {
+            "trait": "core.t.scarce"
+          },
+          {
+            "trait": "core.t.silent"
+          },
+          {
+            "trait": "core.t.toxin"
+          }
+        ]
+      }
+    ],
+    "flavour": "stub",
+    "source": "13-gangs.md 4.3"
+  },
+  {
+    "id": "esc.w.plasma-gun",
+    "name": "Plasma gun",
+    "class": "special",
+    "cost": 100,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "low",
+        "name": "Low power",
+        "range": {
+          "short": 12,
+          "long": 24
+        },
+        "acc": {
+          "short": 2,
+          "long": null
+        },
+        "str": 5,
+        "ap": -1,
+        "dmg": 2,
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.rapid-fire",
+            "x": 1
+          },
+          {
+            "trait": "core.t.scarce"
+          }
+        ]
+      },
+      {
+        "id": "max",
+        "name": "Maximal power",
+        "range": {
+          "short": 12,
+          "long": 24
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 7,
+        "ap": -2,
+        "dmg": 3,
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.scarce"
+          },
+          {
+            "trait": "core.t.unstable"
+          }
+        ]
+      }
+    ],
+    "flavour": "plasma",
+    "source": "13-gangs.md 4.3"
+  },
+  {
+    "id": "esc.w.plasma-cannon",
+    "name": "Plasma cannon",
+    "class": "heavy",
+    "cost": 130,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "low",
+        "name": "Low power",
+        "range": {
+          "short": 18,
+          "long": 36
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 6,
+        "ap": -1,
+        "dmg": 2,
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.rapid-fire",
+            "x": 1
+          },
+          {
+            "trait": "core.t.scarce"
+          },
+          {
+            "trait": "core.t.unwieldy"
+          }
+        ]
+      },
+      {
+        "id": "max",
+        "name": "Maximal power",
+        "range": {
+          "short": 18,
+          "long": 36
+        },
+        "acc": {
+          "short": 1,
+          "long": null
+        },
+        "str": 8,
+        "ap": -2,
+        "dmg": 3,
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 3
+          },
+          {
+            "trait": "core.t.scarce"
+          },
+          {
+            "trait": "core.t.unstable"
+          },
+          {
+            "trait": "core.t.unwieldy"
+          }
+        ]
+      }
+    ],
+    "flavour": "plasma",
+    "source": "13-gangs.md 4.4"
+  },
+  {
+    "id": "esc.w.power-knife",
+    "name": "Power knife",
+    "class": "close",
+    "cost": 25,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": "S+1",
+        "ap": -2,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.backstab"
+          },
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.power"
+          }
+        ]
+      }
+    ],
+    "flavour": "blade",
+    "source": "13-gangs.md 4.5, 9"
+  },
+  {
+    "id": "esc.w.power-sword",
+    "name": "Power sword",
+    "class": "close",
+    "cost": 45,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": "S+1",
+        "ap": -2,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.parry"
+          },
+          {
+            "trait": "core.t.power"
+          }
+        ]
+      }
+    ],
+    "flavour": "blade",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "esc.w.stiletto-knife",
+    "name": "Stiletto knife",
+    "class": "close",
+    "cost": 20,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 0,
+        "ap": 0,
+        "dmg": "-",
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.toxin"
+          }
+        ]
+      }
+    ],
+    "flavour": "blade",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "esc.w.stiletto-sword",
+    "name": "Stiletto sword",
+    "class": "close",
+    "cost": 30,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 0,
+        "ap": -1,
+        "dmg": "-",
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.parry"
+          },
+          {
+            "trait": "core.t.toxin"
+          }
+        ]
+      }
+    ],
+    "flavour": "blade",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "esc.w.venom-claw",
+    "name": "Venom claw",
+    "class": "close",
+    "cost": 30,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": "E"
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 0,
+        "ap": -2,
+        "dmg": "-",
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.entangle"
+          },
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.toxin"
+          }
+        ]
+      }
+    ],
+    "flavour": "blade",
+    "source": "13-gangs.md 4.5, 9"
+  },
+  {
+    "id": "esc.w.whip",
+    "name": "Whip",
+    "class": "close",
+    "cost": 15,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": 3
+        },
+        "acc": {
+          "short": -1,
+          "long": null
+        },
+        "str": "S",
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.entangle"
+          },
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.versatile"
+          }
+        ]
+      }
+    ],
+    "flavour": "whip",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "esc.w.shock-whip",
+    "name": "Shock whip",
+    "class": "close",
+    "cost": 25,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": 3
+        },
+        "acc": {
+          "short": -1,
+          "long": null
+        },
+        "str": "S+1",
+        "ap": 0,
+        "dmg": 1,
+        "ammo": "-",
+        "traits": [
+          {
+            "trait": "core.t.melee"
+          },
+          {
+            "trait": "core.t.shock"
+          },
+          {
+            "trait": "core.t.versatile"
+          }
+        ]
+      }
+    ],
+    "flavour": "whip",
+    "source": "13-gangs.md 4.5"
+  },
+  {
+    "id": "esc.w.choke-gas-grenades",
+    "name": "Choke gas grenades",
+    "class": "grenade",
+    "cost": 45,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": {
+            "strMultiplier": 3
+          }
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 0,
+        "ap": 0,
+        "dmg": "-",
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 3
+          },
+          {
+            "trait": "core.t.gas"
+          },
+          {
+            "trait": "core.t.grenade"
+          }
+        ]
+      }
+    ],
+    "flavour": "grenade",
+    "source": "13-gangs.md 4.6"
+  },
+  {
+    "id": "esc.w.photon-flash-flares",
+    "name": "Photon flash flares",
+    "class": "grenade",
+    "cost": 15,
+    "rarity": null,
+    "profiles": [
+      {
+        "id": "std",
+        "name": null,
+        "range": {
+          "short": null,
+          "long": {
+            "strMultiplier": 3
+          }
+        },
+        "acc": {
+          "short": null,
+          "long": null
+        },
+        "str": 0,
+        "ap": 0,
+        "dmg": "-",
+        "ammo": "5+",
+        "traits": [
+          {
+            "trait": "core.t.blast",
+            "inches": 5
+          },
+          {
+            "trait": "core.t.flash"
+          },
+          {
+            "trait": "core.t.grenade"
+          }
+        ]
+      }
+    ],
+    "flavour": "grenade",
+    "source": "13-gangs.md 4.6"
+  }
+]

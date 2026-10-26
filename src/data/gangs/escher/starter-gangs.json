@@ -1,0 +1,254 @@
+[
+  {
+    "id": "esc.sg.starter-1",
+    "house": "escher",
+    "name": "Lasgun Line",
+    "credits": 1000,
+    "fighters": [
+      {
+        "name": "Queen",
+        "type": "esc.queen",
+        "weapons": [
+          "esc.w.plasma-pistol",
+          "esc.w.power-sword"
+        ],
+        "wargear": [
+          "core.g.mesh-armour"
+        ],
+        "skills": [
+          "core.s.agility.spring-up"
+        ]
+      },
+      {
+        "name": "Matriarch",
+        "type": "esc.matriarch",
+        "weapons": [
+          "esc.w.lasgun",
+          "esc.w.shock-whip"
+        ],
+        "wargear": [
+          "core.g.mesh-armour"
+        ],
+        "skills": [
+          "core.s.agility.dodge"
+        ]
+      },
+      {
+        "name": "Death-Maiden",
+        "type": "esc.death-maiden",
+        "weapons": [
+          "esc.w.needle-pistol",
+          "esc.w.stiletto-sword"
+        ],
+        "wargear": [
+          "core.g.mesh-armour"
+        ],
+        "skills": [
+          "core.s.agility.spring-up"
+        ]
+      },
+      {
+        "name": "Sister (Specialist)",
+        "type": "esc.sister-specialist",
+        "weapons": [
+          "core.w.grenade-launcher",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "core.g.flak-armour"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Sister 1",
+        "type": "esc.sister",
+        "weapons": [
+          "esc.w.lasgun"
+        ],
+        "wargear": [
+          "core.g.flak-armour"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Sister 2",
+        "type": "esc.sister",
+        "weapons": [
+          "esc.w.lasgun"
+        ],
+        "wargear": [
+          "core.g.flak-armour"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Sister 3",
+        "type": "esc.sister",
+        "weapons": [
+          "esc.w.lasgun"
+        ],
+        "wargear": [
+          "core.g.flak-armour"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Sister 4",
+        "type": "esc.sister",
+        "weapons": [
+          "esc.w.lasgun"
+        ],
+        "wargear": [
+          "core.g.flak-armour"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Little Sister",
+        "type": "esc.little-sister",
+        "weapons": [
+          "core.w.stub-gun",
+          "core.w.knife"
+        ],
+        "wargear": [
+          "core.g.flak-armour"
+        ],
+        "skills": []
+      }
+    ],
+    "text": "A Queen, Matriarch and Death-Maiden lead four lasgun Sisters, a grenade-launcher Specialist and a Little Sister. The Death-Maiden brings a Toxin sword and a Toxin pistol.",
+    "source": "13-gangs.md 8.3"
+  },
+  {
+    "id": "esc.sg.starter-2",
+    "house": "escher",
+    "name": "Wyld Skirmishers",
+    "credits": 1000,
+    "fighters": [
+      {
+        "name": "Queen",
+        "type": "esc.queen",
+        "weapons": [
+          "esc.w.lasgun",
+          "esc.w.shock-whip"
+        ],
+        "wargear": [
+          "core.g.mesh-armour"
+        ],
+        "skills": [
+          "core.s.agility.spring-up"
+        ]
+      },
+      {
+        "name": "Matriarch",
+        "type": "esc.matriarch",
+        "weapons": [
+          "core.w.boltgun",
+          "esc.w.stiletto-sword"
+        ],
+        "wargear": [
+          "core.g.mesh-armour"
+        ],
+        "skills": [
+          "core.s.agility.dodge"
+        ]
+      },
+      {
+        "name": "Sister (Specialist)",
+        "type": "esc.sister-specialist",
+        "weapons": [
+          "esc.w.needle-rifle",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "core.g.flak-armour"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Sister 1",
+        "type": "esc.sister",
+        "weapons": [
+          "esc.w.lasgun"
+        ],
+        "wargear": [
+          "core.g.flak-armour"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Sister 2",
+        "type": "esc.sister",
+        "weapons": [
+          "esc.w.lasgun"
+        ],
+        "wargear": [
+          "core.g.flak-armour"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Sister 3",
+        "type": "esc.sister",
+        "weapons": [
+          "esc.w.lasgun"
+        ],
+        "wargear": [
+          "core.g.flak-armour"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Wyld Runner 1",
+        "type": "esc.wyld-runner",
+        "weapons": [
+          "esc.w.wyld-bow",
+          "core.w.chainsword"
+        ],
+        "wargear": [
+          "core.g.flak-armour",
+          "esc.g.phelynx"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Wyld Runner 2",
+        "type": "esc.wyld-runner",
+        "weapons": [
+          "esc.w.wyld-bow",
+          "core.w.chainsword"
+        ],
+        "wargear": [
+          "core.g.flak-armour"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Little Sister 1",
+        "type": "esc.little-sister",
+        "weapons": [
+          "core.w.stub-gun",
+          "core.w.knife"
+        ],
+        "wargear": [
+          "core.g.flak-armour"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Little Sister 2",
+        "type": "esc.little-sister",
+        "weapons": [
+          "core.w.stub-gun",
+          "core.w.knife"
+        ],
+        "wargear": [
+          "core.g.flak-armour"
+        ],
+        "skills": []
+      }
+    ],
+    "text": "A shock-whip Queen, a boltgun Matriarch, a needle-rifle Specialist, three lasgun Sisters, two bow-and-chainsword Wyld Runners (one with a Phelynx) and two Little Sisters.",
+    "source": "13-gangs.md 8.4"
+  }
+]

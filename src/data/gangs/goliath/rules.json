@@ -1,0 +1,56 @@
+[
+  {
+    "id": "gol.r.combat-chems-stash",
+    "name": "Combat Chems Stash",
+    "kind": "fighterRule",
+    "window": "activation.start",
+    "effect": {
+      "code": {
+        "code": "combatChemsStash",
+        "params": {
+          "die": "D6",
+          "table": [
+            {
+              "min": 1,
+              "max": 1,
+              "attacks": {
+                "set": 1
+              }
+            },
+            {
+              "min": 2,
+              "max": 2,
+              "attacks": {
+                "add": 1
+              }
+            },
+            {
+              "min": 3,
+              "max": 4,
+              "attacks": {
+                "add": 2
+              }
+            },
+            {
+              "min": 5,
+              "max": 6,
+              "attacks": {
+                "add": 3
+              }
+            }
+          ],
+          "until": "round.end"
+        }
+      }
+    },
+    "text": "On activation roll a D6: a 1 sets Attacks to 1, a 2 adds 1, a 3 or 4 adds 2, a 5 or 6 adds 3. The result lasts to the end of the round and raises the Attacks characteristic, so it stacks with Paired weapons.",
+    "source": "13-gangs.md 2.4"
+  },
+  {
+    "id": "gol.r.gene-smithing",
+    "name": "Gene-smithing",
+    "kind": "houseRule",
+    "text": "Optional recruitment rule: a new fighter may take an origin (Vatborn, Natborn or Unborn) and a few upgrades that change its profile and cost. The quick-start gangs use none, and it is not implemented in v1 (the upgrade table is not encoded).",
+    "source": "13-gangs.md 2.5"
+  }
+]

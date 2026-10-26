@@ -1,0 +1,249 @@
+[
+  {
+    "id": "gol.sg.starter-1",
+    "house": "goliath",
+    "name": "Furnace Crew",
+    "credits": 1000,
+    "fighters": [
+      {
+        "name": "Forge Tyrant",
+        "type": "gol.forge-tyrant",
+        "weapons": [
+          "core.w.chainaxe",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": [
+          "core.s.ferocity.nerves-of-steel"
+        ]
+      },
+      {
+        "name": "Stimmer",
+        "type": "gol.stimmer",
+        "weapons": [
+          "gol.w.paired-pulverisers",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": [
+          "core.s.ferocity.nerves-of-steel"
+        ]
+      },
+      {
+        "name": "Forge Boss",
+        "type": "gol.forge-boss",
+        "weapons": [
+          "gol.w.combat-shotgun",
+          "gol.w.axe"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": [
+          "core.s.ferocity.true-grit"
+        ]
+      },
+      {
+        "name": "Bruiser (Specialist)",
+        "type": "gol.bruiser-specialist",
+        "weapons": [
+          "core.w.grenade-launcher",
+          "core.w.grenade-launcher.smoke",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Bruiser 1",
+        "type": "gol.bruiser",
+        "weapons": [
+          "core.w.boltgun",
+          "core.w.knife"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Bruiser 2",
+        "type": "gol.bruiser",
+        "weapons": [
+          "gol.w.stub-cannon",
+          "gol.w.axe"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Bully 1",
+        "type": "gol.bully",
+        "weapons": [
+          "gol.w.brute-cleaver",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Bully 2",
+        "type": "gol.bully",
+        "weapons": [
+          "gol.w.axe",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": []
+      }
+    ],
+    "text": "Balanced melee push with fire support: a Tyrant and a Stimmer carry the fight, a shotgun Boss and a grenade-launcher Specialist cover them, and Bruisers and Bullies fill out the crew. Spends the full 1000 credits.",
+    "source": "13-gangs.md 8.1"
+  },
+  {
+    "id": "gol.sg.starter-2",
+    "house": "goliath",
+    "name": "Cheap Muscle",
+    "credits": 1000,
+    "fighters": [
+      {
+        "name": "Forge Tyrant",
+        "type": "gol.forge-tyrant",
+        "weapons": [
+          "gol.w.renderizer-serrated-axe",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates",
+          "core.g.armoured-undersuit"
+        ],
+        "skills": [
+          "core.s.ferocity.nerves-of-steel"
+        ]
+      },
+      {
+        "name": "Forge Boss",
+        "type": "gol.forge-boss",
+        "weapons": [
+          "core.w.boltgun",
+          "core.w.chainaxe"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": [
+          "core.s.ferocity.unstoppable"
+        ]
+      },
+      {
+        "name": "Bruiser (Specialist)",
+        "type": "gol.bruiser-specialist",
+        "weapons": [
+          "core.w.grenade-launcher",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Bruiser",
+        "type": "gol.bruiser",
+        "weapons": [
+          "gol.w.combat-shotgun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Bully 1",
+        "type": "gol.bully",
+        "weapons": [
+          "gol.w.brute-cleaver",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Bully 2",
+        "type": "gol.bully",
+        "weapons": [
+          "gol.w.brute-cleaver",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Bully 3",
+        "type": "gol.bully",
+        "weapons": [
+          "gol.w.brute-cleaver",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Bully 4",
+        "type": "gol.bully",
+        "weapons": [
+          "gol.w.axe",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Forge-born 1",
+        "type": "gol.forge-born",
+        "weapons": [
+          "core.w.knife",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": []
+      },
+      {
+        "name": "Forge-born 2",
+        "type": "gol.forge-born",
+        "weapons": [
+          "core.w.knife",
+          "core.w.stub-gun"
+        ],
+        "wargear": [
+          "gol.g.furnace-plates"
+        ],
+        "skills": []
+      }
+    ],
+    "text": "Ten bodies for 995 credits: a Renderizer Tyrant, a boltgun-and-chainaxe Boss, one Specialist, one shotgun Bruiser, and four Bullies and two Forge-born as cheap melee screens.",
+    "source": "13-gangs.md 8.2"
+  }
+]

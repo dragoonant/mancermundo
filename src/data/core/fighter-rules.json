@@ -1,1 +1,75 @@
-[]
+[
+  {
+    "id": "core.r.gang-hierarchy",
+    "name": "Gang Hierarchy",
+    "kind": "fighterRule",
+    "text": "Marks the fighter as part of the command structure (Leader or Champion). It carries Leading by Example, with range 12 inches for a Leader and 6 inches for a Champion.",
+    "source": "13-gangs.md 1.2"
+  },
+  {
+    "id": "core.r.gang-leader",
+    "name": "Gang Leader",
+    "kind": "fighterRule",
+    "text": "The one fighter every gang must have. If it is lost, a replacement is chosen from the gang (campaign).",
+    "source": "13-gangs.md 1.1, 1.2"
+  },
+  {
+    "id": "core.r.leading-by-example",
+    "name": "Leading by Example",
+    "kind": "fighterRule",
+    "text": "After the gang bottles out, if this fighter passes its Cool test to stay on the battlefield, friendly fighters within range pass automatically (12 inches for a Leader, 6 for a Champion, and a Champion only helps fighters without this rule). Resolved by the End phase; nothing declarative to attach.",
+    "source": "13-gangs.md 1.2"
+  },
+  {
+    "id": "core.r.group-activation",
+    "name": "Group Activation (X)",
+    "kind": "fighterRule",
+    "text": "When this fighter activates, up to X more Ready friendly fighters within 3 inches may activate with it. All are nominated first, then each acts in full. A Leader or Champion brought in this way cannot start its own group.",
+    "source": "13-gangs.md 1.2"
+  },
+  {
+    "id": "core.r.tools-of-the-trade",
+    "name": "Tools of the Trade",
+    "kind": "fighterRule",
+    "text": "Campaign rule that lets the fighter keep several equipment sets and use one per battle. A skirmish gang has one set, so it has no effect.",
+    "source": "13-gangs.md 1.2"
+  },
+  {
+    "id": "core.r.gang-fighter",
+    "name": "Gang Fighter",
+    "kind": "fighterRule",
+    "text": "Counts towards the rule that at least half of the gang must be Gang Fighters (Gangers, Specialists, Juves and Prospects).",
+    "source": "13-gangs.md 1.1, 1.2"
+  },
+  {
+    "id": "core.r.fast-learner",
+    "name": "Fast Learner",
+    "kind": "fighterRule",
+    "text": "Campaign rule that makes advancement cheaper for Juves and Prospects. No skirmish effect.",
+    "source": "13-gangs.md 1.2"
+  },
+  {
+    "id": "core.r.promotion",
+    "name": "Promotion",
+    "kind": "fighterRule",
+    "text": "Campaign rule giving the fighter an upgrade path after enough advancements. No skirmish effect.",
+    "source": "13-gangs.md 1.2"
+  },
+  {
+    "id": "core.r.hot-headed",
+    "name": "Hot-headed",
+    "kind": "fighterRule",
+    "window": "nerve.test",
+    "effect": {
+      "code": {
+        "code": "hotHeaded",
+        "params": {
+          "exemptsFriends": true,
+          "sameTypeStillTests": true
+        }
+      }
+    },
+    "text": "When this fighter is Seriously Injured or goes Out of Action, its friends skip the Nerve test they would normally take for it; fighters of the same Hot-headed type still take it.",
+    "source": "13-gangs.md 1.2"
+  }
+]

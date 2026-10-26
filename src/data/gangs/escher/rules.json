@@ -1,0 +1,26 @@
+[
+  {
+    "id": "esc.r.poison-blood",
+    "name": "Poison Blood",
+    "kind": "fighterRule",
+    "window": "hit.woundRolled",
+    "effect": {
+      "code": {
+        "code": "poisonBlood",
+        "params": {
+          "rerollNaturalOnes": true,
+          "roll": "toxinToughness"
+        }
+      }
+    },
+    "text": "A Death-Maiden using a Toxin weapon may re-roll a natural 1 on its Toughness roll, judged before modifiers.",
+    "source": "13-gangs.md 3.4"
+  },
+  {
+    "id": "esc.r.chem-alchemy",
+    "name": "Chem-alchemy",
+    "kind": "houseRule",
+    "text": "Trading Post facility that lets the gang assemble its own doses between battles. Not available to a starting gang, and chems are outside the v1 scope, so it is not implemented.",
+    "source": "13-gangs.md 3.5"
+  }
+]

@@ -15,6 +15,7 @@ import type {
   DataBundle,
   DataRecord,
   DiceData,
+  EquipmentListData,
   FighterTypeData,
   HouseData,
   Id,
@@ -41,6 +42,11 @@ const DEFAULT_SOURCES = path.resolve(DATA_ROOT, '../../docs/sources')
 export const V1_WARGEAR_KINDS: readonly WargearData['kind'][] = ['armour', 'equipment']
 /** Wargear ids of an out-of-scope kind that 13-gangs.md nevertheless lists for v1 (filled by the gang stage). */
 export const V1_EXTRA_WARGEAR_IDS: readonly Id[] = []
+/**
+ * Weapons that 13-gangs.md marks with an asterisk (two weapon slots) but that carry neither the Unwieldy nor the Paired trait,
+ * so no data field says so. The slot check below counts them as two.
+ */
+export const TWO_SLOT_WEAPON_IDS: readonly Id[] = ['gol.w.krumper-rivet-cannon', 'gol.w.assault-grenade-launchers']
 
 export interface HookUse {
   name: string
@@ -104,6 +110,63 @@ function checkTraitUse(use: TraitUse, traits: Record<Id, TraitData>, at: string,
     if (has(use.x) || has(use.inches)) bad('takes only a target')
   }
   if (!def.implemented) errors.push(`${at}: weapon trait ${use.trait} is not implemented for v1 (R-16.2)`)
+}
+
+// ------------------------------------------------------------------ gang loadouts (S1G)
+/**
+ * The weapon an ammunition-upgrade record belongs to. By convention an upgrade's id is its base weapon's id plus a suffix
+ * (`core.w.stub-gun.dumdum` upgrades `core.w.stub-gun`); it adds a profile to the base, takes no slot and is bought with it.
+ */
+export function upgradeBase(id: Id, weapons: Record<Id, WeaponData>): Id | undefined {
+  const dot = id.lastIndexOf('.')
+  if (dot < 0) return undefined
+  const base = id.slice(0, dot)
+  return weapons[base] ? base : undefined
+}
+
+/** Weapon slots a loadout takes (13-gangs.md 1.1): Unwieldy, Paired and asterisk weapons two, grenades and upgrades none, anything else one. */
+export function loadoutSlots(weapons: Record<Id, WeaponData>, ids: readonly Id[], unwieldySlots = 2): number {
+  let slots = 0
+  for (const id of ids) {
+    const w = weapons[id]
+    if (!w || w.class === 'grenade' || upgradeBase(id, weapons)) continue
+    const two = TWO_SLOT_WEAPON_IDS.includes(id) || w.profiles.some((p) => p.traits.some((t) => t.trait === 'core.t.unwieldy' || t.trait === 'core.t.paired'))
+    slots += two ? unwieldySlots : 1
+  }
+  return slots
+}
+
+/** Starter-gang checks beyond `starterGangProblems`: true slot count, ammunition upgrades with their base, free skills from Primary sets. */
+function starterLoadoutProblems(bundle: DataBundle, sg: StarterGangData): string[] {
+  const out: string[] = []
+  sg.fighters.forEach((f, i) => {
+    const at = `fighters[${i}] (${f.name})`
+    const type = bundle.fighterTypes[f.type]
+    if (!type) return
+    const slots = loadoutSlots(bundle.weapons, f.weapons, bundle.constants.loadout.unwieldySlots)
+    if (slots > bundle.constants.loadout.maxWeapons) out.push(`${at}: carries ${slots} weapon slots (asterisk, Unwieldy and Paired weapons count two), at most ${bundle.constants.loadout.maxWeapons}`)
+    for (const id of f.weapons) {
+      const base = upgradeBase(id, bundle.weapons)
+      if (base && !f.weapons.includes(base)) out.push(`${at}: ${id} is an ammunition upgrade and needs ${base}`)
+    }
+    const leads = type.role === 'leader' || type.role === 'champion'
+    if (f.skills.length > (leads ? 1 : 0)) out.push(`${at}: has ${f.skills.length} starting skill(s), a ${type.role} starts with ${leads ? 'one' : 'none'}`)
+    for (const id of f.skills) {
+      const skill = bundle.skills[id]
+      if (skill && !type.skillAccess.primary.includes(skill.set)) out.push(`${at}: skill ${id} (${skill.set}) is not in a Primary set of ${type.id}`)
+    }
+  })
+  return out
+}
+
+/** Equipment-list checks: an ammunition upgrade is offered only together with its base weapon. */
+function equipmentListProblems(bundle: DataBundle, list: EquipmentListData): string[] {
+  const out: string[] = []
+  for (const w of list.weapons) {
+    const base = upgradeBase(w.id, bundle.weapons)
+    if (base && !list.weapons.some((x) => x.id === base)) out.push(`${list.id}: offers ${w.id} without its base weapon ${base}`)
+  }
+  return out
 }
 
 // ------------------------------------------------------------------ prose spot check
@@ -386,6 +449,10 @@ export function validateAll(options: ValidateOptions = {}): ValidationResult {
   if (bundle) {
     for (const sg of ofType<StarterGangData>('starterGang')) {
       for (const msg of starterGangProblems(bundle, sg)) errors.push(`${where(sg.id)}: ${sg.id}: ${msg}`)
+      for (const msg of starterLoadoutProblems(bundle, sg)) errors.push(`${where(sg.id)}: ${sg.id}: ${msg}`)
+    }
+    for (const list of ofType<EquipmentListData>('equipmentList')) {
+      for (const msg of equipmentListProblems(bundle, list)) errors.push(`${where(list.id)}: ${msg}`)
     }
   }
 

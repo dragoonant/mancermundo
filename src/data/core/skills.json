@@ -1,1 +1,513 @@
-[]
+[
+  {
+    "id": "core.s.agility.catfall",
+    "name": "Catfall",
+    "set": "agility",
+    "text": "Halves the distance counted when falling or jumping down, and may pass an Initiative test to stay standing after a fall. Zone Mortalis boards are flat and nobody falls in v1, so it has no effect.",
+    "source": "13-gangs.md 7.2"
+  },
+  {
+    "id": "core.s.agility.clamber",
+    "name": "Clamber",
+    "set": "agility",
+    "text": "Climbing is not halved in cost. There is no climbing on a flat Zone Mortalis board in v1, so it has no effect.",
+    "source": "13-gangs.md 7.2"
+  },
+  {
+    "id": "core.s.agility.dodge",
+    "name": "Dodge",
+    "set": "agility",
+    "window": "hit.saveRolled",
+    "effect": {
+      "code": {
+        "code": "dodge",
+        "params": {
+          "save": "6+",
+          "unmodifiable": true,
+          "vs": [
+            "ranged",
+            "melee"
+          ],
+          "additional": true,
+          "templateStepInches": 2
+        }
+      }
+    },
+    "text": "A 6+ save that nothing can modify, usable against ranged and close combat attacks in addition to the armour save. Against Blast and template attacks a passed save lets the fighter step up to 2 inches before it is decided whether it is hit.",
+    "source": "13-gangs.md 7.2"
+  },
+  {
+    "id": "core.s.agility.mighty-leap",
+    "name": "Mighty Leap",
+    "set": "agility",
+    "text": "Ignores the first 2 inches of a gap when leaping it. There are no gaps to leap on a flat Zone Mortalis board in v1, so it has no effect.",
+    "source": "13-gangs.md 7.2"
+  },
+  {
+    "id": "core.s.agility.spring-up",
+    "name": "Spring Up",
+    "set": "agility",
+    "window": "activation.start",
+    "when": {
+      "status": "pronePinned"
+    },
+    "effect": {
+      "code": {
+        "code": "springUp",
+        "params": {
+          "test": "initiative",
+          "action": "standUp",
+          "free": true
+        }
+      }
+    },
+    "text": "A Pinned fighter that is activated may pass an Initiative test to stand up for free.",
+    "source": "13-gangs.md 7.2"
+  },
+  {
+    "id": "core.s.agility.sprint",
+    "name": "Sprint",
+    "set": "agility",
+    "window": "action.declared",
+    "when": {
+      "action": "move",
+      "repeatInActivation": true
+    },
+    "effect": {
+      "modifyStat": {
+        "stat": "M",
+        "mult": 2
+      }
+    },
+    "text": "In an activation with two or more Move actions, the final Move uses twice the Movement characteristic.",
+    "source": "13-gangs.md 7.2"
+  },
+  {
+    "id": "core.s.brawn.bull-charge",
+    "name": "Bull Charge",
+    "set": "brawn",
+    "window": "fight.weaponsChosen",
+    "when": {
+      "charging": true
+    },
+    "effect": [
+      {
+        "grantTrait": {
+          "trait": "core.t.knockback",
+          "weapons": {
+            "classes": [
+              "close"
+            ]
+          }
+        }
+      },
+      {
+        "modifyStat": {
+          "stat": "S",
+          "value": 1
+        }
+      }
+    ],
+    "text": "When charging, the fighter's melee weapons gain Knockback and +1 Strength.",
+    "source": "13-gangs.md 7.3"
+  },
+  {
+    "id": "core.s.brawn.bulging-biceps",
+    "name": "Bulging Biceps",
+    "set": "brawn",
+    "window": "fight.weaponsChosen",
+    "effect": {
+      "code": {
+        "code": "bulgingBiceps",
+        "params": {
+          "unwieldyMeleeHands": 1
+        }
+      }
+    },
+    "text": "Lets an Unwieldy melee weapon be wielded one-handed, so a second melee weapon can accompany it. The weapon still occupies two slots, and Unwieldy ranged weapons get no benefit.",
+    "source": "13-gangs.md 7.3"
+  },
+  {
+    "id": "core.s.brawn.crushing-blow",
+    "name": "Crushing Blow",
+    "set": "brawn",
+    "window": "action.declared",
+    "effect": {
+      "code": {
+        "code": "crushingBlow",
+        "params": {
+          "strength": 1,
+          "damage": 1,
+          "attacks": 1,
+          "excludes": "sidearm"
+        }
+      }
+    },
+    "text": "Before rolling to hit, nominate one attack that is not a Sidearm attack; if it connects it gains +1 Strength and +1 Damage.",
+    "source": "13-gangs.md 7.3"
+  },
+  {
+    "id": "core.s.brawn.headbutt",
+    "name": "Headbutt",
+    "set": "brawn",
+    "action": {
+      "id": "headbutt",
+      "type": "free",
+      "statuses": [
+        "standingEngaged"
+      ]
+    },
+    "effect": {
+      "code": {
+        "code": "headbutt",
+        "params": {
+          "dice": "2D6",
+          "strengthBonus": 2,
+          "damage": 2,
+          "fumbleDamage": 1
+        }
+      }
+    },
+    "text": "Free action against an Engaged enemy in base contact. Roll 2D6: should either die reach the target's Toughness, the blow connects at Strength +2 and Damage 2. Should both dice come up short, the fighter wounds itself with a hit at its own Strength and Damage 1.",
+    "source": "13-gangs.md 7.3"
+  },
+  {
+    "id": "core.s.brawn.hurl",
+    "name": "Hurl",
+    "set": "brawn",
+    "action": {
+      "id": "hurl",
+      "type": "basic",
+      "statuses": [
+        "standingEngaged"
+      ]
+    },
+    "effect": {
+      "code": {
+        "code": "hurl",
+        "params": {
+          "test": "initiative",
+          "distance": "D3",
+          "strength": 3,
+          "replacesChargeFight": true
+        }
+      }
+    },
+    "text": "Can replace the free Fight that follows a charge, or be done later as a Basic action. The target is either an enemy locked in base contact with the fighter or a Seriously Injured enemy no more than 1 inch away. Unless that enemy passes an Initiative test, the fighter shifts it D3 inches in any direction; it stops against another standing fighter or terrain. The enemy and whatever it bumps are hit at Strength 3 and Pinned.",
+    "source": "13-gangs.md 7.3"
+  },
+  {
+    "id": "core.s.brawn.iron-jaw",
+    "name": "Iron Jaw",
+    "set": "brawn",
+    "window": "hit.woundRolled",
+    "effect": {
+      "code": {
+        "code": "ironJaw",
+        "params": {
+          "toughness": 2,
+          "vs": "closeCombatNoAp"
+        }
+      }
+    },
+    "text": "Adds 2 to Toughness against close combat attacks whose AP is \"-\".",
+    "source": "13-gangs.md 7.3"
+  },
+  {
+    "id": "core.s.combat.combat-master",
+    "name": "Combat Master",
+    "set": "combat",
+    "window": "fight.weaponsChosen",
+    "effect": {
+      "code": {
+        "code": "combatMaster",
+        "params": {
+          "ignoresInterference": true,
+          "alwaysAssists": true
+        }
+      }
+    },
+    "text": "Ignores interference and always counts as giving an assist in melee.",
+    "source": "13-gangs.md 7.4"
+  },
+  {
+    "id": "core.s.combat.counter-attack",
+    "name": "Counter-attack",
+    "set": "combat",
+    "window": "fight.reactions",
+    "effect": {
+      "code": {
+        "code": "counterAttack",
+        "params": {
+          "perFailedHit": 1
+        }
+      }
+    },
+    "text": "Reaction attacks gain one extra Attack for every attack the opponent made that missed.",
+    "source": "13-gangs.md 7.4"
+  },
+  {
+    "id": "core.s.combat.disarm",
+    "name": "Disarm",
+    "set": "combat",
+    "window": "fight.hitRolled",
+    "effect": {
+      "code": {
+        "code": "combatDisarm",
+        "params": {
+          "grantOn": 6,
+          "existingOn": 5
+        }
+      }
+    },
+    "text": "The fighter's melee weapons gain Disarm on a 6+ to hit; weapons that already have Disarm trigger on a 5+.",
+    "source": "13-gangs.md 7.4"
+  },
+  {
+    "id": "core.s.combat.parry",
+    "name": "Parry",
+    "set": "combat",
+    "window": "fight.weaponsChosen",
+    "effect": {
+      "code": {
+        "code": "parrySkill",
+        "params": {
+          "extraParry": 1
+        }
+      }
+    },
+    "text": "Counts as carrying one extra Parry weapon, so one more attack can be parried.",
+    "source": "13-gangs.md 7.4"
+  },
+  {
+    "id": "core.s.combat.rain-of-blows",
+    "name": "Rain of Blows",
+    "set": "combat",
+    "window": "action.declared",
+    "effect": {
+      "actionType": {
+        "action": "fight",
+        "type": "simple"
+      }
+    },
+    "text": "The Fight (Basic) action becomes a Fight (Simple) action.",
+    "source": "13-gangs.md 7.4"
+  },
+  {
+    "id": "core.s.combat.step-aside",
+    "name": "Step Aside",
+    "set": "combat",
+    "window": "fight.hitRolled",
+    "effect": {
+      "code": {
+        "code": "stepAside",
+        "params": {
+          "test": "initiative",
+          "oncePerEnemyPerRound": true
+        }
+      }
+    },
+    "text": "Each time the fighter is hit in close combat it may pass an Initiative test to avoid the hit, once against each enemy per round of combat.",
+    "source": "13-gangs.md 7.4"
+  },
+  {
+    "id": "core.s.ferocity.berserker",
+    "name": "Berserker",
+    "set": "ferocity",
+    "window": "fight.weaponsChosen",
+    "when": {
+      "charging": true
+    },
+    "effect": {
+      "modifyStat": {
+        "stat": "A",
+        "value": 1
+      }
+    },
+    "text": "+1 Attack when charging.",
+    "source": "13-gangs.md 7.5"
+  },
+  {
+    "id": "core.s.ferocity.fearsome",
+    "name": "Fearsome",
+    "set": "ferocity",
+    "window": "action.declared",
+    "effect": {
+      "code": {
+        "code": "fearsome",
+        "params": {
+          "test": "willpower",
+          "onFail": "endAction"
+        }
+      }
+    },
+    "text": "An enemy declaring a charge on this fighter must first pass a Willpower test; failing it ends that enemy's action.",
+    "source": "13-gangs.md 7.5"
+  },
+  {
+    "id": "core.s.ferocity.impetuous",
+    "name": "Impetuous",
+    "set": "ferocity",
+    "window": "fight.resolved",
+    "effect": {
+      "code": {
+        "code": "impetuous",
+        "params": {
+          "consolidateInches": 4
+        }
+      }
+    },
+    "text": "Consolidates up to 4 inches instead of 2.",
+    "source": "13-gangs.md 7.5"
+  },
+  {
+    "id": "core.s.ferocity.nerves-of-steel",
+    "name": "Nerves of Steel",
+    "set": "ferocity",
+    "window": "shoot.hitRolled",
+    "effect": {
+      "code": {
+        "code": "nervesOfSteel",
+        "params": {
+          "test": "cool",
+          "avoids": "pinned"
+        }
+      }
+    },
+    "text": "Hit by a ranged attack, the fighter may pass a Cool test to avoid becoming Pinned.",
+    "source": "13-gangs.md 7.5"
+  },
+  {
+    "id": "core.s.ferocity.true-grit",
+    "name": "True Grit",
+    "set": "ferocity",
+    "window": "injury.rolled",
+    "effect": {
+      "injuryDice": {
+        "delta": -1
+      }
+    },
+    "text": "One fewer Injury die is rolled for this fighter; when that would leave none, two dice are rolled and one is discarded.",
+    "source": "13-gangs.md 7.5"
+  },
+  {
+    "id": "core.s.ferocity.unstoppable",
+    "name": "Unstoppable",
+    "set": "ferocity",
+    "window": "end.recovery",
+    "effect": {
+      "code": {
+        "code": "unstoppable",
+        "params": {
+          "die": "D6",
+          "on": 4,
+          "removeFleshWounds": 1,
+          "elseExtraRecoveryDie": true
+        }
+      }
+    },
+    "text": "Ahead of a Recovery test roll a D6: on 4+ a Flesh Wound is removed, or, with no Flesh Wounds, the Recovery test gets an extra die and one die is dropped.",
+    "source": "13-gangs.md 7.5"
+  },
+  {
+    "id": "core.s.leadership.commanding-presence",
+    "name": "Commanding Presence",
+    "set": "leadership",
+    "window": "activation.groupNominated",
+    "effect": {
+      "code": {
+        "code": "commandingPresence",
+        "params": {
+          "groupActivation": 1
+        }
+      }
+    },
+    "text": "Group Activation +1.",
+    "source": "13-gangs.md 7.6"
+  },
+  {
+    "id": "core.s.leadership.inspirational",
+    "name": "Inspirational",
+    "set": "leadership",
+    "window": "nerve.test",
+    "effect": {
+      "code": {
+        "code": "inspirational",
+        "params": {
+          "radius": 6,
+          "test": "leadership"
+        }
+      }
+    },
+    "text": "A friendly fighter within 6 inches that fails a Cool test can be rescued: this fighter passes a Leadership test and the failed test counts as passed.",
+    "source": "13-gangs.md 7.6"
+  },
+  {
+    "id": "core.s.leadership.iron-will",
+    "name": "Iron Will",
+    "set": "leadership",
+    "window": "end.bottle",
+    "effect": {
+      "code": {
+        "code": "ironWill",
+        "params": {
+          "bottleRoll": -1
+        }
+      }
+    },
+    "text": "Subtracts 1 from the gang's Bottle roll for as long as this fighter is on the battlefield and neither Seriously Injured nor Wrecked.",
+    "source": "13-gangs.md 7.6"
+  },
+  {
+    "id": "core.s.leadership.mentor",
+    "name": "Mentor",
+    "set": "leadership",
+    "text": "Lets this fighter pass a Leadership test to give a nearby friend one extra XP. Campaign only, so it has no effect in v1.",
+    "source": "13-gangs.md 7.6"
+  },
+  {
+    "id": "core.s.leadership.overseer",
+    "name": "Overseer",
+    "set": "leadership",
+    "action": {
+      "id": "overseer",
+      "type": "double",
+      "statuses": [
+        "standingActive"
+      ]
+    },
+    "effect": {
+      "code": {
+        "code": "overseer",
+        "params": {
+          "radius": 6,
+          "test": "leadership",
+          "targetActions": 2,
+          "targetNeedsReady": false
+        }
+      }
+    },
+    "text": "Double action (Order), only while Active. Pass a Leadership test to have a friendly fighter within 6 inches activate immediately and take two actions even if not Ready; that fighter's Ready status stays as it was.",
+    "source": "13-gangs.md 7.6"
+  },
+  {
+    "id": "core.s.leadership.regroup",
+    "name": "Regroup",
+    "set": "leadership",
+    "window": "activation.end",
+    "when": {
+      "status": "standingActive"
+    },
+    "effect": {
+      "code": {
+        "code": "regroup",
+        "params": {
+          "radius": 6,
+          "test": "leadership"
+        }
+      }
+    },
+    "text": "A fighter still Active when its activation ends may pass a Leadership test to rally every Broken friend within 6 inches.",
+    "source": "13-gangs.md 7.6"
+  }
+]

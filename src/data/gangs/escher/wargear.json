@@ -1,0 +1,25 @@
+[
+  {
+    "id": "esc.g.chem-synth",
+    "name": "Chem-synth",
+    "kind": "equipment",
+    "cost": 15,
+    "code": {
+      "code": "chemSynth",
+      "params": {
+        "test": "intelligence",
+        "toughnessDelta": -1
+      }
+    },
+    "text": "If Standing at the start of an activation, the wearer may pass a free Intelligence test to reduce targets' Toughness by one against Gas and Toxin attacks made that activation.",
+    "source": "13-gangs.md 6.2"
+  },
+  {
+    "id": "esc.g.phelynx",
+    "name": "Phelynx",
+    "kind": "equipment",
+    "cost": 50,
+    "text": "An exotic beast pet (profile in 13-gangs 3.6). Exotic beasts are outside the v1 scope, so the engine ignores this purchase; it is kept so the Wyld Skirmishers starter gang keeps its printed cost.",
+    "source": "13-gangs.md 3.6, 8.4"
+  }
+]

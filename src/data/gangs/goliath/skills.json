@@ -1,0 +1,120 @@
+[
+  {
+    "id": "gol.s.fists-of-steel",
+    "name": "Fists of Steel",
+    "set": "muscle",
+    "window": "fight.weaponsChosen",
+    "effect": {
+      "code": {
+        "code": "fistsOfSteel",
+        "params": {
+          "unarmedStrength": 2,
+          "unarmedDamage": 2
+        }
+      }
+    },
+    "text": "Unarmed attacks get +2 Strength and Damage 2.",
+    "source": "13-gangs.md 7.7"
+  },
+  {
+    "id": "gol.s.iron-man",
+    "name": "Iron Man",
+    "set": "muscle",
+    "window": "hit.damage",
+    "effect": {
+      "code": {
+        "code": "ironMan",
+        "params": {
+          "fleshWoundsReduceToughness": false
+        }
+      }
+    },
+    "text": "Flesh Wounds never lower this fighter's Toughness, though it is still taken Out of Action once its Flesh Wounds reach its Toughness.",
+    "source": "13-gangs.md 7.7"
+  },
+  {
+    "id": "gol.s.immovable-stance",
+    "name": "Immovable Stance",
+    "set": "muscle",
+    "action": {
+      "id": "immovableStance",
+      "type": "double",
+      "statuses": [
+        "standingActive",
+        "standingEngaged"
+      ]
+    },
+    "effect": {
+      "code": {
+        "code": "immovableStance",
+        "params": {
+          "saveBonus": 2,
+          "bestSave": "2+",
+          "immovable": true,
+          "canBePinned": false,
+          "until": "nextActivation"
+        }
+      }
+    },
+    "text": "Double action (Tank). Until its next activation begins, the fighter adds 2 to its saves (best 2+), cannot be Pinned, and cannot be shifted by Hurl, Overseer, Knockback, Drag or anything similar.",
+    "source": "13-gangs.md 7.7"
+  },
+  {
+    "id": "gol.s.naaargah",
+    "name": "Naaargah!",
+    "set": "muscle",
+    "window": "action.resolved",
+    "effect": {
+      "code": {
+        "code": "naaargah",
+        "params": {
+          "test": "toughness",
+          "extraActions": 1,
+          "thenPinned": true
+        }
+      }
+    },
+    "text": "After its two actions the fighter can attempt a third by passing a Toughness test. Whether it passes or fails, it finishes the activation Pinned, and Nerves of Steel cannot stop that.",
+    "source": "13-gangs.md 7.7"
+  },
+  {
+    "id": "gol.s.unleash-the-beast",
+    "name": "Unleash the Beast",
+    "set": "muscle",
+    "action": {
+      "id": "unleashTheBeast",
+      "type": "simple",
+      "statuses": [
+        "standingEngaged"
+      ]
+    },
+    "effect": {
+      "code": {
+        "code": "unleashTheBeast",
+        "params": {
+          "test": "strength",
+          "push": "D3"
+        }
+      }
+    },
+    "text": "Simple action (Flex), only while Engaged: each fighter in base contact, friend or enemy, must pass a Strength test or be pushed D3 inches directly away.",
+    "source": "13-gangs.md 7.7"
+  },
+  {
+    "id": "gol.s.walk-it-off",
+    "name": "Walk It Off",
+    "set": "muscle",
+    "window": "activation.end",
+    "effect": {
+      "code": {
+        "code": "walkItOff",
+        "params": {
+          "minMoves": 2,
+          "test": "toughness"
+        }
+      }
+    },
+    "text": "If the fighter took two or more Move (Simple) actions this activation, a Toughness test at the end of it restores a lost Wound or removes a Flesh Wound.",
+    "source": "13-gangs.md 7.7"
+  }
+]
