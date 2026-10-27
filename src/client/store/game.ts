@@ -27,8 +27,10 @@ import { clearFeed, clearToasts, pushToast } from '../presentation/feedStore'
 import { waitForPresentationIdle } from '../presentation/idleStore'
 import { isAnnouncementHolding } from '../presentation/announceStore'
 import { pushSnapshot, resetPresentation, usePresentedStore } from '../presentation/presentedStore'
-import { speedFactor, useSettings } from '../presentation/settings'
+import { useSettings } from '../presentation/settings'
+import { setTrayHold } from '../dice/trayStore'
 import type { SeatMode } from '../params'
+import { botDelayMs, cardHoldMs, isWatching, startsAttackSequence } from './pacing'
 import { clearSave, SAVE_ENVELOPE_VERSION, SAVE_KIND, writeSave, type SaveEnvelope } from './saveGame'
 
 export interface GameMeta {
@@ -48,6 +50,21 @@ export interface NewGameOptions {
   prepare?: (state: GameState) => GameState
 }
 
+/** The decision a bot seat is about to answer, with the answer it chose, held for the "what the AI is deciding" card. */
+export interface BotDecisionShown {
+  id: string
+  seat: Seat
+  /** the answer that will be (or was) applied */
+  action: Action
+  /** the decision and the state it was taken in (the card words the choice from these, never from later state) */
+  pending: PendingDecision
+  state: GameState
+  /** the answer has gone to the engine; the card stays up while its results play */
+  applied: boolean
+}
+
+export type PauseReason = 'user' | 'attack'
+
 interface GameStore {
   state: GameState | null
   pending: PendingDecision | null
@@ -57,6 +74,23 @@ interface GameStore {
   /** every event of the battle in order (end screen, tests); bounded */
   events: GameEvent[]
   rejection: { code: string; reason: string; nonce: number } | null
+  // ---- watch mode (no human seat): pacing of the bot loop. Ignored whenever a human plays.
+  /** the bot loop holds its next answer */
+  paused: boolean
+  pauseReason: PauseReason | null
+  /** pause by itself when a shooting or fight sequence starts */
+  pauseOnAttacks: boolean
+  /** the camera follows the fighter that is acting */
+  follow: boolean
+  deciding: BotDecisionShown | null
+  /** bot answers applied in this game (tests and the watch bar read it) */
+  botAnswers: number
+  setPaused(paused: boolean, reason?: PauseReason): void
+  togglePause(): void
+  /** while paused: let exactly one bot decision through */
+  stepOnce(): void
+  setPauseOnAttacks(on: boolean): void
+  setFollow(on: boolean): void
   newGame(opts: NewGameOptions): void
   /** Open a saved game exactly where it stopped, with no replay of its dice or banners. Throws (and changes nothing) when the save cannot be restored exactly. */
   restore(env: SaveEnvelope): void
@@ -70,7 +104,6 @@ interface GameStore {
 }
 
 const EVENT_LIMIT = 6000
-const BOT_DELAY_MS = 250
 const PRESENTATION_IDLE_TIMEOUT_MS = 3000
 const NO_PROGRESS_MS = 5000
 const WATCHDOG_POLL_MS = 1000
@@ -84,6 +117,18 @@ let watchdog: ReturnType<typeof setInterval> | null = null
 let watchId: string | null = null
 let watchSince = 0
 let rejectionNonce = 0
+// watch mode: one Step request waiting to be spent, whoever waits for a go-ahead, the decision the bot loop is working on (the
+// watchdog leaves it alone), and the kind of the last answered decision (a shooting or fight sequence starts after a non-attack one)
+let stepRequested = false
+let goWaiters: (() => void)[] = []
+let botBusyId: string | null = null
+let lastAnsweredKind: string | null = null
+
+function wake(): void {
+  const w = goWaiters
+  goWaiters = []
+  for (const r of w) r()
+}
 
 function sleep(ms: number): Promise<void> {
   return ms > 0 ? new Promise((r) => setTimeout(r, ms)) : Promise.resolve()
@@ -110,7 +155,8 @@ export const useGame = create<GameStore>((set, get) => {
 
   /** Write the save after an accepted action (cleared once the game has ended). One serialisation, errors swallowed. */
   function autosave(state: GameState): void {
-    if (!savable) return
+    // a watched game (no human seat) is never saved: it must not replace, or clear, the battle a player left unfinished
+    if (!savable || isWatching(get().seats)) return
     try {
       if (state.phase === 'ended') {
         clearSave()
@@ -143,10 +189,8 @@ export const useGame = create<GameStore>((set, get) => {
     }, 0)
   }
 
-  /** Answer the pending decision for a bot seat. Tries the bot, then every legal action, then the engine's suggestion, then pass. */
-  function answerForBot(expectedId: string): void {
-    const { state, pending } = get()
-    if (!state || !pending || pending.id !== expectedId) return
+  /** The bot's answer to a decision: its own choice, else every legal action, the engine's suggestion, pass. First one the engine accepts. */
+  function resolveBotAnswer(state: GameState, pending: PendingDecision): { action: Action; result: ReturnType<typeof step> } | null {
     const candidates: Action[] = []
     try {
       candidates.push(bots![pending.seat].decide(state, pending))
@@ -159,12 +203,28 @@ export const useGame = create<GameStore>((set, get) => {
     if (pending.canPass) candidates.push({ type: 'pass', seat: pending.seat, decisionId: pending.id, payload: {} })
     for (const a of candidates) {
       const r = step(state, a)
-      if (!r.rejection) {
-        apply(r.state, r.events, r.pending)
-        return
-      }
+      if (!r.rejection) return { action: a, result: r }
       // a bot's rejected guess is never shown to the player: log it and try the next candidate
       console.debug(`[bot] ${pending.kind} rejected: ${r.rejection.code} ${r.rejection.reason}`)
+    }
+    return null
+  }
+
+  /** Send a bot's accepted answer to the engine's result (marks the decision card as answered first). */
+  function commitBot(pending: PendingDecision, result: ReturnType<typeof step>): void {
+    lastAnsweredKind = pending.kind
+    set((s) => ({ botAnswers: s.botAnswers + 1, deciding: s.deciding && s.deciding.id === pending.id ? { ...s.deciding, applied: true } : s.deciding }))
+    apply(result.state, result.events, result.pending)
+  }
+
+  /** Answer the pending decision for a bot seat at once (no card, no pause): the normal game and the watchdog. */
+  function answerForBot(expectedId: string): void {
+    const { state, pending } = get()
+    if (!state || !pending || pending.id !== expectedId) return
+    const found = resolveBotAnswer(state, pending)
+    if (found) {
+      commitBot(pending, found.result)
+      return
     }
     // last resort so a stuck bot can never freeze the battle: it resigns
     console.error(`[bot] no accepted answer for ${pending.kind}; resigning seat ${pending.seat}`)
@@ -172,12 +232,70 @@ export const useGame = create<GameStore>((set, get) => {
     if (!r.rejection) apply(r.state, r.events, r.pending)
   }
 
+  /**
+   * Watch mode: resolves 'run' when the game is running, 'step' when it is paused and one Step was asked for (the request is
+   * spent), and 'stale' when the game moved on or was replaced while waiting. A paused game waits here as long as it takes.
+   */
+  async function waitForGo(id: string, gen: number): Promise<'run' | 'step' | 'stale'> {
+    for (;;) {
+      if (gen !== generation || get().pending?.id !== id) return 'stale'
+      if (!get().paused) {
+        stepRequested = false
+        return 'run'
+      }
+      if (stepRequested) {
+        stepRequested = false
+        return 'step'
+      }
+      await new Promise<void>((r) => goWaiters.push(r))
+    }
+  }
+
   async function runBot(expectedId: string, gen: number): Promise<void> {
-    const backlog = Math.max(0, usePresentedStore.getState().latestSeq - usePresentedStore.getState().presentedSeq)
-    await waitForPresentationIdle(PRESENTATION_IDLE_TIMEOUT_MS + backlog * 150)
-    await sleep(Math.round(BOT_DELAY_MS * speedFactor(useSettings.getState().animSpeed)))
-    if (gen !== generation) return
-    answerForBot(expectedId)
+    const busyKey = `${gen}:${expectedId}`
+    botBusyId = busyKey
+    try {
+      const backlog = Math.max(0, usePresentedStore.getState().latestSeq - usePresentedStore.getState().presentedSeq)
+      await waitForPresentationIdle(PRESENTATION_IDLE_TIMEOUT_MS + backlog * 150)
+      await sleep(botDelayMs(useSettings.getState().animSpeed))
+      if (gen !== generation) return
+      const { state, pending, seats } = get()
+      if (!state || !pending || pending.id !== expectedId) return
+      if (!isWatching(seats)) {
+        answerForBot(expectedId)
+        return
+      }
+      const found = resolveBotAnswer(state, pending)
+      if (!found) {
+        answerForBot(expectedId)
+        return
+      }
+      // show what the bot decided before it happens; pause first when a shooting or fight sequence is starting
+      set({ deciding: { id: pending.id, seat: pending.seat, action: found.action, pending, state, applied: false } })
+      if (get().pauseOnAttacks && !get().paused && startsAttackSequence(lastAnsweredKind, pending.kind)) get().setPaused(true, 'attack')
+      let how = await waitForGo(expectedId, gen)
+      if (how === 'run') {
+        await sleep(cardHoldMs(useSettings.getState().animSpeed))
+        // Pause pressed while the card was up: hold the answer after all
+        how = await waitForGo(expectedId, gen)
+      }
+      if (how === 'stale') return
+      const now = get()
+      if (now.state !== state || now.pending?.id !== expectedId) return
+      commitBot(pending, found.result)
+    } finally {
+      if (botBusyId === busyKey) botBusyId = null
+    }
+  }
+
+  /** Forget the pacing state of the previous game. */
+  function resetWatch(): void {
+    stepRequested = false
+    lastAnsweredKind = null
+    botBusyId = null
+    setTrayHold(false)
+    set({ paused: false, pauseReason: null, deciding: null, botAnswers: 0 })
+    wake()
   }
 
   function startWatchdog(): void {
@@ -197,6 +315,12 @@ export const useGame = create<GameStore>((set, get) => {
         watchSince = Date.now()
         return
       }
+      // the bot loop is working on this very decision (waiting for the presentation, holding the card, or paused by the viewer):
+      // that is pacing, not a stall. Its own waits are bounded, and a paused game waits for the viewer on purpose.
+      if (botBusyId === `${generation}:${pending.id}`) {
+        watchSince = Date.now()
+        return
+      }
       if (seats[pending.seat] === 'bot' && Date.now() - watchSince >= NO_PROGRESS_MS) {
         console.warn(`[bot] watchdog answering ${pending.kind}`)
         watchSince = Date.now()
@@ -213,10 +337,36 @@ export const useGame = create<GameStore>((set, get) => {
     seats: { A: 'human', B: 'bot' },
     events: [],
     rejection: null,
+    paused: false,
+    pauseReason: null,
+    pauseOnAttacks: false,
+    follow: true,
+    deciding: null,
+    botAnswers: 0,
+
+    setPaused(paused, reason = 'user') {
+      if (paused === get().paused) return
+      set({ paused, pauseReason: paused ? reason : null })
+      setTrayHold(paused)
+      if (!paused) stepRequested = false
+      wake()
+    },
+    togglePause() {
+      get().setPaused(!get().paused)
+    },
+    stepOnce() {
+      // Step only means something while paused: one decision goes through, the game stays paused
+      if (!get().paused) return
+      stepRequested = true
+      wake()
+    },
+    setPauseOnAttacks: (pauseOnAttacks) => set({ pauseOnAttacks }),
+    setFollow: (follow) => set({ follow }),
 
     newGame(opts) {
       generation++
       if (botTimer) clearTimeout(botTimer)
+      resetWatch()
       resetDirector()
       clearAnims()
       clearFeed()
@@ -245,6 +395,7 @@ export const useGame = create<GameStore>((set, get) => {
       const { meta: m } = env
       generation++
       if (botTimer) clearTimeout(botTimer)
+      resetWatch()
       resetDirector()
       clearAnims()
       clearFeed()
@@ -310,6 +461,7 @@ export const useGame = create<GameStore>((set, get) => {
     reset() {
       generation++
       if (botTimer) clearTimeout(botTimer)
+      resetWatch()
       resetDirector()
       clearAnims()
       clearFeed()

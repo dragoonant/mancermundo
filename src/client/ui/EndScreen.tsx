@@ -7,6 +7,7 @@ import { dataBundle } from '../game/adapter'
 import { gangName, humanize } from '../game/labels'
 import { scenarioProgress } from '../game/scenario'
 import { useGame } from '../store/game'
+import { isWatching } from '../store/pacing'
 import { useSession } from '../store/session'
 import { trayEntries } from './CasualtyTray'
 import { Keyword } from './Keyword'
@@ -105,6 +106,7 @@ export function EndScreen() {
   const state = useGame((g) => g.state)
   const meta = useGame((g) => g.meta)
   const events = useGame((g) => g.events)
+  const watching = useGame((g) => isWatching(g.seats))
   const [hidden, setHidden] = useState(false)
   const lines = useMemo(() => pointsBySource(events), [events])
   if (!state || !state.result) return null
@@ -150,9 +152,12 @@ export function EndScreen() {
         </div>
         <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
           <Btn data-testid="end-again" variant="primary" onClick={() => session.playAgain()}>
-            Play again
+            {watching ? 'Watch again' : 'Play again'}
           </Btn>
-          <Tooltip title="Swap sides" body="Trade the two gangs and who plays them: you take the other gang and the bot takes yours. Same scenario and board, new seed.">
+          <Tooltip
+            title="Swap sides"
+            body={watching ? 'Trade the two gangs between the sides and watch again. Same scenario and board, new seed.' : 'Trade the two gangs and who plays them: you take the other gang and the bot takes yours. Same scenario and board, new seed.'}
+          >
             <Btn data-testid="end-swap" onClick={() => session.swapSeats()}>
               Swap sides
             </Btn>
@@ -164,7 +169,7 @@ export function EndScreen() {
             Save replay
           </Btn>
           <Btn data-testid="end-menu" onClick={() => session.backToMenu()}>
-            Main menu
+            {watching ? 'Back to start' : 'Main menu'}
           </Btn>
         </div>
       </div>
