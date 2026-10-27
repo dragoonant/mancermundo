@@ -32,14 +32,17 @@ export function headbuttTargets(state: GameState, f: Fighter): Fighter[] {
   return f.engagedWith.map((id) => state.fighters[id]).filter((e): e is Fighter => !!e && e.location === 'board' && baseGap(f, e) <= CONTACT_EPS)
 }
 
-/** Friends an Overseer may order: on the battlefield within the radius (path), not already part of the group in progress. */
+/**
+ * Friends an Overseer may order: on the battlefield within the radius (path), not already part of the group in progress, and not
+ * in an Immovable Stance (the stance names Overseer among the skills that cannot move the fighter).
+ */
 export function overseerTargets(state: GameState, f: Fighter): Fighter[] {
   const hit = skillOf(state, f, 'overseer')
   if (!hit) return []
   const radius = numParam(hit.params, 'radius', 6)
   const group = state.action.group
   return friendsOf(state, f)
-    .filter((g) => g.location === 'board' && withinPath(state, f, g, radius) && !(group && group.members.includes(g.id) && !group.done.includes(g.id)))
+    .filter((g) => g.location === 'board' && !isImmovable(state, g) && withinPath(state, f, g, radius) && !(group && group.members.includes(g.id) && !group.done.includes(g.id)))
     .sort((a, b) => (a.id < b.id ? -1 : 1))
 }
 

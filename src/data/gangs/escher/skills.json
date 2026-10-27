@@ -78,7 +78,7 @@
         }
       }
     },
-    "text": "Following a Charge (Double) and ahead of the enemy's reaction attacks, the fighter makes a free Retreat (Basic) action. If that works, the opponent gets only one set of reaction attacks.",
+    "text": "Following a Charge (Double) and ahead of the enemy's reaction attacks, the fighter may make a free Retreat (Basic) action. Should the Retreat fail, the opponent still gets only one set of reaction attacks.",
     "source": "13-gangs.md 7.8"
   },
   {

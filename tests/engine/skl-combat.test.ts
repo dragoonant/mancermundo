@@ -401,6 +401,16 @@ describe('SKC: skill actions', () => {
     const o = must(step(ready, choose(ready, { action: 'overseer', targetId: 'A3' }), dice(3, 3)))
     const done = must(step(o.state, act.endActivation(o.state.pending!)))
     expect(done.state.fighters.A3!.ready).toBe(true)
+    // a friend in an Immovable Stance cannot be ordered (the stance names Overseer among the skills that cannot move it)
+    const stance = meleeGame({
+      spots,
+      tweak: (d) => {
+        give(d, 'A1', SKILL.overseer)
+        d.effects.push({ id: 'eX', source: 'immovableStance', seat: 'A', kind: 'immovableStance', fighterId: 'A3', expires: 'startOfActivation:A3' })
+      },
+      active: 'A1',
+    })
+    expect(ids(stance).filter((id) => id.startsWith('overseer'))).toEqual([])
   })
 
   it('SKC-018 Immovable Stance: a Double action; until its next activation +2 to saves (best 2+), cannot be Pinned, cannot be shifted', () => {
@@ -608,6 +618,13 @@ describe('SKC: skills inside the close-combat sequence and at activation boundar
     const e = meleeGame({ spots: { A3: { x: 0, z: -10, facing: N }, B3: { x: 0, z: -10 + TOUCH, facing: S }, A4: { x: 3, z: -10, facing: N } }, tweak: (d) => { give(d, 'A3', SKILL.regroup); d.fighters.A4!.conditions.broken = { since: 1 } }, active: 'A3' })
     const n = must(step(e, act.endActivation(e.pending!)))
     expect(eventsOf(n.events, 'SkillTest')).toHaveLength(0)
+    // Broken is a condition, not a status: a Broken fighter that is still Active when its activation ends tests and rallies the others
+    const b = edit(make(), (d) => {
+      d.fighters.A3!.conditions.broken = { since: 1 }
+    })
+    const br = must(step(b, act.endActivation(b.pending!), dice(4, 3)))
+    expect(eventsOf(br.events, 'SkillTest')[0]).toMatchObject({ fighterId: 'A3', test: 'Ld', passed: true })
+    expect(br.state.fighters.A4!.conditions.broken).toBeUndefined()
   })
 
   it('SKC-026 Commanding Presence: Group Activation +1', () => {

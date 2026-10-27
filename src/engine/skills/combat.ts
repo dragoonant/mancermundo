@@ -140,7 +140,8 @@ const DEFS: Def[] = [
           const hit = skillOf(ctx.state, f, 'regroup')
           if (!hit) return null
           refreshEngagement(ctx)
-          if (f.location !== 'board' || f.posture !== 'standing' || f.engagedWith.length > 0 || isBroken(f)) return null
+          // Active is a status (Standing, not Engaged); Broken is a condition and does not stop it
+          if (f.location !== 'board' || f.posture !== 'standing' || f.engagedWith.length > 0) return null
           const radius = numParam(hit.params, 'radius', constants(ctx.state).radii.groupActivation)
           const broken = friendsOf(ctx.state, f).filter((g) => g.location === 'board' && isBroken(g) && withinPath(ctx.state, f, g, radius))
           if (broken.length === 0) return null
