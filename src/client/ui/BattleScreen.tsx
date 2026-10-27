@@ -8,7 +8,11 @@ import { useAnnouncementStore } from '../presentation/announceStore'
 import { useFeedStore } from '../presentation/feedStore'
 import { useDisplayState, useSettled } from '../presentation/presentedStore'
 import { useGame } from '../store/game'
+import { isWatching } from '../store/pacing'
 import { BattleHud } from './BattleHud'
+import { BotDecisionCard } from './BotDecisionCard'
+import { WatchControls } from './WatchControls'
+import { Tooltip } from './Tooltip'
 import { CasualtyTray } from './CasualtyTray'
 import { DecisionPrompt } from './DecisionPrompt'
 import { EndScreen } from './EndScreen'
@@ -19,7 +23,7 @@ import { ScenarioPanel } from './ScenarioPanel'
 import { useFormFactor } from './formFactor'
 import { colors, fontStack, panel } from './theme'
 import { useUi } from './uiStore'
-import { Btn, Die, seatColor } from './widgets'
+import { Die, seatColor } from './widgets'
 
 function Banner() {
   const a = useAnnouncementStore((s) => s.current)
@@ -73,16 +77,61 @@ function Toasts() {
   )
 }
 
+/** The one button that stays when the panels are hidden (H does the same). 44 px on a phone. */
+function UiToggle() {
+  const hidden = useUi((s) => s.uiHidden)
+  const ff = useFormFactor()
+  const size = ff.compact ? 44 : 36
+  return (
+    <div style={{ position: 'absolute', left: 'max(8px, var(--safe-left, 0px))', bottom: 'max(8px, var(--safe-bottom, 0px))', zIndex: 60, pointerEvents: 'auto' }}>
+      <Tooltip title={hidden ? 'Show the panels' : 'Hide the panels'} body="Hides every text window so only the board is left. Press H, or this button, to bring them back." placement="right">
+        <button
+          type="button"
+          data-testid="ui-toggle"
+          aria-label={hidden ? 'Show the panels' : 'Hide the panels'}
+          aria-pressed={hidden}
+          onClick={() => useUi.getState().toggleUi()}
+          style={{ ...panel, width: size, height: size, minHeight: size, padding: 0, display: 'grid', placeItems: 'center', cursor: 'pointer', color: hidden ? colors.accent : colors.text }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+            <circle cx="12" cy="12" r="3" />
+            {hidden && <path d="M3 3l18 18" />}
+          </svg>
+        </button>
+      </Tooltip>
+    </div>
+  )
+}
+
+/** With the panels hidden and a human to decide, one small reminder so the game never looks stuck. */
+function YourMoveChip() {
+  const hidden = useUi((s) => s.uiHidden)
+  const pending = useGame((s) => s.pending)
+  const seats = useGame((s) => s.seats)
+  const over = useGame((s) => s.state?.phase === 'ended')
+  const settled = useSettled()
+  if (!hidden || !pending || over || !settled || seats[pending.seat] !== 'human') return null
+  return (
+    <div data-testid="ui-chip" style={{ ...panel, position: 'absolute', left: '50%', bottom: 12, transform: 'translateX(-50%)', padding: '5px 12px', fontSize: 12, color: colors.muted, pointerEvents: 'none', zIndex: 59, borderTop: `3px solid ${seatColor(pending.seat)}`, whiteSpace: 'nowrap' }}>
+      Your move: press H to show
+    </div>
+  )
+}
+
 export function BattleScreen() {
   const state = useDisplayState()
   const settled = useSettled()
   const ff = useFormFactor()
   const showCard = useUi((s) => s.selected !== null || s.hoverFighter !== null)
-  // keyboard: Escape cancels a pending move, Q / E turn the facing a fighter is deployed with
+  const hidden = useUi((s) => s.uiHidden)
+  const watching = useGame((s) => isWatching(s.seats))
+  // keyboard: H hides or shows every panel, Escape cancels a pending move, Q / E turn the facing a fighter is deployed with
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLElement && /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return
-      if (e.key === 'Escape') {
+      if (e.target instanceof HTMLElement && (/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName) || e.target.isContentEditable)) return
+      if ((e.key === 'h' || e.key === 'H') && !e.ctrlKey && !e.metaKey && !e.altKey) useUi.getState().toggleUi()
+      else if (e.key === 'Escape') {
         if (!cancelDecision()) useUi.setState({ selected: null })
       } else if (e.key === 'q' || e.key === 'Q') rotateFacing(-Math.PI / 4)
       else if (e.key === 'e' || e.key === 'E') rotateFacing(Math.PI / 4)
@@ -96,27 +145,39 @@ export function BattleScreen() {
     useUi.getState().resetDecision()
   }, [decisionId])
   const over = !!state && state.phase === 'ended' && settled
-  const column: CSSProperties = { position: 'absolute', left: 8, bottom: 10, display: 'flex', flexDirection: 'column', gap: 6, zIndex: 15, pointerEvents: 'none', maxWidth: 'calc(100vw - 16px)' }
+  const column: CSSProperties = { position: 'absolute', left: 8, bottom: ff.compact ? 60 : 52, display: 'flex', flexDirection: 'column', gap: 6, zIndex: 15, pointerEvents: 'none', maxWidth: 'calc(100vw - 16px)' }
   const rail: CSSProperties = { position: 'absolute', top: ff.compact ? 112 : 76, right: 8, display: 'flex', flexDirection: 'column', gap: 6, zIndex: 20, pointerEvents: 'none' }
   return (
     <div data-testid="battle" data-phase={state?.phase} data-round={state?.round} style={{ position: 'fixed', inset: 0, overflow: 'hidden', background: '#0a0a10' }}>
       <BoardCanvas />
       <div style={{ position: 'absolute', inset: 0, padding: 'var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left)', pointerEvents: 'none' }}>
-        <BattleHud />
-        <CasualtyTray />
-        <ScenarioPanel />
-        {!ff.compact && (
-          <div style={column}>
-            <EventFeed />
+        {/* one flag hides every panel: they stay mounted (their state and effects keep running), only the display goes */}
+        <div data-testid="panels" data-hidden={hidden ? '1' : '0'} style={hidden ? { display: 'none' } : { display: 'contents' }}>
+          <BattleHud />
+          <CasualtyTray />
+          <ScenarioPanel />
+          {!ff.compact && (
+            <div style={column}>
+              <EventFeed />
+            </div>
+          )}
+          <div style={rail}>
+            {showCard && <FighterStrip />}
+            <DiceTray />
           </div>
-        )}
-        <div style={rail}>
-          {showCard && <FighterStrip />}
-          <DiceTray />
+          {/* nobody to prompt in a watched game: the decision card says what the AI is doing */}
+          {!watching && <DecisionPrompt />}
+          {watching && (
+            <div style={{ position: 'absolute', left: '50%', bottom: ff.compact ? 6 : 12, transform: 'translateX(-50%)', width: 'max-content', maxWidth: ff.compact ? 'calc(100% - 150px)' : 'calc(100% - 24px)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, zIndex: 32, pointerEvents: 'none' }}>
+              <BotDecisionCard />
+              <WatchControls />
+            </div>
+          )}
+          <Banner />
+          <Toasts />
         </div>
-        <DecisionPrompt />
-        <Banner />
-        <Toasts />
+        <YourMoveChip />
+        <UiToggle />
       </div>
       <RotatePrompt />
       {over && <EndScreen />}

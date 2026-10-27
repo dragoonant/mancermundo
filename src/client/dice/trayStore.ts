@@ -3,6 +3,7 @@
 // Shoot or Fight clears the tray, and it folds away on its own a few seconds after the last row.
 import { create } from 'zustand'
 import type { Seat } from '@/engine'
+import { speedFactor } from '../presentation/settings'
 
 export type RowKind = 'hit' | 'wound' | 'save' | 'injury' | 'firepower' | 'ammo' | 'scatter' | 'parry'
 export type DieShape = 'pips' | 'firepower' | 'injury'
@@ -54,9 +55,19 @@ export const useTray = create<TrayState>(() => ({ ...EMPTY }))
 let nextId = 1
 let timer: ReturnType<typeof setTimeout> | null = null
 
+/** While true (a watched game is paused) the tray stays up however long it has been there. */
+let held = false
+
+export function setTrayHold(on: boolean): void {
+  held = on
+  if (!on && useTray.getState().rows.length > 0) arm()
+}
+
 function arm(): void {
   if (timer !== null) clearTimeout(timer)
-  timer = typeof setTimeout === 'undefined' ? null : setTimeout(trayClear, TRAY_LINGER_MS)
+  // slow speed stretches the linger with every other pause, so the rows can still be read when the next beat arrives
+  const linger = Math.round(TRAY_LINGER_MS * Math.max(1, speedFactor()))
+  timer = typeof setTimeout === 'undefined' ? null : setTimeout(() => (held ? arm() : trayClear()), linger)
 }
 
 export function trayBegin(title: string): void {

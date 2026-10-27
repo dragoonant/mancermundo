@@ -57,7 +57,7 @@ function persist(s: Persisted): void {
   }
 }
 
-/** Multiplier applied to every presentation pause. 'instant' = 0 (no waiting at all). */
+/** Multiplier applied to every presentation pause. 'instant' = 0 (no waiting at all); 'slow' leaves time to read every roll and feed line. */
 export function speedFactor(speed: AnimSpeed = useSettings.getState().animSpeed): number {
-  return speed === 'instant' ? 0 : speed === 'fast' ? 0.35 : 1
+  return speed === 'instant' ? 0 : speed === 'fast' ? 0.35 : speed === 'slow' ? 2.5 : 1
 }

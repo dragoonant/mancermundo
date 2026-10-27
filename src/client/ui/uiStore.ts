@@ -31,6 +31,10 @@ interface UiState {
   /** phone layout: the fighter card is open as a sheet (it is a small button otherwise) */
   cardOpen: boolean
   cameraPreset: { id: CameraRequest; nonce: number } | null
+  /** every overlay panel is hidden, leaving the board and the show/hide button (H). One flag: no panel keeps its own. */
+  uiHidden: boolean
+  setUiHidden(hidden: boolean): void
+  toggleUi(): void
   set(p: Partial<UiState>): void
   resetDecision(): void
   requestCamera(id: CameraRequest): void
@@ -50,6 +54,9 @@ export const useUi = create<UiState>((set) => ({
   scenarioOpen: false,
   cardOpen: false,
   cameraPreset: null,
+  uiHidden: false,
+  setUiHidden: (uiHidden) => set({ uiHidden }),
+  toggleUi: () => set((s) => ({ uiHidden: !s.uiHidden })),
   set: (p) => set(p),
   resetDecision: () => set({ facing: null, focusDoor: null, hover: null, hoverNote: null, hoverOption: null }),
   requestCamera: (id) => set((s) => ({ cameraPreset: { id, nonce: (s.cameraPreset?.nonce ?? 0) + 1 } })),

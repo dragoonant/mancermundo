@@ -50,6 +50,10 @@ export interface Session {
   setScenario(id: string): void
   setBoard(id: string): void
   setStarter(seat: Seat, starterId: string): void
+  /** Watch AI vs AI: both seats are bots; the seed, scenario, board and gangs as set. The saved battle is left alone. */
+  launchWatch(): void
+  /** Watch mode set-up: the house that plays a side (its first starter gang, unless the side already has one of that house) */
+  setWatchHouse(seat: Seat, houseId: string): void
   launch(prepare?: NewGameOptions['prepare']): void
   /** start again with the same settings and a fresh seed */
   playAgain(): void
@@ -149,7 +153,7 @@ export const useSession = create<Session>((set, get) => ({
   abandonGame() {
     clearSave()
     useGame.getState().reset()
-    set({ screen: 'start', savedGame: null, saveNotice: null, confirmReplace: false })
+    set((s) => ({ screen: 'start', seats: seatsFor(s.opponent, s.humanSeat), savedGame: null, saveNotice: null, confirmReplace: false }))
   },
   dismissSaveNotice: () => set({ saveNotice: null }),
   setSeat: (seat, mode) => set((s) => ({ seats: { ...s.seats, [seat]: mode } })),
@@ -160,9 +164,22 @@ export const useSession = create<Session>((set, get) => ({
   setScenario: (scenarioId) => set({ scenarioId, boardId: resolveBoard(dataBundle(), scenarioId, get().boardId) }),
   setBoard: (boardId) => set({ boardId }),
   setStarter: (seat, starterId) => set((s) => ({ builds: { ...s.builds, [seat]: { starterId } } })),
+  launchWatch() {
+    set({ opponent: 'bot', seats: { A: 'bot', B: 'bot' } })
+    get().launch()
+  },
+  setWatchHouse(seat, houseId) {
+    const b = dataBundle()
+    const current = b.starterGangs[get().builds[seat].starterId]
+    if (current?.house === houseId) return
+    const first = Object.values(b.starterGangs)
+      .filter((g) => g.house === houseId)
+      .sort((p, q) => (p.id < q.id ? -1 : 1))[0]
+    if (first) get().setStarter(seat, first.id)
+  },
   launch(prepare) {
     const s = get()
-    useUi.setState({ selected: null, hoverFighter: null, hoverOption: null })
+    useUi.setState({ selected: null, hoverFighter: null, hoverOption: null, uiHidden: false })
     useGame.getState().newGame({
       builds: s.builds,
       seats: s.seats,
@@ -186,7 +203,8 @@ export const useSession = create<Session>((set, get) => ({
   },
   backToMenu() {
     useGame.getState().reset()
-    set({ screen: 'start' })
+    // a watched game had both seats on bots: the menu goes back to the seats the opponent choice means
+    set((s) => ({ screen: 'start', seats: seatsFor(s.opponent, s.humanSeat) }))
     // the game in progress stays saved: the Start screen offers Continue
     get().refreshSave()
   },

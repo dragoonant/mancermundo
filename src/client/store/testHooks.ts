@@ -39,6 +39,8 @@ export interface MsHooks {
   toasts(): { text: string; kind: string }[]
   /** every event of the battle so far */
   events(): unknown[]
+  /** watch-mode pacing: paused, the bot answers applied so far, the decision on the card */
+  watch(): { paused: boolean; reason: string | null; answers: number; deciding: string | null; applied: boolean }
 }
 
 declare global {
@@ -114,5 +116,9 @@ export function installTestHooks(): void {
     autoStep,
     toasts: () => useFeedStore.getState().toasts.map((t) => ({ text: t.text, kind: t.kind })),
     events: () => useGame.getState().events,
+    watch: () => {
+      const g = useGame.getState()
+      return { paused: g.paused, reason: g.pauseReason, answers: g.botAnswers, deciding: g.deciding?.id ?? null, applied: g.deciding?.applied ?? false }
+    },
   }
 }

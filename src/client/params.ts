@@ -2,8 +2,9 @@
 //   ?lab                          the S2L lab viewer (main.tsx routes it; it has its own parameters)
 //   ?test=1&seats=human,bot&seed=<s>&gangs=gol,esc&scenario=<id|slug>&board=<id|slug>&starters=<id>,<id>&speed=instant
 //        skips the menus and opens a battle (A = first gang, B = second); `scenario`/`board` accept the full id or the slug.
+//   &watch=1   alias for seats=bot,bot: two AIs fight and the watch bar is shown (an explicit seats= wins)
 //   &fixture=shoot|charge|fight|card|end   (with ?test=1) plays the engine up to a screen worth looking at (client/dev/scenarios.ts)
-export type AnimSpeed = 'normal' | 'fast' | 'instant'
+export type AnimSpeed = 'slow' | 'normal' | 'fast' | 'instant'
 export type SeatMode = 'human' | 'bot'
 
 export interface UrlParams {
@@ -46,13 +47,13 @@ export function parseParams(search: string): UrlParams {
     lab: q.has('lab'),
     fps: q.has('fps'),
     ff: ff === 'compact' || ff === 'desktop' ? ff : null,
-    seats: [mode(seats[0], 'human'), mode(seats[1], 'bot')],
+    seats: q.get('watch') === '1' && !q.has('seats') ? ['bot', 'bot'] : [mode(seats[0], 'human'), mode(seats[1], 'bot')],
     seed: q.get('seed'),
     gangs: pair(q.get('gangs')),
     starters: pair(q.get('starters')),
     scenario: q.get('scenario'),
     board: q.get('board'),
-    speed: speed === 'normal' || speed === 'fast' || speed === 'instant' ? speed : null,
+    speed: speed === 'slow' || speed === 'normal' || speed === 'fast' || speed === 'instant' ? speed : null,
     fixture: q.get('fixture'),
   }
 }

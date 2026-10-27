@@ -39,6 +39,7 @@ export function StartScreen() {
   const s = useSession()
   const scenarios = scenarioList(b)
   const boards = boardsForScenario(b, s.scenarioId)
+  const houses = [...new Set(Object.values(b.starterGangs).map((g) => g.house))].sort()
   const seatCard = (seat: 'A' | 'B') => {
     const gang = gangSummary(s.builds[seat].starterId)
     const g = b.starterGangs[s.builds[seat].starterId]
@@ -163,6 +164,32 @@ export function StartScreen() {
             </Btn>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 10 }}>{(['A', 'B'] as const).map(seatCard)}</div>
+        </section>
+
+        <section data-testid="watch-setup" style={{ ...plate, padding: 14, display: 'flex', flexDirection: 'column', gap: 10, borderLeft: `4px solid ${hive.brass}` }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
+            <h2 style={label}>Or just watch</h2>
+            <Btn data-testid="watch-swap" onClick={() => useSession.setState((x) => ({ builds: { A: x.builds.B, B: x.builds.A } }))}>
+              Swap sides
+            </Btn>
+          </div>
+          <div style={{ fontSize: 13, color: colors.muted, lineHeight: 1.45 }}>
+            Two AIs fight it out on the scenario and board above, with controls to pause, step one decision at a time and slow the dice down. Pick the house on each side.
+          </div>
+          {(['A', 'B'] as const).map((seat) => (
+            <div key={seat}>
+              <div style={{ fontSize: 11, color: colors.muted, marginBottom: 4 }}>Side {seat} ({seat === 'A' ? 'blue' : 'red'})</div>
+              <Segment<string>
+                testId={`watch-house-${seat}`}
+                value={b.starterGangs[s.builds[seat].starterId]?.house ?? ''}
+                onChange={(h) => s.setWatchHouse(seat, h)}
+                options={houses.map((h) => ({ id: h, label: houseName(b, h) }))}
+              />
+            </div>
+          ))}
+          <Btn variant="primary" data-testid="watch-start" onClick={() => s.launchWatch()} style={{ fontSize: 16, padding: '11px 26px', minHeight: 44, alignSelf: 'flex-start' }}>
+            Watch AI vs AI
+          </Btn>
         </section>
 
         <section style={{ ...plate, padding: 14, display: 'flex', alignItems: 'flex-end', gap: 10, flexWrap: 'wrap' }}>
