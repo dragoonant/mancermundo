@@ -7,6 +7,7 @@
 import { runHook } from './hooks'
 import { inVisionArc, ARC_HALF } from './los'
 import { angleDelta } from './footprint'
+import { saveFloor } from './skills/stance'
 import type { Fighter, GameState, Vec2 } from './types'
 
 export interface SaveModifier {
@@ -98,6 +99,8 @@ export function armourSave(state: GameState, target: Fighter, sc: SaveContext): 
   // R-11.6: a fighter with no armour that gains a bonus counts as 7+ before the bonus
   const base = best ? best.base : 7
   if (sc.ap) modifiers.push({ label: 'AP', value: sc.ap })
-  const need = base - bonus - sc.ap
+  // S4K-B: Immovable Stance improves saves to at best 2+ (before the weapon's AP)
+  const floor = saveFloor(state, target)
+  const need = (floor !== null ? Math.max(floor, base - bonus) : base - bonus) - sc.ap
   return { need, item: best ? best.id : combined.item, base, modifiers }
 }

@@ -5,6 +5,7 @@
 import '@/engine' // the engine's modules import each other in a cycle: enter through the index before any submodule
 import { act, validate, type Action, type DecisionOption, type GameState, type PendingDecision, type Vec2, type Waypoint } from '@/engine'
 import { planMove, planToward, type VoluntaryKind } from '@/engine/movement'
+import { somersaultProblem } from '@/engine/skills/somersault'
 import { humanToAct, useGame } from '../store/game'
 import { optionDoor, optionFighter, rejectionText } from '../game/labels'
 import { pushToast } from '../presentation/feedStore'
@@ -13,7 +14,7 @@ import { useUi, type Pt } from '../ui/uiStore'
 const VOLUNTARY: readonly string[] = ['move', 'takeCover', 'crawl', 'carry']
 
 /** Decisions whose options are answered by clicking the fighter they name. */
-const FIGHTER_CLICK_KINDS: readonly string[] = ['action.activate', 'action.group', 'shoot.target', 'shoot.allocate', 'fight.after', 'action.flee', 'setup.crew']
+const FIGHTER_CLICK_KINDS: readonly string[] = ['action.activate', 'action.group', 'shoot.target', 'shoot.allocate', 'fight.after', 'action.flee', 'setup.crew', 'skill.choice']
 
 // ---------------------------------------------------------------- facing
 
@@ -89,6 +90,13 @@ export function routeTo(state: GameState, pending: PendingDecision, pt: Vec2): M
   const max = c.maxInches ?? Number(pending.context.maxInches ?? 0)
   const oneInch = c.oneInch ?? 'enemy'
   const target = { x: round3(pt.x), z: round3(pt.z) }
+  // Somersault places the fighter at the clicked spot (no route): the engine says whether the spot is legal
+  if (c.kind === 'somersault') {
+    const bad = somersaultProblem(state, f, target, max)
+    if (bad) return NO_ROUTE(max, rejectionText(bad))
+    const d = Math.hypot(target.x - f.pos.x, target.z - f.pos.z)
+    return { ok: true, waypoints: [target], cost: d, max, left: Math.max(0, max - d), end: target, short: false, reason: null }
+  }
   let wps: Vec2[] | null = null
   if (VOLUNTARY.includes(c.kind)) wps = planToward(state, f, c.kind as VoluntaryKind, max, target, oneInch)
   if (!wps) wps = [target]

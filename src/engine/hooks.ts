@@ -42,6 +42,9 @@ export type HookName = (typeof HOOK_NAMES)[number]
  *  - Handlers must be idempotent: the engine may re-run a hook after a decision it requested was answered.
  *  - `fighterId` is the subject of the hook (the shooter, the fighter taking the test or the wound); `targetId` is its
  *    opponent in the sequence.
+ *  - Close combat (S4K-B): `fight.attackDice` data carries `{ weaponIds, charge, role: 'fight' | 'reaction', failed }` (`failed`: the
+ *    opponent's attacks at this fighter that failed to hit, for reactions); `weapon.traits` runs for each melee profile with
+ *    `data: { melee: true, traits, rangeLong? }`, a handler pushes onto `traits` (and may set `rangeLong`, the Versatile reach).
  */
 
 export interface HookContext {

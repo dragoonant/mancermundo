@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
-import { join } from 'node:path'
+import { dirname, join, relative, resolve, sep } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { ALL_MODULES, moduleFor } from '@/engine/modules'
 import { skillsModule } from '@/engine/skills'
@@ -40,8 +40,12 @@ describe('module boundaries', () => {
     const bad: string[] = []
     for (const f of files) {
       for (const { spec, line } of imports(f)) {
-        // the type-only data records are the one allowed import (00-architecture section 1)
-        if (!spec.startsWith('./') && spec !== '../data/types') bad.push(`${f}:${line} imports ${spec}`)
+        // the type-only data records are the one allowed import (00-architecture section 1); files in src/engine/<dir>/ import their
+        // siblings with './' and the engine files above them with '../'
+        const target = resolve(dirname(f), spec)
+        const inside = spec.startsWith('./') || (spec.startsWith('../') && relative(resolve(ENGINE), target).split(sep)[0] !== '..')
+        const dataTypes = relative(resolve('src/data'), target).replace(/\\/g, '/') === 'types'
+        if (!inside && !dataTypes) bad.push(`${f}:${line} imports ${spec}`)
       }
       for (const [i, raw] of readFileSync(f, 'utf8').split('\n').entries()) {
         const c = code(raw)

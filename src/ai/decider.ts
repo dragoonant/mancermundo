@@ -12,6 +12,7 @@ import * as moves from './moves'
 import { passAction, randomPolicy, suggestPolicy } from './random'
 import * as setup from './setup'
 import * as shoot from './shoot'
+import * as skills from './skills'
 import { aiBudgetMs, clock, newMemory, tunedWeights, TIERS, workPerMs, type AiCtx, type AiMemory, type Tier, type TierParams, type Weights } from './tiers'
 
 type Policy = (ctx: AiCtx) => Action | null
@@ -38,7 +39,7 @@ export const POLICIES: Record<DecisionKind, Policy> = {
   'end.bottle': end.bottle,
   'end.assist': end.assist,
   'end.recoveryPick': end.recoveryPick,
-  'skill.choice': end.skillChoice,
+  'skill.choice': skills.skillChoice,
   'dice.reroll': end.reroll,
   confirm: end.confirm,
 }

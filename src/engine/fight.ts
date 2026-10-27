@@ -42,10 +42,20 @@ import { reject, type Ctx, type Handled, type ModuleDef, type OptionInput } from
 import { constants, EngineInvariantError, enemiesOf, friendsOf, getFighter, isBroken } from './state'
 import { linkedWeaponIds } from './shoot'
 import { hasTrait, isMeleeProfile, meltaApplies, profileImplemented, profileRanges, profileStrength, setCondition, T, versatileReach } from './traits'
-import type { Action, Fighter, GameState, PendingDecision, RuntimeProfile, Seat, Vec2 } from './types'
+import { markFired } from './code-hooks'
+import { acrobaticFor } from './movement'
+import { hasSkill, mentalTest, numParam, skillOf } from './skills/common'
+import { hurlTargets, resolveHurl } from './skills/hurl'
+import type { Action, Fighter, GameState, PendingDecision, RuntimeProfile, Seat, TraitRef, Vec2 } from './types'
 
 /** R-10.10: the consolidate move. */
 export const CONSOLIDATE_INCHES = 2
+
+/** The consolidate allowance of a fighter: 2", or 4" with Impetuous. */
+export function consolidateInches(state: GameState, f: Fighter): number {
+  const hit = skillOf(state, f, 'impetuous')
+  return hit ? numParam(hit.params, 'consolidateInches', 4) : CONSOLIDATE_INCHES
+}
 /** R-14.3 Entangle: a natural 6 to hit puts the target's reaction attacks at -2. */
 const ENTANGLE_MODIFIER = -2
 
@@ -72,6 +82,23 @@ interface AttackFrame {
   weaponIds: string[] | null
   split: Record<string, number> | null
   stage: 'start' | 'weapons' | 'split' | 'splitting' | 'roll'
+  /** a reaction: how many of the target's attacks at this fighter failed to hit (Counter-attack) */
+  failed: number
+  /** a reaction made because of a Retreat's Initiative test (not the reaction attacks that follow a Fight) */
+  escape: boolean
+  /** the Lightning Reflexes and Hurl windows of this attack were offered already */
+  offered: boolean
+}
+
+/** A skill offered inside the sequence (`skill.choice`): Hit and Run, Lightning Reflexes, Hurl instead of the free Fight. */
+interface ChoiceFrame {
+  type: 'choice'
+  skill: 'hitAndRun' | 'lightningReflexes' | 'hurlFight'
+  /** the fighter whose skill it is (the seat that answers) */
+  fighterId: string
+  /** the fighter making the attack the choice interrupts */
+  attackerId: string
+  stage: 'start' | 'asked'
 }
 
 interface AfterFrame {
@@ -92,9 +119,11 @@ interface EscapeFrame {
   passed: boolean
   /** the enemies it was Engaged with (Retreat falls back to moving straight away from the nearest) */
   from: string[]
+  /** a free Retreat granted by Hit and Run or Lightning Reflexes (its reaction attacks count as the opponent's one set, Hit and Run) */
+  skill?: 'hitAndRun' | 'lightningReflexes'
 }
 
-type Frame = AttackFrame | AfterFrame | EscapeFrame
+type Frame = AttackFrame | AfterFrame | EscapeFrame | ChoiceFrame
 
 export type Resume =
   | { kind: 'pay'; fighterId: string; action: string; free: string[] }
@@ -109,6 +138,8 @@ interface FightSeq {
   resume: Resume
   /** fighters whose reaction attacks are at -2 this sequence (Entangle) */
   entangled: string[]
+  /** enemies that already made reaction attacks against a Hit and Run Retreat: no second set after the Fight (S4K-B) */
+  reacted?: string[]
 }
 
 function seqOf(state: GameState): FightSeq {
@@ -128,7 +159,7 @@ const pop = (seq: FightSeq): void => {
 }
 
 function attackFrame(attackerId: string, role: AttackFrame['role'], targets: string[], extra: Partial<AttackFrame> = {}): AttackFrame {
-  return { type: 'attack', attackerId, role, targets, engaged: [], charge: false, unseen: [], reachWeapon: null, turned: false, weaponIds: null, split: null, stage: 'start', ...extra }
+  return { type: 'attack', attackerId, role, targets, engaged: [], charge: false, unseen: [], reachWeapon: null, turned: false, weaponIds: null, split: null, stage: 'start', failed: 0, escape: false, offered: false, ...extra }
 }
 
 // ---------------------------------------------------------------------------
@@ -148,9 +179,21 @@ export function meleeWeapons(state: GameState, f: Fighter): MeleeWeapon[] {
     const w = state.data.weapons[fw.weaponId]
     if (!w) continue
     const p = w.profiles.find((q) => !fw.lostProfiles.includes(q.id) && isMeleeProfile(q) && profileImplemented(state, q))
-    if (p) out.push({ weaponId: fw.weaponId, profile: p })
+    if (p) out.push({ weaponId: fw.weaponId, profile: grantedTraits(state, f, fw.weaponId, p) })
   }
   return out
+}
+
+/**
+ * The `weapon.traits` hook point for close combat: skills that give a fighter's weapons a trait (Combat Virtuoso: Versatile with
+ * reach equal to Strength) push onto `data.traits` and may set `data.rangeLong`; the profile is copied only when something changed.
+ * `data.melee` is true so a handler written for ranged profiles can tell the contexts apart.
+ */
+function grantedTraits(state: GameState, f: Fighter, weaponId: string, p: RuntimeProfile): RuntimeProfile {
+  const data: { melee: true; traits: TraitRef[]; rangeLong?: number } = { melee: true, traits: p.traits.slice() }
+  runHook('weapon.traits', { seat: f.seat, state, fighterId: f.id, weaponId, data })
+  if (data.traits.length === p.traits.length && data.rangeLong === undefined) return p
+  return { ...p, traits: data.traits, range: data.rangeLong === undefined ? p.range : { ...p.range, long: data.rangeLong } }
 }
 
 export function meleeProfile(state: GameState, f: Fighter, weaponId: string): RuntimeProfile | null {
@@ -159,15 +202,19 @@ export function meleeProfile(state: GameState, f: Fighter, weaponId: string): Ru
 
 const isSidearm = (p: RuntimeProfile | null) => !!p && hasTrait(p, T.sidearm) && p.range.long !== 'E' && !hasTrait(p, T.melee)
 
-/** R-10.4: A, Paired doubles the base A on a charge, +1 for two weapons (or Paired), +1 on a charge; `fight.attackDice` hooks. */
-export function attackDiceFor(state: GameState, f: Fighter, weaponIds: readonly string[], charge: boolean): number {
+/**
+ * R-10.4: A, Paired doubles the base A on a charge, +1 for two weapons (or Paired), +1 on a charge; `fight.attackDice` hooks.
+ * `ctx` says which attack it is (`role`) and, for a reaction, how many of the opponent's attacks at this fighter failed to hit
+ * (`failed`: Counter-attack); queries that do not know leave it out.
+ */
+export function attackDiceFor(state: GameState, f: Fighter, weaponIds: readonly string[], charge: boolean, ctx: { role?: 'fight' | 'reaction'; failed?: number } = {}): number {
   let n = stat(state, f.id, 'A')
   const profiles = weaponIds.map((id) => meleeProfile(state, f, id)).filter((p): p is RuntimeProfile => !!p)
   const paired = profiles.some((p) => hasTrait(p, T.paired))
   if (charge && paired) n *= 2
   if (weaponIds.length >= 2 || paired) n += 1
   if (charge) n += 1
-  for (const r of runHook('fight.attackDice', { seat: f.seat, state, fighterId: f.id, data: { weaponIds: weaponIds.slice(), charge } })) if (r.delta) n += r.delta
+  for (const r of runHook('fight.attackDice', { seat: f.seat, state, fighterId: f.id, data: { weaponIds: weaponIds.slice(), charge, role: ctx.role ?? 'fight', failed: ctx.failed ?? 0 } })) if (r.delta) n += r.delta
   return Math.max(0, n)
 }
 
@@ -215,7 +262,7 @@ function outOfContact(f: Fighter, t: Fighter): boolean {
  * matters), one weapon, or unarmed. An attack at Versatile reach may only use Versatile weapons that reach every target;
  * a Disarmed fighter's reaction attacks are unarmed (R-14.3). Ordered best first (pairs, singles, unarmed).
  */
-export function weaponCombos(state: GameState, f: Fighter, targets: readonly Fighter[], role: 'fight' | 'reaction', charge: boolean): string[][] {
+export function weaponCombos(state: GameState, f: Fighter, targets: readonly Fighter[], role: 'fight' | 'reaction', charge: boolean, failed = 0): string[][] {
   const atReach = targets.some((t) => outOfContact(f, t))
   const disarmed = role === 'reaction' && f.conditions.disarmed !== undefined
   if (disarmed) return atReach ? [] : [[]]
@@ -224,14 +271,17 @@ export function weaponCombos(state: GameState, f: Fighter, targets: readonly Fig
     const need = Math.max(0, ...targets.map((t) => baseGap(f, t)))
     pool = pool.filter((m) => (versatileReach(m.profile) ?? -1) >= need - 1e-9)
   }
+  // Bulging Biceps: an Unwieldy close combat weapon needs one hand, so it can be paired with a second weapon
+  const oneHanded = hasSkill(state, f, 'bulgingBiceps')
+  const twoHands = (m: MeleeWeapon) => hasTrait(m.profile, T.unwieldy) && !oneHanded
   const out: string[][] = []
   for (let i = 0; i < pool.length; i++) {
     for (let j = i + 1; j < pool.length; j++) {
       const a = pool[i]!
       const b = pool[j]!
-      if (hasTrait(a.profile, T.unwieldy) || hasTrait(b.profile, T.unwieldy)) continue
+      if (twoHands(a) || twoHands(b)) continue
       out.push([a.weaponId, b.weaponId])
-      const n = attackDiceFor(state, f, [a.weaponId, b.weaponId], charge)
+      const n = attackDiceFor(state, f, [a.weaponId, b.weaponId], charge, { role, failed })
       if (n % 2 === 1 && !isSidearm(a.profile) && !isSidearm(b.profile) && a.weaponId !== b.weaponId) out.push([b.weaponId, a.weaponId])
     }
   }
@@ -260,6 +310,8 @@ export interface MeleeNeed {
   modifiers: MeleeModifier[]
   /** Blind: only a natural 6 hits (R-3.11) */
   sixesOnly: boolean
+  /** code hooks of skills that changed this need (the roll marks them as fired) */
+  skills?: string[]
 }
 
 export interface NeedFlags {
@@ -276,8 +328,19 @@ export function meleeNeedFor(state: GameState, a: Fighter, t: Fighter, flags: Ne
   const ws = stat(state, a.id, 'WS')
   const mods: MeleeModifier[] = []
   // assists: friends Engaged with the target and no other enemy; interference: other enemies Engaged with the attacker and no other friend
-  const assists = friendsOf(state, a).filter((g) => g.engagedWith.includes(t.id) && g.engagedWith.length === 1).length
-  const interference = enemiesOf(state, a).filter((e) => e.id !== t.id && a.engagedWith.includes(e.id) && e.engagedWith.length === 1).length
+  // Combat Master: a friend with it always assists (even Engaged with other enemies), and its own attacks ignore interference
+  const skills: string[] = []
+  const assists = friendsOf(state, a).filter((g) => {
+    if (!g.engagedWith.includes(t.id)) return false
+    if (g.engagedWith.length === 1) return true
+    if (!hasSkill(state, g, 'combatMaster')) return false
+    skills.push('combatMaster')
+    return true
+  }).length
+  const interferers = enemiesOf(state, a).filter((e) => e.id !== t.id && a.engagedWith.includes(e.id) && e.engagedWith.length === 1).length
+  const ignoresInterference = interferers > 0 && hasSkill(state, a, 'combatMaster')
+  if (ignoresInterference) skills.push('combatMaster')
+  const interference = ignoresInterference ? 0 : interferers
   if (assists) mods.push({ label: 'assist', value: assists * k.assist })
   if (interference) mods.push({ label: 'interference', value: interference * k.interference })
   if (flags.turned) mods.push({ label: 'turnedToFace', value: k.turnedToFace })
@@ -289,7 +352,7 @@ export function meleeNeedFor(state: GameState, a: Fighter, t: Fighter, flags: Ne
     if (r.delta) mods.push({ label: r.reason ?? 'rule', value: r.delta })
   }
   const need = ws - mods.reduce((n, m) => n + m.value, 0)
-  return { need, ws, modifiers: mods, sixesOnly: a.conditions.blind !== undefined }
+  return { need, ws, modifiers: mods, sixesOnly: a.conditions.blind !== undefined, ...(skills.length > 0 ? { skills } : {}) }
 }
 
 function hits(natural: number, n: MeleeNeed): boolean {
@@ -343,6 +406,17 @@ export function startCharge(ctx: Ctx, f: Fighter, targetId: string, weaponId?: s
   const s = ctx.state
   const t = getFighter(s, targetId)
   const act = s.action.activation!
+  // Fearsome: the charger must first pass a Willpower test or its action ends (the Double action is spent, nobody moves)
+  if (hasSkill(s, t, 'fearsome')) {
+    markFired('fearsome')
+    const res = mentalTest(ctx, f, 'Wil', 'fearsome')
+    if (!res.passed) {
+      ctx.emit({ type: 'SkillUsed', fighterId: t.id, skill: 'fearsome', targetId: f.id, detail: 'chargeEnds' }, t.seat)
+      newSeq(ctx, f.id, { kind: 'pay', fighterId: f.id, action: 'charge', free: [] })
+      pump(ctx)
+      return
+    }
+  }
   act.charged = true
   const unseen = enemiesOf(s, f)
     .filter((e) => !(hasLos(s, f, e) && inVisionArc(f, e)))
@@ -356,8 +430,11 @@ export function startCharge(ctx: Ctx, f: Fighter, targetId: string, weaponId?: s
     .map((e) => e.id)
   const route = chargeMove(s, f, t, allowance, reach)
   if (route.wps.length > 0) {
-    const plan = planMove(s, f, route.wps, { maxInches: allowance, oneInch: 'none' })
-    if (plan.ok) applyMove(ctx, f, plan, 'charge', allowance)
+    const plan = planMove(s, f, route.wps, { maxInches: allowance, oneInch: 'none', ...(acrobaticFor(s, f) ? { acrobatic: true } : {}) })
+    if (plan.ok) {
+      if (plan.viaAcrobatic) markFired('acrobatic')
+      applyMove(ctx, f, plan, 'charge', allowance)
+    }
   }
   refreshEngagement(ctx)
   for (const id of pinnedBefore) {
@@ -449,7 +526,8 @@ function pump(ctx: Ctx): void {
     const seq = seqOf(s)
     const fr = top(seq)
     if (fr) {
-      const waiting = fr.type === 'attack' ? stepAttack(ctx, seq, fr) : fr.type === 'after' ? stepAfter(ctx, seq, fr) : stepEscape(ctx, seq, fr)
+      const waiting =
+        fr.type === 'attack' ? stepAttack(ctx, seq, fr) : fr.type === 'after' ? stepAfter(ctx, seq, fr) : fr.type === 'choice' ? stepChoice(ctx, seq, fr) : stepEscape(ctx, seq, fr)
       if (waiting) return
       continue
     }
@@ -557,6 +635,11 @@ function startAttack(ctx: Ctx, fr: AttackFrame): Fighter[] {
 function stepAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): boolean {
   const s = ctx.state
   if (fr.stage === 'start') {
+    // Hit and Run: an enemy that already reacted to the Retreat makes no second set of reaction attacks (S4K-B)
+    if (fr.role === 'reaction' && !fr.escape && seq.reacted?.includes(fr.attackerId)) {
+      pop(seq)
+      return false
+    }
     const targets = startAttack(ctx, fr)
     if (targets.length === 0) {
       pop(seq)
@@ -564,12 +647,22 @@ function stepAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): boolean {
     }
     fr.targets = targets.map((t) => t.id)
     const a = getFighter(s, fr.attackerId)
+    // skill windows before the Fight's dice: Hurl instead of the free Fight after a charge, Lightning Reflexes of the targets
+    if (fr.role === 'fight' && !fr.offered) {
+      fr.offered = true
+      const asks = fightWindows(ctx, fr, a, targets)
+      if (asks.length > 0) {
+        for (let i = asks.length - 1; i >= 0; i--) seq.stack.push(asks[i]!)
+        return false
+      }
+    }
     if (fr.role === 'reaction') ctx.emit({ type: 'ReactionStarted', fighterId: a.id }, a.seat)
-    const combos = weaponCombos(s, a, targets, fr.role, fr.charge)
+    const combos = weaponCombos(s, a, targets, fr.role, fr.charge, fr.failed)
     if (combos.length === 0) {
       pop(seq)
       return false
     }
+    if (hasSkill(s, a, 'bulgingBiceps') && combos.some((c) => c.length === 2 && c.some((id) => hasTrait(meleeProfile(s, a, id) ?? { traits: [] }, T.unwieldy)))) markFired('bulgingBiceps')
     if (combos.length === 1) {
       fr.weaponIds = combos[0]!
       fr.stage = 'split'
@@ -581,7 +674,7 @@ function stepAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): boolean {
   }
   if (fr.stage === 'split') {
     const a = getFighter(s, fr.attackerId)
-    const n = attackDiceFor(s, a, fr.weaponIds!, fr.charge)
+    const n = attackDiceFor(s, a, fr.weaponIds!, fr.charge, { role: fr.role, failed: fr.failed })
     if (fr.targets.length > 1 && n > 0) {
       fr.stage = 'splitting'
       raiseSplit(ctx, fr, a, n)
@@ -600,7 +693,7 @@ function stepAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): boolean {
 function raiseWeapons(ctx: Ctx, fr: AttackFrame, a: Fighter, combos: string[][]): void {
   const s = ctx.state
   const options: OptionInput[] = combos.map((c) => {
-    const n = attackDiceFor(s, a, c, fr.charge)
+    const n = attackDiceFor(s, a, c, fr.charge, { role: fr.role, failed: fr.failed })
     return {
       id: c.length ? c.join('+') : 'unarmed',
       labelKey: c.length ? 'fight.weapons' : 'fight.weapons.unarmed',
@@ -642,6 +735,10 @@ interface RolledDie {
   natural: number
   ok: boolean
   rerolled: boolean
+  /** Crushing Blow: the nominated attack (+1 Strength and +1 Damage if it hits) */
+  crush?: boolean
+  /** Step Aside: the hit was avoided */
+  avoided?: boolean
 }
 
 const UNARMED_DMG = { kind: 'fixed' as const, value: 1 }
@@ -650,7 +747,7 @@ function rollAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): void {
   const s = ctx.state
   const a = getFighter(s, fr.attackerId)
   const weaponIds = fr.weaponIds ?? []
-  const n = attackDiceFor(s, a, weaponIds, fr.charge)
+  const n = attackDiceFor(s, a, weaponIds, fr.charge, { role: fr.role, failed: fr.failed })
   const perWeapon = weaponDice(s, a, weaponIds, n)
   if (fr.role === 'fight') {
     ctx.emit({ type: 'FightStarted', attackerId: a.id, targets: fr.targets.slice(), weapons: weaponIds.slice(), dice: n, charge: fr.charge }, a.seat)
@@ -670,16 +767,19 @@ function rollAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): void {
       else groups.push({ weaponId: w, targetId, dice: 1 })
     }
   }
+  // Crushing Blow: before the hit rolls one attack that is not a Sidearm attack is nominated (+1 S, +1 D if it hits)
+  const crushAt = hasSkill(s, a, 'crushingBlow') ? nominateCrush(s, seq, fr, a, groups) : -1
   // (5) hit rolls, one roll per weapon and target; sidearms roll a Firepower dice each (R-10.4)
   const rolled: RolledDie[] = []
   const ammoFails: string[] = []
-  for (const g of groups) {
+  for (const [gi, g] of groups.entries()) {
     const t = getFighter(s, g.targetId)
     const p = g.weaponId ? meleeProfile(s, a, g.weaponId) : null
     const need = meleeNeedFor(s, a, t, needFlags(s, seq, fr, t))
+    for (const code of need.skills ?? []) markFired(code)
     const dice = ctx.roll('hit', g.dice)
     ctx.emit({ type: 'FightHitRolled', weaponId: g.weaponId ?? 'unarmed', targetId: t.id, dice: dice.slice(), need: need.sixesOnly ? 6 : need.need, modifiers: need.modifiers }, a.seat)
-    for (const d of dice) rolled.push({ weaponId: g.weaponId, profile: p, targetId: t.id, natural: d, ok: hits(d, need), rerolled: false })
+    dice.forEach((d, di) => rolled.push({ weaponId: g.weaponId, profile: p, targetId: t.id, natural: d, ok: hits(d, need), rerolled: false, ...(gi === crushAt && di === 0 ? { crush: true } : {}) }))
     if (p && isSidearm(p) && p.ammo !== null) {
       for (let i = 0; i < g.dice; i++) {
         const face = firepowerFace(s, ctx.roll('firepower', 1, 'firepower')[0]!)
@@ -693,6 +793,9 @@ function rollAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): void {
   }
   // Parry (R-10.9): each defender forces one successful hit to be re-rolled (two with two Parry weapons)
   for (const targetId of fr.targets) parry(ctx, seq, fr, a, getFighter(s, targetId), rolled)
+  // Step Aside: a target with the skill tries once against this attacker to avoid one of the hits that landed
+  const tried = new Set<string>()
+  for (const targetId of fr.targets) stepAside(ctx, a, getFighter(s, targetId), rolled, tried)
   // (6) resolve the hits
   for (const r of rolled) {
     if (!r.ok) continue
@@ -700,13 +803,19 @@ function rollAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): void {
     if (t.location !== 'board') continue
     resolveHit(ctx, meleeHit(s, a, t, r))
   }
-  // natural-6 effects on the targets still in the fight
+  // natural-6 effects on the targets still in the fight (Disarm skill: 6+ on any melee weapon, 5+ on one that has Disarm)
+  const disarmSkill = skillOf(s, a, 'combatDisarm')
   for (const r of rolled) {
-    if (!r.ok || r.natural !== 6 || !r.profile) continue
+    if (!r.ok || !r.profile) continue
     const t = s.fighters[r.targetId]!
     if (t.location !== 'board') continue
-    if (hasTrait(r.profile, T.disarm)) setCondition(ctx, t, 'disarmed', r.weaponId!)
-    if (hasTrait(r.profile, T.entangle) && !seq.entangled.includes(t.id)) seq.entangled.push(t.id)
+    const own = hasTrait(r.profile, T.disarm)
+    const needed = own ? (disarmSkill ? numParam(disarmSkill.params, 'existingOn', 5) : 6) : disarmSkill ? numParam(disarmSkill.params, 'grantOn', 6) : 7
+    if (r.natural >= needed) {
+      if (disarmSkill && !(own && r.natural === 6)) markFired('combatDisarm')
+      setCondition(ctx, t, 'disarmed', r.weaponId!)
+    }
+    if (r.natural === 6 && hasTrait(r.profile, T.entangle) && !seq.entangled.includes(t.id)) seq.entangled.push(t.id)
   }
   for (const id of new Set(ammoFails)) {
     for (const wid of linkedWeaponIds(a, id)) {
@@ -720,25 +829,29 @@ function rollAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): void {
   pop(seq)
   if (fr.role === 'fight') {
     seq.stack.push({ type: 'after', attackerId: a.id, mode: 'fight', engaged: fr.engaged.slice(), stage: 'start' })
-    pushReactions(s, seq, fr, a)
+    pushReactions(s, seq, fr, a, rolled)
+    // Hit and Run: after a Charge's Fight and ahead of the opponent's reaction attacks, a free Retreat may be offered
+    if (fr.charge && hasSkill(s, a, 'hitAndRun') && standingOnBoard(a) && a.engagedWith.length > 0) seq.stack.push(choiceFrame('hitAndRun', a.id, a.id))
   }
   drainInto(ctx, seq)
 }
 
 /** R-10.8: every enemy still Standing and Engaged with the attacker strikes back (a Versatile target only with Versatile reach). */
-function pushReactions(state: GameState, seq: FightSeq, fr: AttackFrame, a: Fighter): void {
+function pushReactions(state: GameState, seq: FightSeq, fr: AttackFrame, a: Fighter, rolled: readonly RolledDie[]): void {
   if (!standingOnBoard(a)) return
   const frames: AttackFrame[] = []
+  // Counter-attack counts the attacks at the reacting fighter that failed to hit (missed, parried, stepped aside)
+  const failedAt = (id: string) => rolled.filter((r) => r.targetId === id && !r.ok).length
   for (const e of enemiesOf(state, a).sort((x, y) => (x.id < y.id ? -1 : 1))) {
     if (!standingOnBoard(e) || e.conditions.blaze) continue
     if (a.engagedWith.includes(e.id)) {
-      frames.push(attackFrame(e.id, 'reaction', [a.id]))
+      frames.push(attackFrame(e.id, 'reaction', [a.id], { failed: failedAt(e.id) }))
       continue
     }
     if (!fr.reachWeapon || !fr.engaged.includes(e.id)) continue
     const gap = baseGap(e, a)
     const w = meleeWeapons(state, e).find((m) => (versatileReach(m.profile) ?? -1) >= gap - 1e-9)
-    if (w) frames.push(attackFrame(e.id, 'reaction', [a.id], { reachWeapon: w.weaponId }))
+    if (w) frames.push(attackFrame(e.id, 'reaction', [a.id], { reachWeapon: w.weaponId, failed: failedAt(e.id) }))
   }
   for (let i = frames.length - 1; i >= 0; i--) seq.stack.push(frames[i]!)
 }
@@ -748,7 +861,11 @@ function parry(ctx: Ctx, seq: FightSeq, fr: AttackFrame, a: Fighter, t: Fighter,
   const parryWeapons = t.weapons
     .map((fw) => s.data.weapons[fw.weaponId])
     .filter((w): w is NonNullable<typeof w> => !!w && w.profiles.some((p) => hasTrait(p, T.parry)))
-  let uses = Math.min(2, parryWeapons.length)
+  // the Parry skill counts as one extra Parry weapon: one more attack can be parried (it adds to the two the weapons allow)
+  const skill = skillOf(s, t, 'parrySkill')
+  const fromWeapons = Math.min(2, parryWeapons.length)
+  let uses = fromWeapons + (skill ? numParam(skill.params, 'extraParry', 1) : 0)
+  let used = 0
   if (uses === 0) return
   const powerParry = parryWeapons.some((w) => w.profiles.some((p) => hasTrait(p, T.parry) && hasTrait(p, T.power)))
   while (uses > 0) {
@@ -759,12 +876,56 @@ function parry(ctx: Ctx, seq: FightSeq, fr: AttackFrame, a: Fighter, t: Fighter,
     // the defender takes away the most dangerous hit: a Power hit first, then the highest Damage
     const pick = eligible.reduce((x, y) => (danger(y) > danger(x) ? y : x))
     const roll = ctx.roll('parry', 1)[0]!
+    if (skill && used >= fromWeapons) markFired('parrySkill')
     pick.natural = roll
     pick.rerolled = true
     pick.ok = hits(roll, meleeNeedFor(s, a, t, needFlags(s, seq, fr, t)))
     ctx.emit({ type: 'Parried', by: t.id, rerolled: [roll] }, t.seat)
     uses--
+    used++
   }
+}
+
+/**
+ * Step Aside: a target with the skill may pass an Initiative test to avoid a hit, once against this attacker per set of attacks
+ * (the attempt is made on the most dangerous hit that landed on it). Made automatically: it can never cost the target anything.
+ */
+function stepAside(ctx: Ctx, a: Fighter, t: Fighter, rolled: RolledDie[], tried: Set<string>): void {
+  if (t.location !== 'board' || tried.has(t.id) || !hasSkill(ctx.state, t, 'stepAside')) return
+  const landed = rolled.filter((r) => r.ok && r.targetId === t.id)
+  if (landed.length === 0) return
+  tried.add(t.id)
+  const pick = landed.reduce((x, y) => (danger(y) > danger(x) ? y : x))
+  markFired('stepAside')
+  if (initiativeTest(ctx, t, 'stepAside')) {
+    pick.ok = false
+    pick.avoided = true
+    ctx.emit({ type: 'SkillUsed', fighterId: t.id, skill: 'stepAside', targetId: a.id, detail: 'avoided' }, t.seat)
+  }
+}
+
+/**
+ * Crushing Blow: nominate the one attack (a die of a group that is not a Sidearm attack) that gains +1 Strength and +1 Damage.
+ * Made automatically (it can never hurt): the die of the group whose weapon is expected to do the most with the boost. Returns the
+ * index of that group in `groups`, or -1 when every attack is a Sidearm attack.
+ */
+function nominateCrush(s: GameState, seq: FightSeq, fr: AttackFrame, a: Fighter, groups: { weaponId: string | null; targetId: string; dice: number }[]): number {
+  let best = -1
+  let bestScore = -Infinity
+  groups.forEach((g, i) => {
+    const p = g.weaponId ? meleeProfile(s, a, g.weaponId) : null
+    if (p && isSidearm(p)) return
+    const t = getFighter(s, g.targetId)
+    const chance = meleeHitChance(meleeNeedFor(s, a, t, needFlags(s, seq, fr, t)))
+    const dmg = p ? (p.dmg.kind === 'fixed' ? p.dmg.value : p.dmg.kind === 'dice' ? 2 : 0) : hasSkill(s, a, 'fistsOfSteel') ? 2 : 1
+    const str = (p ? profileStrength(p, stat(s, a.id, 'S')) : stat(s, a.id, 'S')) + 1
+    const score = chance * (dmg + 1) * (1 + str / 10) - i * 1e-6
+    if (score > bestScore) {
+      bestScore = score
+      best = i
+    }
+  })
+  return best
 }
 
 function danger(r: RolledDie): number {
@@ -780,13 +941,19 @@ function meleeHit(state: GameState, a: Fighter, t: Fighter, r: RolledDie): HitIn
   const backstab = !!p && hasTrait(p, T.backstab) && !inVisionArc(t, a)
   const power6 = !!p && hasTrait(p, T.power) && r.natural === 6
   const shock6 = !!p && hasTrait(p, T.shock) && r.natural === 6
+  // Fists of Steel: unarmed attacks gain +2 Strength and Damage 2
+  const fists = skillOf(state, a, 'fistsOfSteel')
+  const unarmed = !p && !!fists
+  if (unarmed) markFired('fistsOfSteel')
+  if (r.crush) markFired('crushingBlow')
+  const extra = (power6 ? 1 : 0) + (r.crush ? 1 : 0)
   return {
     attackerId: a.id,
     targetId: t.id,
     weaponId: r.weaponId,
-    strength: (p ? profileStrength(p, S) : S) + (backstab ? 1 : 0),
+    strength: (p ? profileStrength(p, S) : S + (unarmed ? numParam(fists!.params, 'unarmedStrength', 2) : 0)) + (backstab ? 1 : 0) + (r.crush ? 1 : 0),
     ap: p?.ap ?? 0,
-    damage: p?.dmg ?? UNARMED_DMG,
+    damage: p?.dmg ?? (unarmed ? { kind: 'fixed' as const, value: numParam(fists!.params, 'unarmedDamage', 2) } : UNARMED_DMG),
     traits: p?.traits ?? [],
     hitRoll: r.natural,
     knockFrom: centre(a),
@@ -797,7 +964,7 @@ function meleeHit(state: GameState, a: Fighter, t: Fighter, r: RolledDie): HitIn
     saves: !power6,
     cause: r.weaponId ?? 'unarmed',
     ...(shock6 ? { autoWound: true } : {}),
-    ...(power6 ? { extraDamage: 1 } : {}),
+    ...(extra > 0 ? { extraDamage: extra } : {}),
     followUp: a.id,
   }
 }
@@ -834,7 +1001,7 @@ function stepAfter(ctx: Ctx, seq: FightSeq, fr: AfterFrame): boolean {
     }
   }
   const options: OptionInput[] = cdg.map((t) => ({ id: `cdg:${t.id}`, labelKey: 'fight.after.coupDeGrace', type: 'fight.after' as const, payload: { choice: 'coupDeGrace' as const, targetId: t.id } }))
-  if (fr.mode === 'fight') options.push({ id: 'consolidate', labelKey: 'fight.after.consolidate', type: 'fight.after', payload: { choice: 'consolidate' }, data: { maxInches: CONSOLIDATE_INCHES } })
+  if (fr.mode === 'fight') options.push({ id: 'consolidate', labelKey: 'fight.after.consolidate', type: 'fight.after', payload: { choice: 'consolidate' }, data: { maxInches: consolidateInches(s, a) } })
   options.push({ id: 'none', labelKey: 'fight.after.none', type: 'fight.after', payload: { choice: 'none' } })
   fr.stage = 'choose'
   ctx.raise({ kind: 'fight.after', seat: a.seat, window: 'fight.resolved', context: { fighterId: a.id, mode: fr.mode }, options })
@@ -876,8 +1043,10 @@ function stepEscape(ctx: Ctx, seq: FightSeq, fr: EscapeFrame): boolean {
     for (const id of f.engagedWith) {
       const e = s.fighters[id]
       if (!standingOnBoard(e) || e.conditions.blaze) continue
-      if (initiativeTest(ctx, e, `reaction:${fr.kind}`)) frames.push(attackFrame(e.id, 'reaction', [f.id]))
+      if (initiativeTest(ctx, e, `reaction:${fr.kind}`)) frames.push(attackFrame(e.id, 'reaction', [f.id], { escape: true }))
     }
+    // Hit and Run: the opponent gets one set of reaction attacks, these, and none after the Fight
+    if (fr.skill === 'hitAndRun') (seq.reacted ??= []).push(...frames.map((x) => x.attackerId))
     for (let i = frames.length - 1; i >= 0; i--) seq.stack.push(frames[i]!)
     return false
   }
@@ -928,6 +1097,116 @@ function stepEscape(ctx: Ctx, seq: FightSeq, fr: EscapeFrame): boolean {
     return true
   }
   throw new EngineInvariantError(`escape frame stuck at ${fr.stage}`)
+}
+
+// ---------------------------------------------------------------------------
+// Skill windows inside the sequence (S4K-B): Hurl instead of the free Fight, Lightning Reflexes, Hit and Run
+// ---------------------------------------------------------------------------
+
+function choiceFrame(skill: ChoiceFrame['skill'], fighterId: string, attackerId: string): ChoiceFrame {
+  return { type: 'choice', skill, fighterId, attackerId, stage: 'start' }
+}
+
+/** Lightning Reflexes: once each round, an Engaged fighter that is about to be attacked in a Fight may make a free Retreat first. */
+export function lightningAvailable(state: GameState, f: Fighter): boolean {
+  return hasSkill(state, f, 'lightningReflexes') && standingOnBoard(f) && f.engagedWith.length > 0 && effectsOf(state, 'lightningReflexesUsed', (e) => e.fighterId === f.id).length === 0
+}
+
+/** The windows ahead of a Fight's dice, in the order they are asked: Hurl instead of a charge's free Fight, then each target's Lightning Reflexes. */
+function fightWindows(ctx: Ctx, fr: AttackFrame, a: Fighter, targets: readonly Fighter[]): ChoiceFrame[] {
+  const s = ctx.state
+  const out: ChoiceFrame[] = []
+  if (fr.charge && hasSkill(s, a, 'hurl') && hurlTargets(s, a).length > 0) out.push(choiceFrame('hurlFight', a.id, a.id))
+  for (const t of targets) if (lightningAvailable(s, t)) out.push(choiceFrame('lightningReflexes', t.id, a.id))
+  return out
+}
+
+function stepChoice(ctx: Ctx, seq: FightSeq, fr: ChoiceFrame): boolean {
+  const s = ctx.state
+  if (fr.stage !== 'start') throw new EngineInvariantError(`choice frame stuck at ${fr.stage}`)
+  refreshEngagement(ctx)
+  const who = s.fighters[fr.fighterId]
+  const att = s.fighters[fr.attackerId]
+  if (!standingOnBoard(who) || !standingOnBoard(att)) {
+    pop(seq)
+    return false
+  }
+  const base = { fighterId: who.id, attackerId: att.id, skill: fr.skill }
+  const yesNo = (use: string, decline: string, data: Record<string, unknown>): OptionInput[] => [
+    { id: 'use', labelKey: use, type: 'skill.choice', payload: { option: 'use' }, data },
+    { id: 'decline', labelKey: decline, type: 'skill.choice', payload: { option: 'decline' } },
+  ]
+  if (fr.skill === 'hitAndRun') {
+    if (who.engagedWith.length === 0) {
+      pop(seq)
+      return false
+    }
+    fr.stage = 'asked'
+    const need = stat(s, who.id, 'I')
+    ctx.raise({ kind: 'skill.choice', seat: who.seat, window: 'fight.resolved', context: { ...base, engagedWith: who.engagedWith.slice() }, options: yesNo('skill.hitAndRun.use', 'skill.decline', { need, chance: d6TestChance(need) }) })
+    return true
+  }
+  if (fr.skill === 'lightningReflexes') {
+    if (!lightningAvailable(s, who) || !att.engagedWith.includes(who.id)) {
+      pop(seq)
+      return false
+    }
+    fr.stage = 'asked'
+    const need = stat(s, who.id, 'I')
+    ctx.raise({ kind: 'skill.choice', seat: who.seat, window: 'action.declared', context: base, options: yesNo('skill.lightningReflexes.use', 'skill.decline', { need, chance: d6TestChance(need) }) })
+    return true
+  }
+  // Hurl instead of the free Fight of a charge
+  const targets = hurlTargets(s, who)
+  if (targets.length === 0) {
+    pop(seq)
+    return false
+  }
+  fr.stage = 'asked'
+  const options: OptionInput[] = [
+    { id: 'fight', labelKey: 'skill.hurl.fight', type: 'skill.choice', payload: { option: 'fight' } },
+    ...targets.map((h) => ({ id: `hurl:${h.targetId}`, labelKey: 'skill.hurl.use', type: 'skill.choice' as const, payload: { option: `hurl:${h.targetId}` }, data: { targetId: h.targetId, chance: h.chance, need: h.need } })),
+  ]
+  ctx.raise({ kind: 'skill.choice', seat: who.seat, window: 'action.declared', context: base, options })
+  return true
+}
+
+/** The answer to a `skill.choice` raised by `stepChoice` (skills.ts routes it here). */
+export function answerChoice(state: GameState, action: Extract<Action, { type: 'skill.choice' }>, pending: PendingDecision): Handled {
+  if (!state.attack || state.attack.kind !== 'fight') return reject('E_WRONG_DECISION', 'no close-combat sequence is in progress')
+  const option = action.payload.option
+  const skill = pending.context.skill as ChoiceFrame['skill']
+  return {
+    run(ctx) {
+      const s = ctx.state
+      const seq = seqOf(s)
+      const fr = top(seq) as ChoiceFrame
+      const who = getFighter(s, fr.fighterId)
+      pop(seq)
+      if (skill === 'hurlFight') {
+        if (option.startsWith('hurl:')) {
+          // the Hurl replaces the free Fight: drop the windows and the attack frame it interrupts
+          while (top(seq) && !(top(seq)!.type === 'attack' && (top(seq) as AttackFrame).attackerId === fr.attackerId)) pop(seq)
+          pop(seq)
+          const res = resolveHurl(ctx, who, option.slice(5), true)
+          if (res === 'asked') return
+        }
+      } else if (option === 'use') {
+        if (skill === 'lightningReflexes') {
+          addEffect(ctx, { source: 'lightningReflexes', seat: who.seat, kind: 'lightningReflexesUsed', fighterId: who.id, expires: 'round' })
+        }
+        markFired(skill)
+        ctx.emit({ type: 'SkillUsed', fighterId: who.id, skill, targetId: fr.attackerId }, who.seat)
+        seq.stack.push({ ...escapeFrame(who, 'retreat'), skill })
+      }
+      pump(ctx)
+    },
+  }
+}
+
+/** Carry on with the close-combat sequence (a Hurl's direction was chosen inside a charge). */
+export function resumeSequence(ctx: Ctx): void {
+  pump(ctx)
 }
 
 /** movement.ts: a Retreat or Consolidate path was answered (or the consolidate declined); carry on with the sequence. */
@@ -986,12 +1265,14 @@ function handle(state: GameState, action: Action, pending: PendingDecision): Han
             if (seq.resume.kind === 'pay' && seq.resume.fighterId === a.id) seq.resume.free.push('coupDeGrace')
           } else if (p.choice === 'consolidate') {
             fr.stage = 'moving'
+            const inches = consolidateInches(s, a)
+            if (inches > CONSOLIDATE_INCHES) markFired('impetuous')
             ctx.raise({
               kind: 'move.path',
               seat: a.seat,
               window: 'fight.resolved',
-              context: { fighterId: a.id, kind: 'consolidate', maxInches: CONSOLIDATE_INCHES, obstacleCost: constants(s).obstacle.height },
-              constraints: { kind: 'consolidate', fighterId: a.id, origin: { ...a.pos }, baseRadius: a.baseRadius, maxInches: CONSOLIDATE_INCHES, oneInch: 'enemy' },
+              context: { fighterId: a.id, kind: 'consolidate', maxInches: inches, obstacleCost: constants(s).obstacle.height },
+              constraints: { kind: 'consolidate', fighterId: a.id, origin: { ...a.pos }, baseRadius: a.baseRadius, maxInches: inches, oneInch: 'enemy' },
               canPass: true,
             })
             return

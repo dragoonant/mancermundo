@@ -42,6 +42,9 @@ import {
   terminalsNear,
 } from './zm'
 import { runEndPhase } from './endphase'
+import { markFired } from './code-hooks'
+import { actionDef, hasSkill, numParam, skillActionDef, skillOf } from './skills/common'
+import { handleSkillAction, skillMenu } from './skills/actions'
 import { chargeTargets, coupDeGrace, coupDeGraceTargets, reachFights, settleNerve, startCharge, startEscape, startFight } from './fight'
 import { resolveHit } from './hits'
 import { blazeMove } from './movement'
@@ -349,6 +352,10 @@ export function actionMenu(state: GameState, fighterId: string): ActionMenu {
     }
     if (options.length === before) withheld.push({ action: a.id, reason: 'noTarget' })
   }
+  // actions granted by skills (Headbutt, Hurl, Overseer, Immovable Stance, Unleash the Beast, Somersault)
+  const granted = skillMenu(state, f, act, st, blind)
+  options.push(...granted.options)
+  withheld.push(...granted.withheld)
   // R-12.3: Running for Cover is mandatory for a Broken fighter; it may only end the activation when it cannot run
   if (st === 'broken' && options.some((o) => o.payload.action === 'runForCover')) {
     const at = options.findIndex((o) => o.payload.action === 'end')
@@ -402,14 +409,17 @@ function groupCandidates(state: GameState, leader: Fighter, nominated: readonly 
   return readyFighters(state, leader.seat).filter((f) => f.id !== leader.id && !nominated.includes(f.id) && withinPath(state, leader, f, radius))
 }
 
-function groupSize(f: Fighter): number {
-  return f.rules.find((r) => r.id === GROUP_RULE)?.x ?? 0
+/** Group Activation (X), plus the Commanding Presence skill's +1. */
+export function groupSize(state: GameState, f: Fighter): number {
+  const base = f.rules.find((r) => r.id === GROUP_RULE)?.x ?? 0
+  const cp = skillOf(state, f, 'commandingPresence')
+  return base + (cp ? numParam(cp.params, 'groupActivation', 1) : 0)
 }
 
 function raiseGroup(ctx: Ctx, leader: Fighter): void {
   const s = ctx.state
   const g = s.action.group!
-  const x = groupSize(leader)
+  const x = groupSize(s, leader)
   const cands = groupCandidates(s, leader, g.members)
   ctx.raise({
     kind: 'action.group',
@@ -565,8 +575,10 @@ function afterActivation(ctx: Ctx, f: Fighter): void {
 // Activation
 // ---------------------------------------------------------------------------
 
-function startActivation(ctx: Ctx, f: Fighter, leaderId?: string): void {
+function startActivation(ctx: Ctx, f: Fighter, leaderId?: string, order?: { overseerId: string }): void {
   const s = ctx.state
+  // an Overseer's order activates the fighter whether or not it is Ready, and leaves its Ready status as it was (restored at the end)
+  const orderedFrom = order ? { ready: f.ready, activated: f.activatedThisRound } : undefined
   f.ready = false
   f.activatedThisRound = true
   s.action.turn = f.seat
@@ -580,10 +592,11 @@ function startActivation(ctx: Ctx, f: Fighter, leaderId?: string): void {
     charged: false,
     turnedToFace: false,
     ...(leaderId ? { groupLeaderId: leaderId } : {}),
+    ...(order ? { orderedBy: order.overseerId, orderedFrom: orderedFrom! } : {}),
     declared: null,
     casualtyMark: s.casualties.length,
   }
-  ctx.emit({ type: 'FighterActivated', fighterId: f.id, ...(leaderId ? { group: true } : {}) }, f.seat)
+  ctx.emit({ type: 'FighterActivated', fighterId: f.id, ...(leaderId ? { group: true } : {}), ...(order ? { orderedBy: order.overseerId } : {}) }, f.seat)
   expireEffects(ctx, `startOfActivation:${f.id}`)
   runHook('activation.start', { seat: f.seat, state: s, engine: ctx, fighterId: f.id })
   // M-4.5 (Forgotten Riches): a fighter alone in the dark may lose actions or its life
@@ -596,8 +609,9 @@ function startActivation(ctx: Ctx, f: Fighter, leaderId?: string): void {
     endActivation(ctx)
     return
   }
-  const x = leaderId ? 0 : groupSize(f)
+  const x = leaderId || order ? 0 : groupSize(s, f)
   if (x > 0 && groupCandidates(s, f, []).length > 0) {
+    if (hasSkill(s, f, 'commandingPresence')) markFired('commandingPresence')
     s.action.group = { leaderId: f.id, seat: f.seat, members: [], done: [] }
     raiseGroup(ctx, f)
     return
@@ -675,10 +689,55 @@ export function endActivation(ctx: Ctx): void {
   const f = getFighter(s, act.fighterId)
   ctx.emit({ type: 'ActivationEnded', fighterId: f.id, actionsUsed: (act.allowance ?? 2) - act.actionsLeft }, f.seat)
   runHook('activation.end', { seat: f.seat, state: s, engine: ctx, fighterId: f.id })
+  // Naaargah!: whether or not the third action was won, the fighter ends the activation Pinned (no skill can stop it)
+  if (act.naaargah === 'pinned' && f.location === 'board' && f.posture === 'standing') {
+    f.posture = 'pinned'
+    ctx.emit({ type: 'StatusChanged', fighterId: f.id, from: 'standing', to: 'pinned', reason: 'naaargah' }, f.seat)
+    ctx.emit({ type: 'FighterPinned', fighterId: f.id }, f.seat)
+  }
   expireEffects(ctx, 'activation')
+  // an ordered fighter's Ready status is as it was before the order (a Broken fighter stays unready)
+  if (act.orderedFrom && f.location === 'board' && !isBroken(f)) {
+    f.ready = act.orderedFrom.ready
+    f.activatedThisRound = act.orderedFrom.activated
+  }
   s.action.activation = null
   refreshEngagement(ctx)
-  afterActivation(ctx, f)
+  // an Overseer's order passed its Leadership test: the ordered fighter activates at once, then the turn carries on as the Overseer's would
+  const order = s.action.order
+  if (order && !act.orderedBy) {
+    s.action.order = null
+    const target = s.fighters[order.targetId]
+    if (target && target.location === 'board' && f.location === 'board') {
+      startActivation(ctx, target, undefined, { overseerId: order.overseerId })
+      return
+    }
+  }
+  afterActivation(ctx, act.orderedBy ? (s.fighters[act.orderedBy] ?? f) : f)
+}
+
+/**
+ * Naaargah!: after its two actions the fighter may try for a third by passing a Toughness test (`skill.choice`); it ends the
+ * activation Pinned either way. True when the decision was raised.
+ */
+function offerNaaargah(ctx: Ctx, f: Fighter): boolean {
+  const s = ctx.state
+  const act = s.action.activation!
+  if (act.naaargah || act.allowance !== undefined || f.location !== 'board' || f.posture === 'seriouslyInjured' || isBroken(f) || f.conditions.blaze) return false
+  if (!hasSkill(s, f, 'naaargah')) return false
+  act.naaargah = 'declined'
+  const need = stat(s, f.id, 'T')
+  ctx.raise({
+    kind: 'skill.choice',
+    seat: f.seat,
+    window: 'action.resolved',
+    context: { skill: 'naaargah', fighterId: f.id },
+    options: [
+      { id: 'attempt', labelKey: 'skill.naaargah.attempt', type: 'skill.choice', payload: { option: 'attempt' }, data: { need, chance: Math.min(6, Math.max(0, need)) / 6 } },
+      { id: 'decline', labelKey: 'skill.decline', type: 'skill.choice', payload: { option: 'decline' } },
+    ],
+  })
+  return true
 }
 
 /**
@@ -688,7 +747,7 @@ export function endActivation(ctx: Ctx): void {
 export function payAndContinue(ctx: Ctx, f: Fighter, key: string, turnAfter = false, type?: ActionCostType): void {
   const s = ctx.state
   const act = s.action.activation!
-  const a = type ? { ...s.data.actions[key]!, type } : s.data.actions[key]!
+  const a = type ? { ...actionDef(s, key)!, type } : actionDef(s, key)!
   // R-4.1: a free turn comes before the first action and right after a move; any other action closes it
   act.canTurn = turnAfter
   act.performed.push({ action: key, type: a.type })
@@ -713,6 +772,7 @@ export function continueActivation(ctx: Ctx): void {
   }
   const f = getFighter(s, act.fighterId)
   refreshEngagement(ctx)
+  if (f.location === 'board' && act.actionsLeft <= 0 && offerNaaargah(ctx, f)) return
   if (f.location !== 'board' || act.actionsLeft <= 0) endActivation(ctx)
   else raiseChoose(ctx)
 }
@@ -727,6 +787,7 @@ export function resumeFlow(ctx: Ctx, seat: Seat): void {
   const act = s.action.activation
   if (act) {
     const f = getFighter(s, act.fighterId)
+    if (f.location === 'board' && act.actionsLeft <= 0 && offerNaaargah(ctx, f)) return
     if (f.location !== 'board' || act.actionsLeft <= 0) endActivation(ctx)
     else raiseChoose(ctx)
     return
@@ -753,10 +814,13 @@ export function resumeFlow(ctx: Ctx, seat: Seat): void {
 
 function declare(ctx: Ctx, f: Fighter, key: string, params?: Record<string, unknown>): void {
   const act = ctx.state.action.activation!
-  const a = ctx.state.data.actions[key]!
+  const a = actionDef(ctx.state, key)!
   act.declared = { action: key, ...(params ? { params } : {}) }
   ctx.emit({ type: 'ActionDeclared', fighterId: f.id, action: key, actionType: a.type }, f.seat)
 }
+
+/** For skill actions (skills/actions.ts): the same declaration the core actions make. */
+export const declareAction = declare
 
 /** A `move.path` was answered: apply the posture change of the kind, then pay and continue. */
 export function completeAction(ctx: Ctx, f: Fighter, kind: VoluntaryKind, _plan: Extract<MovePlan, { ok: true }>): void {
@@ -982,7 +1046,7 @@ function handleChoose(state: GameState, action: Action): Handled {
         },
       }
     default:
-      return reject('E_TODO', `${p.action} is not implemented yet`)
+      return handleSkillAction(state, fid, p) ?? reject('E_TODO', `${p.action} is not implemented yet`)
   }
 }
 
@@ -1011,7 +1075,7 @@ function handleGroup(state: GameState, action: Action): Handled {
       const g = s.action.group!
       const leader = getFighter(s, g.leaderId)
       if (p.fighterId) g.members.push(p.fighterId)
-      const x = groupSize(leader)
+      const x = groupSize(s, leader)
       const more = !p.done && g.members.length < x && groupCandidates(s, leader, g.members).length > 0
       if (more) {
         raiseGroup(ctx, leader)
@@ -1028,7 +1092,7 @@ function explainChoose(state: GameState, p: Choose): Rejection | null {
   const act = state.action.activation
   if (!act) return null
   const f = getFighter(state, act.fighterId)
-  const a = state.data.actions[p.action]
+  const a = state.data.actions[p.action] ?? (f.skills.some((id) => state.data.skills[id]?.action?.id === p.action) ? skillActionDef(state, p.action) : undefined)
   if (!a) return rejection('E_NOT_AN_OPTION', `unknown action ${p.action}`)
   const st = menuStatus(state, f)
   if (!statusAllows(a, st)) return rejection('E_ACTION_RESTRICTED', `${a.name} is not available to a fighter that is ${st}`)
@@ -1036,7 +1100,7 @@ function explainChoose(state: GameState, p: Choose): Rejection | null {
   if (verdict === 'noActions' || verdict === 'needsTwo') return rejection('E_NO_ACTIONS', `${a.name} costs more actions than are left (${act.actionsLeft})`)
   if (verdict === 'repeat') return rejection('E_ACTION_RESTRICTED', `${a.name} cannot be repeated in one activation`)
   if (verdict === 'noTurn') return rejection('E_ACTION_RESTRICTED', 'the fighter can no longer turn for free')
-  if (!IMPLEMENTED_ACTIONS.has(a.id)) return rejection('E_TODO', `${a.name} is not implemented yet`)
+  if (state.data.actions[a.id] && !IMPLEMENTED_ACTIONS.has(a.id)) return rejection('E_TODO', `${a.name} is not implemented yet`)
   if (p.action === 'operateDoor' && p.doorId) {
     const rec = state.board.doors[p.doorId]
     if (rec?.state === 'closed' && rec.locked) return rejection('E_ACTION_RESTRICTED', 'that door is locked: use a terminal or force it open')

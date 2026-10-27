@@ -26,6 +26,7 @@ import { circleOverlapsPolygon, polygonBBox, round3, segmentPolygonIntervals } f
 import { cloneState } from '@/engine/state'
 import { insideOutline } from '@/engine/board'
 import { baseGap } from '@/engine/measure'
+import { groupSize } from '@/engine/activation'
 import { downCount } from '@/engine/casualties'
 import { approachPoint, planToward, shortestLegalPath } from '@/engine/movement'
 import type { VoluntaryKind } from '@/engine/movement'
@@ -370,7 +371,7 @@ export function checkInvariants(prev: GameState, next: GameState, action: Action
   if (a) {
     if (a.actionsLeft < 0 || a.actionsLeft > 2) add('ACT', `${a.fighterId} has ${a.actionsLeft} actions left`)
     const spent = a.performed.reduce((n, p) => n + (p.type === 'double' ? 2 : p.type === 'free' ? 0 : 1), 0)
-    if (spent > 2) add('ACT', `${a.fighterId} spent ${spent} actions: ${a.performed.map((p) => p.action).join(',')}`)
+    if (spent > Math.max(2, a.allowance ?? 2)) add('ACT', `${a.fighterId} spent ${spent} actions: ${a.performed.map((p) => p.action).join(',')}`)
     if (spent + a.actionsLeft !== (a.allowance ?? 2)) add('ACT', `${a.fighterId} spent ${spent} with ${a.actionsLeft} left of ${a.allowance ?? 2}`)
     const basics = a.performed.filter((p) => p.type === 'basic').map((p) => p.action)
     if (new Set(basics).size !== basics.length) add('ACT', `${a.fighterId} repeated a Basic action: ${basics.join(',')}`)
@@ -378,7 +379,7 @@ export function checkInvariants(prev: GameState, next: GameState, action: Action
       if (p.type === 'double' && i > 0 && a.performed.slice(0, i).some((q) => q.type !== 'free')) add('ACT', `${a.fighterId} did a Double after another action`)
     })
   }
-  if (next.action.group && next.action.group.members.length > 2) add('GROUP', `a group of ${next.action.group.members.length} members`)
+  if (next.action.group && next.action.group.members.length > groupSize(next, next.fighters[next.action.group.leaderId]!)) add('GROUP', `a group of ${next.action.group.members.length} members`)
 
   for (const ev of events) {
     if (ev.type === 'DiceRolled') {
