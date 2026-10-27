@@ -1,4 +1,4 @@
-# STATUS (rewritten 2026-10-26, end of the first overnight run)
+# STATUS (updated 2026-10-26 after stage S4K, skills)
 
 Play: https://dragoonant.github.io/mancermundo/ (deploys from `main`).
 
@@ -9,15 +9,15 @@ Play: https://dragoonant.github.io/mancermundo/ (deploys from `main`).
 | Boards | 5 Zone Mortalis boards (`src/data/zm/boards`): foundry-run, bulkhead-gauntlet, cistern-crossing, hive-heart, sump-warren; walls, doors, ductways, terminals; procedural walls and floors |
 | Scenarios | Tunnel Skirmish, Smash & Grab, Forgotten Riches (all playable; crew selection, casket placement, tile deployment, scoring, victory) |
 | Engine | Priority, Action and End phases; group activations; move, charge, retreat, take cover, crawl, doors, ductways; shooting (hit/wound/save, Firepower and ammo, blasts, templates, stray shots, pinning); close combat (reactions, parry, coup de grace, consolidate); Injury dice, Seriously Injured, recovery with assists; nerve, Broken, flee, rally; bottle tests (incl. voluntary); Horrors in the Dark; replay/save with hash |
-| Not yet in the engine | **41 skill and wargear code hooks** (e.g. Nerves of Steel, Iron Jaw, Step Aside, Counter-attack, chem stashes): listed on fighter cards, no effect in play. Only 3 of 44 hooks are implemented |
-| AI | `src/ai`: utility decider (random/easy/normal tiers), every decision kind answered; normal beats random 39/40 (gate >= 95%), normal beats easy 18-2-4; client plays `normal` inline (~4 ms a decision) |
+| Skills and wargear | All 42 skill, wargear and fighter-rule code hooks implemented (S4K): passives in `src/engine/skills/passive.ts`, close combat and skill actions in `src/engine/skills/{combat,actions,hurl,somersault,stance}.ts`. New actions: Headbutt, Hurl, Overseer, Immovable Stance, Unleash the Beast, Somersault; Naaargah!, Hit and Run, Lightning Reflexes, Stimm-slugs, Chem-synth and Combat Chems ask through `skill.choice`; harmless optional skills apply automatically. `validate:data` now fails on any unregistered code hook. Checklist SKL-001..025, SKC-001..029 |
+| AI | `src/ai`: utility decider (random/easy/normal tiers), every decision kind answered; normal beats random 39/40 on two seeds (gate >= 95%); skill actions scored (`src/ai/skills.ts`), normal beats easy 18-2-4; client plays `normal` inline (~4 ms a decision) |
 | Client | Start screen, gang picker, briefing, battle screen, prompts with engine odds, fighter card, hover glossary, casualty tray, dice tray (Firepower and Injury glyphs), event feed, end screen, save/continue, phone layout |
 | Figures | 27 Hunyuan GLBs (one per fighter role, weapon fused), matched to fighters by a name heuristic (`figures/BattleFighter.tsx` `matchBody`); status pips and chips over each figure |
 | Audio | 84 ids in `public/audio` (6 music, 4 ambience, 11 announcer lines, SFX); wired to events, music director, Sound button; **not auditioned by ear** (`public/sounds.html`) |
 | VFX | Muzzle flash, tracers, flame, blast, impacts, melee sweeps, death effects through the presentation director |
 
-## Gates (last run 2026-10-26)
-typecheck clean; vitest 50 files / 535 tests; `validate:data` ok; `sim --games 50` 0 violations, 0 rejections; `bench:ai --games 40` 39W 1L GATE OK; Playwright 26/26 plus one full bot-vs-bot browser game per scenario (all ended with a winner, no console errors).
+## Gates (last run 2026-10-26, after S4K)
+typecheck clean; vitest 53 files / 597 tests; `validate:data` ok (every code hook registered); `sim --games 50` 0 violations, 0 rejections; `bench:ai --games 40` 39W 1L on seeds 1 and 7, GATE OK; Playwright 26/26.
 
 ## Rulings
-271 `RULING:` lines in `docs/needs-rules-check.md`, 204 marked Unsourced (no primary text at hand; worth a pass with the rulebook).
+313 `RULING:` lines in `docs/needs-rules-check.md`: 223 Unsourced, 42 Fan-source, 38 Confirmed, 10 Corrected (worth a pass with the rulebook).

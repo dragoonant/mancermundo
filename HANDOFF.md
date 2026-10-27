@@ -1,4 +1,4 @@
-# HANDOFF (2026-10-26, morning after the first overnight run)
+# HANDOFF (2026-10-26, after stage S4K: skills)
 
 ## Play it
 **https://dragoonant.github.io/mancermundo/** : pick a scenario and board, choose your gang (Goliath or Escher), read the briefing, and play against the AI. Desktop or phone. Click a fighter to activate it; the prompt at the bottom lists its actions with the engine's odds; doors next to the active fighter can be clicked on the board. "Place the rest for me" speeds up deployment. Sound starts on your first click (Sound button bottom-right).
@@ -12,16 +12,16 @@ Useful URL flags: `?seats=bot,bot` (watch two AIs), `&speed=instant|fast`, `&sce
 4. **Figures.** Each fighter gets the closest of the 27 bodies by name; some matches will be off.
 
 ## Known gaps (biggest first)
-- **Skills do nothing yet.** 41 of 44 skill and wargear code hooks are unimplemented (stage S4K was deferred to save tokens). They appear on fighter cards but have no effect. This is the largest fidelity gap.
-- 204 of 271 rulings are "Unsourced" (decided without the primary text); see `docs/needs-rules-check.md`.
+- Skills now work (S4K): all 42 skill, wargear and fighter-rule hooks, each checked against the rulebook text by a verifier pass. The starter gangs only carry Nerves of Steel, Unstoppable, True Grit, Spring Up and Dodge, so the skill actions (Headbutt, Hurl, Overseer, Somersault and the rest) only show up on custom fighters; the AI can use them but the bench never sees them.
+- 223 of 313 rulings are "Unsourced" (decided without the primary text); see `docs/needs-rules-check.md`.
 - No sightline or measuring overlay yet; no shoot/fight body cues on figures (pose changes for Pinned and Seriously Injured do work).
 - Forgotten Riches: a battle where both gangs secure no casket is a draw (ruling, Unsourced), which happens often against a collapsing gang.
 - Campaign layer, more houses and Sector Mechanicus are later milestones (M8+).
 
 ## Decisions waiting for you
 1. **Edition.** GW released *Necromunda Skirmish* (N26) in August 2026 (starter box: Goliath vs Escher). v1 uses the 2023 rules because N26's core rules are not available without the book. Switch later or stay? (`PLAN.md` decisions table.)
-2. **Token spend.** You approved about 3M tokens; the run used roughly 9-10M (gang data research, two full rules engines' worth of stages, and three parallel stages at the end). At the end the account showed 24% of the weekly limit used. Further stages (skills, sightlines) are another 1-2M.
-3. **Next stage.** Recommended: S4K skills (makes fighter cards true), then a rules pass over the Unsourced rulings with the rulebook at hand.
+2. **Token spend.** You approved about 3M tokens; the run used roughly 9-10M (gang data research, two full rules engines' worth of stages, and three parallel stages at the end). At the end the account showed 24% of the weekly limit used. Stage S4K (skills) used about 1.7M more (two implementers in parallel worktrees, two rules verifiers, one AI fix).
+3. **Next stage.** Recommended: a rules pass over the Unsourced rulings with the rulebook at hand, then sightline/measuring overlays. Note: `docs/sources/rules/wc-faq-2026-09.txt` turned out to be the FAQ for the 2026 Skirmish edition, not the 2023 book, so it is not used for rulings.
 
 ## Where things are
 `STATUS.md` (what exists, gate numbers), `PLAN.md` (decisions), `KICKOFF.md` (your answers), `docs/spec/` (00 architecture, 10-13 rules and gangs, 20 data, 40 AI, 50 client, 60 testing), `docs/audio.md`, `docs/knowledge-base/` (cross-project lessons, updated with this run). The Kill Team code this started from was deleted at 47d8077 (last present at 396f9e8).

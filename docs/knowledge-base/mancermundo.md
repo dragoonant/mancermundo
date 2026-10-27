@@ -16,7 +16,15 @@ Zone Mortalis skirmish, Goliath vs Escher, 2023 rules, player vs AI. M0 to a pla
 - **A subagent with its own background work re-sent its hand-back several times.** Stop it with `TaskStop` once its report is in.
 - **The browser pane cannot render while the app window is in the background** (overnight). Use headless Playwright scripts against the dev server instead.
 - **Data shape surprises:** `state.data.weapons` holds only the rostered weapons (tests use the full bundle); the Firepower dice's ammo symbol is on face 1 in the data, not 6.
-- **41 of 44 skill hooks were deferred** to save tokens; cards list skills that do nothing. Say so in the UI or implement before calling a build "faithful".
+- **41 of 44 skill hooks were deferred** to save tokens; cards list skills that do nothing. Say so in the UI or implement before calling a build "faithful". (Done the next morning as S4K; see below.)
 
-## Numbers at the end of the night
+## Stage S4K (skills), same day
+- **Two implementers in parallel worktrees split by hook point, not by house.** Passives (save/wound/pin/recovery/bottle/stat hooks) vs close combat + new actions. Seven conflicts at merge, all small: appended doc sections, two `SkillUsed` event shapes, two `skill.choice` dispatchers (`context.code` vs `context.skill`). Next time, fix the shared contract (event names, choice context key) in the brief before splitting.
+- **Worktrees need `node_modules`:** a junction (`mklink /J`) to the main checkout's works; gitignored sources must be given by absolute path. The pre-commit privacy hook's pattern file is not in a worktree, so grep by hand there.
+- **A session-model verifier per half earned its keep:** it found 6 real rules errors (Combat Chems optional, Inspirational status limits, Overseer vs Immovable Stance, Regroup on Broken fighters, Dodge vs blasts, Stimm-slug crash with Iron Man) that the implementers' own tests encoded wrongly.
+- **Check what a source is before trusting it:** the "2026-09 FAQ" in sources was the new Skirmish edition's FAQ (edition leak).
+- **The AI bench caught a regression that was not in the skill code:** merged skills shifted Smash & Grab enough that raiders broke the defenders before the third casket (a defender win). Fixed in the AI's kill discount, not the rules.
+- **Flip "pending code hooks allowed" off once the hooks land**, and make `validate:data` check registrations, so a new data record cannot silently do nothing.
+
+## Numbers at the end of the night (before S4K)
 50 test files / 535 tests; sim 50 games 0 violations; normal AI beats random 39/40 and easy 18-2-4; Playwright 26/26 plus one full browser game per scenario; 271 rulings (204 Unsourced).
