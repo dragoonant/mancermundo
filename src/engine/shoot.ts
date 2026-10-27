@@ -14,6 +14,7 @@ import { runHook } from './hooks'
 import { baseGap, withinPath } from './measure'
 import { blockers } from './los'
 import {
+  avoidArea,
   fightersUnderBlast,
   hitDoor,
   pinTarget,
@@ -24,6 +25,7 @@ import {
   type HitInput,
 } from './hits'
 import { takeOutOfAction } from './casualties'
+import { rescuedCoolTest } from './morale'
 import { stat } from './query'
 import { reject, type Ctx, type Handled, type ModuleDef, type OptionInput } from './registry'
 import { constants, getFighter, onBoard } from './state'
@@ -1005,7 +1007,8 @@ function templateShot(ctx: Ctx, f: Fighter, shot: ShotSpec, p: RuntimeProfile, a
   ctx.emit({ type: 'TemplatePlaced', polygon: shape.polygon.map((q) => ({ ...q })) }, f.seat)
   declared(ctx, f, { point: { ...aim }, distance: 0, band: null, cover: 'none', need: null, modifiers: [] })
   rollFirepower(ctx, f, shot, p)
-  const victims = templateVictims(s, f, shape)
+  // Dodge (`blast.victims`): a fighter whose save succeeds may step clear before it is decided whether it is hit
+  const victims = avoidArea(ctx, templateVictims(s, f, shape), { kind: 'template', by: f.id, hitAt: (g, pos) => circleOverlapsPolygon(pos, g.baseRadius, shape.polygon) })
   resolveAutoHits(ctx, f, shot, p, victims, true)
 }
 
@@ -1129,7 +1132,8 @@ function handle(state: GameState, action: Action, pending: PendingDecision): Han
             for (const r of runHook('test.modify', { seat: f.seat, state: s, engine: ctx, fighterId: f.id, data: { test: 'cool', reason: 'targetPriority' } })) if (r.delta) mod += r.delta
             const total = ctx.roll('priorityCool', 1, '2d6')[0]!
             const need = stat(s, f.id, 'Cl')
-            const passed = twoD6TestPasses(total, need, mod)
+            let passed = twoD6TestPasses(total, need, mod)
+            if (!passed && rescuedCoolTest(ctx, f, 'targetPriority')) passed = true
             ctx.emit({ type: 'PriorityTest', fighterId: f.id, roll: total, need, passed, ...(passed ? {} : { redirectedTo: closest }) }, f.seat)
             if (!passed) id = closest
           }

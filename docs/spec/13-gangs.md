@@ -126,7 +126,7 @@ Skill descriptions for every skill a Goliath can take as a starting skill are in
 
 ### 2.4 Special rules owned by single types
 
-- **Combat Chems Stash (Stimmer and 'Zerker):** when activated, roll a D6 for the round. 1 sets the fighter's Attacks to 1; 2 gives +1 Attack; 3 or 4 gives +2; 5 or 6 gives +3. The bonus lasts until the end of the round and stacks with Paired weapons because it raises the Attacks characteristic. Source: ND p.115 and GH-GOL (which describes the same thing as a D3 roll with a natural 1 being the failure).
+- **Combat Chems Stash (Stimmer and 'Zerker):** when activated, the fighter may roll a D6 for the round (optional: "can roll"). 1 sets the fighter's Attacks to 1; 2 gives +1 Attack; 3 or 4 gives +2; 5 or 6 gives +3. The bonus lasts until the end of the round and stacks with Paired weapons because it raises the Attacks characteristic. Source: ND p.115 and GH-GOL (which describes the same thing as a D3 roll with a natural 1 being the failure).
 - **Furnace plates, Stimm-slug stash and the other Goliath wargear:** see section 6.
 - **Sumpkroc (pet):** profile and rules in section 2.6.
 

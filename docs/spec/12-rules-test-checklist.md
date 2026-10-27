@@ -179,3 +179,33 @@ SCEN-011 | M-3.4 | Smash & Grab: the defender places 5 caskets in its own half, 
 ## GOLDEN
 
 GOLDEN-001 | R-5 to R-13 | One forced-dice round of the Goliath and Escher starter gangs (charges, shots, fights, nerve, the End phase) reproduces its pinned digest.
+
+## SKL - skills, wargear and fighter rules (passive)
+
+Each hook has its rule on scripted dice and `hookFireCount(name) > 0` in a game built with the fixtures (tests/engine/skl-passive.test.ts).
+
+SKL-001 | 13-gangs 7.2 Dodge | After the armour save fails (or there is none) a ranged hit gets an extra unmodifiable 6+ save; a 6 ignores the hit; an armour save that succeeds never reaches Dodge.
+SKL-002 | 13-gangs 7.2 Dodge | 1-5 fails and the hit goes on; AP does not touch the 6+; it stops a hit that allows no armour save (Power); a hit with no attacker (door, trap, flames) is never dodged.
+SKL-003 | 00 section 7.6 | `query.saveChance` and `expectedOutcome.pUnsaved` count the Dodge save (1 - (1 - armour)(5/6)).
+SKL-004 | 13-gangs 7.2 Dodge | Against a Blast marker or Template a successful Dodge lets the fighter step up to 2" clear before it is decided whether it is hit; a failed save leaves it under the marker.
+SKL-005 | 13-gangs 7.2 Spring Up | Activated while Pinned, an Initiative test stands the fighter up for free (both actions kept); a failure leaves it Pinned with Stand Up on the menu; no skill, no roll.
+SKL-006 | 13-gangs 7.3 Iron Jaw | +2 Toughness against close combat attacks with AP "-" only (not AP -1, not ranged); shown in `stat`, the fight odds and the wound roll.
+SKL-007 | 13-gangs 7.5 Nerves of Steel | Hit by a ranged attack, a Cool test avoids the Pin (one test per attack); a failure Pins; `expectedOutcome.pPinned` falls by the pass chance.
+SKL-008 | 13-gangs 7.5 Unstoppable | Before a Recovery test a D6: 4+ removes a Flesh Wound, or with none adds a die the owner picks between; 1-3 nothing.
+SKL-009 | 13-gangs 7.6 Inspirational | A friend within 6" failing a Cool test (the Nerves of Steel test too) is rescued when an Inspirational fighter, whatever its status, passes a Leadership test; farther away or a failed Leadership test does not help; `nerveOdds` and `pPinned` count it.
+SKL-010 | 13-gangs 7.6 Inspirational | In a fight, the nerve test a casualty causes is rescued by an Inspirational friend nearby (hookFireCount > 0).
+SKL-011 | 13-gangs 7.6 Iron Will | -1 to the gang's Bottle roll while a fighter with it is on the battlefield and not Seriously Injured (does not stack); `bottleOdds.need` and `modifier` show it.
+SKL-012 | 13-gangs 7.7 Iron Man | Flesh Wounds do not lower Toughness (the wound roll uses the printed T), yet Flesh Wounds equal to T take the fighter Out of Action; the Injury odds use the remaining Toughness.
+SKL-013 | 13-gangs 7.8 Combat Focus | +1 Willpower and Cool per enemy Out of Action or Seriously Injured (fled not counted); a 2 on 2D6 still fails at any Cool.
+SKL-014 | 13-gangs 7.7 Walk It Off | Two Move (Simple) actions, then a Toughness test (D6 <= T) at the end of the activation removes a Flesh Wound or else restores a lost Wound; one Move, no roll.
+SKL-015 | 13-gangs 6.2 Respirator, Filter plugs | +2 / +1 Toughness against Gas weapons only (stackable); in `stat`, the Gas odds and the Gas roll.
+SKL-016 | 13-gangs 6.2 Photo-goggles | The wearer has line of sight and cover judged through smoke clouds and shoots through them; +1 on the Initiative test against Flash.
+SKL-017 | 13-gangs 6.1 Heavy carapace | -1 Initiative (a worse target number) and -1" movement when charging only (`move.limit` with `charge`); shown in `stat` and the charge odds; the saves are data.
+SKL-018 | 13-gangs 6.2 Bio-booster | The first Injury roll of the battle is one die fewer (a single die: two rolled, the worse dropped); used up afterwards; the Injury odds show it.
+SKL-019 | 13-gangs 6.2 Stimm-slug stash | At the start of the wearer's activation a `skill.choice` (use first): +2 M, S, T for the round and a Flesh Wound shed; declining keeps it; once per battle.
+SKL-020 | 13-gangs 6.2 Stimm-slug stash | At the start of the End phase a 1 on a D6 forces an Injury roll; the boost ends with the round, and Flesh Wounds that now reach the normal Toughness put the fighter Out of Action.
+SKL-021 | 13-gangs 6.2 Chem-synth | A Standing wearer with a Gas or Toxin weapon is asked at the start of its activation; an Intelligence test lowers targets' Toughness by 1 against Gas and Toxin until the activation ends.
+SKL-022 | 13-gangs 1.2 Hot-headed | When the fighter goes down its friends owe no nerve test; fighters of its own type still do.
+SKL-023 | 13-gangs 2.4 Combat Chems Stash | On activation the owner may (`skill.choice`) roll a D6 for the round: 1 sets Attacks to 1, 2 adds 1, 3-4 adds 2, 5-6 adds 3; it raises the characteristic and ends with the round.
+SKL-024 | 13-gangs 3.4 Poison Blood | A natural 1 on the Toughness roll of the wielder's Toxin weapon is re-rolled; a 2, a Gas roll or a fighter without the rule never is; the Toxin odds show it.
+SKL-025 | 20 section 11 | All 19 passive code hooks are registered, every data record that names one passes its params validator, and params missing what the hook needs are refused.

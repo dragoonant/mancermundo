@@ -4,7 +4,9 @@
 // previews); S3b adds the close-combat and nerve numbers (charge targets with pReach, fight outcome, nerve and rally odds);
 // S4 the bottle and scenario numbers.
 import { runHook } from './hooks'
-import { coverOf, hasLos, inVisionArc, losLines, type CoverResult, type SightLine } from './los'
+import { withoutFireCounts } from './code-hooks'
+import { ironManFlesh } from './skills/util'
+import { coverOf, hasLos, inVisionArc, losLines, seesThroughSmoke, type CoverResult, type SightLine } from './los'
 import { baseGap, pathGap } from './measure'
 import { constants, getFighter, isBroken } from './state'
 import type { Fighter, GameState, RuntimeProfile, StatKey, Vec2 } from './types'
@@ -27,6 +29,7 @@ import {
   expectedDamage,
   firepowerHitsDistribution,
   hitChanceFor,
+  injuryFaceOdds,
   injuryOdds as injuryOddsTable,
   parseDiceExpr,
   saveChanceFor,
@@ -35,7 +38,7 @@ import {
   woundNeed,
   type InjuryOdds,
 } from './dice'
-import { armourSave, type SaveInfo } from './wargear'
+import { armourSave, extraSaves, type ExtraSave, type SaveInfo } from './wargear'
 import { fightersUnderBlast } from './hits'
 import { blastRadius, hasTrait, isTemplate, meltaApplies, profileRanges, profileStrength, rapidFire, T as TRAIT } from './traits'
 import { attackDiceFor, chargeTargets as chargeTargetsFor, meleeHitChance, meleeNeedFor, meleeProfile, weaponCombos, weaponDice, type ChargeTarget, type MeleeNeed } from './fight'
@@ -68,7 +71,7 @@ export function status(state: GameState, id: string): DerivedStatus {
  * Concussion on I (never worse than 6+), then `stat.modify` hooks (delta is added to a plain number and improves a target
  * number, so a hook's `+1` is always good for the fighter).
  */
-export function stat(state: GameState, id: string, key: StatKey): number {
+export function stat(state: GameState, id: string, key: StatKey, vs?: StatVs): number {
   const f = getFighter(state, id)
   let v = f.stats[key]
   if (key === 'T') v -= f.fleshWounds
@@ -77,9 +80,26 @@ export function stat(state: GameState, id: string, key: StatKey): number {
     const worst = Number.parseInt(c.worstInitiative, 10)
     v = Math.max(v, Math.min(worst, v - c.initiativeModifier))
   }
-  const results = runHook('stat.modify', { seat: f.seat, state, fighterId: id, data: { key, value: v } })
+  const results = runHook('stat.modify', { seat: f.seat, state, fighterId: id, ...(vs?.attackerId ? { targetId: vs.attackerId } : {}), data: { key, value: v, ...(vs ? { vs } : {}) } })
   for (const r of results) if (r.delta) v += isTargetNumber(key) ? -r.delta : r.delta
   return v
+}
+
+/** What a characteristic is being used against (S4K-A): Iron Jaw, Respirator and Chem-synth change T for some attacks only. */
+export interface StatVs {
+  /** the attacker, when one is hitting this fighter */
+  attackerId?: string | null
+  /** a close combat attack */
+  melee?: boolean
+  /** the attack's AP (0 = "-") */
+  ap?: number
+  gas?: boolean
+  toxin?: boolean
+}
+
+/** `stat` for odds and previews: reading a number is not the rule firing, so passive hooks do not count it. */
+export function statQuiet(state: GameState, id: string, key: StatKey, vs?: StatVs): number {
+  return withoutFireCounts(() => stat(state, id, key, vs))
 }
 
 /** Ids of the enemies the fighter is Engaged with. */
@@ -128,7 +148,7 @@ export function losLine(state: GameState, fromId: string, toId: string): LosLine
     los: hasLos(state, a, b),
     inArc: inVisionArc(a, b),
     distance: baseGap(a, b),
-    lines: losLines(state, { x: a.pos.x, z: a.pos.z }, b),
+    lines: losLines(state, { x: a.pos.x, z: a.pos.z }, b, seesThroughSmoke(state, a)),
     cover: coverOf(state, a, b),
   }
 }
@@ -183,10 +203,24 @@ export function hitChance(state: GameState, shooterId: string, weaponId: string,
 /** Chance one hit of the profile wounds the target (Gas / Toxin: the D6 >= T test; Flash and Smoke never wound). */
 export function woundChance(state: GameState, attackerId: string, weaponId: string, profileId: string, targetId: string): number {
   const p = needProfile(state, weaponId, profileId)
-  const t = stat(state, targetId, 'T')
-  if (hasTrait(p, TRAIT.gas) || hasTrait(p, TRAIT.toxin)) return toxinChance(t)
+  const gas = hasTrait(p, TRAIT.gas)
+  const toxin = hasTrait(p, TRAIT.toxin)
+  const t = statQuiet(state, targetId, 'T', { attackerId, melee: false, ap: p.ap, gas, toxin })
+  if (gas || toxin) {
+    const pass = toxinChance(t)
+    // Poison Blood: a natural 1 may be re-rolled
+    return rerollsNaturalOne(state, attackerId, gas ? 'gas' : 'toxin') ? pass + pass / 6 : pass
+  }
   if (hasTrait(p, TRAIT.flash) || hasTrait(p, TRAIT.smoke)) return 0
   return woundChanceFor(woundNeed(profileStrength(p, stat(state, attackerId, 'S')), t))
+}
+
+/** Would the attacker re-roll a natural 1 on this roll (Poison Blood, the `attack.reroll` hook)? */
+function rerollsNaturalOne(state: GameState, attackerId: string, purpose: string): boolean {
+  const a = getFighter(state, attackerId)
+  const data = { purpose, roll: 1, reroll: false }
+  withoutFireCounts(() => runHook('attack.reroll', { seat: a.seat, state, fighterId: a.id, data }))
+  return data.reroll
 }
 
 /** The save the target would make against AP `ap` (from an attacker, a Blast or a Template, with a cover bonus). */
@@ -194,21 +228,74 @@ export function saveChance(
   state: GameState,
   targetId: string,
   ap: number,
-  opts: { fromId?: string; from?: Vec2; vs?: 'blast' | 'template' | null; coverBonus?: number } = {},
-): SaveInfo & { chance: number } {
+  opts: { fromId?: string; from?: Vec2; vs?: 'blast' | 'template' | null; coverBonus?: number; melee?: boolean } = {},
+): SaveInfo & { chance: number; extra: ExtraSave[] } {
   const t = getFighter(state, targetId)
   const from = opts.fromId ? getFighter(state, opts.fromId) : (opts.from ?? null)
   const info = armourSave(state, t, { ap, from, vs: opts.vs ?? null, coverBonus: opts.coverBonus ?? 0 })
-  return { ...info, chance: saveChanceFor(info.need) }
+  const extra = extraSaves(state, t, { attackerId: opts.fromId ?? null, melee: !!opts.melee, vs: opts.vs ?? null })
+  return { ...info, extra, chance: combinedSaveChance(info.need, extra) }
+}
+
+/** Chance that the armour save or any extra (invulnerable) save succeeds. */
+function combinedSaveChance(armourNeed: number | null, extra: readonly ExtraSave[]): number {
+  let fail = 1 - saveChanceFor(armourNeed)
+  for (const e of extra) fail *= 1 - saveChanceFor(e.need)
+  return 1 - fail
+}
+
+/**
+ * The Injury dice a fighter would roll for `dice` (True Grit and Bio-booster take one off; a single die becomes two of which the
+ * worse is discarded), and the odds of that roll. Reading the odds does not use up a once-per-battle item.
+ */
+function injuryOddsFor(state: GameState, t: Fighter, dice: number, melta: boolean): InjuryOdds {
+  let n = dice
+  const data = { dice, preview: true }
+  withoutFireCounts(() => {
+    for (const r of runHook('injury.dice', { seat: t.seat, state, fighterId: t.id, data })) if (r.delta) n += r.delta
+  })
+  const opts = { toughness: stat(state, t.id, 'T') - ironManFlesh(state, t), alreadySeriouslyInjured: t.posture === 'seriouslyInjured', melta }
+  if (n <= 0 && dice > 0 && n !== dice) return injuryOddsKeepBest(state, opts)
+  return injuryOddsTable(state, n, opts)
+}
+
+/** Two Injury dice, the worse discarded (the single die of a True Grit or Bio-booster fighter): exact odds. */
+function injuryOddsKeepBest(state: GameState, opts: { toughness: number; alreadySeriouslyInjured: boolean; melta: boolean }): InjuryOdds {
+  if (opts.melta) return { pOutOfAction: 1, pSeriouslyInjured: 0, pFleshWoundsOnly: 0 }
+  const f = injuryFaceOdds(state)
+  const faces = [
+    ['fleshWound', f.fleshWound],
+    ['seriouslyInjured', f.seriouslyInjured],
+    ['outOfAction', f.outOfAction],
+  ] as const
+  const out: InjuryOdds = { pOutOfAction: 0, pSeriouslyInjured: 0, pFleshWoundsOnly: 0 }
+  for (let a = 0; a < 3; a++) {
+    for (let b = 0; b < 3; b++) {
+      const w = faces[a]![1] * faces[b]![1]
+      if (w === 0) continue
+      const kept = faces[Math.min(a, b)]![0]
+      if (kept === 'outOfAction') out.pOutOfAction += w
+      else if (kept === 'seriouslyInjured' && !opts.alreadySeriouslyInjured) out.pSeriouslyInjured += w
+      else if (opts.toughness - 1 <= 0) out.pOutOfAction += w
+      else out.pFleshWoundsOnly += w
+    }
+  }
+  return out
 }
 
 /** Odds of `dice` Injury dice rolled together (R-11.8 stacking), for a target (its T and status) and the weapon traits. */
 export function injuryOdds(state: GameState, dice: number, traits: readonly string[] = [], targetId?: string): InjuryOdds {
   const t = targetId ? getFighter(state, targetId) : null
-  return injuryOddsTable(state, dice, {
-    ...(t ? { toughness: stat(state, t.id, 'T'), alreadySeriouslyInjured: t.posture === 'seriouslyInjured' } : {}),
-    melta: traits.includes(TRAIT.melta),
-  })
+  if (t) return injuryOddsFor(state, t, dice, traits.includes(TRAIT.melta))
+  return injuryOddsTable(state, dice, { melta: traits.includes(TRAIT.melta) })
+}
+
+/** The chance Nerves of Steel (or another `pin.allowed` rule) keeps a ranged hit from Pinning the target. */
+function pinVetoChance(state: GameState, targetId: string, attackerId: string): number {
+  const t = getFighter(state, targetId)
+  const data = { preview: true, pVeto: 0 }
+  withoutFireCounts(() => runHook('pin.allowed', { seat: t.seat, state, fighterId: targetId, targetId: attackerId, data }))
+  return data.pVeto
 }
 
 export interface ExpectedOutcome {
@@ -255,10 +342,9 @@ export function expectedOutcome(state: GameState, attackerId: string, weaponId: 
   }
   let q = 0
   let r = 0
-  const toughness = stat(state, targetId, 'T')
   for (const { d, w } of dmgOutcomes) {
     const n = d < 0 ? 1 : t.wounds > 0 ? Math.max(0, d - t.wounds + 1) : d
-    const o = injuryOddsTable(state, n, { toughness, alreadySeriouslyInjured: t.posture === 'seriouslyInjured', melta: melta && d >= 0 })
+    const o = injuryOddsFor(state, t, n, melta && d >= 0)
     q += w * o.pOutOfAction
     r += w * o.pSeriouslyInjured
   }
@@ -281,7 +367,7 @@ export function expectedOutcome(state: GameState, attackerId: string, weaponId: 
     expectedWounds: pHit * meanHits * per * mean,
     pSeriouslyInjured: Math.max(0, pDown - pOoa),
     pOutOfAction: pOoa,
-    pPinned: t.posture === 'standing' && t.engagedWith.length === 0 && !gas ? pHit : 0,
+    pPinned: t.posture === 'standing' && t.engagedWith.length === 0 && !gas ? pHit * (1 - pinVetoChance(state, targetId, attackerId)) : 0,
   }
 }
 
@@ -368,9 +454,10 @@ function perHitOdds(state: GameState, a: Fighter, t: Fighter, p: RuntimeProfile 
   const S = stat(state, a.id, 'S')
   const backstab = !!p && hasTrait(p, TRAIT.backstab) && !inVisionArc(t, a)
   const strength = (p ? profileStrength(p, S) : S) + (backstab ? 1 : 0)
-  const toughness = stat(state, t.id, 'T')
+  const ap = p?.ap ?? 0
+  const toughness = statQuiet(state, t.id, 'T', { attackerId: a.id, melee: true, ap })
   const pWound = woundChanceFor(woundNeed(strength, toughness))
-  const pUnsaved = 1 - saveChanceFor(armourSave(state, t, { ap: p?.ap ?? 0, from: a }).need)
+  const pUnsaved = 1 - combinedSaveChance(armourSave(state, t, { ap, from: a }).need, extraSaves(state, t, { attackerId: a.id, melee: true, vs: null }))
   const dmg = p?.dmg ?? { kind: 'fixed' as const, value: 1 }
   const outcomes: { d: number; w: number }[] = []
   if (dmg.kind === 'none') outcomes.push({ d: 0, w: 1 })
@@ -385,7 +472,7 @@ function perHitOdds(state: GameState, a: Fighter, t: Fighter, p: RuntimeProfile 
   let pDown = 0
   for (const { d, w } of outcomes) {
     const n = t.wounds > 0 ? Math.max(0, d - t.wounds + 1) : d
-    const o = injuryOddsTable(state, n, { toughness, alreadySeriouslyInjured: t.posture === 'seriouslyInjured', melta: sever && n > 0 })
+    const o = injuryOddsFor(state, t, n, sever && n > 0)
     pOoa += w * o.pOutOfAction
     pDown += w * (o.pOutOfAction + o.pSeriouslyInjured)
   }
@@ -481,7 +568,7 @@ export function fightOutcome(state: GameState, attackerId: string, weaponIds?: s
  * the smallest D6 that bottles it and the exact chance. `pBottle` is 1 for a gang that has bottled and 0 with nobody down.
  */
 export function bottleOdds(state: GameState, seat: Seat): BottleInfo {
-  return bottleInfo(state, seat)
+  return withoutFireCounts(() => bottleInfo(state, seat))
 }
 
 export interface ScenarioView {

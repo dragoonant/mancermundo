@@ -348,7 +348,7 @@ export function startCharge(ctx: Ctx, f: Fighter, targetId: string, weaponId?: s
     .filter((e) => !(hasLos(s, f, e) && inVisionArc(f, e)))
     .map((e) => e.id)
   const d3 = ctx.roll('charge', 1, 'd3')[0]!
-  const allowance = moveAllowance(s, f) + d3
+  const allowance = moveAllowance(s, f, true) + d3
   const p = weaponId ? meleeProfile(s, f, weaponId) : null
   const reach = p ? versatileReach(p) : null
   const pinnedBefore = enemiesOf(s, f)
@@ -799,6 +799,7 @@ function meleeHit(state: GameState, a: Fighter, t: Fighter, r: RolledDie): HitIn
     ...(shock6 ? { autoWound: true } : {}),
     ...(power6 ? { extraDamage: 1 } : {}),
     followUp: a.id,
+    closeCombat: true,
   }
 }
 
@@ -1043,7 +1044,7 @@ export function reachChance(m: number, cost: number): number {
  */
 export function chargeTargets(state: GameState, f: Fighter): ChargeTarget[] {
   if (f.location !== 'board' || f.posture !== 'standing' || f.engagedWith.length > 0) return []
-  const m = moveAllowance(state, f)
+  const m = moveAllowance(state, f, true)
   const reachWeapons = meleeWeapons(state, f).filter((w) => versatileReach(w.profile) !== null)
   const out: ChargeTarget[] = []
   for (const e of enemiesOf(state, f)) {

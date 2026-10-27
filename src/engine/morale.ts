@@ -36,7 +36,18 @@ function coolTest(state: GameState, f: Fighter, radius: number, reason: 'nerve' 
   }
   for (const r of runHook('test.modify', { seat: f.seat, state, fighterId: f.id, data: { test: 'cool', reason } })) if (r.delta) modifier += r.delta
   const need = stat(state, f.id, 'Cl')
-  return { need, modifier, supporters: sup.map((g) => g.id), chance: twoD6TestChance(need, modifier) }
+  const p = twoD6TestChance(need, modifier)
+  // Inspirational (`test.failed`, preview): the chance a failed test is rescued
+  const preview = { test: 'cool', reason, rescued: false, preview: true, chance: 0 }
+  runHook('test.failed', { seat: f.seat, state, fighterId: f.id, data: preview })
+  return { need, modifier, supporters: sup.map((g) => g.id), chance: p + (1 - p) * preview.chance }
+}
+
+/** A failed Cool test of `f` may be rescued (Inspirational, the `test.failed` hook); true when the original test counts as passed. */
+export function rescuedCoolTest(ctx: Ctx, f: Fighter, reason: string): boolean {
+  const data = { test: 'cool', reason, rescued: false }
+  runHook('test.failed', { seat: f.seat, state: ctx.state, engine: ctx, fighterId: f.id, data })
+  return data.rescued
 }
 
 /** R-12.2: Cool test, +1 per other friend within 3" that is not Broken and not Seriously Injured. */
@@ -65,7 +76,8 @@ export function takeNerveTest(ctx: Ctx, entry: NerveCheck): boolean {
   const info = nerveInfo(ctx.state, f)
   const total = ctx.roll('nerve', 1, '2d6')[0]!
   const modifier = info.modifier + (entry.modifier ?? 0)
-  const passed = twoD6TestPasses(total, info.need, modifier)
+  let passed = twoD6TestPasses(total, info.need, modifier)
+  if (!passed && rescuedCoolTest(ctx, f, 'nerve')) passed = true
   // `need` is the 2D6 total that passes once the supporters are counted
   ctx.emit({ type: 'NerveTest', fighterId: f.id, roll: total, need: info.need - modifier, passed }, f.seat)
   if (passed) return false

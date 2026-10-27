@@ -28,6 +28,15 @@ export const HOOK_NAMES = [
   'round.start',
   'round.end',
   'phase.end',
+  // S4K-A (additive): see docs/spec/00-architecture.md change log
+  'save.extra',
+  'blast.victims',
+  'attack.reroll',
+  'test.failed',
+  'bottle.mods',
+  'recovery.start',
+  'nerve.queue',
+  'los.smoke',
 ] as const
 
 export type HookName = (typeof HOOK_NAMES)[number]

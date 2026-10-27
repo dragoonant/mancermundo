@@ -106,6 +106,8 @@ export interface RuntimeWargear {
   /** declarative effect list or code ref; interpreted by wargear.ts / skills.ts */
   effect?: unknown
   code?: string
+  /** the `params` of the data record's code hook (S4K: respirator +2, filter plugs +1 ...) */
+  codeParams?: Record<string, unknown>
 }
 
 /** A skill, fighter rule or house rule. */
@@ -279,6 +281,8 @@ export interface Fighter {
   activatedThisRound: boolean
   /** for scoring and the end screen */
   downedBy?: { by: string | null; cause: string }
+  /** once-per-battle ledger of skills and wargear already used (Bio-booster, Stimm-slug stash ...) */
+  used?: string[]
 }
 
 // ---------------------------------------------------------------------------
@@ -359,6 +363,8 @@ export interface Activation {
   declared: { action: string; params?: Record<string, unknown> } | null
   /** length of the casualty log when the activation began (R-10.11: a free Coup de Grace on a fighter downed in this activation owes no extra nerve test) */
   casualtyMark?: number
+  /** `skill.choice` codes already put to the player in this activation (Stimm-slug stash, Chem-synth) */
+  asked?: string[]
 }
 
 export interface GroupState {

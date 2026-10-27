@@ -271,6 +271,7 @@ export function bundleFromData(data: DataBundle): EngineBundle {
       ...(w.saveMods ? { saveMods: w.saveMods.map((m) => ({ ...m })) } : {}),
       ...(w.effect ? { effect: w.effect } : {}),
       ...(w.code ? { code: w.code.code } : {}),
+      ...(w.code?.params ? { codeParams: JSON.parse(JSON.stringify(w.code.params)) as Record<string, unknown> } : {}),
     })),
     actions: runtimeActions(Object.values(data.actions)),
     dice: runtimeDice(data.dice),

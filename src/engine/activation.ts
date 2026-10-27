@@ -46,6 +46,7 @@ import { chargeTargets, coupDeGrace, coupDeGraceTargets, reachFights, settleNerv
 import { resolveHit } from './hits'
 import { blazeMove } from './movement'
 import { clearCondition } from './traits'
+import { raiseActivationChoices } from './skills/choice'
 import { attackOptions, linkedWeaponIds, startRangedAttack, type AttackOption } from './shoot'
 import { ductFireChoices } from './zm'
 import type {
@@ -606,12 +607,14 @@ function startActivation(ctx: Ctx, f: Fighter, leaderId?: string): void {
 }
 
 /** After activation (and any group nomination): a burning fighter's activation is the Blaze sequence, otherwise the menu. */
-function beginActions(ctx: Ctx, f: Fighter): void {
+export function beginActions(ctx: Ctx, f: Fighter): void {
   // no actions left to take (Horrors in the Dark): the activation is over
   if (ctx.state.action.activation!.actionsLeft <= 0) {
     endActivation(ctx)
     return
   }
+  // S4K-A: start-of-activation choices (Stimm-slug stash, Chem-synth) are put to the player before the first action
+  if (raiseActivationChoices(ctx, f)) return
   if (f.conditions.blaze) blazeActivation(ctx, f)
   else raiseChoose(ctx)
 }
