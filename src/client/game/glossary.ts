@@ -154,7 +154,7 @@ const TRAITS = mk('trait', [
   { term: 'Plentiful', body: 'Plenty of ammunition: Reload tests pass without rolling.' },
   { term: 'Scarce', body: 'Very little ammunition: the weapon can never be reloaded.' },
   { term: 'Unstable', body: 'If the Ammo symbol shows, roll a D6: on 1-3 the shooter goes Out of Action.' },
-  { term: 'Unwieldy', body: 'Takes two weapon slots. Shooting with it costs both actions, and it cannot be paired in melee.' },
+  { term: 'Unwieldy', body: 'Takes two weapon slots. Shooting with it costs both actions, and it cannot be paired in melee (the Bulging Biceps skill lifts that for close combat weapons).' },
   { term: 'Rapid Fire', body: 'After a successful hit roll, up to X Firepower dice are rolled. Each bullet hole is a further hit, which can be spread to enemies close to the target.' },
   { term: 'Scattershot', body: 'A hit throws a spray of pellets: it makes a D6 wound rolls instead of one.' },
   { term: 'Template', body: 'A flame jet. No hit roll: every fighter under the template is hit, unless a wall or door is in the way. Check for friends.' },

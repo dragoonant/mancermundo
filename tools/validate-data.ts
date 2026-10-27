@@ -4,6 +4,8 @@
  * Prints `ok (<n> records)` (after a table of the data files and the core records) or `path: message` lines and exits non-zero.
  */
 import { validateAll } from '../src/data/validate'
+import '../src/engine'
+import { registeredCodeHooks } from '../src/engine/code-hooks'
 import { starterGangCost } from '../src/data/roster'
 import type { ActionData, ConstantsData, DataBundle, DiceData, TraitData } from '../src/data/types'
 
@@ -11,7 +13,7 @@ const args = process.argv.slice(2)
 const flag = (name: string) => args.includes(name)
 const printWhat = args.includes('--print') ? args[args.indexOf('--print') + 1] : undefined
 
-const result = validateAll({ allowPendingCodes: flag('--allow-pending-codes'), sourcesDir: flag('--no-sources') ? false : undefined })
+const result = validateAll({ registeredCodes: new Set(registeredCodeHooks()), allowPendingCodes: flag('--allow-pending-codes'), sourcesDir: flag('--no-sources') ? false : undefined })
 
 const pad = (s: string, n: number) => (s.length >= n ? s : s + ' '.repeat(n - s.length))
 

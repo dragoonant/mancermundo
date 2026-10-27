@@ -26,6 +26,7 @@ import {
   type TargetInfo,
 } from './shoot'
 import {
+  d6TestChance,
   expectedDamage,
   firepowerHitsDistribution,
   hitChanceFor,
@@ -46,6 +47,8 @@ import { nerveInfo, rallyInfo, type CoolTestInfo } from './morale'
 import { bottleInfo, downCount, type BottleInfo } from './casualties'
 import { casketRules, projectedWinner, securedBySeat } from './scenarios'
 import { tileIndexAt } from './board'
+import { headbuttChance } from './skills/actions'
+import { numParam, skillOf } from './skills/common'
 import type { Seat } from './types'
 
 export type DerivedStatus = 'standingActive' | 'standingEngaged' | 'pinned' | 'seriouslyInjured' | 'outOfAction'
@@ -626,5 +629,67 @@ export function scenarioView(state: GameState): ScenarioView {
     crewCap: state.scenario.crewCap,
     locked: state.scenario.locked ? { winner: state.scenario.locked.winner, reason: state.scenario.locked.reason } : null,
     leading: projectedWinner(state),
+  }
+}
+
+// ---------------------------------------------------------------------------
+// S4K-B: the skill actions that strike (Headbutt, Hurl)
+// ---------------------------------------------------------------------------
+
+/** What one strike does to a fighter, with the chance it lands already folded in. */
+export interface StrikeOdds {
+  /** the chance the strike lands at all (1 when it is already certain) */
+  pHit: number
+  pOutOfAction: number
+  pSeriouslyInjured: number
+  expectedWounds: number
+}
+
+/** A fixed-Strength, fixed-Damage, AP 0 strike as a profile, to reuse the wound / save / Injury odds of a melee hit. */
+function strikeProfile(strength: number, damage: number): RuntimeProfile {
+  return { id: 'skill', name: null, range: { short: null, long: 'E' }, acc: { short: null, long: null }, str: { base: 'fixed', value: strength }, ap: 0, dmg: { kind: 'fixed', value: damage }, ammo: null, traits: [] }
+}
+
+function strikeOdds(state: GameState, from: Fighter, to: Fighter, strength: number, damage: number, pLands: number): StrikeOdds {
+  const o = perHitOdds(state, from, to, strikeProfile(strength, damage))
+  const per = pLands * o.pWound * o.pUnsaved
+  return { pHit: pLands, pOutOfAction: per * o.pOoa, pSeriouslyInjured: per * o.pSi, expectedWounds: per * o.meanDamage }
+}
+
+export interface HeadbuttOutcome {
+  /** the hit on the target (2D6, a die at least its Toughness) */
+  hit: StrikeOdds
+  /** the Headbutter's own risk when both dice fall short */
+  fumble: StrikeOdds
+}
+
+/** Odds of a Headbutt by `fighterId` on `targetId` (Strength +2 and Damage 2 on a hit, its own Strength and Damage 1 on a fumble). */
+export function headbuttOutcome(state: GameState, fighterId: string, targetId: string): HeadbuttOutcome {
+  const f = getFighter(state, fighterId)
+  const t = getFighter(state, targetId)
+  const params = skillOf(state, f, 'headbutt')?.params ?? {}
+  const S = stat(state, f.id, 'S')
+  const pHit = headbuttChance(stat(state, t.id, 'T'))
+  return {
+    hit: strikeOdds(state, f, t, S + numParam(params, 'strengthBonus', 2), numParam(params, 'damage', 2), pHit),
+    fumble: strikeOdds(state, f, f, S, numParam(params, 'fumbleDamage', 1), 1 - pHit),
+  }
+}
+
+export interface HurlOutcome {
+  /** the chance the target fails its Initiative test and is hurled */
+  pHurled: number
+  /** the Strength 3 hit the hurled fighter takes, given that it is hurled (the chance of landing is 1) */
+  hit: StrikeOdds
+}
+
+/** Odds of a Hurl by `fighterId` on `targetId`. */
+export function hurlOutcome(state: GameState, fighterId: string, targetId: string): HurlOutcome {
+  const f = getFighter(state, fighterId)
+  const t = getFighter(state, targetId)
+  const params = skillOf(state, f, 'hurl')?.params ?? {}
+  return {
+    pHurled: 1 - d6TestChance(stat(state, t.id, 'I')),
+    hit: strikeOdds(state, f, t, numParam(params, 'strength', 3), 1, 1),
   }
 }

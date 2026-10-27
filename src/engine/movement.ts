@@ -18,6 +18,10 @@ import { reject, type Ctx, type Handled, type ModuleDef } from './registry'
 import { constants, enemiesOf, getFighter, onBoard, oneInchEnemies } from './state'
 import { pathGapPoints } from './measure'
 import { angleDelta } from './footprint'
+import { markFired } from './code-hooks'
+import { hasSkill } from './skills/common'
+import { isImmovable } from './skills/stance'
+import { handleSomersault, suggestSomersault } from './skills/somersault'
 import type { MoveKind } from './events'
 import type { Action, Fighter, GameState, MoveConstraints, PendingDecision, Rejection, Vec2, Waypoint } from './types'
 
@@ -135,11 +139,18 @@ export interface PlanOptions {
   facing?: number
   /** the end spot must be more than 1" from every Standing or Pinned enemy (Retreat, R-7.9 ruling) */
   endClear?: boolean
+  /** Acrobatic (esc): may pass over enemy bases and cross obstacles at no cost; the 1" rule is checked at the end spot only */
+  acrobatic?: boolean
 }
 
 export type MovePlan =
-  | { ok: true; path: Vec2[]; length: number; cost: number; crossings: number; end: Vec2; facing: number }
+  | { ok: true; path: Vec2[]; length: number; cost: number; crossings: number; end: Vec2; facing: number; viaAcrobatic?: boolean }
   | { ok: false; rejection: Rejection }
+
+/** Acrobatic applies to a Move or Charge made while Active (Standing and not Engaged). */
+export function acrobaticFor(state: GameState, f: Fighter): boolean {
+  return f.posture === 'standing' && f.engagedWith.length === 0 && hasSkill(state, f, 'acrobatic')
+}
 
 const fail = (rejection: Rejection): MovePlan => ({ ok: false, rejection })
 
@@ -178,6 +189,7 @@ export function planMove(state: GameState, f: Fighter, waypoints: readonly Waypo
   const r = f.baseRadius
   const blockers = navFor(def, state.board.doors, r).blockers
   let length = 0
+  let overEnemy = false
   for (let i = 0; i + 1 < path.length; i++) {
     const a = path[i]!
     const b = path[i + 1]!
@@ -185,19 +197,25 @@ export function planMove(state: GameState, f: Fighter, waypoints: readonly Waypo
     if (sweepBlocked(blockers, a, b, r)) return fail(reasonOf('E_NO_PATH', 'the path crosses a wall or a closed door'))
     for (const e of onBoard(state)) {
       if (e.id === f.id || e.seat === f.seat) continue
-      if (pointSegDist({ x: e.pos.x, z: e.pos.z }, a, b) < e.baseRadius + r - 1e-6) return fail(reasonOf('E_NO_PATH', `the path crosses the base of ${e.id}`))
+      if (pointSegDist({ x: e.pos.x, z: e.pos.z }, a, b) < e.baseRadius + r - 1e-6) {
+        if (opts.acrobatic) {
+          overEnemy = true
+          continue
+        }
+        return fail(reasonOf('E_NO_PATH', `the path crosses the base of ${e.id}`))
+      }
     }
     length += Math.hypot(b.x - a.x, b.z - a.z)
   }
   const crossings = countCrossings(state, path)
-  const cost = length + crossings * constants(state).obstacle.height
+  const cost = length + (opts.acrobatic ? 0 : crossings * constants(state).obstacle.height)
   if (cost > opts.maxInches + LENGTH_TOLERANCE) {
     return fail(reasonOf('E_OUT_OF_RANGE', `the path costs ${cost.toFixed(2)}" of ${opts.maxInches}"`, { cost, length, crossings, maxInches: opts.maxInches }))
   }
   const end = path[path.length - 1]!
-  const endProblem = spotProblem(state, f, end, opts.endClear ? { oneInch: true } : {})
+  const endProblem = spotProblem(state, f, end, opts.endClear || (opts.acrobatic && opts.oneInch === 'enemy') ? { oneInch: true } : {})
   if (endProblem) return fail(endProblem)
-  if (opts.oneInch === 'enemy') {
+  if (opts.oneInch === 'enemy' && !opts.acrobatic) {
     const limit = constants(state).radii.oneInchRule
     for (const e of oneInchEnemies(state, f)) {
       const startGap = Math.hypot(e.pos.x - start.x, e.pos.z - start.z) - e.baseRadius - r
@@ -216,7 +234,7 @@ export function planMove(state: GameState, f: Fighter, waypoints: readonly Waypo
     const a = path[path.length - 2]!
     facing = Math.atan2(end.x - a.x, end.z - a.z)
   }
-  return { ok: true, path, length, cost, crossings, end, facing }
+  return { ok: true, path, length, cost, crossings, end, facing, ...(opts.acrobatic && (overEnemy || crossings > 0) ? { viaAcrobatic: true } : {}) }
 }
 
 export function normaliseAngle(a: number): number {
@@ -290,18 +308,21 @@ function handleMovePath(state: GameState, action: Action, pending: PendingDecisi
   const c = pending.constraints
   if (!c || !c.fighterId) return reject('E_SCHEMA', 'move.path without constraints')
   const f = getFighter(state, c.fighterId)
+  if (c.kind === 'somersault') return handleSomersault(state, action.payload, c)
   const kind = c.kind as VoluntaryKind | SequenceMoveKind
   const plan = planMove(state, f, action.payload.waypoints, {
     maxInches: c.maxInches ?? 0,
     oneInch: c.oneInch ?? 'enemy',
     allowEmpty: kind === 'takeCover',
     endClear: kind === 'retreat',
+    ...(kind === 'move' && acrobaticFor(state, f) ? { acrobatic: true } : {}),
     ...(action.payload.facing !== undefined ? { facing: action.payload.facing } : {}),
   })
   if (!plan.ok) return { rejection: plan.rejection }
   return {
     run(ctx) {
       const fighter = getFighter(ctx.state, f.id)
+      if (plan.viaAcrobatic) markFired('acrobatic')
       if (plan.length > 0) applyMove(ctx, fighter, plan, kind, c.maxInches ?? 0)
       if (kind === 'retreat' || kind === 'consolidate') resumeAfterMove(ctx, fighter, kind)
       else completeAction(ctx, fighter, kind, plan)
@@ -389,6 +410,10 @@ export function suggestMovePath(state: GameState, pending: PendingDecision): Act
   const ready = pending.context.suggestion as Vec2[] | undefined
   if (ready) return { type: 'move.path', seat: pending.seat, decisionId: pending.id, payload: { waypoints: ready.map((p) => ({ x: p.x, z: p.z })) } }
   if (c.kind === 'consolidate') return { type: 'pass', seat: pending.seat, decisionId: pending.id, payload: {} }
+  if (c.kind === 'somersault') {
+    const at = suggestSomersault(state, f, c.maxInches)
+    return at ? { type: 'move.path', seat: pending.seat, decisionId: pending.id, payload: { waypoints: [at] } } : { type: 'pass', seat: pending.seat, decisionId: pending.id, payload: {} }
+  }
   const enemies = oneInchEnemies(state, f)
   const target = enemies.length
     ? enemies.reduce((best, e) => (Math.hypot(e.pos.x - f.pos.x, e.pos.z - f.pos.z) < Math.hypot(best.pos.x - f.pos.x, best.pos.z - f.pos.z) ? e : best))
@@ -447,6 +472,11 @@ export function placeAlong(ctx: Ctx, f: Fighter, kind: MoveKind, to: Vec2, maxIn
  */
 export function knockbackPush(ctx: Ctx, f: Fighter, from: Vec2, distance: number): PushResult {
   const s = ctx.state
+  // Immovable Stance: cannot be shifted by Knockback (or Hurl, Drag, Overseer ...): nothing moves and nothing is blocked
+  if (isImmovable(s, f)) {
+    markFired('immovableStance')
+    return { moved: 0, blocked: false, shift: { x: 0, z: 0 } }
+  }
   const start = { x: f.pos.x, z: f.pos.z }
   let dx = start.x - from.x
   let dz = start.z - from.z
@@ -580,7 +610,9 @@ export function chargeRoute(state: GameState, f: Fighter, target: Fighter): { wp
   const tc = { x: target.pos.x, z: target.pos.z }
   const base = Math.atan2(start.x - tc.x, start.z - tc.z)
   const nav = navFor(state.board.def, state.board.doors, f.baseRadius)
-  const avoid: AvoidDisc[] = enemiesOf(state, f).map((e) => ({ c: { x: e.pos.x, z: e.pos.z }, r: e.baseRadius + (e.id === target.id ? 0 : CONTACT_IN) }))
+  // Acrobatic ignores enemies on the way: the route runs straight over them (planMove allows it below)
+  const acrobatic = acrobaticFor(state, f)
+  const avoid: AvoidDisc[] = acrobatic ? [] : enemiesOf(state, f).map((e) => ({ c: { x: e.pos.x, z: e.pos.z }, r: e.baseRadius + (e.id === target.id ? 0 : CONTACT_IN) }))
   let best: { wps: Vec2[]; cost: number } | null = null
   for (const k of [0, 1, -1, 2, -2, 3, -3, 4, -4, 5, -5, 6]) {
     const ang = base + (k * Math.PI) / 6
@@ -589,7 +621,7 @@ export function chargeRoute(state: GameState, f: Fighter, target: Fighter): { wp
     if (spotProblem(state, f, c)) continue
     const route = shortestRoute(nav, start, c, avoid)
     if (!route) continue
-    const plan = planMove(state, f, route.path.slice(1), { maxInches: Infinity, oneInch: 'none', allowEmpty: true })
+    const plan = planMove(state, f, route.path.slice(1), { maxInches: Infinity, oneInch: 'none', allowEmpty: true, ...(acrobatic ? { acrobatic } : {}) })
     if (!plan.ok) continue
     if (!best || plan.cost < best.cost) best = { wps: plan.path.slice(1), cost: plan.cost }
   }
@@ -632,7 +664,7 @@ export function chargeMove(state: GameState, f: Fighter, target: Fighter, allowa
     if (at !== null) {
       const wps = at > 0 ? truncatePath(start, route.wps, at) : []
       const end = wps.length ? wps[wps.length - 1]! : start
-      const plan = wps.length ? planMove(state, f, wps, { maxInches: allowance, oneInch: 'none' }) : null
+      const plan = wps.length ? planMove(state, f, wps, { maxInches: allowance, oneInch: 'none', ...(acrobaticFor(state, f) ? { acrobatic: true } : {}) }) : null
       if ((!plan || plan.ok) && !spotProblem(state, f, end, { oneInch: true })) return { wps, cost: plan && plan.ok ? plan.cost : 0, reached: true }
     }
   }
@@ -642,7 +674,7 @@ export function chargeMove(state: GameState, f: Fighter, target: Fighter, allowa
     const wps = truncatePath(start, route.wps, s)
     if (wps.length === 0) break
     if (spotProblem(state, f, wps[wps.length - 1]!, { oneInch: true })) continue
-    const plan = planMove(state, f, wps, { maxInches: allowance, oneInch: 'none' })
+    const plan = planMove(state, f, wps, { maxInches: allowance, oneInch: 'none', ...(acrobaticFor(state, f) ? { acrobatic: true } : {}) })
     if (plan.ok) return { wps, cost: plan.cost, reached: false }
   }
   return none

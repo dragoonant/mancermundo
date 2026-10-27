@@ -17,7 +17,17 @@ export function weaponName(state: GameState | null, id: string | null | undefine
 }
 
 export function actionName(state: GameState | null, id: string): string {
-  return state?.data.actions[id]?.name ?? humanize(id)
+  const core = state?.data.actions[id]?.name
+  if (core) return core
+  // an action a skill grants (Headbutt, Hurl, Overseer ...) carries the skill's name
+  const skill = state ? Object.values(state.data.skills).find((s) => s.action?.id === id) : undefined
+  return skill?.name ?? humanize(id)
+}
+
+/** The name of the skill whose data record is implemented by the code hook `code` (`hitAndRun` -> "Hit and Run"). */
+export function skillNameOf(state: GameState | null, code: string): string {
+  const hit = state ? Object.values(state.data.skills).find((s) => JSON.stringify(s.effect ?? '').includes(`"code":"${code}"`)) : undefined
+  return hit?.name ?? humanize(code)
 }
 
 export function gangName(state: GameState | null, seat: Seat | null): string {
@@ -100,7 +110,7 @@ export function decisionTitle(pending: PendingDecision, state: GameState | null)
   const who = pending.context.fighterId
   if (pending.kind === 'move.path') {
     const kind = String((pending.constraints?.kind ?? pending.context.kind) || 'move')
-    const verb = kind === 'takeCover' ? 'Take Cover' : kind === 'crawl' ? 'Crawl' : kind === 'carry' ? 'Carry' : kind === 'retreat' ? 'Retreat' : kind === 'consolidate' ? 'Consolidate' : 'Move'
+    const verb = kind === 'takeCover' ? 'Take Cover' : kind === 'crawl' ? 'Crawl' : kind === 'carry' ? 'Carry' : kind === 'retreat' ? 'Retreat' : kind === 'consolidate' ? 'Consolidate' : kind === 'somersault' ? 'Somersault' : 'Move'
     return `${verb}: ${fighterName(state, String(pending.constraints?.fighterId ?? who ?? ''))}`
   }
   if (pending.kind === 'action.choose' && typeof who === 'string') return `${fighterName(state, who)}: choose an action`
@@ -123,6 +133,7 @@ export function decisionHelp(pending: PendingDecision): string {
     case 'action.choose':
       return 'Each activation has two actions. Doors beside the fighter can be clicked on the board.'
     case 'move.path':
+      if (pending.constraints?.kind === 'somersault') return 'Click a spot within reach that the fighter can see and that is more than an inch from every enemy. Right click or Escape cancels.'
       return 'Click the board: the fighter takes the shortest legal route, as far as the allowance reaches. Right click or Escape cancels.'
     case 'shoot.aim':
       return 'Click the board to aim, or pick a suggested aim point.'
@@ -201,7 +212,7 @@ export function optionLabel(opt: DecisionOption, state: GameState | null): strin
     case 'end.recoveryPick':
       return `Use die ${a.payload.index + 1}`
     case 'skill.choice':
-      return humanize(a.payload.option)
+      return skillChoiceLabel(opt, state, d)
     case 'dice.reroll':
       return `Re-roll ${a.payload.dieIndexes.length} dice`
     case 'confirm':
@@ -213,11 +224,58 @@ export function optionLabel(opt: DecisionOption, state: GameState | null): strin
   }
 }
 
+/** A `skill.choice` button: the answer to a skill's question, in words (Hit and Run, Lightning Reflexes, Naaargah!, Hurl). */
+function skillChoiceLabel(opt: DecisionOption, state: GameState | null, d: Data): string {
+  const option = (opt.action.payload as { option: string }).option
+  switch (opt.labelKey) {
+    case 'skill.hitAndRun.use':
+      return 'Hit and Run: slip away with a free Retreat'
+    case 'skill.lightningReflexes.use':
+      return 'Lightning Reflexes: slip away before the blow lands'
+    case 'skill.naaargah.attempt':
+      return 'Naaargah!: try for a third action (you end the activation Pinned)'
+    case 'skill.stimmSlugStash.use':
+      return 'Stimm-slugs: +2 Movement, Strength and Toughness this round (once a battle; may hurt at round end)'
+    case 'skill.chemSynth.use':
+      return `Chem-synth: Intelligence test (${typeof d.chance === 'number' ? `${Math.round(d.chance * 100)}%` : `${String(d.need)}+`}) to weaken Gas and Toxin targets this activation`
+    case 'skill.combatChemsStash.use':
+      return `Combat chems: roll for Attacks (now ${String(d.attacks)}; a 1 drops it to 1, otherwise +1 to +3)`
+    case 'skill.stimmSlugStash.decline':
+    case 'skill.chemSynth.decline':
+    case 'skill.combatChemsStash.decline':
+    case 'skill.decline':
+      return 'No, carry on'
+    case 'skill.hurl.fight':
+      return 'Fight as usual'
+    case 'skill.hurl.use':
+      return `Hurl ${fighterName(state, typeof d.targetId === 'string' ? d.targetId : option.slice(5))} instead of fighting`
+    case 'skill.hurl.direction': {
+      const contacts = Array.isArray(d.contacts) ? (d.contacts as string[]) : []
+      const where = typeof d.angle === 'number' ? facingName(d.angle) : humanize(option)
+      return `Hurl ${where}${contacts.length > 0 ? `, into ${contacts.map((id) => fighterName(state, id)).join(' and ')}` : d.stoppedShort === true ? ', against the terrain' : ''}`
+    }
+    default:
+      return humanize(option)
+  }
+}
+
 function chooseLabel(p: Extract<DecisionOption['action'], { type: 'action.choose' }>['payload'], state: GameState | null, d: Data): string {
   const name = actionName(state, p.action)
   switch (p.action) {
     case 'end':
       return 'End activation'
+    case 'headbutt':
+      return `Headbutt ${fighterName(state, p.targetId)}`
+    case 'hurl':
+      return `Hurl ${fighterName(state, p.targetId)}`
+    case 'overseer':
+      return `Order ${fighterName(state, p.targetId)} to act now`
+    case 'immovableStance':
+      return 'Brace: Immovable Stance'
+    case 'unleashTheBeast':
+      return 'Unleash the Beast'
+    case 'somersault':
+      return 'Somersault to a new spot'
     case 'turn':
       if (p.targetId) return `Face ${fighterName(state, p.targetId)}`
       return typeof p.facing === 'number' ? facingName(p.facing) : 'Turn'
@@ -242,7 +300,7 @@ function chooseLabel(p: Extract<DecisionOption['action'], { type: 'action.choose
   }
 }
 
-const HANDLED_FACTS = new Set(['maxInches', 'chance', 'need', 'plentiful', 'helpers', 'distance', 'band', 'cover', 'priority', 'hit', 'pHit', 'weapons', 'targets', 'doors', 'point', 'template', 'cost', 'auto', 'bonus', 'to', 'doorId', 'exit', 'from', 'contentsModifier', 'pReach', 'visible', 'dice', 'reach', 'needs', 'perWeapon', 'weaponId'])
+const HANDLED_FACTS = new Set(['maxInches', 'chance', 'need', 'plentiful', 'helpers', 'distance', 'band', 'cover', 'priority', 'hit', 'pHit', 'weapons', 'targets', 'doors', 'point', 'template', 'cost', 'auto', 'bonus', 'to', 'doorId', 'exit', 'from', 'contentsModifier', 'pReach', 'visible', 'dice', 'reach', 'needs', 'perWeapon', 'weaponId', 'angle', 'moved', 'contacts', 'stoppedShort', 'saveBonus', 'ready'])
 const plural = (n: number, one: string, many = `${one}s`): string => `${n} ${n === 1 ? one : many}`
 
 /** Short engine facts to show beside an option's button: ranges, odds, needs (all read from `option.data`). */
@@ -267,6 +325,9 @@ export function optionFacts(opt: DecisionOption): string[] {
   if (d.visible === false) add('not in sight: -1 to hit')
   if (typeof d.dice === 'number') add(`${d.dice} attack dice`)
   if (d.reach === true) add('at weapon reach')
+  if (typeof d.moved === 'number') add(`flies ${inch(d.moved)}`)
+  if (typeof d.saveBonus === 'number') add(`+${d.saveBonus} to saves (best 2+), no Pinning, no shoving, until it next activates`)
+  if (d.ready === false) add('has already acted this round')
   if (d.auto === true) add('no roll needed')
   if (typeof d.cost === 'string') add(`${humanize(d.cost).toLowerCase()} action`)
   if (typeof d.weapons === 'number') add(d.weapons === 0 ? 'no weapon ready' : plural(d.weapons, 'weapon'))
@@ -290,7 +351,7 @@ export function optionFacts(opt: DecisionOption): string[] {
 /** The fighter an option concerns (for hover highlights on the board), if any. */
 export function optionFighter(opt: DecisionOption): string | null {
   const p = opt.action.payload as Record<string, unknown>
-  const id = p.fighterId ?? p.targetId ?? p.recoveringId
+  const id = p.fighterId ?? p.targetId ?? p.recoveringId ?? (opt.data as Record<string, unknown> | undefined)?.targetId
   return typeof id === 'string' ? id : null
 }
 
@@ -401,6 +462,19 @@ export function describeEvent(ev: GameEvent, state: GameState | null): string | 
       return `${n(ev.fighterId)} nerve test ${ev.roll} against ${ev.need}: ${ev.passed ? 'holds' : 'breaks'}.`
     case 'RunningForCover':
       return `${n(ev.fighterId)} runs for cover.`
+    case 'SkillUsed': {
+      const skill = skillNameOf(state, ev.skill)
+      const who = ev.targetId ? ` on ${n(ev.targetId)}` : ''
+      if (ev.skill === 'headbutt') return `${n(ev.fighterId)} headbutts${who}: ${ev.detail === 'hit' ? 'it connects' : 'it fumbles'}.`
+      if (ev.skill === 'stepAside') return `${n(ev.fighterId)} steps aside from ${n(ev.targetId)}'s blow.`
+      if (ev.skill === 'fearsome') return `${n(ev.fighterId)} is so fearsome that ${n(ev.targetId)} stops short.`
+      if (ev.skill === 'regroup') return `${n(ev.fighterId)} rallies the gang (${skill}).`
+      return `${n(ev.fighterId)} uses ${skill}${who}.`
+    }
+    case 'SkillTest': {
+      const stat = ev.test === 'Ld' ? 'Leadership' : ev.test === 'Wil' ? 'Willpower' : ev.test === 'S' ? 'Strength' : ev.test === 'T' ? 'Toughness' : 'Initiative'
+      return `${n(ev.fighterId)} ${stat} test (${humanize(ev.reason).toLowerCase()}): ${ev.dice.join(' + ')} against ${ev.need}${ev.test === 'S' || ev.test === 'T' ? ' or less' : '+'}: ${ev.passed ? 'passed' : 'failed'}.`
+    }
     case 'BottleTest':
       return `${gangName(state, ev.seat)} bottle test: ${ev.bottled ? 'bottles out' : 'holds'} (${ev.down} of ${ev.crew} down).`
     case 'FleeTest':
@@ -464,6 +538,12 @@ function moveVerb(kind: string): string {
       return 'crawls through a duct,'
     case 'doorPush':
       return 'is pushed clear,'
+    case 'hurled':
+      return 'is hurled'
+    case 'pushed':
+      return 'is shoved'
+    case 'somersault':
+      return 'somersaults'
     default:
       return 'moves'
   }

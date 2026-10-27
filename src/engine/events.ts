@@ -23,6 +23,9 @@ export type MoveKind =
   | 'doorPush'
   | 'duct'
   | 'pushedApart'
+  | 'hurled'
+  | 'pushed'
+  | 'somersault'
 
 export type DiceKind = 'd6' | 'd3' | '2d6' | 'firepower' | 'injury' | 'scatter'
 
@@ -46,7 +49,7 @@ export type GameEventBody =
   | { type: 'FighterDeployed'; fighterId: string; pos: Vec3; facing: number }
   // activation
   | { type: 'FightersReadied'; fighterIds: string[] }
-  | { type: 'FighterActivated'; fighterId: string; group?: boolean }
+  | { type: 'FighterActivated'; fighterId: string; group?: boolean; orderedBy?: string }
   | { type: 'GroupNominated'; leaderId: string; fighterIds: string[] }
   | { type: 'FighterTurned'; fighterId: string; from: number; to: number; free: boolean }
   | { type: 'ActionDeclared'; fighterId: string; action: string; actionType: ActionCostType }
@@ -107,6 +110,9 @@ export type GameEventBody =
   // the Initiative tests of Retreat / Running for Cover from combat and of the enemies reacting to them (additive, S3b)
   | { type: 'InitiativeTest'; fighterId: string; roll: number; need: number; passed: boolean; reason: string }
   | { type: 'RunningForCover'; fighterId: string }
+  // skills and skill actions (additive, S4K-B): a skill took effect, and the characteristic tests it asks for
+  | { type: 'SkillUsed'; fighterId: string; skill: string; targetId?: string; detail?: string; roll?: number; need?: number; passed?: boolean }
+  | { type: 'SkillTest'; fighterId: string; test: 'Ld' | 'Wil' | 'S' | 'T' | 'I'; dice: number[]; need: number; passed: boolean; reason: string }
   | { type: 'BottleTest'; seat: Seat; roll: number; down: number; crew: number; bottled: boolean; voluntary: boolean; modifier?: number }
   | { type: 'FleeTest'; fighterId: string; roll: number; need: number; passed: boolean; auto?: string }
   | { type: 'RecoveryTest'; fighterId: string; faces: string[]; applied: string; assistedBy?: string }
@@ -126,7 +132,6 @@ export type GameEventBody =
   | { type: 'CasketSecured'; casketId: string; seat: Seat }
   | { type: 'ResultLocked'; winner: Seat; reason: string }
   // timed effects (additive, 00 section 11 row S1)
-  | { type: 'SkillUsed'; fighterId: string; code: string; detail: string; roll?: number; need?: number; passed?: boolean }
   | { type: 'EffectStarted'; effectId: string; source: string; kind: string }
   | { type: 'EffectEnded'; effectId: string; source: string }
   // dice: every physical roll; the tray renders `die`

@@ -15,7 +15,7 @@ const SCENARIO_HOOKS = ['horrorsInTheDark', 'smashAndGrabCaskets', 'smashAndGrab
 
 describe('code hooks: scenario hooks (S4)', () => {
   it('every code name the scenario data uses is registered, with a params validator that takes none', () => {
-    const res = validateAll({ registeredCodes: new Set(registeredCodeHooks()), allowPendingCodes: true })
+    const res = validateAll({ registeredCodes: new Set(registeredCodeHooks()) })
     const used = res.hooks.filter((h) => h.usedBy.some((id) => id.startsWith('scn.'))).map((h) => h.name)
     expect(used.sort()).toEqual(['horrorsInTheDark', 'smashAndGrabVictory'])
     for (const name of SCENARIO_HOOKS) {

@@ -181,7 +181,7 @@ registerCodeHook({
         if (!ctx) return null
         const roll = ctx.roll('nervesOfSteel', 1, '2d6')[0]!
         const passed = twoD6TestPasses(roll, need, modifier)
-        ctx.emit({ type: 'SkillUsed', fighterId: f.id, code: 'nervesOfSteel', detail: 'cool', roll, need: need - modifier, passed }, f.seat)
+        ctx.emit({ type: 'SkillUsed', fighterId: f.id, skill: 'nervesOfSteel', detail: 'cool', roll, need: need - modifier, passed }, f.seat)
         if (!passed) {
           const rescue = { test: 'cool', reason: 'nervesOfSteel', rescued: false }
           runHook('test.failed', { seat: f.seat, state: ctx.state, engine: ctx, fighterId: f.id, data: rescue })
@@ -214,14 +214,14 @@ registerCodeHook({
         const d = h.data as { extraDice: number }
         if (ok && f.fleshWounds > 0) {
           f.fleshWounds -= 1
-          ctx.emit({ type: 'SkillUsed', fighterId: f.id, code: 'unstoppable', detail: 'fleshWoundRemoved', roll, need: on, passed: true }, f.seat)
+          ctx.emit({ type: 'SkillUsed', fighterId: f.id, skill: 'unstoppable', detail: 'fleshWoundRemoved', roll, need: on, passed: true }, f.seat)
           markFired('unstoppable')
         } else if (ok) {
           d.extraDice += 1
-          ctx.emit({ type: 'SkillUsed', fighterId: f.id, code: 'unstoppable', detail: 'extraRecoveryDie', roll, need: on, passed: true }, f.seat)
+          ctx.emit({ type: 'SkillUsed', fighterId: f.id, skill: 'unstoppable', detail: 'extraRecoveryDie', roll, need: on, passed: true }, f.seat)
           markFired('unstoppable')
         } else {
-          ctx.emit({ type: 'SkillUsed', fighterId: f.id, code: 'unstoppable', detail: 'failed', roll, need: on, passed: false }, f.seat)
+          ctx.emit({ type: 'SkillUsed', fighterId: f.id, skill: 'unstoppable', detail: 'failed', roll, need: on, passed: false }, f.seat)
         }
         return null
       },
@@ -266,7 +266,7 @@ registerCodeHook({
           const need = stat(ctx.state, g.id, 'Ld')
           const roll = ctx.roll('inspirational', 1, '2d6')[0]!
           const passed = twoD6TestPasses(roll, need)
-          ctx.emit({ type: 'SkillUsed', fighterId: g.id, code: 'inspirational', detail: `rescued:${tester.id}`, roll, need, passed }, g.seat)
+          ctx.emit({ type: 'SkillUsed', fighterId: g.id, skill: 'inspirational', detail: `rescued:${tester.id}`, roll, need, passed }, g.seat)
           if (passed) {
             d.rescued = true
             markFired('inspirational')
@@ -362,7 +362,7 @@ registerCodeHook({
         const roll = ctx.roll('walkItOff', 1)[0]!
         const passed = strengthTestPasses(roll, need)
         if (!passed) {
-          ctx.emit({ type: 'SkillUsed', fighterId: f.id, code: 'walkItOff', detail: 'failed', roll, need, passed }, f.seat)
+          ctx.emit({ type: 'SkillUsed', fighterId: f.id, skill: 'walkItOff', detail: 'failed', roll, need, passed }, f.seat)
           return null
         }
         // a Flesh Wound is worth more than a Wound (a fighter with Flesh Wounds is already at 0 Wounds)
@@ -374,7 +374,7 @@ registerCodeHook({
           f.wounds += 1
           detail = 'woundRestored'
         }
-        ctx.emit({ type: 'SkillUsed', fighterId: f.id, code: 'walkItOff', detail: detail || 'nothingToRestore', roll, need, passed }, f.seat)
+        ctx.emit({ type: 'SkillUsed', fighterId: f.id, skill: 'walkItOff', detail: detail || 'nothingToRestore', roll, need, passed }, f.seat)
         if (detail) markFired('walkItOff')
         return null
       },
@@ -487,7 +487,7 @@ registerCodeHook({
         if (h.engine) {
           markUsed(f, 'bioBooster')
           markFired('bioBooster')
-          h.engine.emit({ type: 'SkillUsed', fighterId: f.id, code: 'bioBooster', detail: 'oneInjuryDieFewer' }, f.seat)
+          h.engine.emit({ type: 'SkillUsed', fighterId: f.id, skill: 'bioBooster', detail: 'oneInjuryDieFewer' }, f.seat)
         }
         return { delta: numParam(paramsOf(h.state, f, 'bioBooster'), 'injuryDiceDelta', -1) }
       },
@@ -510,7 +510,7 @@ registerCodeHook({
         markUsed(f, 'stimmSlugStash')
         setCondition(ctx, f, 'stimm', 'stimmSlugStash', { round: ctx.state.round })
         if (f.fleshWounds > 0) f.fleshWounds -= 1
-        ctx.emit({ type: 'SkillUsed', fighterId: f.id, code: 'stimmSlugStash', detail: 'used' }, f.seat)
+        ctx.emit({ type: 'SkillUsed', fighterId: f.id, skill: 'stimmSlugStash', detail: 'used' }, f.seat)
         markFired('stimmSlugStash')
       },
     })
@@ -538,7 +538,7 @@ registerCodeHook({
           const risk = (paramsOf(ctx.state, f, 'stimmSlugStash').endPhaseRisk as { on?: number } | undefined) ?? {}
           const roll = ctx.roll('stimm', 1)[0]!
           const hurt = roll <= (risk.on ?? 1)
-          ctx.emit({ type: 'SkillUsed', fighterId: f.id, code: 'stimmSlugStash', detail: hurt ? 'injuryRoll' : 'safe', roll, need: (risk.on ?? 1) + 1, passed: !hurt }, f.seat)
+          ctx.emit({ type: 'SkillUsed', fighterId: f.id, skill: 'stimmSlugStash', detail: hurt ? 'injuryRoll' : 'safe', roll, need: (risk.on ?? 1) + 1, passed: !hurt }, f.seat)
           if (hurt) rollInjuries(ctx, f, 1, { attackerId: null, cause: 'stimm', melta: false, weaponId: null })
         }
         return null
@@ -577,7 +577,7 @@ registerCodeHook({
         const need = stat(ctx.state, f.id, 'Int')
         const roll = ctx.roll('chemSynth', 1, '2d6')[0]!
         const passed = twoD6TestPasses(roll, need)
-        ctx.emit({ type: 'SkillUsed', fighterId: f.id, code: 'chemSynth', detail: 'intelligence', roll, need, passed }, f.seat)
+        ctx.emit({ type: 'SkillUsed', fighterId: f.id, skill: 'chemSynth', detail: 'intelligence', roll, need, passed }, f.seat)
         if (!passed) return
         setCondition(ctx, f, 'chemSynth', 'chemSynth')
         markFired('chemSynth')
@@ -661,7 +661,7 @@ registerCodeHook({
         const mode = row.attacks.set !== undefined ? 'set' : 'add'
         const n = row.attacks.set ?? row.attacks.add ?? 0
         setCondition(ctx, f, 'combatChems', 'combatChemsStash', { mode, n, roll })
-        ctx.emit({ type: 'SkillUsed', fighterId: f.id, code: 'combatChemsStash', detail: `${mode}:${n}`, roll }, f.seat)
+        ctx.emit({ type: 'SkillUsed', fighterId: f.id, skill: 'combatChemsStash', detail: `${mode}:${n}`, roll }, f.seat)
         markFired('combatChemsStash')
       },
     })

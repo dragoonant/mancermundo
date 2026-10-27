@@ -14,8 +14,11 @@ import { round3 } from '@/engine/geometry'
 import { fighterValue, overlay, outcomeValue, shotOutcome, hitChain } from './eval'
 import { approachCost, goalsFor, homePoint, leansMelee, needsHauling, supportAt, type Goal } from './goals'
 import { fieldFrom, reachablePoints, sampleField } from './field'
-import { reachChance } from '@/engine/fight'
+import { consolidateInches, reachChance } from '@/engine/fight'
+import { groupSize } from '@/engine/activation'
+import { somersaultProblem } from '@/engine/skills/somersault'
 import { bestShot, type ShotPlan } from './shots'
+import { headbuttScore, hurlScore, overseerScore, stanceScore, unleashScore } from './skills'
 import { exposure } from './threat'
 import { spend, tracing, type AiCtx, type Intent } from './tiers'
 
@@ -265,6 +268,46 @@ export function scoreSpots(ctx: AiCtx, state: GameState, f: Fighter, kind: MoveK
   return out
 }
 
+interface SomersaultSpot {
+  pos: Vec2
+  score: number
+  facing: number
+}
+
+/**
+ * Somersault places a fighter at a spot in sight within `max` that is more than 1" from every enemy: it needs no route, so even a
+ * fighter hemmed in by a fight has spots. Three rings of sixteen spots round the fighter, kept when the engine accepts them,
+ * scored like a Move's spots (position value gained, plus the shot the spot opens).
+ */
+function somersaultSpots(ctx: AiCtx, state: GameState, f: Fighter, max: number, goals: Goal[], left: number): SomersaultSpot[] {
+  const key = `somer:${f.id}:${max}:${left}`
+  const hit = ctx.cache.get(key) as SomersaultSpot[] | undefined
+  if (hit) return hit
+  const base = positionValue(ctx, state, f, centre(f), f.posture, f.facing, goals)
+  const out: SomersaultSpot[] = []
+  for (const r of [max * 0.4, max * 0.7, max]) {
+    for (let k = 0; k < 16; k++) {
+      const a = (k * Math.PI) / 8
+      const pos = { x: round3(f.pos.x + Math.sin(a) * r), z: round3(f.pos.z + Math.cos(a) * r) }
+      if (somersaultProblem(state, f, pos, max)) continue
+      if (!spend(ctx, 1)) break
+      const facing = faceFrom(ctx, state, f, pos, goals)
+      let score = positionValue(ctx, state, f, pos, 'standing', facing, goals) - base
+      const sh = shotFrom(ctx, state, f, pos, 'standing', Math.max(1, left - 1), false, null)
+      let face = facing
+      if (sh) {
+        face = sh.facing
+        if (left - 1 >= 1 && ctx.params.lookahead && sh.plan.cost === 'basic') score += 0.85 * sh.plan.value
+        else score += ctx.w.potential * Math.max(0, sh.plan.value)
+      }
+      out.push({ pos, score, facing: face })
+    }
+  }
+  out.sort((a, b) => b.score - a.score)
+  ctx.cache.set(key, out)
+  return out
+}
+
 // ---------------------------------------------------------------------------
 // Action scores
 // ---------------------------------------------------------------------------
@@ -445,6 +488,37 @@ function scoreChoices(ctx: AiCtx, state: GameState, snap: FighterSnapshot, optio
   const run = first('runForCover')
   if (run) push(run, 5, 'runForCover')
 
+  // ---- skill actions: Headbutt (free), Hurl, Overseer, Immovable Stance, Unleash the Beast, Somersault (S4K-B)
+  const targetOf = (o: DecisionOption): Fighter | null => {
+    const p = o.action.type === 'action.choose' ? o.action.payload : null
+    return p?.targetId ? getFighter(state, p.targetId) : null
+  }
+  for (const o of groups.get('headbutt') ?? []) {
+    const t = targetOf(o)
+    if (t) push(o, headbuttScore(ctx, state, f, t), 'headbutt')
+  }
+  for (const o of groups.get('hurl') ?? []) {
+    const t = targetOf(o)
+    if (t) push(o, hurlScore(ctx, state, f, t), 'hurl')
+  }
+  for (const o of groups.get('overseer') ?? []) {
+    const t = targetOf(o)
+    if (!t) continue
+    const chance = Number((o.data as { chance?: number } | undefined)?.chance ?? 0.5)
+    push(o, overseerScore(ctx, chance, activationValue(ctx, state, t), activationValue(ctx, state, f)), 'overseer')
+  }
+  const stance = first('immovableStance')
+  if (stance) push(stance, stanceScore(ctx, state, f), 'stance')
+  const unleash = first('unleashTheBeast')
+  if (unleash) push(unleash, unleashScore(ctx, state, f), 'unleash')
+  const somersault = first('somersault')
+  if (somersault) {
+    // a placement within reach that the engine accepts: the best spot a Move could reach, ranked the same way; out of a fight it needs no Initiative test and draws no reaction attacks
+    const max = Number((somersault.data as { maxInches?: number } | undefined)?.maxInches ?? 6)
+    const top = somersaultSpots(ctx, state, f, max, goals, left)[0]
+    if (top) push(somersault, f.engagedWith.length > 0 ? top.score + 0.1 : top.score * 0.95 - 0.03, 'somersault', { path: [top.pos], facing: top.facing, kind: 'somersault' })
+  }
+
   // ---- stand up
   const stand = first('standUp')
   if (stand && !state.action.activation?.performed.some((x) => x.action === 'takeCover')) {
@@ -558,7 +632,7 @@ function scoreChoices(ctx: AiCtx, state: GameState, snap: FighterSnapshot, optio
 /** The best 2" Consolidate for a fighter that has just won a fight (null: no legal spot). */
 export function consolidateSpot(ctx: AiCtx, state: GameState, f: Fighter): SpotScore | null {
   const goals = goalsFor(ctx, state, f)
-  const scored = scoreSpots(ctx, state, f, 'move', 2, goals, 1).sort((a, b) => b.score - a.score)
+  const scored = scoreSpots(ctx, state, f, 'move', consolidateInches(state, f), goals, 1).sort((a, b) => b.score - a.score)
   return scored.find((s) => s.spot.path.length > 0) ?? null
 }
 
@@ -673,6 +747,20 @@ export function movePath(ctx: AiCtx): Action | null {
   const max = c.maxInches ?? 0
   // a Retreat cannot be passed once its dice are rolled: take the engine's best end point (it scores the same four criteria)
   if (kind === 'retreat') return suggest(state, p)
+  if (kind === 'somersault') {
+    // the spot the choice settled on, else the best legal spot of a Move's ranking, else give the action back
+    if (intent && intent.fighterId === f.id && intent.dest && intent.dest.kind === 'somersault' && intent.dest.path.length > 0) {
+      const a = act.path(p, intent.dest.path.map((q) => ({ x: round3(q.x), z: round3(q.z) })), intent.dest.facing ?? undefined)
+      if (!validate(state, a)) return a
+    }
+    const scored = somersaultSpots(ctx, state, f, max, goalsFor(ctx, state, f), (state.action.activation?.actionsLeft ?? 1))
+    for (const s of scored) {
+      const a = act.path(p, [{ x: round3(s.pos.x), z: round3(s.pos.z) }], round3(s.facing))
+      if (!validate(state, a)) return a
+    }
+    banChosen(ctx)
+    return p.canPass ? act.pass(p) : suggest(state, p)
+  }
   if (kind === 'consolidate') {
     if (intent && intent.fighterId === f.id && intent.dest && intent.dest.kind === 'consolidate' && intent.dest.path.length > 0) {
       const a = act.path(p, intent.dest.path.map((q) => ({ x: round3(q.x), z: round3(q.z) })), undefined)
@@ -784,7 +872,7 @@ export function activate(ctx: AiCtx): Action | null {
     const f = getFighter(state, o.action.payload.fighterId)
     let v = activationValue(ctx, state, f)
     // a leader's group activation moves several fighters before the opponent can answer
-    const x = f.rules.find((r) => r.id === 'core.r.group-activation')?.x ?? 0
+    const x = groupSize(state, f)
     if (x > 0 && !p.context.group) {
       const mates = readyFighters(state, f.seat)
         .filter((g) => g.id !== f.id && Math.hypot(g.pos.x - f.pos.x, g.pos.z - f.pos.z) <= 6)

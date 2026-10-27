@@ -209,3 +209,34 @@ SKL-022 | 13-gangs 1.2 Hot-headed | When the fighter goes down its friends owe n
 SKL-023 | 13-gangs 2.4 Combat Chems Stash | On activation the owner may (`skill.choice`) roll a D6 for the round: 1 sets Attacks to 1, 2 adds 1, 3-4 adds 2, 5-6 adds 3; it raises the characteristic and ends with the round.
 SKL-024 | 13-gangs 3.4 Poison Blood | A natural 1 on the Toughness roll of the wielder's Toxin weapon is re-rolled; a 2, a Gas roll or a fighter without the rule never is; the Toxin odds show it.
 SKL-025 | 20 section 11 | All 19 passive code hooks are registered, every data record that names one passes its params validator, and params missing what the hook needs are refused.
+## SKC - close combat skills and skill actions
+
+SKC-001 | 13-gangs 7.3 (Crushing Blow) | One non-Sidearm attack is nominated before the hit rolls; if it hits it gets +1 Strength and +1 Damage (the nomination is automatic; each fight and each reaction nominates its own).
+SKC-002 | 13-gangs 7.3 (Crushing Blow) | A Sidearm attack is never the nominated one: with a pistol die and an unarmed die, the unarmed die is boosted.
+SKC-003 | 13-gangs 7.4 (Counter-attack) | Reaction attacks gain one Attack for each of the opponent's attacks at that fighter that failed to hit (missed, parried or stepped aside); Fight actions gain nothing.
+SKC-004 | 13-gangs 7.4 (Disarm) | The fighter's melee weapons disarm on a natural 6 to hit; a weapon that already has Disarm disarms on 5+; below that nothing happens.
+SKC-005 | 13-gangs 7.4 (Parry) | The fighter counts as carrying one extra Parry weapon: without a Parry weapon one hit is re-rolled, with two Parry weapons three can be.
+SKC-006 | 13-gangs 7.4 (Step Aside) | A fighter hit in close combat passes an Initiative test to avoid the most dangerous hit, once against each enemy per set of attacks (the attempt is automatic); a failed test leaves every hit.
+SKC-007 | 13-gangs 7.4 (Combat Master) | The fighter's own attacks ignore interference, and as a friend it counts as giving an assist even when it is Engaged with other enemies.
+SKC-008 | 13-gangs 7.7 (Fists of Steel) | Unarmed attacks get +2 Strength and Damage 2.
+SKC-009 | 13-gangs 7.8 (Combat Virtuoso) | The listed knives, stiletto weapons, power knives and swords and chainswords gain Versatile with a reach equal to the fighter's Strength (the Fight at reach is offered).
+SKC-010 | 13-gangs 7.3 (Bulging Biceps) | An Unwieldy close combat weapon can be paired with a second weapon; without the skill it stands alone. Slots are unchanged.
+SKC-011 | 13-gangs 7.5 (Impetuous) | Consolidate offers 4" (move.path allowance 4) instead of 2".
+SKC-012 | 13-gangs 7.5 (Fearsome) | A fighter that charges the Fearsome fighter first passes a Willpower test (2D6, before the D3 is rolled); on a fail the Charge is paid and nobody moves.
+SKC-013 | 13-gangs 7.3 (Headbutt) | A Free action against an Engaged enemy in base contact (once per activation): 2D6, a die at least the target's Toughness hits at Strength +2, Damage 2; both dice lower and the Headbutter takes a hit at its own Strength, Damage 1. Costs no action.
+SKC-014 | 13-gangs 7.3 (Hurl) | A Basic action on an Engaged enemy in base contact or a Seriously Injured enemy within 1": the target passes an Initiative test or is moved D3" in a direction the Hurler chooses (skill.choice listing what each direction touches), then is hit at Strength 3 and Pinned; a passed test leaves it where it is.
+SKC-015 | 13-gangs 7.3 (Hurl) | The hurled fighter stops against another fighter; both take a Strength 3 hit and are Pinned.
+SKC-016 | 13-gangs 7.3 (Hurl) | After a Charge, Hurl can replace the free Fight (skill.choice fight / hurl:<id>); no Fight and no reaction attacks follow a Hurl.
+SKC-017 | 13-gangs 7.6 (Overseer) | A Double action while Active: on a passed Leadership test a friend within 6" activates at once for two actions, Ready or not; its Ready status is as it was afterwards; a failed test orders nobody.
+SKC-018 | 13-gangs 7.7 (Immovable Stance) | A Double action: until its next activation the fighter adds 2 to its saves (best 2+, before AP), cannot be Pinned and cannot be shifted by Knockback, Hurl or Unleash the Beast.
+SKC-019 | 13-gangs 7.7 (Naaargah!) | After its two actions the fighter may try a third (skill.choice): a Toughness test (D6 at most T) wins one more action; it ends the activation Pinned whether it passed or failed; declining leaves it standing.
+SKC-020 | 13-gangs 7.7 (Unleash the Beast) | A Simple action while Engaged: every fighter in base contact, friend or foe, passes a Strength test (D6 at most S) or is pushed D3" straight away; the order is by fighter id.
+SKC-021 | 13-gangs 7.8 (Somersault) | A Basic action: the fighter is placed within 6" (straight line) of where it stands, at a spot it can see and more than 1" from every enemy, even out of combat, with no dice and no reaction attacks; passing the move.path cancels the action unspent.
+SKC-022 | 13-gangs 7.8 (Acrobatic) | While Active a Move or Charge can pass over enemy bases and obstacles at no extra cost; the 1" rule is checked only where it ends.
+SKC-023 | 13-gangs 7.8 (Hit and Run) | After a Charge's free Fight and before the reaction attacks the fighter may make a free Retreat (skill.choice, use first); the enemies that reacted to the Retreat do not react again after the Fight.
+SKC-024 | 13-gangs 7.8 (Lightning Reflexes) | Once each round an Engaged fighter about to be attacked by an enemy's Fight may make a free Retreat first (skill.choice, use first); the use is spent whether or not the Retreat works.
+SKC-025 | 13-gangs 7.6 (Regroup) | A fighter still Active when its activation ends passes a Leadership test (automatic) to rally every Broken friend within 6"; an Engaged fighter takes no test.
+SKC-026 | 13-gangs 7.6 (Commanding Presence) | Group Activation +1: the leader may nominate one more fighter.
+SKC-027 | code hooks | The 23 code hooks of these skills are registered with a params validator that accepts the data's params and refuses a non-number.
+SKC-028 | code hooks | The shipped data validates with every one of these code hooks registered.
+SKC-029 | skills in play | Random-bot games in which every fighter has every one of these skills end cleanly with no violation or rejection, and the skill actions and hooks fire.

@@ -4,7 +4,7 @@
 import type { CSSProperties, ReactNode } from 'react'
 import { type DecisionOption, type GameState, type PendingDecision } from '@/engine'
 import { bottleOdds, pct } from '../game/odds'
-import { fighterName, humanize, optionFacts, optionLabel } from '../game/labels'
+import { fighterName, humanize, optionFacts, optionLabel, skillNameOf } from '../game/labels'
 import { useGame } from '../store/game'
 import { Keyword } from './Keyword'
 import { cardStyle } from './promptParts'
@@ -170,14 +170,26 @@ export function RecoveryPickPrompt({ pending, state }: { pending: PendingDecisio
 
 // ---------------------------------------------------------------- skills, re-rolls, confirmations
 
+/** What each close-combat skill question asks, in our own words (the skill is named by its code hook in `context.skill`). */
+const SKILL_QUESTION: Record<string, string> = {
+  hitAndRun: 'its charge is done. A free Retreat now, before the enemy hits back, can take it out of the fight.',
+  lightningReflexes: 'an enemy is about to attack it. It can slip away with a free Retreat first (once each round).',
+  hurlFight: 'its charge is done. It can Hurl an enemy in place of the free Fight.',
+  hurlDirection: 'the enemy failed its test and is thrown. Pick the direction it flies.',
+  naaargah: 'both actions are spent. A Toughness test wins a third, but the fighter ends the activation Pinned either way.',
+}
+const SKILL_NAME_OF: Record<string, string> = { hurlFight: 'hurl', hurlDirection: 'hurl' }
+
 export function SkillChoicePrompt({ pending, state }: { pending: PendingDecision; state: GameState }) {
   const skill = pending.context.skill as string | undefined
-  const name = skill ? (state.data.skills[skill]?.name ?? humanize(skill)) : null
+  const name = skill ? (state.data.skills[skill]?.name ?? skillNameOf(state, SKILL_NAME_OF[skill] ?? skill)) : null
+  const who = typeof pending.context.fighterId === 'string' ? fighterName(state, pending.context.fighterId) : null
+  const question = skill ? SKILL_QUESTION[skill] : undefined
   return (
     <div>
       {name && (
         <div style={{ ...small, marginBottom: 5 }}>
-          <Keyword term={name} /> offers a choice.
+          <Keyword term={name} /> {question ? `: ${who ?? 'the fighter'}, ${question}` : 'offers a choice.'}
         </div>
       )}
       <Cards pending={pending} state={state} />

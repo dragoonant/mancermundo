@@ -235,7 +235,7 @@ describe('SKL: skills, wargear and fighter rules (passive)', () => {
     const s = duel({ b: { skills: [SKILL.nervesOfSteel] } })
     // hit 6, Cool 6 + 6 = 12 (Cl 7+) passes: not Pinned; wound 1 fails
     const ok = shootB3(s, dice(6, 6, 6, 1))
-    expect(eventsOf(ok.events, 'SkillUsed')[0]).toMatchObject({ fighterId: 'B3', code: 'nervesOfSteel', passed: true })
+    expect(eventsOf(ok.events, 'SkillUsed')[0]).toMatchObject({ fighterId: 'B3', skill: 'nervesOfSteel', passed: true })
     expect(ok.state.fighters.B3!.posture).toBe('standing')
     expect(eventsOf(ok.events, 'FighterPinned')).toHaveLength(0)
     expect(hookFireCount('nervesOfSteel')).toBe(1)
@@ -252,7 +252,7 @@ describe('SKL: skills, wargear and fighter rules (passive)', () => {
     // the Nerves of Steel test is a Cool test, so an Inspirational friend within 6" may rescue it (Leadership 6 + 6)
     const inspired = equip(duel({ b: { skills: [SKILL.nervesOfSteel] }, spots: { B4: { x: 3, z: 1, facing: S } } }), 'B4', { skills: [SKILL.inspirational] })
     const rescued = shootB3(inspired, dice(6, 2, 3, 6, 6, 1))
-    expect(eventsOf(rescued.events, 'SkillUsed').map((e) => [e.code, e.passed])).toEqual([['nervesOfSteel', false], ['inspirational', true]])
+    expect(eventsOf(rescued.events, 'SkillUsed').map((e) => [e.skill, e.passed])).toEqual([['nervesOfSteel', false], ['inspirational', true]])
     expect(rescued.state.fighters.B3!.posture).toBe('standing')
     expect(pin(inspired)).toBeLessThan(pin(s))
   })
@@ -274,7 +274,7 @@ describe('SKL: skills, wargear and fighter rules (passive)', () => {
       )
     // Flesh Wounds 2: the Bottle roll 1 holds, Unstoppable rolls 5 (one Flesh Wound goes), the recovery die 4 (stays down, +1 Flesh Wound)
     const wounded = playOut(base((d) => (d.fighters.A3!.fleshWounds = 2)), dice(1, 5, 4, ...PRIORITY))
-    expect(eventsOf(wounded.events, 'SkillUsed')).toEqual([expect.objectContaining({ fighterId: 'A3', code: 'unstoppable', detail: 'fleshWoundRemoved', roll: 5 })])
+    expect(eventsOf(wounded.events, 'SkillUsed')).toEqual([expect.objectContaining({ fighterId: 'A3', skill: 'unstoppable', detail: 'fleshWoundRemoved', roll: 5 })])
     expect(wounded.state.fighters.A3).toMatchObject({ posture: 'seriouslyInjured', fleshWounds: 2 })
     expect(eventsOf(wounded.events, 'FleshWound')[0]).toMatchObject({ total: 2 })
     expect(hookFireCount('unstoppable')).toBe(1)
@@ -304,7 +304,7 @@ describe('SKL: skills, wargear and fighter rules (passive)', () => {
     const near = mk(4.5)
     const saved = test(near, [1, 1, 3, 3])
     expect(saved.broke).toBe(false)
-    expect(eventsOf(saved.ctx.events, 'SkillUsed')).toEqual([expect.objectContaining({ fighterId: 'B1', code: 'inspirational', detail: 'rescued:B4', roll: 6, need: 5, passed: true })])
+    expect(eventsOf(saved.ctx.events, 'SkillUsed')).toEqual([expect.objectContaining({ fighterId: 'B1', skill: 'inspirational', detail: 'rescued:B4', roll: 6, need: 5, passed: true })])
     expect(eventsOf(saved.ctx.events, 'NerveTest')[0]).toMatchObject({ fighterId: 'B4', passed: true })
     expect(saved.ctx.state.fighters.B4!.conditions.broken).toBeUndefined()
     expect(hookFireCount('inspirational')).toBe(1)
@@ -445,7 +445,7 @@ describe('SKL: skills, wargear and fighter rules (passive)', () => {
     // a Flesh Wound lowers T to 2: a 2 passes; the Flesh Wound goes first
     const wounded = twoMoves(base((d) => (d.fighters.A3!.fleshWounds = 1)), [2])
     expect(wounded.state.fighters.A3!.fleshWounds).toBe(0)
-    expect(eventsOf(wounded.events, 'SkillUsed')[0]).toMatchObject({ code: 'walkItOff', detail: 'fleshWoundRemoved', roll: 2, need: 2, passed: true })
+    expect(eventsOf(wounded.events, 'SkillUsed')[0]).toMatchObject({ skill: 'walkItOff', detail: 'fleshWoundRemoved', roll: 2, need: 2, passed: true })
     expect(hookFireCount('walkItOff')).toBe(1)
     // no Flesh Wound: a lost Wound comes back
     const hurt = twoMoves(base((d) => ((d.fighters.A3!.maxWounds = 2), (d.fighters.A3!.wounds = 1))), [3])
@@ -623,7 +623,7 @@ describe('SKL: skills, wargear and fighter rules (passive)', () => {
     expect(asked.pending!.options![0]!.id).toBe('use')
     // Int 7+: 4 + 4 passes; the target's T 3 is 2 against Gas, which shows in the odds
     const used = must(take(asked.state, { option: 'use' }, dice(4, 4)))
-    expect(eventsOf(used.events, 'SkillUsed')[0]).toMatchObject({ code: 'chemSynth', roll: 8, need: 7, passed: true })
+    expect(eventsOf(used.events, 'SkillUsed')[0]).toMatchObject({ skill: 'chemSynth', roll: 8, need: 7, passed: true })
     expect(used.state.fighters.A3!.conditions.chemSynth).toBeDefined()
     expect(query.woundChance(used.state, 'A3', 'atk.w.gas', 'std', 'B3')).toBeCloseTo(5 / 6, 6)
     expect(query.woundChance(asked.state, 'A3', 'atk.w.gas', 'std', 'B3')).toBeCloseTo(4 / 6, 6)
@@ -683,7 +683,7 @@ describe('SKL: skills, wargear and fighter rules (passive)', () => {
       const r = must(take(asked.state, { option: 'use' }, dice(roll)))
       expect(r.pending!.kind).toBe('action.choose')
       expect(stat(r.state, 'A1', 'A'), `roll ${roll}`).toBe(attacks)
-      expect(eventsOf(r.events, 'SkillUsed')[0]).toMatchObject({ code: 'combatChemsStash', detail, roll })
+      expect(eventsOf(r.events, 'SkillUsed')[0]).toMatchObject({ skill: 'combatChemsStash', detail, roll })
       expect(r.state.fighters.A1!.conditions.combatChems).toBeDefined()
       expect(hookFireCount('combatChemsStash')).toBe(1)
     }

@@ -365,6 +365,12 @@ export interface Activation {
   casualtyMark?: number
   /** `skill.choice` codes already put to the player in this activation (Stimm-slug stash, Chem-synth) */
   asked?: string[]
+  /** S4K-B: set when the fighter was ordered to activate by an Overseer; the Overseer's activation resumes the turn flow afterwards */
+  orderedBy?: string
+  /** S4K-B: the ordered fighter's Ready / activated flags before the order (restored when its activation ends: the order does not change them) */
+  orderedFrom?: { ready: boolean; activated: boolean }
+  /** S4K-B: Naaargah! was offered this activation (`attempted`) and its outcome owes a Pinned fighter at the end (`pinned`) */
+  naaargah?: 'declined' | 'pinned'
 }
 
 export interface GroupState {
@@ -380,6 +386,8 @@ export interface ActionPhaseState {
   group: GroupState | null
   /** voluntary flight progress (R-13.4) */
   flightDone: Seat[]
+  /** S4K-B: an Overseer's order awaiting the end of its own activation (the ordered fighter then activates at once) */
+  order?: { overseerId: string; targetId: string } | null
 }
 
 export interface EndPhaseState {
@@ -614,7 +622,7 @@ export interface DecisionOption {
 
 /** Continuous answers: where a path or set-up spot may go. */
 export interface MoveConstraints {
-  kind: 'move' | 'takeCover' | 'crawl' | 'retreat' | 'consolidate' | 'carry' | 'deploy' | 'casket'
+  kind: 'move' | 'takeCover' | 'crawl' | 'retreat' | 'consolidate' | 'carry' | 'deploy' | 'casket' | 'somersault'
   fighterId?: string
   fighterIds?: string[]
   origin?: Vec3

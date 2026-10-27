@@ -162,7 +162,11 @@ function stepsFor(kind: string, state: GameState | null, fighterId: string): Eve
     case 'duct':
       return [{ id: 'move-climb', opts: { volume: 0.8 } }]
     case 'knockback':
+    case 'hurled':
+    case 'pushed':
       return [{ id: 'move-drop', opts: { volume: 0.7 } }]
+    case 'somersault':
+      return [{ id: 'move-climb', opts: { volume: 0.5 } }]
     case 'charge': {
       const house = state?.fighters[fighterId]?.seat ? state.players[state.fighters[fighterId]!.seat]?.houseId : null
       return [{ id: 'move-steps-heavy', opts: { volume: 0.8 } }, ...(house === 'goliath' ? [{ id: 'gol-roar-perc' as SoundId, opts: { volume: 0.7 } }] : [])]
