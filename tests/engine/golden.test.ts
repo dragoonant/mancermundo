@@ -24,8 +24,8 @@ function dieStream(n: number, seed = 12345): number[] {
 }
 
 const GOLDEN = {
-  hash: 'd8f0bdfc',
-  decisions: 57,
+  hash: 'c8f383cd',
+  decisions: 58,
   events: {
     ActionDeclared: 15,
     ActionResolved: 15,
@@ -35,7 +35,7 @@ const GOLDEN = {
     ConditionChanged: 4,
     CoupDeGrace: 3,
     DamageInflicted: 13,
-    DecisionRequested: 57,
+    DecisionRequested: 58,
     DiceRolled: 102,
     EngagementChanged: 31,
     FightHitRolled: 26,

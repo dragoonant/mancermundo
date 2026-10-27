@@ -18,7 +18,7 @@ import { clearCondition, setCondition } from '../traits'
 import type { Fighter, GameState, Vec2 } from '../types'
 import type { ExtraSave } from '../wargear'
 import { registerChoice } from './choice'
-import { hasCode, markUsed, numParam, paramsOf, targetParam, usedOnce, usesOf } from './util'
+import { hasCode, ironManFlesh, markUsed, numParam, paramsOf, targetParam, usedOnce, usesOf } from './util'
 
 const T_GAS = 'core.t.gas'
 const T_TOXIN = 'core.t.toxin'
@@ -73,7 +73,8 @@ registerCodeHook({
         const ctx = h.engine
         const s = ctx?.state
         const d = h.data as { ids: string[]; kind: string; hitAt: (f: Fighter, p: Vec2) => boolean } | undefined
-        if (!ctx || !s || !d) return null
+        // only against an attack made by a fighter (as the save: never doors, traps or flames)
+        if (!ctx || !s || !d || !h.fighterId) return null
         for (const id of d.ids.slice()) {
           const f = s.fighters[id]
           if (!f || f.location !== 'board' || !hasCode(s, f, 'dodge')) continue
@@ -168,7 +169,11 @@ registerCodeHook({
         const modifier = sumModifiers(h, f, { test: 'cool', reason: 'nervesOfSteel' })
         const d = h.data as { preview?: boolean; pVeto?: number } | undefined
         if (d?.preview) {
-          const p = twoD6TestChance(need, modifier)
+          // a failed Cool test may still be rescued by an Inspirational friend (`test.failed`)
+          const rescue = { test: 'cool', reason: 'nervesOfSteel', rescued: false, preview: true, chance: 0 }
+          runHook('test.failed', { seat: f.seat, state: s, fighterId: f.id, data: rescue })
+          const base = twoD6TestChance(need, modifier)
+          const p = base + (1 - base) * rescue.chance
           d.pVeto = 1 - (1 - (d.pVeto ?? 0)) * (1 - p)
           return null
         }
@@ -177,7 +182,11 @@ registerCodeHook({
         const roll = ctx.roll('nervesOfSteel', 1, '2d6')[0]!
         const passed = twoD6TestPasses(roll, need, modifier)
         ctx.emit({ type: 'SkillUsed', fighterId: f.id, code: 'nervesOfSteel', detail: 'cool', roll, need: need - modifier, passed }, f.seat)
-        if (!passed) return null
+        if (!passed) {
+          const rescue = { test: 'cool', reason: 'nervesOfSteel', rescued: false }
+          runHook('test.failed', { seat: f.seat, state: ctx.state, engine: ctx, fighterId: f.id, data: rescue })
+          if (!rescue.rescued) return null
+        }
         markFired('nervesOfSteel')
         return { allow: false, reason: 'nervesOfSteel' }
       },
@@ -240,7 +249,6 @@ registerCodeHook({
               g.id !== tester.id &&
               g.seat === tester.seat &&
               g.location === 'board' &&
-              g.posture !== 'seriouslyInjured' &&
               hasCode(s, g, 'inspirational') &&
               withinPath(s, tester, g, numParam(paramsOf(s, g, 'inspirational'), 'radius', 6)),
           )
@@ -546,7 +554,7 @@ registerCodeHook({
         for (const f of Object.values(ctx.state.fighters)) {
           if (!f.conditions.stimm) continue
           clearCondition(ctx, f, 'stimm', 'roundEnd')
-          if (f.location === 'board' && stat(ctx.state, f.id, 'T') <= 0) takeOutOfAction(ctx, f, null, 'stimm')
+          if (f.location === 'board' && stat(ctx.state, f.id, 'T') - ironManFlesh(ctx.state, f) <= 0) takeOutOfAction(ctx, f, null, 'stimm')
         }
         return null
       },
@@ -639,26 +647,24 @@ registerCodeHook({
   kind: 'rule',
   params: (p) => (isRecord(p) && Array.isArray(p.table) ? null : 'combatChemsStash needs params.table'),
   install() {
-    // when activated roll a D6 for the round: 1 sets Attacks to 1, 2 adds 1, 3-4 adds 2, 5-6 adds 3 (it raises the characteristic)
-    registerHook(
-      'activation.start',
-      (h) => {
-        const ctx = h.engine
-        const f = ctx && h.fighterId ? ctx.state.fighters[h.fighterId] : undefined
-        if (!ctx || !f || f.location !== 'board' || f.conditions.combatChems || !hasCode(ctx.state, f, 'combatChemsStash')) return null
+    // "can roll" a D6 when activated (a `skill.choice`, since a 1 can lower Attacks): 1 sets Attacks to 1, 2 adds 1, 3-4 adds 2,
+    // 5-6 adds 3 for the round (it raises the characteristic). Not asked of a Seriously Injured fighter (it makes no attacks).
+    registerChoice({
+      code: 'combatChemsStash',
+      eligible: (s, f) => f.location === 'board' && f.posture !== 'seriouslyInjured' && !f.conditions.combatChems && hasCode(s, f, 'combatChemsStash'),
+      info: (s, f) => ({ attacks: stat(s, f.id, 'A') }),
+      apply(ctx, f) {
         const table = (paramsOf(ctx.state, f, 'combatChemsStash').table as { min: number; max: number; attacks: { set?: number; add?: number } }[] | undefined) ?? []
         const roll = ctx.roll('combatChems', 1)[0]!
         const row = table.find((r) => roll >= r.min && roll <= r.max)
-        if (!row) return null
+        if (!row) return
         const mode = row.attacks.set !== undefined ? 'set' : 'add'
         const n = row.attacks.set ?? row.attacks.add ?? 0
         setCondition(ctx, f, 'combatChems', 'combatChemsStash', { mode, n, roll })
         ctx.emit({ type: 'SkillUsed', fighterId: f.id, code: 'combatChemsStash', detail: `${mode}:${n}`, roll }, f.seat)
         markFired('combatChemsStash')
-        return null
       },
-      'skl.combatChemsStash.start',
-    )
+    })
     registerHook(
       'stat.modify',
       (h) => {

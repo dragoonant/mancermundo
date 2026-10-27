@@ -249,6 +249,12 @@ describe('SKL: skills, wargear and fighter rules (passive)', () => {
     expect(pin(s)).toBeCloseTo(pin(plain) * (1 - 21 / 36), 6)
     // Engaged fighters are never Pinned and take no test
     expect(pin(plain)).toBeGreaterThan(0)
+    // the Nerves of Steel test is a Cool test, so an Inspirational friend within 6" may rescue it (Leadership 6 + 6)
+    const inspired = equip(duel({ b: { skills: [SKILL.nervesOfSteel] }, spots: { B4: { x: 3, z: 1, facing: S } } }), 'B4', { skills: [SKILL.inspirational] })
+    const rescued = shootB3(inspired, dice(6, 2, 3, 6, 6, 1))
+    expect(eventsOf(rescued.events, 'SkillUsed').map((e) => [e.code, e.passed])).toEqual([['nervesOfSteel', false], ['inspirational', true]])
+    expect(rescued.state.fighters.B3!.posture).toBe('standing')
+    expect(pin(inspired)).toBeLessThan(pin(s))
   })
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -310,9 +316,9 @@ describe('SKL: skills, wargear and fighter rules (passive)', () => {
     expect(eventsOf(far.ctx.events, 'SkillUsed')).toHaveLength(0)
     // a passed test needs no rescue
     expect(eventsOf(test(near, [6, 6]).ctx.events, 'SkillUsed')).toHaveLength(0)
-    // a Seriously Injured Inspirational fighter cannot rescue anyone
+    // the skill names no status that stops it: a Seriously Injured Inspirational fighter still rescues
     const down = equip(meleeGame({ spots: { B4: { x: 0, z: 0, facing: S }, B1: { x: 4, z: 0, facing: S, posture: 'seriouslyInjured' } } }), 'B1', { skills: [SKILL.inspirational] })
-    expect(test(down, [1, 1]).broke).toBe(true)
+    expect(test(down, [1, 1, 3, 3]).broke).toBe(false)
     // the nerve odds count the rescue: 21/36 + (15/36)(30/36)
     expect(query.nerveOdds(near, 'B4').chance).toBeCloseTo(21 / 36 + (15 / 36) * (30 / 36), 6)
     expect(query.nerveOdds(mk(8), 'B4').chance).toBeCloseTo(21 / 36, 6)
@@ -664,27 +670,34 @@ describe('SKL: skills, wargear and fighter rules (passive)', () => {
     expect(hookFireCount('hotHeaded')).toBe(2)
   })
 
-  it('SKL-023 Combat Chems Stash: on activation a D6 sets Attacks to 1 (1), adds 1 (2), 2 (3-4) or 3 (5-6) for the round; it raises the characteristic', () => {
+  it('SKL-023 Combat Chems Stash: on activation the owner may roll a D6 that sets Attacks to 1 (1), adds 1 (2), 2 (3-4) or 3 (5-6) for the round; it raises the characteristic', () => {
     const PRIORITY = [3, 4]
     const base = equip(meleeGame({ spots: { A1: { x: 0, z: -6, facing: N }, B3: { x: 0, z: 6, facing: S } } }), 'A1', { rules: ['gol.r.combat-chems-stash'] })
     expect(stat(base, 'A1', 'A')).toBe(2)
     const expected: [number, number, string][] = [[1, 1, 'set:1'], [2, 3, 'add:1'], [3, 4, 'add:2'], [4, 4, 'add:2'], [5, 5, 'add:3'], [6, 5, 'add:3']]
     for (const [roll, attacks, detail] of expected) {
       resetFireCounts()
-      const r = must(activate(base, 'A1', dice(roll)))
+      const asked = must(activate(base, 'A1', dice()))
+      expect(asked.pending!.kind).toBe('skill.choice')
+      expect(asked.pending!.context).toMatchObject({ code: 'combatChemsStash', fighterId: 'A1', attacks: 2 })
+      const r = must(take(asked.state, { option: 'use' }, dice(roll)))
+      expect(r.pending!.kind).toBe('action.choose')
       expect(stat(r.state, 'A1', 'A'), `roll ${roll}`).toBe(attacks)
       expect(eventsOf(r.events, 'SkillUsed')[0]).toMatchObject({ code: 'combatChemsStash', detail, roll })
       expect(r.state.fighters.A1!.conditions.combatChems).toBeDefined()
       expect(hookFireCount('combatChemsStash')).toBe(1)
     }
     // the result lasts to the end of the round
-    const five = must(activate(base, 'A1', dice(5))).state
+    const five = must(take(must(activate(base, 'A1', dice())).state, { option: 'use' }, dice(5))).state
     const over = playOut(five, dice(...PRIORITY))
     expect(over.state.round).toBe(2)
     expect(over.state.fighters.A1!.conditions.combatChems).toBeUndefined()
     expect(stat(over.state, 'A1', 'A')).toBe(2)
-    // other fighters roll nothing
-    expect(eventsOf(must(activate(equip(base, 'A1', {}), 'A1', dice(2))).events, 'DiceRolled')).toHaveLength(1)
+    // the roll is optional ("can roll"): declining rolls nothing and keeps the printed Attacks
+    const declined = must(take(must(activate(base, 'A1', dice())).state, { option: 'decline' }, dice()))
+    expect(eventsOf(declined.events, 'DiceRolled')).toHaveLength(0)
+    expect(declined.state.fighters.A1!.conditions.combatChems).toBeUndefined()
+    expect(stat(declined.state, 'A1', 'A')).toBe(2)
   })
 
   it('SKL-024 Poison Blood: a natural 1 on the Toughness roll of a Toxin weapon is re-rolled; no other roll is, and a fighter without the rule never re-rolls', () => {
