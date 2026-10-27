@@ -107,7 +107,7 @@ export type GameEventBody =
   // the Initiative tests of Retreat / Running for Cover from combat and of the enemies reacting to them (additive, S3b)
   | { type: 'InitiativeTest'; fighterId: string; roll: number; need: number; passed: boolean; reason: string }
   | { type: 'RunningForCover'; fighterId: string }
-  | { type: 'BottleTest'; seat: Seat; roll: number; down: number; crew: number; bottled: boolean; voluntary: boolean }
+  | { type: 'BottleTest'; seat: Seat; roll: number; down: number; crew: number; bottled: boolean; voluntary: boolean; modifier?: number }
   | { type: 'FleeTest'; fighterId: string; roll: number; need: number; passed: boolean; auto?: string }
   | { type: 'RecoveryTest'; fighterId: string; faces: string[]; applied: string; assistedBy?: string }
   | { type: 'RallyTest'; fighterId: string; roll: number; need: number; passed: boolean }
@@ -126,6 +126,7 @@ export type GameEventBody =
   | { type: 'CasketSecured'; casketId: string; seat: Seat }
   | { type: 'ResultLocked'; winner: Seat; reason: string }
   // timed effects (additive, 00 section 11 row S1)
+  | { type: 'SkillUsed'; fighterId: string; code: string; detail: string; roll?: number; need?: number; passed?: boolean }
   | { type: 'EffectStarted'; effectId: string; source: string; kind: string }
   | { type: 'EffectEnded'; effectId: string; source: string }
   // dice: every physical roll; the tray renders `die`

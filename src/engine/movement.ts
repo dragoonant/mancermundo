@@ -9,6 +9,7 @@ import { resumeAfterMove } from './fight'
 import { coverFrom, hasLos } from './los'
 import { rollExpr } from './dice'
 import { runHook } from './hooks'
+import { stat } from './query'
 import { baseGap, CONTACT_EPS, refreshEngagement } from './measure'
 import { navFor, pointSegDist, shortestRoute, sweepBlocked, type AvoidDisc } from './nav'
 import { insideOutline } from './board'
@@ -52,9 +53,10 @@ export function halfMove(state: GameState, f: Fighter): number {
 }
 
 /** M (inches), with `move.limit` hooks applied. */
-export function moveAllowance(state: GameState, f: Fighter): number {
-  let m = f.stats.M
-  for (const r of runHook('move.limit', { seat: f.seat, state, fighterId: f.id, data: { value: m } })) if (r.delta) m += r.delta
+export function moveAllowance(state: GameState, f: Fighter, charge = false): number {
+  // the effective M (Stimm-slugs raise it through `stat.modify`), then `move.limit` (Heavy carapace charges 1" less)
+  let m = stat(state, f.id, 'M')
+  for (const r of runHook('move.limit', { seat: f.seat, state, fighterId: f.id, data: { value: m, charge } })) if (r.delta) m += r.delta
   return m
 }
 

@@ -69,6 +69,30 @@ function fromFront(target: Fighter, from: Fighter | Vec2 | null | undefined): bo
   return Math.abs(angleDelta(target.facing, bearing)) <= ARC_HALF + 1e-9
 }
 
+/** An invulnerable save a skill grants on top of the armour save (Dodge): unmodifiable, never ignored (S4K-A `save.extra`). */
+export interface ExtraSave {
+  /** the code hook that grants it (counted as fired when it saves) */
+  code: string
+  item: string
+  need: number
+}
+
+export interface ExtraSaveContext {
+  /** a fighter made the attack (environmental hits never allow Dodge) */
+  attackerId: string | null
+  /** a close combat attack */
+  melee: boolean
+  /** Blast and Template hits are handled before the hit (Dodge steps clear instead of saving) */
+  vs: 'blast' | 'template' | null
+}
+
+/** The extra saves the target gets against one hit, in order (the `save.extra` hook; pure, so odds can call it). */
+export function extraSaves(state: GameState, target: Fighter, sc: ExtraSaveContext): ExtraSave[] {
+  const data = { extras: [] as ExtraSave[], attacker: sc.attackerId !== null, melee: sc.melee, vs: sc.vs }
+  runHook('save.extra', { seat: target.seat, state, fighterId: target.id, ...(sc.attackerId ? { targetId: sc.attackerId } : {}), data })
+  return data.extras
+}
+
 /** The save a fighter makes against one hit (R-11.3 to R-11.6, R-9.7). */
 export function armourSave(state: GameState, target: Fighter, sc: SaveContext): SaveInfo {
   const front = fromFront(target, sc.from)

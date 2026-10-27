@@ -2,6 +2,7 @@
 // sight; fighters and obstacles never do, but they give cover. `query.losLine` returns the sample lines and what stopped
 // each, so the client draws exactly what the engine judged.
 import { angleDelta } from './footprint'
+import { runHook } from './hooks'
 import { blockingPolygons } from './board'
 import { segmentCircleInterval, segmentPolygonIntervals, distToPolygon, ringPoints } from './geometry'
 import { onBoard } from './state'
@@ -29,15 +30,25 @@ function crossesInterior(a: Vec2, b: Vec2, poly: Polygon): boolean {
   return segmentPolygonIntervals(a, b, poly).length > 0
 }
 
+/**
+ * Does the viewer see through smoke clouds (Photo-goggles, the `los.smoke` hook)? Cheap when no cloud is on the board.
+ */
+export function seesThroughSmoke(state: GameState, viewer: Fighter): boolean {
+  if (state.board.smoke.length === 0) return false
+  const data = { ignore: false }
+  runHook('los.smoke', { seat: viewer.seat, state, fighterId: viewer.id, data })
+  return data.ignore
+}
+
 /** What, if anything, a wall / closed door / smoke does to the segment a -> b. */
-function terrainBlock(state: GameState, a: Vec2, b: Vec2): Blocker | null {
+function terrainBlock(state: GameState, a: Vec2, b: Vec2, ignoreSmoke = false): Blocker | null {
   const def = state.board.def
   for (const w of def.walls) if (crossesInterior(a, b, w.poly)) return 'wall'
   for (const d of def.doors) {
     const rec = state.board.doors[d.id]
     if ((!rec || rec.state === 'closed') && crossesInterior(a, b, d.poly)) return 'door'
   }
-  for (const sm of state.board.smoke) if (segmentCircleInterval(a, b, sm.pos, sm.radius)) return 'smoke'
+  if (!ignoreSmoke) for (const sm of state.board.smoke) if (segmentCircleInterval(a, b, sm.pos, sm.radius)) return 'smoke'
   return null
 }
 
@@ -47,18 +58,18 @@ export function targetSamples(target: Fighter): Vec2[] {
 }
 
 /** The line-of-sight sample lines from a point to a target base. */
-export function losLines(state: GameState, from: Vec2, target: Fighter): SightLine[] {
-  return targetSamples(target).map((to) => ({ to, blocked: terrainBlock(state, from, to) }))
+export function losLines(state: GameState, from: Vec2, target: Fighter, ignoreSmoke = false): SightLine[] {
+  return targetSamples(target).map((to) => ({ to, blocked: terrainBlock(state, from, to, ignoreSmoke) }))
 }
 
 /** True when at least one sample line is clear of walls, closed doors and smoke. */
-export function hasLosFrom(state: GameState, from: Vec2, target: Fighter): boolean {
-  for (const to of targetSamples(target)) if (!terrainBlock(state, from, to)) return true
+export function hasLosFrom(state: GameState, from: Vec2, target: Fighter, ignoreSmoke = false): boolean {
+  for (const to of targetSamples(target)) if (!terrainBlock(state, from, to, ignoreSmoke)) return true
   return false
 }
 
 export function hasLos(state: GameState, viewer: Fighter, target: Fighter): boolean {
-  return hasLosFrom(state, centre(viewer), target)
+  return hasLosFrom(state, centre(viewer), target, seesThroughSmoke(state, viewer))
 }
 
 // ---------------------------------------------------------------------------
@@ -129,10 +140,11 @@ export function coverFrom(state: GameState, from: Vec2, target: Fighter, attacke
   })
   const lines: SightLine[] = []
   let clear = 0
+  const ignoreSmoke = !!attacker && seesThroughSmoke(state, attacker)
   for (let k = 0; k < COVER_SAMPLES; k++) {
     const off = ((k / (COVER_SAMPLES - 1)) * 2 - 1) * r
     const to = { x: t.x + px * off, z: t.z + pz * off }
-    let blocked: SightLine = { to, blocked: terrainBlock(state, from, to) }
+    let blocked: SightLine = { to, blocked: terrainBlock(state, from, to, ignoreSmoke) }
     if (!blocked.blocked) {
       const ob = obstacles.find((o) => crossesInterior(from, to, o.poly))
       if (ob) blocked = { to, blocked: 'obstacle', by: ob.id }

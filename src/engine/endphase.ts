@@ -15,7 +15,7 @@ import { settleNerve } from './fight'
 import { fleshWound } from './hits'
 import { runHook } from './hooks'
 import { withinPath } from './measure'
-import { rallyInfo } from './morale'
+import { rallyInfo, rescuedCoolTest } from './morale'
 import { beginRound } from './priority'
 import { stat } from './query'
 import { endGame, reject, type Ctx, type Handled, type ModuleDef } from './registry'
@@ -136,9 +136,9 @@ function handleBottle(state: GameState, action: Action, pending: PendingDecision
       if (voluntary) bottled = true
       else {
         roll = ctx.roll('bottle', 1)[0]!
-        bottled = roll + info.down > info.crew
+        bottled = roll + info.modifier + info.down > info.crew
       }
-      ctx.emit({ type: 'BottleTest', seat, roll, down: info.down, crew: info.crew, bottled, voluntary }, seat)
+      ctx.emit({ type: 'BottleTest', seat, roll, down: info.down, crew: info.crew, bottled, voluntary, ...(info.modifier && !voluntary ? { modifier: info.modifier } : {}) }, seat)
       if (bottled) {
         s.players[seat].bottled = true
         s.players[seat].bottledVoluntarily = voluntary
@@ -164,7 +164,9 @@ function plainCoolTest(ctx: Ctx, f: Fighter, purpose: string, reason: string): {
   for (const r of runHook('test.modify', { seat: f.seat, state: s, fighterId: f.id, data: { test: 'cool', reason } })) if (r.delta) modifier += r.delta
   const need = stat(s, f.id, 'Cl')
   const roll = ctx.roll(purpose, 1, '2d6')[0]!
-  return { roll, need: need - modifier, passed: twoD6TestPasses(roll, need, modifier) }
+  let passed = twoD6TestPasses(roll, need, modifier)
+  if (!passed && rescuedCoolTest(ctx, f, reason)) passed = true
+  return { roll, need: need - modifier, passed }
 }
 
 /**
@@ -289,15 +291,19 @@ function runRecoveries(ctx: Ctx): boolean {
       continue
     }
     const assister = s.end.assists[id]
-    const dice = ctx.roll('recovery', assister ? 2 : 1, 'injury')
+    // Unstoppable (`recovery.start`): before the test a D6 may remove a Flesh Wound or add a die to choose from
+    const before = { extraDice: 0 }
+    runHook('recovery.start', { seat: f.seat, state: s, engine: ctx, fighterId: id, data: before })
+    const count = 1 + (assister ? 1 : 0) + before.extraDice
+    const dice = ctx.roll('recovery', count, 'injury')
     const faces = dice.map((d) => injuryFace(s, d) as string)
-    if (assister && new Set(faces).size > 1) {
-      s.end.pick = { fighterId: id, assisterId: assister, faces }
+    if (count > 1 && new Set(faces).size > 1) {
+      s.end.pick = { fighterId: id, assisterId: assister ?? '', faces }
       ctx.raise({
         kind: 'end.recoveryPick',
         seat: f.seat,
         window: 'end.recovery',
-        context: { fighterId: id, assisterId: assister, faces },
+        context: { fighterId: id, assisterId: assister ?? null, faces },
         options: faces
           .map((face, index) => ({ face, index }))
           .sort((a, b) => severity(a.face) - severity(b.face) || a.index - b.index)
@@ -355,7 +361,7 @@ function handlePick(state: GameState, action: Action, pending: PendingDecision):
     run(ctx) {
       const s = ctx.state
       const f = getFighter(s, pick.fighterId)
-      applyRecovery(ctx, f, pick.faces[index]!, pick.faces, pick.assisterId)
+      applyRecovery(ctx, f, pick.faces[index]!, pick.faces, pick.assisterId || undefined)
       s.end.pick = null
       s.end.recoveryQueue.shift()
       advance(ctx)
@@ -378,7 +384,8 @@ function rallyStep(ctx: Ctx): void {
   const rallied: Fighter[] = []
   for (const { f, info } of infos) {
     const total = ctx.roll('rally', 1, '2d6')[0]!
-    const passed = twoD6TestPasses(total, info.need, info.modifier)
+    let passed = twoD6TestPasses(total, info.need, info.modifier)
+    if (!passed && rescuedCoolTest(ctx, f, 'rally')) passed = true
     ctx.emit({ type: 'RallyTest', fighterId: f.id, roll: total, need: info.need - info.modifier, passed }, f.seat)
     if (passed) rallied.push(f)
   }

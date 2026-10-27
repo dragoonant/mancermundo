@@ -21,6 +21,10 @@ export function queueNerve(ctx: Ctx, downed: Fighter, reason: 'seriouslyInjured'
     if (g.id === downed.id || g.seat !== downed.seat) continue
     if (!withinPath(s, downed, g, radius)) continue
     if (s.nerve.some((n) => n.fighterId === g.id && n.reason === `${reason}:${downed.id}`)) continue
+    // Hot-headed: friends skip the test for this casualty (`nerve.queue`)
+    const skip = { skip: false }
+    runHook('nerve.queue', { seat: downed.seat, state: s, engine: ctx, fighterId: downed.id, targetId: g.id, data: skip })
+    if (skip.skip) continue
     s.nerve.push({ fighterId: g.id, reason: `${reason}:${downed.id}` })
   }
 }
@@ -93,6 +97,8 @@ export interface BottleInfo {
   down: number
   /** the gang's starting crew (the number the D6 + down must beat) */
   crew: number
+  /** modifier to the D6 (Iron Will: -1) */
+  modifier: number
   bottled: boolean
   voluntary: boolean
   /** the gang must test this End phase: not bottled and at least one fighter down */
@@ -107,11 +113,15 @@ export interface BottleInfo {
 export function bottleInfo(state: GameState, seat: Seat): BottleInfo {
   const p = state.players[seat]
   const down = downCount(state, seat)
-  const need = Math.max(1, Math.min(7, p.startingCrew - down + 1))
+  // Iron Will: a -1 modifier to the Bottle roll (the `bottle.mods` hook)
+  let modifier = 0
+  for (const r of runHook('bottle.mods', { seat, state, data: { modifier: 0 } })) if (r.delta) modifier += r.delta
+  const need = Math.max(1, Math.min(7, p.startingCrew - down - modifier + 1))
   return {
     seat,
     down,
     crew: p.startingCrew,
+    modifier,
     bottled: p.bottled,
     voluntary: p.bottledVoluntarily,
     mustTest: !p.bottled && down > 0,
