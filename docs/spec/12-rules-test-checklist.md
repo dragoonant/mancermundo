@@ -38,7 +38,7 @@ VIS-005 | R-4.4 | A Pinned fighter in partial cover cannot be targeted by a rang
 ROUND-001 | R-5.2 | Round 1 priority ties re-roll; a later tie hands priority to the player who did not hold it last round.
 ROUND-002 | R-5.4 | Activations alternate starting with the Priority player; a fighter without Ready cannot be activated.
 ROUND-003 | R-5.5 | A Leader may group-activate at most 2 Ready friends within 3"; a Champion at most 1; a fighter 3.1" away is rejected.
-ROUND-004 | R-5.5 | All group members are nominated before any acts; each finishes its whole activation before the next starts.
+ROUND-004 | R-5.5 | All group members are nominated before any acts; the owner then activates them (the leader included) one at a time in any order, each finishing its whole activation before the next starts.
 ROUND-005 | R-5.6 | When one side has no Ready fighters, the other activates all its remaining Ready fighters in a row.
 ROUND-006 | R-5.7 | End phase steps run in the order Bottle, Flee, Recovery, Rally.
 ROUND-007 | R-5.8 | The battle ends at the end of a round when only one gang has non-Seriously-Injured fighters on the board.
@@ -52,6 +52,7 @@ ACT-004 | R-6.3 | Take Cover moves at most half M and leaves the fighter Pinned.
 ACT-005 | R-6.3 | A Seriously Injured fighter's only legal action is Crawl (Double, half M).
 ACT-006 | R-6.5 | An Engaged fighter may not Move, Shoot or Reload; Fight and Retreat are offered.
 ACT-007 | R-10.11 | Coup de Grace takes a Seriously Injured enemy within 1" and in arc Out of Action; it is rejected while the actor is Engaged.
+ACT-008 | R-4.1 | After a Fight that ends in a consolidate move the free turn is open again; a Fight without a move closes it.
 
 ## MOVE - movement
 
@@ -77,6 +78,8 @@ SHOOT-008 | R-8.7 | A Standing Active target hit by a ranged attack is Pinned be
 SHOOT-009 | R-8.8 | A miss rolls stray shots for fighters within 1" of the line, closest to the shooter first; 1-3 hits that fighter and stops the check.
 SHOOT-010 | R-8.9 | An Ammo symbol with a failed Ammo test marks the weapon Out of Ammo after the attack resolves; all its profiles become unusable.
 SHOOT-011 | R-8.11 | Reload of a Plentiful weapon always succeeds; a Scarce weapon cannot be reloaded.
+SHOOT-012 | R-8.11 | Reload uses the easiest profile still available (Limited profiles lost are skipped); a Single Shot profile never reloads, even beside an ammo cache.
+SHOOT-013 | R-8.4, R-8.8 | A shot beyond Long range misses with no hit roll and rolls stray shots for fighters within 1" of the line.
 
 ## BLAST - blasts and templates
 
@@ -86,6 +89,7 @@ BLAST-003 | R-9.4 | Scatter "Hit" plus a 1: a further 1 centres the blast on the
 BLAST-004 | R-9.5 | Every fighter under the marker is hit except those with a wall between them and the centre; friends are hit too.
 BLAST-005 | R-9.6 | A template hits every fighter under it with no hit roll and ignores target priority; fighters behind a wall are not hit.
 BLAST-006 | R-9.7 | A target in partial cover from the blast centre gets +1 to its save; an unarmoured target saves on 6 (7+ improved by 1).
+BLAST-007 | R-14.3 | A Rapid Fire Blast that misses places one marker per bullet hole, each scattering on its own from the aim point.
 
 ## CC - close combat
 
@@ -110,6 +114,7 @@ INJ-006 | R-11.8 | Any Out of Action result in a roll removes the fighter; other
 INJ-007 | R-11.8 | A Flesh Wound lowers T by 1; T reaching 0 is Out of Action.
 INJ-008 | R-11.8 | A Seriously Injured result on an already Seriously Injured fighter gives a Flesh Wound only.
 INJ-009 | R-11.11 | A Melta hit at Short range that reduces the target to 0 W is Out of Action with no Injury roll; at Long range it rolls normally.
+INJ-010 | R-11.3 | AP +1 makes the save one easier (the Goliath maul is S, AP +1, D2).
 
 ## NERVE - nerve tests and Broken
 
@@ -118,6 +123,7 @@ NERVE-002 | R-12.2 | The nerve test gets +1 per other friend within 3" that is n
 NERVE-003 | R-12.3 | A fighter that fails a nerve test loses Ready and immediately makes Running for Cover, even if it already activated.
 NERVE-004 | R-12.3 | A Broken fighter's only available action on activation is Running for Cover.
 NERVE-005 | R-12.4 | Running for Cover picks an end point more than 3" from enemies before one merely out of sight.
+NERVE-006 | R-12.2 | An already Broken fighter takes the nerve test; failing it, it loses Ready and runs for cover again at once.
 
 ## END - end phase
 
@@ -135,7 +141,7 @@ END-011 | R-13.5, R-12.3 | Nerve tests caused by a recovery roll (an Out of Acti
 
 ## TRAIT - weapon traits
 
-TRAIT-001 | R-14.3 | Rapid Fire (2) on a hit rolls up to 2 Firepower dice and scores hits equal to total bullet holes.
+TRAIT-001 | R-14.3 | Rapid Fire (2) asks for 1 or 2 Firepower dice (with the engine's odds, no pass); on a hit it scores hits equal to the bullet holes on the dice rolled.
 TRAIT-002 | R-14.3 | Rapid Fire extra hits may go only to enemies within 3" of the original target that are not harder to hit.
 TRAIT-003 | R-14.3 | Rapid Fire with two failed Ammo tests jams the weapon for the battle (Reload rejected).
 TRAIT-004 | R-14.3 | Knockback with a hit roll >= target S pushes 1"; blocked by a wall adds +1 Damage.
@@ -146,6 +152,9 @@ TRAIT-008 | R-14.3 | Unwieldy: Shoot with it costs both actions; in melee no sec
 TRAIT-009 | R-14.3 | Versatile: a charger may stop at Versatile reach and fight; the target cannot react unless it also has Versatile reach.
 TRAIT-010 | R-14.3 | Blaze: a hit target not taken Out of Action catches fire on 4+.
 TRAIT-011 | R-14.3 | Smoke cloud blocks line of sight through it and is removed in the End phase on 1-4.
+TRAIT-012 | R-14.2 | Reclaimed/Scavenged: a Plentiful profile loses Plentiful; any other has its Ammo worsened by 1 (at worst 6+).
+TRAIT-013 | R-14.3 | Knockback in melee: the attacker chooses to follow up into base contact or stay put; staying put leaves the two apart with no reaction attacks.
+TRAIT-014 | R-14.3 | Versatile while in base contact: enemies within the weapon's reach join the targets, but only an all-Versatile attack can put dice on them.
 
 ## ZM - Zone Mortalis board
 
@@ -161,6 +170,10 @@ ZM-009 | R-15.9 | Fire Through Ductway hits on 5+ regardless of BS; a template v
 ZM-010 | R-15.10 | Two enemies touching opposite sides of a barricade and within 1" of each other are Engaged.
 ZM-011 | R-15.11 | Smash Open succeeds on D6 + S >= 6 and applies -1 to the contents roll (minimum 1).
 ZM-012 | R-15.12 | Every shipped board has at least 3 doors, 2 ductways, 2 loot caskets 6"+ from edges.
+ZM-013 | R-15.11 | A frag trap rolls a D6 for a fighter ending an action within 2", once per activation: 1 dud (removed), 2-3 nothing, 4+ it explodes (Blast 5", S3 AP - D1 Knockback).
+ZM-014 | R-15.11 | A move that comes within 2" of a frag trap stops there to roll; a blast that pins ends the move, a quiet roll lets it go on.
+ZM-015 | R-15.11 | A frag trap can be shot (-1 at Short, -2 at Long); a hit rolls a D6: 1-2 nothing, 3-4 it explodes, 5-6 it is removed.
+ZM-016 | R-15.9 | A Blast through a ductway may target a point within 1" of the far end, at 5+, and hits everyone under it there.
 
 ## SCEN - scenarios
 
@@ -174,7 +187,7 @@ SCEN-007 | M-4.7 | Forgotten Riches counts a casket only if it ends on the owner
 SCEN-008 | M-1.10 | A gang that voluntarily bottles and flees loses Smash & Grab and Forgotten Riches outright.
 SCEN-009 | M-4.3, M-4.4 | Forgotten Riches starts: five caskets one per tile with the first in the centre, casket-free outer tiles are the deployment choices, fighters set up within 3" of the tile's outer edge.
 SCEN-010 | M-4.4 | When the two deployment tiles touch no fighter is set up within 6" of an enemy.
-SCEN-011 | M-3.4 | Smash & Grab: the defender places 5 caskets in its own half, 4" from every edge, 6" apart and clear of walls, after choosing its half and before deployment.
+SCEN-011 | M-3.4 | Smash & Grab: the defender places 5 caskets in its own half, 4" from every edge, not overlapping and clear of walls, after choosing its half and before deployment.
 
 ## GOLDEN
 
@@ -225,7 +238,7 @@ SKC-011 | 13-gangs 7.5 (Impetuous) | Consolidate offers 4" (move.path allowance 
 SKC-012 | 13-gangs 7.5 (Fearsome) | A fighter that charges the Fearsome fighter first passes a Willpower test (2D6, before the D3 is rolled); on a fail the Charge is paid and nobody moves.
 SKC-013 | 13-gangs 7.3 (Headbutt) | A Free action against an Engaged enemy in base contact (once per activation): 2D6, a die at least the target's Toughness hits at Strength +2, Damage 2; both dice lower and the Headbutter takes a hit at its own Strength, Damage 1. Costs no action.
 SKC-014 | 13-gangs 7.3 (Hurl) | A Basic action on an Engaged enemy in base contact or a Seriously Injured enemy within 1": the target passes an Initiative test or is moved D3" in a direction the Hurler chooses (skill.choice listing what each direction touches), then is hit at Strength 3 and Pinned; a passed test leaves it where it is.
-SKC-015 | 13-gangs 7.3 (Hurl) | The hurled fighter stops against another fighter; both take a Strength 3 hit and are Pinned.
+SKC-015 | 13-gangs 7.3 (Hurl) | The hurled fighter stops against another Standing fighter; both take a Strength 3 hit and are Pinned.
 SKC-016 | 13-gangs 7.3 (Hurl) | After a Charge, Hurl can replace the free Fight (skill.choice fight / hurl:<id>); no Fight and no reaction attacks follow a Hurl.
 SKC-017 | 13-gangs 7.6 (Overseer) | A Double action while Active: on a passed Leadership test a friend within 6" activates at once for two actions, Ready or not; its Ready status is as it was afterwards; a failed test orders nobody.
 SKC-018 | 13-gangs 7.7 (Immovable Stance) | A Double action: until its next activation the fighter adds 2 to its saves (best 2+, before AP), cannot be Pinned and cannot be shifted by Knockback, Hurl or Unleash the Beast.
@@ -240,3 +253,4 @@ SKC-026 | 13-gangs 7.6 (Commanding Presence) | Group Activation +1: the leader m
 SKC-027 | code hooks | The 23 code hooks of these skills are registered with a params validator that accepts the data's params and refuses a non-number.
 SKC-028 | code hooks | The shipped data validates with every one of these code hooks registered.
 SKC-029 | skills in play | Random-bot games in which every fighter has every one of these skills end cleanly with no violation or rejection, and the skill actions and hooks fire.
+SKC-030 | 13-gangs 7.3 (Hurl) | The hurled fighter passes over Pinned and Seriously Injured fighters without hitting them, stops only against terrain or a Standing fighter, and stops short rather than end on a Prone base.

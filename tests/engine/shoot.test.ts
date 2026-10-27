@@ -269,3 +269,38 @@ describe('Shooting details beyond the checklist rows', () => {
     void attackBundle
   })
 })
+
+describe('SHOOT: reloading and range (R-8.11, R-8.4, R-8.8)', () => {
+  it('SHOOT-012 Reload uses the easiest profile still available; a Single Shot profile never reloads, even next to an ammo cache', () => {
+    const s = edit(shootingGame({ spots: { A3: { x: 0, z: -6 }, B3: { x: 0, z: 0 } }, loadouts: { A3: { weapons: ['atk.w.dual', 'atk.w.single'] } } }), (d) => {
+      const dual = d.data.weapons['atk.w.dual']!
+      d.data = { ...d.data, weapons: { ...d.data.weapons, 'atk.w.dual': { ...dual, profiles: [dual.profiles[0]!, { ...dual.profiles[1]!, ammo: 3 }] } } }
+      d.fighters.A3!.weapons.forEach((w) => (w.ammo = 'out'))
+      d.board.caskets.k1 = { pos: { x: 1.2, z: -6 }, state: 'ammoCache', carriedBy: null }
+    })
+    const a = take(s, { fighterId: 'A3' }).state
+    const reloads = a.pending!.options!.filter((o) => (o.action.payload as { action: string }).action === 'reload')
+    expect(reloads.map((o) => (o.action.payload as { weaponId: string }).weaponId)).toEqual(['atk.w.dual'])
+    expect(reloads[0]!.data).toMatchObject({ need: 3, bonus: 2 })
+    // with profile b lost (Limited), only profile a (5+) is left to reload with
+    const lost = take(edit(s, (d) => (d.fighters.A3!.weapons[0]!.lostProfiles = ['b'])), { fighterId: 'A3' }).state
+    const opt = lost.pending!.options!.find((o) => (o.action.payload as { action: string }).action === 'reload')!
+    expect(opt.data).toMatchObject({ need: 5 })
+  })
+
+  it('SHOOT-013 a shot beyond Long range misses and, like any miss, risks stray shots on fighters within 1 inch of the line', () => {
+    const s = shoot(
+      shootingGame({
+        spots: { A3: { x: 0, z: -14, facing: 0 }, A2: { x: 0.9, z: -8 }, B3: { x: 0, z: 14 } },
+        loadouts: { A3: { weapons: ['atk.w.plain'] } },
+        active: 'A3',
+      }),
+    )
+    expect(query.shootTargets(s, 'A3', 'atk.w.plain', 'std').find((t) => t.targetId === 'B3')).toMatchObject({ band: null, chance: 0 })
+    // no hit roll; A2 next to the line rolls 2 for its stray shot (hit: wound 1 fails)
+    const r = must(take(s, { targetId: 'B3' }, dice(2, 1)))
+    expect(eventsOf(r.events, 'HitRolled')[0]).toMatchObject({ dice: [], hit: false })
+    expect(eventsOf(r.events, 'StrayShot').map((e) => [e.candidateId, e.hit])).toEqual([['A2', true]])
+    expect(eventsOf(r.events, 'WoundRolled')[0]).toMatchObject({ targetId: 'A2' })
+  })
+})

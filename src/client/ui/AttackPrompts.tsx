@@ -118,10 +118,10 @@ function OddsStrip({ o }: { o: ShotOdds }) {
 
 function TargetCard({ opt, state, pending }: { opt: DecisionOption; state: GameState; pending: PendingDecision }) {
   const answer = useAnswer(opt)
-  const payload = opt.action.payload as { targetId?: string; doorId?: string; point?: boolean }
+  const payload = opt.action.payload as { targetId?: string; doorId?: string; point?: boolean; trapId?: string }
   const t = payload.targetId ? state.fighters[payload.targetId] : undefined
   const odds = shotOdds(state, pending, opt)
-  const d = (opt.data ?? {}) as { distance?: number; band?: string; auto?: boolean }
+  const d = (opt.data ?? {}) as { distance?: number; band?: string; auto?: boolean; need?: number; chance?: number }
   if (!t) {
     return (
       <button type="button" data-testid={`opt-${opt.id}`} onClick={answer} {...hoverProps(opt)} style={{ ...cardStyle(), font: 'inherit' }}>
@@ -130,6 +130,7 @@ function TargetCard({ opt, state, pending }: { opt: DecisionOption; state: GameS
           {typeof d.distance === 'number' ? `${Math.round(d.distance * 10) / 10}" away` : ''}
           {d.band ? ` · ${d.band} range` : ''}
           {d.auto ? ' · hit automatically' : payload.point ? ' · aim comes next, and a blast on the floor is harder to land' : ''}
+          {payload.trapId && typeof d.chance === 'number' ? ` · ${Math.round(d.chance * 100)}% to hit (${d.need}+): 3-4 sets it off, 5-6 wrecks it` : ''}
         </div>
       </button>
     )

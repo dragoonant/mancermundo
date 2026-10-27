@@ -6,7 +6,7 @@
 // weapon states (Out of Ammo, jammed, Limited, spent) -> the action is paid. Doors are targets too (R-15.8).
 import { payAndContinue, cancelDeclared } from './activation'
 import { insideOutline } from './board'
-import { firepowerFace, hitChanceFor, scatterFace, twoD6TestPasses, d6TestPasses } from './dice'
+import { firepowerFace, firepowerHitsDistribution, hitChanceFor, scatterFace, twoD6TestPasses, d6TestPasses } from './dice'
 import { ARC_HALF, coverOf, hasLos, hiddenFromRanged, inVisionArc, type CoverLevel } from './los'
 import { angleDelta } from './footprint'
 import { circleOverlapsPolygon, pointInPolygon, round3 } from './geometry'
@@ -43,7 +43,7 @@ import {
   rapidFire,
   T,
 } from './traits'
-import { ammoCacheNear, ductFireChoices, fightersNear, shootableDoors } from './zm'
+import { ammoCacheNear, casketGap, ductFireChoices, explodeTrap, fightersNear, shootableDoors, shootableTraps } from './zm'
 import type { Action, ActionCostType, Fighter, GameState, PendingDecision, Polygon, Rejection, RuntimeProfile, Vec2 } from './types'
 import type { RangeBand } from './events'
 
@@ -235,11 +235,28 @@ export function canShootDoors(p: RuntimeProfile): boolean {
 // Blast points and scatter (R-9.1 to R-9.4)
 // ---------------------------------------------------------------------------
 
-/** Why a floor point cannot be the centre of a Blast (off the board, inside a wall, out of sight or out of the arc). */
-export function pointAimProblem(state: GameState, f: Fighter, mode: ShotMode, aim: Vec2): Rejection | null {
+/** The far end of the ductway a Fire Through Ductway attack in progress goes through (null outside one). */
+function ductFar(state: GameState): Vec2 | null {
+  const a = state.attack
+  if (!a || a.kind !== 'shoot') return null
+  return (a.data as unknown as ShootData).far ?? null
+}
+
+/**
+ * Why a floor point cannot be the centre of a Blast (off the board, inside a wall, out of sight or out of the arc). Through a
+ * ductway the point only has to be within 1" of the far end (R-15.9 YAQ); sight, arc and range do not apply.
+ */
+export function pointAimProblem(state: GameState, f: Fighter, mode: ShotMode, aim: Vec2, far: Vec2 | null = null): Rejection | null {
   if (!Number.isFinite(aim.x) || !Number.isFinite(aim.z)) return rej('E_SCHEMA', 'the aim point must be finite')
   if (!insideOutline(state.board.def, aim)) return rej('E_OUT_OF_RANGE', 'the point is off the battlefield')
   if (blockers(state).some((poly) => pointInPolygon(aim, poly))) return rej('E_NOT_VISIBLE', 'the point is inside a wall or a closed door')
+  if (mode === 'fireDuct') {
+    const end = far ?? ductFar(state)
+    const reach = constants(state).radii.interact
+    if (!end) return rej('E_INVALID_TARGET', 'no ductway is being fired through')
+    if (Math.hypot(aim.x - end.x, aim.z - end.z) > reach + 1e-6) return rej('E_OUT_OF_RANGE', `the point must be within ${reach}" of the far end of the ductway`)
+    return null
+  }
   const c = centre(f)
   if (!segmentClear(state, c, aim, true)) return rej('E_NOT_VISIBLE', 'no line of sight to that point')
   if (mode !== 'blindFire') {
@@ -267,11 +284,32 @@ export interface AimSuggestion {
   friends: string[]
 }
 
-/** Engine aims for a Blast at a floor point: each enemy centre the shooter can see (the hidden ones included). */
-export function pointSuggestions(state: GameState, f: Fighter, p: RuntimeProfile, mode: ShotMode): AimSuggestion[] {
+/**
+ * Engine aims for a Blast at a floor point: each enemy centre the shooter can see (the hidden ones included). Through a
+ * ductway: the far end itself and, for each enemy near it, the point 1" from the end toward that enemy.
+ */
+export function pointSuggestions(state: GameState, f: Fighter, p: RuntimeProfile, mode: ShotMode, far: Vec2 | null = null): AimSuggestion[] {
   const r = blastRadius(p) ?? constants(state).smoke.radius
   const long = profileRanges(p, stat(state, f.id, 'S')).long
   const out: AimSuggestion[] = []
+  const end = mode === 'fireDuct' ? (far ?? ductFar(state)) : null
+  if (end) {
+    const reach = constants(state).radii.interact
+    const aims: Vec2[] = [{ ...end }]
+    for (const e of onBoard(state)) {
+      if (e.seat === f.seat) continue
+      const d = Math.hypot(e.pos.x - end.x, e.pos.z - end.z)
+      if (d < 1e-6 || d - e.baseRadius > reach + r) continue
+      const k = Math.min(reach, d) / d
+      aims.push({ x: round3(end.x + (e.pos.x - end.x) * k), z: round3(end.z + (e.pos.z - end.z) * k) })
+    }
+    for (const aim of aims) {
+      if (pointAimProblem(state, f, mode, aim, end)) continue
+      const under = fightersUnderBlast(state, aim, r)
+      out.push({ aim, enemies: under.filter((g) => g.seat !== f.seat).map((g) => g.id), friends: under.filter((g) => g.seat === f.seat).map((g) => g.id) })
+    }
+    return out.sort((a, b) => b.enemies.length - a.enemies.length || a.friends.length - b.friends.length)
+  }
   for (const e of onBoard(state)) {
     if (e.seat === f.seat) continue
     const aim = centre(e)
@@ -417,6 +455,32 @@ export interface AttackOption {
   doors: number
   point: boolean
   template: boolean
+  /** frag traps in range and sight it could shoot at (R-15.11) */
+  traps?: number
+}
+
+/** Profiles that may shoot at a frag trap: a direct shot with a hit roll (not a Blast, Template or Smoke). */
+export function canShootTraps(p: RuntimeProfile): boolean {
+  return blastRadius(p) === null && !isTemplate(p) && !hasTrait(p, T.smoke)
+}
+
+/** The hit need against a frag trap: the usual accuracy, Aim and Blind Fire modifiers, plus -1 at Short or -2 at Long ([ND]). */
+export function trapNeedFor(state: GameState, f: Fighter, p: RuntimeProfile, mode: ShotMode, band: RangeBand | null, aimed: boolean): HitNeed {
+  const n = hitNeedFor(state, f, p, { mode, band, aimed })
+  const k = constants(state).casket.fragTrap.shotModifier
+  const value = band === 'short' && p.range.short !== null ? k.short : k.long
+  return { need: n.need - value, bs: n.bs, modifiers: [...n.modifiers, { label: 'fragTrap', value }] }
+}
+
+/** Frag traps a profile can shoot at now: in sight and within Long range. */
+function trapTargets(state: GameState, f: Fighter, p: RuntimeProfile, mode: ShotMode): { casketId: string; distance: number; band: RangeBand }[] {
+  if (!canShootTraps(p) || mode === 'fireDuct') return []
+  const out: { casketId: string; distance: number; band: RangeBand }[] = []
+  for (const t of shootableTraps(state, f, mode === 'blindFire')) {
+    const b = bandFor(state, f, p, t.distance)
+    if (b.band !== null) out.push({ ...t, band: b.band })
+  }
+  return out
 }
 
 function twinProfile(state: GameState, f: Fighter, weaponId: string): RuntimeProfile | undefined {
@@ -436,7 +500,7 @@ export function attackOptions(state: GameState, f: Fighter, mode: ShotMode, acti
     if (cost === 'double' && actionsLeft < 2) continue
     const base = { weaponId, profileId: p.id, cost, targets: 0, doors: 0, point: false, template: false }
     if (duct) {
-      out.push({ ...base, targets: duct.targets.length, template: isTemplate(p) })
+      out.push({ ...base, targets: duct.targets.length, template: isTemplate(p), point: !isTemplate(p) && (blastRadius(p) !== null || hasTrait(p, T.smoke)) })
       continue
     }
     if (isTemplate(p)) {
@@ -446,7 +510,8 @@ export function attackOptions(state: GameState, f: Fighter, mode: ShotMode, acti
     const targets = targetInfos(state, f, p, mode, { cache }).length
     const doors = canShootDoors(p) ? shootableDoors(state, f, mode === 'blindFire').length : 0
     const point = (blastRadius(p) !== null || hasTrait(p, T.smoke)) && pointSuggestions(state, f, p, mode).length > 0
-    if (targets + doors > 0 || point) out.push({ ...base, targets, doors, point })
+    const traps = trapTargets(state, f, p, mode).length
+    if (targets + doors + traps > 0 || point) out.push({ ...base, targets, doors, point, ...(traps > 0 ? { traps } : {}) })
   }
   // twin sidearms (R-8.10): two different Sidearm weapons at one target, -1 to hit each
   if (!duct) {
@@ -480,6 +545,7 @@ interface ShotSpec {
 type TargetSpec =
   | { kind: 'fighter'; id: string }
   | { kind: 'door'; id: string }
+  | { kind: 'trap'; id: string }
   | { kind: 'point'; x: number; z: number }
   | { kind: 'template'; x: number; z: number }
   | { kind: 'ductTemplate' }
@@ -515,6 +581,8 @@ interface ShootData {
   alloc: AllocState | null
   ammo: AmmoNote[]
   unstable: boolean
+  /** Rapid Fire (X): the Firepower dice chosen for the current shot (null until asked) */
+  fpDice?: number | null
 }
 
 function data(state: GameState): ShootData {
@@ -621,12 +689,17 @@ function raiseTarget(ctx: Ctx): void {
     }
     const duct = ductFireChoices(s, f).find((x) => x.ductId === d.ductId)!
     const need = hitNeedFor(s, f, p, { mode: 'fireDuct', band: 'short' })
+    const options: OptionInput[] = duct.targets.map((id) => ({ id: `t:${id}`, labelKey: 'shoot.target.fighter', type: 'shoot.target' as const, payload: { targetId: id }, data: { need: need.need, chance: hitChanceFor(need.need, need.bs), priority: 'free', modifiers: need.modifiers } }))
+    // R-15.9 YAQ: a Blast through a ductway may instead be aimed at any point within 1" of the far end (5+ to hit, scatters on a miss)
+    if (blastRadius(p) !== null || hasTrait(p, T.smoke)) {
+      options.push({ id: 'point', labelKey: 'shoot.target.point', type: 'shoot.target', payload: { point: true }, data: { needAtLong: need.need, radius: blastRadius(p) ?? constants(s).smoke.radius } })
+    }
     ctx.raise({
       kind: 'shoot.target',
       seat: f.seat,
       window: 'action.declared',
       context: { fighterId: f.id, weaponId: shot.weaponId, profileId: shot.profileId, mode: d.mode, ductId: d.ductId },
-      options: duct.targets.map((id) => ({ id: `t:${id}`, labelKey: 'shoot.target.fighter', type: 'shoot.target' as const, payload: { targetId: id }, data: { need: need.need, chance: hitChanceFor(need.need, need.bs), priority: 'free', modifiers: need.modifiers } })),
+      options,
       canPass: true,
     })
     return
@@ -656,6 +729,12 @@ function raiseTarget(ctx: Ctx): void {
     for (const door of shootableDoors(s, f, d.mode === 'blindFire')) {
       const b = bandFor(s, f, p, door.distance)
       options.push({ id: `door:${door.doorId}`, labelKey: 'shoot.target.door', type: 'shoot.target', payload: { doorId: door.doorId }, data: { distance: door.distance, band: b.band, auto: b.band !== null } })
+    }
+  }
+  if (!shot.twin) {
+    for (const t of trapTargets(s, f, p, d.mode)) {
+      const n = trapNeedFor(s, f, p, d.mode, t.band, d.aimed)
+      options.push({ id: `trap:${t.casketId}`, labelKey: 'shoot.target.trap', type: 'shoot.target', payload: { trapId: t.casketId }, data: { distance: t.distance, band: t.band, need: n.need, chance: hitChanceFor(n.need, n.bs), modifiers: n.modifiers } })
     }
   }
   if ((blastRadius(p) !== null || hasTrait(p, T.smoke)) && pointSuggestions(s, f, p, d.mode).length > 0) {
@@ -691,8 +770,9 @@ function raisePointAim(ctx: Ctx): void {
       kind: 'blast',
       mode: d.mode,
       radius: blastRadius(p) ?? constants(s).smoke.radius,
-      long: profileRanges(p, stat(s, f.id, 'S')).long,
-      suggestions: pointSuggestions(s, f, p, d.mode),
+      long: d.mode === 'fireDuct' ? null : profileRanges(p, stat(s, f.id, 'S')).long,
+      ...(d.far ? { within: { centre: { ...d.far }, radius: constants(s).radii.interact } } : {}),
+      suggestions: pointSuggestions(s, f, p, d.mode, d.far),
     },
     canPass: true,
   })
@@ -718,6 +798,7 @@ function runShots(ctx: Ctx): void {
     if (resolveShot(ctx, d.shots[d.shotIndex]!)) return
     d.shotIndex++
     d.alloc = null
+    d.fpDice = null
   }
   finishAttack(ctx)
 }
@@ -738,7 +819,7 @@ function rollFirepower(ctx: Ctx, f: Fighter, shot: ShotSpec, p: RuntimeProfile):
   const d = data(s)
   const note: AmmoNote = { weaponId: shot.weaponId, profileId: shot.profileId, fails: 0, spend: false }
   d.ammo.push(note)
-  const n = firepowerDice(p)
+  const n = rapidFire(p) > 1 && d.fpDice ? Math.max(1, Math.min(rapidFire(p), d.fpDice)) : firepowerDice(p)
   let holes = 0
   let symbols = 0
   if (n > 0) {
@@ -797,16 +878,59 @@ function hitInputFor(state: GameState, f: Fighter, shot: ShotSpec, p: RuntimePro
   }
 }
 
-/** Resolve one shot; true when it is waiting on a `shoot.allocate` decision. */
+/**
+ * Rapid Fire (X) with X of 2 or more: the odds of rolling 1 to X Firepower dice (R-14.3, "up to X"). Expected bullet holes,
+ * and the chances that the Ammo tests leave the weapon Out of Ammo (one fail) or jammed (two or more).
+ */
+export function firepowerChoices(state: GameState, f: Fighter, p: RuntimeProfile): { dice: number; expectedHits: number; outOfAmmo: number; jam: number }[] {
+  const x = rapidFire(p)
+  if (x < 2) return []
+  const symbol = [1, 2, 3, 4, 5, 6].filter((r) => firepowerFace(state, r).ammo).length / 6
+  const bonus = ammoCacheNear(state, f) ? constants(state).casket.ammoCache.ammoBonus : 0
+  const fail = p.ammo === null ? 0 : Math.max(0, Math.min(1, (p.ammo - bonus - 1) / 6))
+  const r = symbol * fail
+  const out: { dice: number; expectedHits: number; outOfAmmo: number; jam: number }[] = []
+  for (let n = 1; n <= x; n++) {
+    const dist = firepowerHitsDistribution(state, n)
+    const expectedHits = dist.reduce((a, q, k) => a + q * k, 0)
+    const none = (1 - r) ** n
+    const one = n * r * (1 - r) ** (n - 1)
+    out.push({ dice: n, expectedHits, outOfAmmo: 1 - none, jam: n >= 2 ? 1 - none - one : 0 })
+  }
+  return out
+}
+
+function raiseFirepower(ctx: Ctx, f: Fighter, shot: ShotSpec, p: RuntimeProfile): void {
+  const s = ctx.state
+  const choices = firepowerChoices(s, f, p)
+  ctx.raise({
+    kind: 'shoot.firepower',
+    seat: f.seat,
+    window: 'shoot.targetDeclared',
+    context: { fighterId: f.id, weaponId: shot.weaponId, profileId: shot.profileId, max: rapidFire(p), ammo: p.ammo },
+    options: choices.map((c) => ({ id: `fp:${c.dice}`, labelKey: 'shoot.firepower', type: 'shoot.firepower' as const, payload: { dice: c.dice }, data: { ...c } })),
+  })
+}
+
+/** Resolve one shot; true when it is waiting on a decision (`shoot.firepower`, `shoot.allocate`). */
 function resolveShot(ctx: Ctx, shot: ShotSpec): boolean {
   const s = ctx.state
   const d = data(s)
   const f = shooterOf(s)
   const p = shotProfile(s, shot)
   const target = d.target!
+  // Rapid Fire (X >= 2): the shooter first picks how many Firepower dice to roll (a twin shot at a fallen target is skipped)
+  const gone = target.kind === 'fighter' && s.fighters[target.id]?.location !== 'board'
+  if (rapidFire(p) > 1 && !d.fpDice && !gone) {
+    raiseFirepower(ctx, f, shot, p)
+    return true
+  }
   switch (target.kind) {
     case 'door':
       doorShot(ctx, f, shot, p, target.id)
+      return false
+    case 'trap':
+      trapShot(ctx, f, shot, p, target.id)
       return false
     case 'template':
       templateShot(ctx, f, shot, p, { x: target.x, z: target.z })
@@ -837,9 +961,10 @@ function directShot(ctx: Ctx, f: Fighter, shot: ShotSpec, p: RuntimeProfile, tar
   const n = hitNeedFor(s, f, p, { mode: d.mode, band: b.band, cover, target: t, aimed: d.aimed, twin: shot.twin })
   declared(ctx, f, { targetId, distance, band: b.band, cover, need: n.need, modifiers: n.modifiers })
   if (b.band === null) {
-    // beyond Long range: an automatic miss, the Firepower dice is still rolled (R-8.4, R-8.9); no stray shots (ruling)
+    // beyond Long range: an automatic miss, the Firepower dice is still rolled (R-8.4, R-8.9), and a miss risks stray shots (R-8.8)
     ctx.emit({ type: 'HitRolled', fighterId: f.id, targetId, dice: [], need: n.need, hit: false }, f.seat)
-    rollFirepower(ctx, f, shot, p)
+    const missed = rollFirepower(ctx, f, shot, p)
+    if (d.mode !== 'fireDuct') strayShots(ctx, f, shot, p, t, rapidFire(p) > 0 ? missed : 1)
     return false
   }
   const roll = rollToHit(ctx, n.need, n.bs)
@@ -904,11 +1029,12 @@ function raiseAllocate(ctx: Ctx): void {
 }
 
 /** R-8.8 stray shots: fighters Engaged with the target or within 1" of the line of fire, closest to the shooter first. */
-function strayShots(ctx: Ctx, f: Fighter, shot: ShotSpec, p: RuntimeProfile, t: Fighter, checks: number): void {
+function strayShots(ctx: Ctx, f: Fighter, shot: ShotSpec, p: RuntimeProfile, t: Fighter | Vec2, checks: number): void {
   const s = ctx.state
   const k = constants(s).strayShot
   const a = centre(f)
-  const b = centre(t)
+  const target = 'id' in t ? t : null
+  const b = 'id' in t ? centre(t) : { x: t.x, z: t.z }
   const seg = (q: Vec2) => {
     const dx = b.x - a.x
     const dz = b.z - a.z
@@ -917,7 +1043,7 @@ function strayShots(ctx: Ctx, f: Fighter, shot: ShotSpec, p: RuntimeProfile, t: 
     return Math.hypot(a.x + dx * u - q.x, a.z + dz * u - q.z)
   }
   const atRisk = onBoard(s)
-    .filter((g) => g.id !== f.id && g.id !== t.id && (t.engagedWith.includes(g.id) || seg(centre(g)) - g.baseRadius <= k.radius + 1e-9))
+    .filter((g) => g.id !== f.id && g.id !== target?.id && ((target?.engagedWith.includes(g.id) ?? false) || seg(centre(g)) - g.baseRadius <= k.radius + 1e-9))
     .sort((x, y) => baseGap(f, x) - baseGap(f, y) || (x.id < y.id ? -1 : 1))
     .map((g) => g.id)
   if (atRisk.length === 0) return
@@ -963,6 +1089,18 @@ function blastShot(ctx: Ctx, f: Fighter, shot: ShotSpec, p: RuntimeProfile, targ
   const roll = rollToHit(ctx, n.need, n.bs)
   ctx.emit({ type: 'HitRolled', fighterId: f.id, targetId: t?.id ?? null, dice: roll.dice, need: n.need, hit: roll.hit, ...(roll.improbable ? { improbable: true } : {}) }, f.seat)
   const holes = rollFirepower(ctx, f, shot, p)
+  // Rapid Fire Blast that misses: one marker per bullet hole, each scattering on its own from the aim point ([ND] Rapid Fire)
+  if (!roll.hit && !smoke && rapidFire(p) > 0 && holes > 1) {
+    const centres: Vec2[] = []
+    for (let i = 0; i < holes; i++) {
+      const c = scatter(ctx, f, at)
+      if (!c) continue
+      ctx.emit({ type: 'BlastPlaced', centre: { ...c }, radius }, f.seat)
+      centres.push(c)
+    }
+    resolveMarkers(ctx, f, shot, p, centres, null)
+    return false
+  }
   let finalCentre: Vec2 | null = at
   if (!roll.hit) finalCentre = scatter(ctx, f, at)
   if (!finalCentre) return false // a dud, or the marker left the battlefield
@@ -1037,6 +1175,44 @@ function resolveAutoHits(ctx: Ctx, f: Fighter, shot: ShotSpec, p: RuntimeProfile
   }
 }
 
+/**
+ * A shot at a frag trap ([ND] Booby Traps): -1 to hit at Short, -2 at Long. Each hit rolls a D6: 1-2 nothing, 3-4 it
+ * explodes, 5-6 it is disarmed and removed. A miss risks stray shots along the line as usual.
+ */
+function trapShot(ctx: Ctx, f: Fighter, shot: ShotSpec, p: RuntimeProfile, casketId: string): void {
+  const s = ctx.state
+  const d = data(s)
+  const c = s.board.caskets[casketId]
+  if (!c || c.state !== 'fragTrap') return
+  const at = { x: c.pos.x, z: c.pos.z }
+  const distance = round3(casketGap(f, at))
+  const b = bandFor(s, f, p, distance)
+  const n = trapNeedFor(s, f, p, d.mode, b.band, d.aimed)
+  declared(ctx, f, { point: { ...at }, distance, band: b.band, cover: 'none', need: n.need, modifiers: n.modifiers })
+  if (b.band === null) {
+    ctx.emit({ type: 'HitRolled', fighterId: f.id, targetId: null, dice: [], need: n.need, hit: false }, f.seat)
+    const missed = rollFirepower(ctx, f, shot, p)
+    strayShots(ctx, f, shot, p, at, rapidFire(p) > 0 ? missed : 1)
+    return
+  }
+  const roll = rollToHit(ctx, n.need, n.bs)
+  ctx.emit({ type: 'HitRolled', fighterId: f.id, targetId: null, dice: roll.dice, need: n.need, hit: roll.hit, ...(roll.improbable ? { improbable: true } : {}) }, f.seat)
+  const holes = rollFirepower(ctx, f, shot, p)
+  if (!roll.hit) {
+    strayShots(ctx, f, shot, p, at, rapidFire(p) > 0 ? holes : 1)
+    return
+  }
+  const k = constants(s).casket.fragTrap
+  const hits = rapidFire(p) > 0 ? holes : 1
+  for (let i = 0; i < hits && c.state === 'fragTrap'; i++) {
+    const r = ctx.roll('trapShot', 1)[0]!
+    const result = r <= k.shotNoEffectMax ? 'none' : r <= k.shotExplodeMax ? 'exploded' : 'disarmed'
+    ctx.emit({ type: 'TrapShot', casketId, fighterId: f.id, roll: r, result }, f.seat)
+    if (result === 'exploded') explodeTrap(ctx, casketId)
+    if (result === 'disarmed') c.state = 'removed'
+  }
+}
+
 function doorShot(ctx: Ctx, f: Fighter, shot: ShotSpec, p: RuntimeProfile, doorId: string): void {
   const s = ctx.state
   const door = shootableDoors(s, f, data(s).mode === 'blindFire').find((x) => x.doorId === doorId)
@@ -1099,6 +1275,7 @@ function handle(state: GameState, action: Action, pending: PendingDecision): Han
   if (!state.attack || state.attack.kind !== 'shoot') return reject('E_WRONG_DECISION', 'no shooting attack is in progress')
   if (action.type === 'pass') {
     if (pending.kind === 'shoot.allocate') return reject('E_PASS_NOT_ALLOWED', 'every hit must be allocated')
+    if (pending.kind === 'shoot.firepower') return reject('E_PASS_NOT_ALLOWED', 'pick how many Firepower dice to roll')
     return { run: (ctx) => cancelAttack(ctx) }
   }
   switch (action.type) {
@@ -1108,7 +1285,7 @@ function handle(state: GameState, action: Action, pending: PendingDecision): Han
     }
     case 'shoot.target': {
       const p = action.payload
-      const opt = pending.options?.find((o) => o.action.type === 'shoot.target' && (o.action.payload as typeof p).targetId === p.targetId && (o.action.payload as typeof p).doorId === p.doorId && !!(o.action.payload as typeof p).point === !!p.point)
+      const opt = pending.options?.find((o) => o.action.type === 'shoot.target' && (o.action.payload as typeof p).targetId === p.targetId && (o.action.payload as typeof p).doorId === p.doorId && (o.action.payload as typeof p).trapId === p.trapId && !!(o.action.payload as typeof p).point === !!p.point)
       const priority = opt?.data?.priority as PriorityClass | undefined
       const closest = pending.context.closest as string | null | undefined
       return {
@@ -1122,6 +1299,11 @@ function handle(state: GameState, action: Action, pending: PendingDecision): Han
           }
           if (p.doorId) {
             d.target = { kind: 'door', id: p.doorId }
+            runShots(ctx)
+            return
+          }
+          if (p.trapId) {
+            d.target = { kind: 'trap', id: p.trapId }
             runShots(ctx)
             return
           }
@@ -1147,7 +1329,7 @@ function handle(state: GameState, action: Action, pending: PendingDecision): Han
       const f = getFighter(state, state.attack.attackerId)
       const d = state.attack.data as unknown as ShootData
       const aim = { x: p.x, z: p.z }
-      const problem = d.aimKind === 'template' ? templateProblem(state, f, d.mode, aim) : pointAimProblem(state, f, d.mode, aim)
+      const problem = d.aimKind === 'template' ? templateProblem(state, f, d.mode, aim) : pointAimProblem(state, f, d.mode, aim, d.far)
       if (problem) return { rejection: problem }
       return {
         run(ctx) {
@@ -1179,6 +1361,16 @@ function handle(state: GameState, action: Action, pending: PendingDecision): Han
           }
           d.shotIndex++
           d.alloc = null
+          d.fpDice = null
+          runShots(ctx)
+        },
+      }
+    }
+    case 'shoot.firepower': {
+      const n = action.payload.dice
+      return {
+        run(ctx) {
+          data(ctx.state).fpDice = n
           runShots(ctx)
         },
       }

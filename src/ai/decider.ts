@@ -33,9 +33,11 @@ export const POLICIES: Record<DecisionKind, Policy> = {
   'shoot.target': shoot.target,
   'shoot.aim': shoot.aim,
   'shoot.allocate': shoot.allocate,
+  'shoot.firepower': shoot.firepower,
   'fight.weapons': fight.weapons,
   'fight.split': fight.split,
   'fight.after': fight.after,
+  'fight.followUp': fight.followUp,
   'end.bottle': end.bottle,
   'end.assist': end.assist,
   'end.recoveryPick': end.recoveryPick,
@@ -95,7 +97,7 @@ function damped(w: Weights, state: GameState): Weights {
   }
   // the raiders: a gang that breaks (or is wiped out) ends the battle, and the defenders win it with fewer than three caskets cracked, so kills matter less and less the closer the defenders are to breaking; discounted from the first kill, steeply near the end
   if (state.players[me].role !== 'attacker' || v.opened >= (v.goal?.needed ?? 3)) return w
-  return { ...w, dmg: w.dmg * (standing <= 3 ? 0.1 : standing <= 6 ? 0.3 : 0.5) }
+  return { ...w, dmg: w.dmg * (standing <= 3 || state.players[enemy].bottled ? 0.1 : standing <= 6 ? 0.3 : 0.5) }
 }
 
 export function makeCtx(tier: Tier, rawView: PlayerView, pending: PendingDecision, legal: Action[] | null, opts: AiOpts, memory: AiMemory): AiCtx {

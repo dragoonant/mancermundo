@@ -148,7 +148,7 @@ export function lineFor(w: RuntimeWeapon, p: RuntimeProfile, strength: string, a
     range: rangeText(p.range),
     acc: `${signed(p.acc.short)} / ${signed(p.acc.long)}`,
     strength,
-    ap: p.ap === 0 ? '-' : String(p.ap),
+    ap: p.ap === 0 ? '-' : p.ap > 0 ? `+${p.ap}` : String(p.ap),
     damage: p.dmg.kind === 'fixed' ? String(p.dmg.value) : p.dmg.kind === 'dice' ? p.dmg.expr : '-',
     ammo: p.ammo === null ? '-' : `${p.ammo}+`,
     traits: p.traits.map((t) => ({ trait: t.trait, ...(t.x !== undefined ? { x: t.x } : {}), ...(t.inches !== undefined ? { inches: t.inches } : {}), ...(t.target !== undefined ? { target: t.target } : {}) })),

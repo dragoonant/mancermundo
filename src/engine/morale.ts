@@ -67,12 +67,13 @@ export function breakFighter(ctx: Ctx, f: Fighter, reason: string): void {
 }
 
 /**
- * Resolve one owed nerve test (R-12.1, R-12.2). A fighter no longer on the battlefield or already Broken does not test
- * (ruling). Returns true when it failed and became Broken; the caller then runs its immediate Running for Cover.
+ * Resolve one owed nerve test (R-12.1, R-12.2). Every fighter still on the battlefield tests, whatever its status: an
+ * already Broken one that fails becomes Broken again, so it loses Ready and runs for cover at once as well. Returns true on
+ * a fail; the caller then runs the immediate Running for Cover.
  */
 export function takeNerveTest(ctx: Ctx, entry: NerveCheck): boolean {
   const f = ctx.state.fighters[entry.fighterId]
-  if (!f || f.location !== 'board' || isBroken(f)) return false
+  if (!f || f.location !== 'board') return false
   const info = nerveInfo(ctx.state, f)
   const total = ctx.roll('nerve', 1, '2d6')[0]!
   const modifier = info.modifier + (entry.modifier ?? 0)

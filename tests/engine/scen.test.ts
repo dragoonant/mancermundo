@@ -290,14 +290,14 @@ describe('SCEN: Forgotten Riches (M-4)', () => {
     }
   })
 
-  it('SCEN-009 by hand: setup.casket enforces the centre tile first, a different tile each, 6" from every edge and 6" apart; setup.zone offers only casket-free tiles', () => {
+  it('SCEN-009 by hand: setup.casket enforces the centre tile first, a different tile each, 6" apart (no edge distance); setup.zone offers only casket-free tiles', () => {
     const bundle = realBundle()
     const boardId = 'zm.b.hive-heart'
     const created = createGame(realSetup({ scenarioId: RICHES, boardId, options: { autoCrew: true } }), 'manual', bundle)
     let s = setupUntil(created.state, (x) => x.pending!.kind === 'setup.casket')
     const first = s.pending!
     expect(first.constraints).toMatchObject({ kind: 'casket' })
-    expect(first.context).toMatchObject({ index: 1, of: 5, minFromEdge: 6, minApart: 6 })
+    expect(first.context).toMatchObject({ index: 1, of: 5, minFromEdge: 0, minApart: 6 })
     expect(first.context.suggestion).toBeDefined()
     // not in the centre tile: refused; centre of the board: fine
     const off = step(s, act.casket(first, 6, 12))
@@ -309,10 +309,9 @@ describe('SCEN: Forgotten Riches (M-4)', () => {
     // the other seat places the second casket (alternating), in a tile of its own
     expect(s.pending!.seat).not.toBe(first.seat)
     expect(step(s, act.casket(s.pending!, 1, 1)).rejection?.code).toBe('E_OUT_OF_RANGE')
-    // a spot too close to an edge of an outer tile is refused (the tile at the bottom-left corner)
+    // Forgotten Riches sets no distance from the board edge: only the outer wall itself keeps a casket off the very edge
     const edgeSpot = step(s, act.casket(s.pending!, -11.5, -17.5))
-    expect(edgeSpot.rejection?.code).toBe('E_OUT_OF_RANGE')
-    expect(edgeSpot.rejection?.reason).toMatch(/edge/)
+    expect(edgeSpot.rejection?.reason ?? '').not.toMatch(/from every board edge/)
     // play the rest with the engine's spots, then the tile choice
     s = setupUntil(s, (x) => x.pending!.kind === 'setup.zone')
     expect(Object.keys(s.board.caskets)).toHaveLength(5)
@@ -360,8 +359,10 @@ describe('SCEN: Forgotten Riches (M-4)', () => {
     }
     expect(spot).not.toBeNull()
     const enemyId = Object.values(s.fighters).find((x) => x.seat !== seat && x.location === 'board')!.id
+    // one enemy at the probed gap; the rest of that gang is taken off the board so only the one gap is measured
     const at = (gap: number) =>
       edit(s, (d) => {
+        for (const e of Object.values(d.fighters)) if (e.seat !== seat && e.id !== enemyId && e.location === 'board') e.location = 'reserve'
         d.fighters[enemyId]!.pos = { x: spot!.x + gap + f.baseRadius + d.fighters[enemyId]!.baseRadius, y: 0, z: spot!.z }
       })
     const near = at(5.9)
@@ -527,7 +528,7 @@ describe('SCEN: Forgotten Riches (M-4)', () => {
 })
 
 describe('SCEN: set-up by hand (M-3.4)', () => {
-  it('SCEN-011 Smash & Grab: the defender places 5 caskets in its own half, 4" from every edge, 6" apart, clear of walls, before anyone deploys', () => {
+  it('SCEN-011 Smash & Grab: the defender places 5 caskets in its own half, 4" from every edge, not overlapping, clear of walls, before anyone deploys', () => {
     const bundle = realBundle()
     const created = createGame(realSetup({ scenarioId: SMASH, options: { autoCrew: true } }), 'sg', bundle)
     let s = setupUntil(created.state, (x) => x.pending!.kind === 'setup.casket')
@@ -537,15 +538,16 @@ describe('SCEN: set-up by hand (M-3.4)', () => {
     const half = s.setup.zoneChoices[pending.seat]
     expect(half).toBeDefined()
     const sign = half === 'low' ? -1 : 1
-    expect(pending.context).toMatchObject({ index: 1, of: 5, minFromEdge: 4, minApart: 6 })
+    expect(pending.context).toMatchObject({ index: 1, of: 5, minFromEdge: 4, minApart: 0 })
     // the enemy's half, too close to the edge, or off the half line: refused
     expect(step(s, act.casket(pending, 0, -sign * 8)).rejection?.code).toBe('E_OUT_OF_RANGE')
     expect(step(s, act.casket(pending, 11, sign * 8)).rejection?.reason).toMatch(/edge/)
     const spot = pending.context.suggestion as { x: number; z: number }
     s = must(step(s, act.casket(pending, spot.x, spot.z))).state
-    // 6" apart: some spot 3" away is free of walls but too close to the first casket
-    const reasons = [[3, 0], [-3, 0], [0, 3], [0, -3], [2.5, 2.5], [-2.5, 2.5]].map(([dx, dz]) => step(s, act.casket(s.pending!, spot.x + dx!, spot.z + dz!)).rejection?.reason ?? "")
-    expect(reasons.some((r) => /apart/.test(r))).toBe(true)
+    // no spacing rule (only the defender's zone and 4" from the edge): a casket may sit next to another, never on top of it
+    expect(step(s, act.casket(s.pending!, spot.x + 0.5, spot.z)).rejection?.code).toBe('E_OVERLAP')
+    const near = [[1.2, 0], [-1.2, 0], [0, 1.2], [0, -1.2]].map(([dx, dz]) => step(s, act.casket(s.pending!, spot.x + dx!, spot.z + dz!)).rejection)
+    expect(near.some((r) => r === undefined)).toBe(true)
     // all five are the defender's, and deployment begins afterwards
     s = setupUntil(s, (x) => x.pending!.kind === 'setup.deploy')
     expect(Object.keys(s.board.caskets)).toHaveLength(5)

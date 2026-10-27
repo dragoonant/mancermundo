@@ -35,7 +35,7 @@ describe('scenario data (11-scenarios.md)', () => {
     expect(smash.roles).toBe(true)
     expect(smash.crews).toEqual({ attacker: { method: 'custom', x: 8 }, defender: { method: 'hybrid', x: 3, y: 'D6' } })
     expect(smash.deployment).toEqual({ kind: 'standard', minFromCentreline: 12, defenderFirst: true })
-    expect(smash.caskets).toMatchObject({ count: 5, placer: 'defender', region: 'ownHalf', minFromEdge: 4, minApart: 6, openBy: 'attacker' })
+    expect(smash.caskets).toMatchObject({ count: 5, placer: 'defender', region: 'ownHalf', minFromEdge: 4, minApart: 0, openBy: 'attacker' })
     expect(smash.scoring).toEqual([{ on: 'casketOpened', seat: 'attacker', count: true }])
     // the booby-trap / valuables / jackpot table and the three-opened win are scenario code (S4)
     expect(smash.caskets!.contents).toBe('scn.smash-and-grab')
@@ -56,7 +56,7 @@ describe('scenario data (11-scenarios.md)', () => {
     // the scenario's cap table is the one in the shared constants
     expect(riches.crewCap).toEqual(bundle.constants.crewCap)
     expect(riches.deployment).toEqual({ kind: 'tile', withinOfEdge: 3, enemyClearance: 6 })
-    expect(riches.caskets).toMatchObject({ count: 5, placer: 'alternate', region: 'centreTileFirst', minApart: 6, contents: 'core' })
+    expect(riches.caskets).toMatchObject({ count: 5, placer: 'alternate', region: 'centreTileFirst', minFromEdge: 0, minApart: 6, contents: 'core' })
     expect(riches.scoring).toEqual([
       { on: 'fighterOutOfAction', points: 1 },
       { on: 'fighterFled', points: 1 },

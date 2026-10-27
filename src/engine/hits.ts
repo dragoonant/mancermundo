@@ -56,7 +56,10 @@ export interface HitInput {
   autoWound?: boolean
   /** extra Damage on the first wounding hit (Power on a natural 6) */
   extraDamage?: number
-  /** a melee attacker that follows up a Knockback to stay in base contact (ruling: always, when in base contact) */
+  /**
+   * a melee attacker that may follow up a Knockback to stay in base contact (R-14.3): the push happens here, and the choice
+   * (and the pushed-apart step that waits on it) is handed back to the caller in the result
+   */
   followUp?: string | null
   /** a close combat attack (Iron Jaw, Dodge) */
   closeCombat?: boolean
@@ -222,12 +225,47 @@ function statVs(h: HitInput): StatVs {
   return { attackerId: h.attackerId, melee: !!h.closeCombat, ap: h.ap, gas: has(h, T.gas), toxin: has(h, T.toxin) }
 }
 
-/** Resolve one hit on one fighter (R-11.1). Pinning is the caller's business (it happens before any wound roll). */
-export function resolveHit(ctx: Ctx, h: HitInput): void {
+/** A melee Knockback the attacker may follow up: the push vector; `applyFollowUp` finishes it once the attacker has chosen. */
+export interface FollowUpChoice {
+  followerId: string
+  targetId: string
+  shift: Vec2
+}
+
+export interface HitResult {
+  followUp?: FollowUpChoice
+}
+
+/**
+ * Finish a melee Knockback (R-14.3, R-7.4): a follower moves by the same vector to stay in base contact (not across a
+ * barricade); then the pushed-apart step, which spares the follower but treats a fighter that stayed put like any other enemy.
+ */
+export function applyFollowUp(ctx: Ctx, fu: FollowUpChoice, follow: boolean): void {
+  const s = ctx.state
+  const follower = s.fighters[fu.followerId]
+  const t = s.fighters[fu.targetId]
+  const goes = follow && !!follower && follower.location === 'board' && follower.posture === 'standing'
+  if (goes) {
+    const len = Math.hypot(fu.shift.x, fu.shift.z)
+    const to = slide(s, follower, fu.shift.x / len, fu.shift.z / len, len)
+    if (Math.hypot(to.x - follower.pos.x, to.z - follower.pos.z) > 0) placeAlong(ctx, follower, 'knockback', to, len)
+  }
+  if (follower) ctx.emit({ type: 'FollowedUp', fighterId: follower.id, targetId: fu.targetId, follow: goes }, follower.seat)
+  if (t && t.location === 'board') afterInvoluntary(ctx, t, goes ? [follower.id] : [])
+  refreshEngagement(ctx)
+}
+
+/**
+ * Resolve one hit on one fighter (R-11.1). Pinning is the caller's business (it happens before any wound roll). A melee
+ * Knockback that leaves the attacker able to follow up is returned (`followUp`): the caller asks and calls `applyFollowUp`.
+ */
+export function resolveHit(ctx: Ctx, h: HitInput): HitResult {
   const s = ctx.state
   const t = s.fighters[h.targetId]
-  if (!t || t.location !== 'board') return
+  if (!t || t.location !== 'board') return {}
   let bonusDamage = 0
+  let followUp: FollowUpChoice | undefined
+  const result = (): HitResult => (followUp ? { followUp } : {})
 
   // Flash: no wound roll; an Initiative test or Blind (R-3.11)
   if (has(h, T.flash)) {
@@ -241,7 +279,7 @@ export function resolveHit(ctx: Ctx, h: HitInput): void {
       t.ready = false
     }
     afterHit(ctx, t, h)
-    return
+    return result()
   }
 
   // Knockback (R-14.3): hit roll >= target S pushes 1" away; a blocked push adds 1 Damage
@@ -249,17 +287,16 @@ export function resolveHit(ctx: Ctx, h: HitInput): void {
     if (h.hitRoll >= stat(s, t.id, 'S')) {
       const k = constants(s).knockback
       const follower = h.followUp ? s.fighters[h.followUp] : undefined
-      // a melee attacker in base contact (not across a barricade) follows up by the same vector (ruling: it always does)
-      const follows = !!follower && follower.location === 'board' && inContact(follower, t)
+      // a melee attacker in base contact (not across a barricade) may follow up by the same vector: the caller asks
+      const follows = !!follower && follower.location === 'board' && follower.posture === 'standing' && inContact(follower, t)
       const push = knockbackPush(ctx, t, h.knockFrom, k.distance)
       if (push.blocked) bonusDamage += k.blockedDamageBonus
       if (follows && push.moved > 0) {
-        const len = Math.hypot(push.shift.x, push.shift.z)
-        const to = slide(s, follower, push.shift.x / len, push.shift.z / len, len)
-        if (Math.hypot(to.x - follower.pos.x, to.z - follower.pos.z) > 0) placeAlong(ctx, follower, 'knockback', to, len)
+        followUp = { followerId: follower.id, targetId: t.id, shift: { x: push.shift.x, z: push.shift.z } }
+      } else {
+        afterInvoluntary(ctx, t, [])
+        refreshEngagement(ctx)
       }
-      afterInvoluntary(ctx, t, follows ? [follower.id] : [])
-      refreshEngagement(ctx)
     }
   }
 
@@ -283,7 +320,7 @@ export function resolveHit(ctx: Ctx, h: HitInput): void {
       }
     }
     afterHit(ctx, t, h)
-    return
+    return result()
   }
 
   // Scattershot: D6 wound rolls instead of one
@@ -323,6 +360,7 @@ export function resolveHit(ctx: Ctx, h: HitInput): void {
     }
   }
   afterHit(ctx, t, h)
+  return result()
 }
 
 /** Effects of being hit at all: Blaze (4+ unless Out of Action), Concussion. */

@@ -281,7 +281,7 @@
         "casket": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["smash", "contents", "ammoCache"],
+          "required": ["smash", "contents", "ammoCache", "fragTrap"],
           "properties": {
             "smash": {
               "type": "object",
@@ -316,6 +316,35 @@
                 "radius": { "$ref": "common.schema.json#/$defs/Inches" },
                 "ammoBonus": { "type": "integer" },
                 "exhaustedOn": { "type": "integer", "minimum": 1, "maximum": 6 }
+              }
+            },
+            "fragTrap": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["triggerRange", "dudOn", "explodeOn", "blast", "shotModifier", "shotNoEffectMax", "shotExplodeMax"],
+              "properties": {
+                "triggerRange": { "$ref": "common.schema.json#/$defs/Inches" },
+                "dudOn": { "type": "integer", "minimum": 0, "maximum": 6 },
+                "explodeOn": { "type": "integer", "minimum": 1, "maximum": 7 },
+                "blast": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["inches", "strength", "ap", "damage"],
+                  "properties": {
+                    "inches": { "$ref": "common.schema.json#/$defs/Inches" },
+                    "strength": { "type": "integer", "minimum": 1 },
+                    "ap": { "type": "integer" },
+                    "damage": { "type": "integer", "minimum": 0 }
+                  }
+                },
+                "shotModifier": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["short", "long"],
+                  "properties": { "short": { "type": "integer" }, "long": { "type": "integer" } }
+                },
+                "shotNoEffectMax": { "type": "integer", "minimum": 0, "maximum": 6 },
+                "shotExplodeMax": { "type": "integer", "minimum": 0, "maximum": 6 }
               }
             }
           }

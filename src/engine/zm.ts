@@ -7,7 +7,7 @@ import { baseGapToDoor, doorById, insideOutline } from './board'
 import { d6TestPasses, twoD6TestPasses } from './dice'
 import { circleOverlapsPolygon, pointInPolygon, round3, segmentPolygonIntervals } from './geometry'
 import { CONTACT_EPS } from './measure'
-import { findClearSpot, spotProblem, standUpContacted } from './movement'
+import { findClearSpot, firstWithin, spotProblem, standUpContacted } from './movement'
 import { resolveBlast, resolveHit } from './ports'
 import { stat } from './query'
 import type { Ctx } from './registry'
@@ -279,14 +279,123 @@ function openCasket(ctx: Ctx, f: Fighter, casketId: string, contentsModifier: nu
     onCasketOpened(ctx, f)
     return
   }
-  c.state = result === 'ammoCache' ? 'ammoCache' : 'opened'
+  // Dangerous Goods ([EOG], [ND]): the casket becomes a frag trap marker; the opener rolls for it as its action ends
+  c.state = result === 'ammoCache' ? 'ammoCache' : result === 'fragTrap' ? 'fragTrap' : 'opened'
+  if (result === 'fragTrap') c.checked = []
   ctx.emit({ type: 'CasketOpened', casketId, by: f.id, roll, result }, f.seat)
-  if (result === 'fragTrap') {
-    // R-15.11 ruling: an immediate frag-grenade explosion centred on the casket, no hit roll
-    ctx.emit({ type: 'BlastPlaced', centre: { ...c.pos }, radius: 1.5 }, null)
-    resolveBlast(ctx, { centre: { ...c.pos }, radius: 1.5, strength: 3, ap: 0, damage: 1, source: 'casket', knockback: true })
-  }
   onCasketOpened(ctx, f)
+}
+
+// ---------------------------------------------------------------------------
+// Frag traps ([ND] Booby Traps: Frag, R-15.11): a booby-trapped casket
+// ---------------------------------------------------------------------------
+
+/** Centre distance at which a fighter's base comes within the trigger range of a trap marker (edge to edge). */
+function trapReach(state: GameState, f: Fighter): number {
+  return constants(state).casket.fragTrap.triggerRange + f.baseRadius + CASKET_RADIUS
+}
+
+/** Frag traps a fighter is within trigger range of now and has not rolled for in this activation, nearest first. */
+export function trapsNear(state: GameState, f: Fighter): string[] {
+  const r = trapReach(state, f)
+  return Object.entries(state.board.caskets)
+    .filter(([, c]) => c.state === 'fragTrap' && !(c.checked ?? []).includes(f.id) && Math.hypot(c.pos.x - f.pos.x, c.pos.z - f.pos.z) <= r + 1e-9)
+    .sort(([a, x], [b, y]) => Math.hypot(x.pos.x - f.pos.x, x.pos.z - f.pos.z) - Math.hypot(y.pos.x - f.pos.x, y.pos.z - f.pos.z) || (a < b ? -1 : 1))
+    .map(([id]) => id)
+}
+
+/**
+ * The first frag trap a fighter moving along `path` (its start first) comes within trigger range of, with the path length
+ * there; traps it starts within range of are not "come within", and each trap rolls once per fighter per activation.
+ */
+export function firstTrapOnPath(state: GameState, f: Fighter, path: readonly Vec2[]): { casketId: string; at: number } | null {
+  if (path.length < 2) return null
+  // the move is stopped just inside the 2" (by the contact tolerance), where the base already touches the 5" Blast
+  const r = trapReach(state, f) - CONTACT_EPS
+  let best: { casketId: string; at: number } | null = null
+  for (const [id, c] of Object.entries(state.board.caskets).sort(([a], [b]) => (a < b ? -1 : 1))) {
+    if (c.state !== 'fragTrap' || (c.checked ?? []).includes(f.id)) continue
+    const at = firstWithin(path[0]!, path.slice(1), c.pos, r)
+    if (at === null || at <= 1e-9) continue
+    if (!best || at < best.at - 1e-9) best = { casketId: id, at }
+  }
+  return best
+}
+
+/** Every trap a straight or bent path comes within range of (not counting the ones it starts in range of), in path order. */
+export function trapsAlong(state: GameState, f: Fighter, path: readonly Vec2[]): string[] {
+  if (path.length < 2) return []
+  const r = trapReach(state, f) - CONTACT_EPS
+  const hits: { id: string; at: number }[] = []
+  for (const [id, c] of Object.entries(state.board.caskets)) {
+    if (c.state !== 'fragTrap' || (c.checked ?? []).includes(f.id)) continue
+    const at = firstWithin(path[0]!, path.slice(1), c.pos, r)
+    if (at !== null && at > 1e-9) hits.push({ id, at })
+  }
+  return hits.sort((x, y) => x.at - y.at || (x.id < y.id ? -1 : 1)).map((h) => h.id)
+}
+
+/** Every trap the fighter is in range of at the end of an action: one D6 each (R-15.11). */
+export function checkTraps(ctx: Ctx, f: Fighter): void {
+  for (const id of trapsNear(ctx.state, f)) {
+    if (f.location !== 'board') return
+    rollTrap(ctx, f, id)
+  }
+}
+
+/** A new activation: each fighter may set each trap off once again ("once per booby trap in a single activation"). */
+export function resetTrapChecks(state: GameState): void {
+  for (const c of Object.values(state.board.caskets)) if (c.checked && c.checked.length > 0) c.checked = []
+}
+
+/** One fighter risks one trap: D6, 1 a dud (removed), 2-3 nothing, 4+ it explodes. */
+export function rollTrap(ctx: Ctx, f: Fighter, casketId: string): 'dud' | 'quiet' | 'exploded' {
+  const s = ctx.state
+  const c = s.board.caskets[casketId]
+  if (!c || c.state !== 'fragTrap') return 'quiet'
+  c.checked = [...(c.checked ?? []), f.id]
+  const k = constants(s).casket.fragTrap
+  const roll = ctx.roll('trapTrigger', 1)[0]!
+  const result = roll <= k.dudOn ? 'dud' : roll >= k.explodeOn ? 'exploded' : 'quiet'
+  ctx.emit({ type: 'TrapTriggered', casketId, fighterId: f.id, roll, result }, f.seat)
+  if (result === 'dud') c.state = 'removed'
+  if (result === 'exploded') explodeTrap(ctx, casketId)
+  return result
+}
+
+/** The frag trap goes off: a Blast 5" marker on it (S3, AP -, D1, Knockback, no hit roll), and the marker is removed. */
+export function explodeTrap(ctx: Ctx, casketId: string): void {
+  const s = ctx.state
+  const c = s.board.caskets[casketId]!
+  const k = constants(s).casket.fragTrap
+  c.state = 'removed'
+  const radius = k.blast.inches / 2
+  ctx.emit({ type: 'BlastPlaced', centre: { ...c.pos }, radius }, null)
+  resolveBlast(ctx, { centre: { ...c.pos }, radius, strength: k.blast.strength, ap: k.blast.ap, damage: k.blast.damage, source: 'fragTrap', knockback: true })
+}
+
+/** Frag traps a shooter may target (R-15.11 [ND]): line of sight from its centre to the marker, in its arc unless blind firing. */
+export interface TrapTarget {
+  casketId: string
+  /** shooter base edge to the marker's edge */
+  distance: number
+}
+
+export function shootableTraps(state: GameState, f: Fighter, allArc: boolean): TrapTarget[] {
+  const out: TrapTarget[] = []
+  const c0 = centreOf(f)
+  for (const [id, c] of Object.entries(state.board.caskets).sort(([a], [b]) => (a < b ? -1 : 1))) {
+    if (c.state !== 'fragTrap') continue
+    if (!allArc) {
+      if (f.posture !== 'standing') continue
+      const bearing = Math.atan2(c.pos.x - c0.x, c.pos.z - c0.z)
+      const off = Math.abs(Math.atan2(Math.sin(bearing - f.facing), Math.cos(bearing - f.facing)))
+      if (off > Math.PI / 4 + 1e-9) continue
+    }
+    if (!clearOfOthers(state, c0, c.pos, '')) continue
+    out.push({ casketId: id, distance: round3(casketGap(f, c.pos)) })
+  }
+  return out
 }
 
 /** Smash Open (Basic): D6 + S >= 6, then -1 on the contents roll (minimum 1). */

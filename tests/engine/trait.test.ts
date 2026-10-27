@@ -24,10 +24,26 @@ const open = { A3: { x: 0, z: -6, facing: 0 }, B3: { x: 0, z: 0 } }
 describe('TRAIT: weapon traits used by shooting (R-14.3)', () => {
   it('TRAIT-001 Rapid Fire (2) on a hit rolls up to 2 Firepower dice and scores hits equal to total bullet holes', () => {
     const s = aimAt({} as GameState, 'atk.w.rf2', open)
-    // hit 5; Firepower 4 (2 holes) + 6 (3 holes) = 5 hits, all on the only target; five wound rolls of 1
-    const r = must(take(s, { targetId: 'B3' }, dice(5, 4, 6, 1, 1, 1, 1, 1)))
+    // the shooter first picks 1 or 2 Firepower dice, with the engine's odds on each
+    const ask = must(take(s, { targetId: 'B3' }))
+    expect(ask.pending!.kind).toBe('shoot.firepower')
+    expect(ask.pending!.options!.map((o) => (o.action.payload as { dice: number }).dice)).toEqual([1, 2])
+    const [one, two] = ask.pending!.options!.map((o) => o.data as { expectedHits: number; outOfAmmo: number; jam: number })
+    expect(two!.expectedHits).toBeCloseTo(2 * one!.expectedHits, 6)
+    expect(one!.jam).toBe(0)
+    expect(two!.jam).toBeGreaterThan(0)
+    expect(two!.outOfAmmo).toBeGreaterThan(one!.outOfAmmo)
+    // two dice: hit 5; Firepower 4 (2 holes) + 6 (3 holes) = 5 hits, all on the only target; five wound rolls of 1
+    const r = must(step(ask.state, act.firepower(ask.pending!, 2), dice(5, 4, 6, 1, 1, 1, 1, 1)))
     expect(eventsOf(r.events, 'FirepowerRolled')[0]).toMatchObject({ faces: ['hit2', 'hit3'], hits: 5, ammoSymbols: 0 })
     expect(eventsOf(r.events, 'WoundRolled')).toHaveLength(5)
+    // one die: hit 5; Firepower 6 (3 holes) = 3 hits
+    const r1 = must(step(ask.state, act.firepower(ask.pending!, 1), dice(5, 6, 1, 1, 1)))
+    expect(eventsOf(r1.events, 'FirepowerRolled')[0]).toMatchObject({ faces: ['hit3'], hits: 3 })
+    expect(eventsOf(r1.events, 'WoundRolled')).toHaveLength(3)
+    // three dice is not an option, and the choice cannot be passed
+    expect(step(ask.state, act.firepower(ask.pending!, 3)).rejection?.code).toBe('E_NOT_AN_OPTION')
+    expect(step(ask.state, act.pass(ask.pending!)).rejection?.code).toBe('E_PASS_NOT_ALLOWED')
   })
 
   it('TRAIT-002 Rapid Fire extra hits may go only to enemies within 3 inches of the original target that are not harder to hit', () => {
@@ -42,7 +58,8 @@ describe('TRAIT: weapon traits used by shooting (R-14.3)', () => {
     expect(t.B3!.priority).toBe('closest')
     expect(t.B2!.need).toBeGreaterThan(t.B3!.need) // behind the barricade
     // hit 5; Firepower 2 + 4 = 3 holes: two extra hits to allocate
-    let r = must(take(s, { targetId: 'B3' }, dice(5, 2, 4)))
+    let r = must(take(s, { targetId: 'B3' }))
+    r = must(step(r.state, act.firepower(r.pending!, 2), dice(5, 2, 4)))
     expect(r.pending!.kind).toBe('shoot.allocate')
     expect(r.pending!.options!.map((o) => o.id).sort()).toEqual(['t:B3', 't:B4'])
     r = must(take(r.state, { targetId: 'B4' }))
@@ -54,7 +71,8 @@ describe('TRAIT: weapon traits used by shooting (R-14.3)', () => {
   it('TRAIT-003 Rapid Fire with two failed Ammo tests jams the weapon for the battle (Reload rejected)', () => {
     const s = aimAt({} as GameState, 'atk.w.rf2', open)
     // hit 5; Firepower 1 + 1 (two Ammo symbols, 2 holes); Ammo tests 1, 1; wounds 1, 1
-    const r = must(take(s, { targetId: 'B3' }, dice(5, 1, 1, 1, 1, 1, 1)))
+    const ask = must(take(s, { targetId: 'B3' }))
+    const r = must(step(ask.state, act.firepower(ask.pending!, 2), dice(5, 1, 1, 1, 1, 1, 1)))
     expect(eventsOf(r.events, 'AmmoTest').map((e) => e.passed)).toEqual([false, false])
     expect(r.state.fighters.A3!.weapons[0]!.ammo).toBe('jammed')
     expect(menuActions(r.state)).not.toContain('reload')
@@ -308,5 +326,56 @@ describe('TRAIT: close-combat traits (R-14.3, S3b)', () => {
     const back = eventsOf(ent.events, 'FightHitRolled').find((e) => e.targetId === 'A3')!
     expect(back.modifiers).toContainEqual({ label: 'entangled', value: -2 })
     expect(back.need).toBe(6)
+  })
+})
+
+describe('TRAIT: variants and close-combat choices (R-14.2, R-14.3)', () => {
+  it('TRAIT-012 Reclaimed/Scavenged: a Plentiful profile loses Plentiful; any other has its Ammo worsened by 1 (at worst 6+)', async () => {
+    const { runtimeProfile: runtimeProfileForTest } = await import('@/engine/bundle')
+    const base = { id: 'std', name: null, range: { short: 8, long: 24 }, acc: { short: null, long: null }, str: 3, ap: 0, dmg: 1 } as const
+    const rec = { trait: 'core.t.reclaimed-scavenged' }
+    expect(runtimeProfileForTest({ ...base, ammo: '4+', traits: [rec] }).ammo).toBe(5)
+    expect(runtimeProfileForTest({ ...base, ammo: '6+', traits: [rec] }).ammo).toBe(6)
+    const plentiful = runtimeProfileForTest({ ...base, ammo: '4+', traits: [{ trait: 'core.t.plentiful' }, rec] })
+    expect(plentiful.ammo).toBe(4)
+    expect(plentiful.traits.map((t) => t.trait)).toEqual(['core.t.reclaimed-scavenged'])
+    expect(runtimeProfileForTest({ ...base, ammo: '4+', traits: [] }).ammo).toBe(4)
+  })
+
+  it('TRAIT-013 Knockback in melee: the attacker chooses whether to follow up into base contact; staying put leaves the pair apart', () => {
+    const pair = { A3: { x: 0, z: -TOUCH, facing: 0 }, B3: { x: 0, z: 0, facing: Math.PI } }
+    const s = meleeGame({ spots: pair, loadouts: { A3: { weapons: ['cc.w.knock'] } }, active: 'A3' })
+    // hit 6 (>= S3): B3 is pushed 1" straight back; wound roll 1 fails; then the choice
+    const asked = must(answer(s, optionWhere(s, { action: 'fight' }), dice(6, 1)))
+    expect(asked.pending!.kind).toBe('fight.followUp')
+    expect(asked.pending!.options!.map((o) => o.id)).toEqual(['follow', 'stay'])
+    expect(asked.state.fighters.B3!.pos.z).toBeCloseTo(1, 2)
+    // follow: A3 moves the same 1" and stays Engaged (B3 then makes its reaction attack: a 1 misses)
+    const followed = must(step(asked.state, act.followUp(asked.pending!, true), dice(1)))
+    expect(followed.state.fighters.A3!.pos.z).toBeCloseTo(-TOUCH + 1, 2)
+    expect(eventsOf(followed.events, 'FollowedUp')[0]).toMatchObject({ fighterId: 'A3', targetId: 'B3', follow: true })
+    expect(eventsOf(followed.events, 'ReactionStarted').map((e) => e.fighterId)).toEqual(['B3'])
+    // stay: A3 does not move, the two are no longer Engaged and B3 makes no reaction attack
+    const stayed = must(step(asked.state, act.followUp(asked.pending!, false)))
+    expect(stayed.state.fighters.A3!.pos.z).toBeCloseTo(-TOUCH, 3)
+    expect(stayed.state.fighters.A3!.engagedWith).toEqual([])
+    expect(eventsOf(stayed.events, 'ReactionStarted')).toHaveLength(0)
+    // a hit roll below the target's Strength pushes nobody and asks nothing
+    const none = must(answer(s, optionWhere(s, { action: 'fight' }), dice(2, 1)))
+    expect(none.pending!.kind).not.toBe('fight.followUp')
+  })
+
+  it('TRAIT-014 Versatile while in base contact: enemies within the weapon\'s reach join the targets, but only Versatile dice can reach them', () => {
+    const spots = { A3: { x: 0, z: -TOUCH, facing: 0 }, B3: { x: 0, z: 0, facing: Math.PI }, B4: { x: 1.5, z: 1.5, facing: Math.PI } }
+    const s = meleeGame({ spots, loadouts: { A3: { weapons: ['cc.w.whip', 'cc.w.knife'] } }, active: 'A3' })
+    const r = must(step(s, optionWhere(s, { action: 'fight' })))
+    expect(r.pending!.kind).toBe('fight.weapons')
+    // the whip alone can split its dice between B3 (base contact) and B4 (at reach)
+    const whip = must(step(r.state, optionWhere(r.state, { weaponIds: ['cc.w.whip'] })))
+    expect(whip.pending!.kind).toBe('fight.split')
+    expect(Object.keys((whip.pending!.options![0]!.action.payload as { split: Record<string, number> }).split).sort()).toEqual(['B3', 'B4'])
+    // with the knife in hand as well, B4 drops out: every die goes to B3
+    const both = must(step(r.state, optionWhere(r.state, { weaponIds: ['cc.w.whip', 'cc.w.knife'] }), dice(1, 1, 1, 1, 1, 1)))
+    expect(Object.keys(eventsOf(both.events, 'AttackDiceSplit').find((e) => e.attackerId === 'A3')!.split)).toEqual(['B3'])
   })
 })

@@ -43,11 +43,14 @@ export const act = {
   targetPoint: (p: P) => makeAction('shoot.target', p, { point: true }),
   aim: (p: P, at: Vec2) => makeAction('shoot.aim', p, { x: at.x, z: at.z }),
   allocate: (p: P, targetId: string) => makeAction('shoot.allocate', p, { targetId }),
+  targetTrap: (p: P, trapId: string) => makeAction('shoot.target', p, { trapId }),
+  firepower: (p: P, dice: number) => makeAction('shoot.firepower', p, { dice }),
   // fighting
   fightWeapons: (p: P, weaponIds: string[]) => makeAction('fight.weapons', p, { weaponIds }),
   split: (p: P, split: Record<string, number>) => makeAction('fight.split', p, { split }),
   after: (p: P, choice: ActionPayloadMap['fight.after']['choice'], targetId?: string) =>
     makeAction('fight.after', p, targetId === undefined ? { choice } : { choice, targetId }),
+  followUp: (p: P, follow: boolean) => makeAction('fight.followUp', p, { follow }),
   // end phase
   bottle: (p: P, choice: 'test' | 'bottle') => makeAction('end.bottle', p, { choice }),
   assist: (p: P, assisterId: string, recoveringId: string) => makeAction('end.assist', p, { assisterId, recoveringId }),

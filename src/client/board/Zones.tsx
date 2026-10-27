@@ -1,5 +1,6 @@
 // Board markers drawn from engine state: caskets (a gold disc while closed, green once opened, blue for an ammo cache, grey when
-// spent; hidden while a fighter carries it), smoke clouds at their radius, and the Blast circle / flamer Template the director
+// spent, red for a frag trap with its 2" trigger ring; hidden while a fighter carries it), smoke clouds at their radius, and the
+// Blast circle / flamer Template the director
 // has just played. Flat and unlit so they read from any camera angle; deployment regions are the DeployLayer's.
 import { useMemo } from 'react'
 import { DoubleSide, Shape } from 'three'
@@ -8,7 +9,10 @@ import { useMarks } from '../presentation/markStore'
 
 const Y = 0.05
 
-const CASKET_COLOUR: Record<string, string> = { closed: '#e0b44a', opened: '#8be28b', ammoCache: '#7fc8ff', exhausted: '#6a6f80' }
+const CASKET_COLOUR: Record<string, string> = { closed: '#e0b44a', opened: '#8be28b', ammoCache: '#7fc8ff', exhausted: '#6a6f80', fragTrap: '#ff4a3a' }
+
+/** A frag trap goes off for a fighter that comes within 2" of the marker (its edge): the ring shows that reach. */
+const TRAP_REACH = 2 + 0.5
 
 function Disc({ at, r, colour, opacity, ring = 0.12, y = Y, order = 3 }: { at: Vec2; r: number; colour: string; opacity: number; ring?: number; y?: number; order?: number }) {
   return (
@@ -48,6 +52,11 @@ export function Zones({ state }: { state: GameState }) {
       {caskets.map(([id, c]) => (
         <Disc key={id} at={c.pos} r={0.55} colour={CASKET_COLOUR[c.state] ?? '#e0b44a'} opacity={0.55} />
       ))}
+      {caskets
+        .filter(([, c]) => c.state === 'fragTrap')
+        .map(([id, c]) => (
+          <Disc key={`${id}:reach`} at={c.pos} r={TRAP_REACH} colour="#ff4a3a" opacity={0.08} ring={0.05} y={Y - 0.004} order={2} />
+        ))}
       {state.board.smoke.map((s) => (
         <Disc key={s.id} at={s.pos} r={s.radius} colour="#b8bcc8" opacity={0.28} ring={0.08} y={Y - 0.005} order={2} />
       ))}

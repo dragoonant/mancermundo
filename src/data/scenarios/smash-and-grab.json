@@ -6,7 +6,7 @@
   "crews": { "attacker": { "method": "custom", "x": 8 }, "defender": { "method": "hybrid", "x": 3, "y": "D6" } },
   "crewCap": null,
   "deployment": { "kind": "standard", "minFromCentreline": 12, "defenderFirst": true },
-  "caskets": { "count": 5, "placer": "defender", "region": "ownHalf", "minFromEdge": 4, "minApart": 6, "openBy": "attacker", "contents": "scn.smash-and-grab" },
+  "caskets": { "count": 5, "placer": "defender", "region": "ownHalf", "minFromEdge": 4, "minApart": 0, "openBy": "attacker", "contents": "scn.smash-and-grab" },
   "scoring": [ { "on": "casketOpened", "seat": "attacker", "count": true } ],
   "victory": { "code": "smashAndGrabVictory" },
   "special": [],

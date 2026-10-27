@@ -93,9 +93,11 @@ const KIND_TITLE: Record<string, string> = {
   'shoot.target': 'Choose a target',
   'shoot.aim': 'Pick the aim point',
   'shoot.allocate': 'Allocate the extra hit',
+  'shoot.firepower': 'How many Firepower dice?',
   'fight.weapons': 'Choose fighting weapons',
   'fight.split': 'Split the attack dice',
   'fight.after': 'After the fight',
+  'fight.followUp': 'Follow up the knockback?',
   'end.bottle': 'Bottle test',
   'end.assist': 'Assist a recovery',
   'end.recoveryPick': 'Pick a recovery die',
@@ -194,7 +196,11 @@ export function optionLabel(opt: DecisionOption, state: GameState | null): strin
       return `${weaponName(state, a.payload.weaponId)}${label ? ` (${label.toLowerCase()})` : ''}${a.payload.twinWith ? ` + ${weaponName(state, a.payload.twinWith)}` : ''}`
     }
     case 'shoot.target':
-      return a.payload.targetId ? fighterName(state, a.payload.targetId) : a.payload.doorId ? `Door ${a.payload.doorId}` : 'A point on the floor'
+      return a.payload.targetId ? fighterName(state, a.payload.targetId) : a.payload.doorId ? `Door ${a.payload.doorId}` : a.payload.trapId ? 'The frag trap' : 'A point on the floor'
+    case 'shoot.firepower':
+      return a.payload.dice === 1 ? 'Roll 1 Firepower dice' : `Roll ${a.payload.dice} Firepower dice`
+    case 'fight.followUp':
+      return a.payload.follow ? 'Follow up: stay in base contact' : 'Stay put and let it go'
     case 'shoot.allocate':
       return `Hit ${fighterName(state, a.payload.targetId)}`
     case 'fight.weapons':
@@ -306,6 +312,13 @@ const plural = (n: number, one: string, many = `${one}s`): string => `${n} ${n =
 /** Short engine facts to show beside an option's button: ranges, odds, needs (all read from `option.data`). */
 export function optionFacts(opt: DecisionOption): string[] {
   const d = (opt.data ?? {}) as Data
+  if (opt.labelKey === 'shoot.firepower') {
+    // the engine's odds for this many Firepower dice: hits on a successful hit roll, and the Ammo risks they bring
+    const hits = typeof d.expectedHits === 'number' ? `about ${Math.round(d.expectedHits * 10) / 10} hits if it lands` : null
+    const out = typeof d.outOfAmmo === 'number' ? `${pct(d.outOfAmmo)} out of ammo` : null
+    const jam = typeof d.jam === 'number' && d.jam > 0 ? `${pct(d.jam)} jams` : null
+    return [hits, out, jam].filter((x): x is string => !!x)
+  }
   const out: string[] = []
   const add = (s: string | null) => {
     if (s) out.push(s)
@@ -450,6 +463,8 @@ export function describeEvent(ev: GameEvent, state: GameState | null): string | 
       return `${n(ev.targetId)}: Injury dice ${ev.faces.map(humanize).join(', ')} -> ${humanize(ev.applied).toLowerCase()}.`
     case 'KnockedBack':
       return `${n(ev.targetId)} is knocked back.`
+    case 'FollowedUp':
+      return ev.follow ? `${n(ev.fighterId)} follows ${n(ev.targetId)} in.` : `${n(ev.fighterId)} lets ${n(ev.targetId)} go.`
     case 'CaughtFire':
       return `${n(ev.targetId)} catches fire.`
     case 'FightStarted':
@@ -492,7 +507,11 @@ export function describeEvent(ev: GameEvent, state: GameState | null): string | 
     case 'DuctUsed':
       return `${n(ev.fighterId)} uses a ductway.`
     case 'CasketOpened':
-      return `A casket opens: ${humanize(String(ev.result)).toLowerCase()}.`
+      return ev.result === 'fragTrap' ? 'A casket opens: it is booby-trapped, a frag trap now sits in it.' : `A casket opens: ${humanize(String(ev.result)).toLowerCase()}.`
+    case 'TrapTriggered':
+      return `${n(ev.fighterId)} sets off the frag trap (${ev.roll}): ${ev.result === 'dud' ? 'a dud, it is gone' : ev.result === 'exploded' ? 'it explodes' : 'nothing happens'}.`
+    case 'TrapShot':
+      return `${n(ev.fighterId)} hits the frag trap (${ev.roll}): ${ev.result === 'disarmed' ? 'it is wrecked and removed' : ev.result === 'exploded' ? 'it explodes' : 'no effect'}.`
     case 'CasketMoved':
       return ev.carriedBy ? `${n(ev.carriedBy)} picks up a casket.` : 'A casket is put down.'
     case 'SmokePlaced':

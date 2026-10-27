@@ -60,7 +60,10 @@ export function briefingFor(s: ScenarioData): Briefing {
   else deployment.push('The winner of the roll-off chooses whether to set up first or second, and picks a half of the board.')
   if (d.kind === 'standard') deployment.push(`Fighters set up in their own half, at least ${d.minFromCentreline ?? 12}" from the centre line.`)
   else deployment.push(`Each gang picks an outer tile and sets up within ${d.withinOfEdge ?? 3}" of its outer edge, at least ${d.enemyClearance ?? 6}" from the enemy.`)
-  if (s.caskets) deployment.push(`${s.caskets.count} loot caskets are placed on the board, at least ${s.caskets.minApart}" apart and ${s.caskets.minFromEdge}" from the edge.`)
+  if (s.caskets) {
+    const limits = [s.caskets.minApart > 0 ? `at least ${s.caskets.minApart}" apart` : '', s.caskets.minFromEdge > 0 ? `${s.caskets.minFromEdge}" from the edge` : ''].filter(Boolean)
+    deployment.push(`${s.caskets.count} loot caskets are placed on the board${limits.length ? `, ${limits.join(' and ')}` : ''}.`)
+  }
 
   const scoring: string[] = []
   const who = (x?: string) => (x === 'attacker' ? 'the attackers score' : x === 'defender' ? 'the defenders score' : 'a gang scores')

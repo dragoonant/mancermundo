@@ -168,8 +168,22 @@ function runtimeTrait(t: TraitUse): TraitRef {
   return out
 }
 
-function runtimeProfile(p: WeaponProfile): RuntimeProfile {
-  return {
+const T_RECLAIMED = 'core.t.reclaimed-scavenged'
+const T_PLENTIFUL = 'core.t.plentiful'
+
+/**
+ * Reclaimed / Scavenged (R-14.2, [ND] weapon traits): a worse copy of the weapon. A profile with Plentiful loses it; any other
+ * profile with an Ammo value has it worsened by 1 (4+ becomes 5+, never worse than 6+).
+ */
+function reclaimed(p: RuntimeProfile): RuntimeProfile {
+  if (!p.traits.some((t) => t.trait === T_RECLAIMED)) return p
+  if (p.traits.some((t) => t.trait === T_PLENTIFUL)) return { ...p, traits: p.traits.filter((t) => t.trait !== T_PLENTIFUL) }
+  return p.ammo === null ? p : { ...p, ammo: Math.min(6, p.ammo + 1) }
+}
+
+/** One weapon profile as the engine reads it (exported for the trait tests). */
+export function runtimeProfile(p: WeaponProfile): RuntimeProfile {
+  return reclaimed({
     id: p.id,
     name: p.name,
     range: { short: p.range.short, long: p.range.long },
@@ -179,7 +193,7 @@ function runtimeProfile(p: WeaponProfile): RuntimeProfile {
     dmg: runtimeDmg(p.dmg),
     ammo: p.ammo === '-' ? null : parseTarget(p.ammo),
     traits: p.traits.map(runtimeTrait),
-  }
+  })
 }
 
 function runtimeWeapon(w: WeaponData): RuntimeWeapon {

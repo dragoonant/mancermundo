@@ -12,7 +12,7 @@
     { "min": 11, "max": 12, "cap": 9 }
   ],
   "deployment": { "kind": "tile", "withinOfEdge": 3, "enemyClearance": 6 },
-  "caskets": { "count": 5, "placer": "alternate", "region": "centreTileFirst", "minFromEdge": 6, "minApart": 6, "contents": "core" },
+  "caskets": { "count": 5, "placer": "alternate", "region": "centreTileFirst", "minFromEdge": 0, "minApart": 6, "contents": "core" },
   "scoring": [
     { "on": "fighterOutOfAction", "points": 1 },
     { "on": "fighterFled", "points": 1 },

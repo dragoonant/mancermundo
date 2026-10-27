@@ -148,7 +148,16 @@ function objectiveGoals(ctx: AiCtx, state: GameState, f: Fighter): Goal[] {
   if (sid !== 'scn.smash-and-grab' && sid !== 'scn.forgotten-riches') return out
   const caskets = scenario(ctx, state).caskets
   if (sid === 'scn.smash-and-grab' && me.role === 'attacker') {
-    for (const c of caskets) if (c.state === 'closed') out.push({ kind: 'casket', pos: { x: c.pos.x, z: c.pos.z }, ideal: 0.6, weight: 0.9, radius: 0, casketId: c.id })
+    // the clock runs out when the defenders break or dwindle (the battle ends with them): then the caskets pull hardest
+    const foe = state.players[f.seat === 'A' ? 'B' : 'A']
+    const standing = enemiesOf(state, f).filter((e) => e.location === 'board' && e.posture !== 'seriouslyInjured').length
+    const weight = foe.bottled || standing <= 3 ? 1.6 : 0.9
+    for (const c of caskets) {
+      if (c.state !== 'closed') continue
+      // a casket behind a closed door: the door on the way is the goal until it is open
+      const dg = doorGoal(ctx, state, f, c.pos)
+      out.push(dg ? { ...dg, weight } : { kind: 'casket', pos: { x: c.pos.x, z: c.pos.z }, ideal: 0.6, weight, radius: 0, casketId: c.id })
+    }
   } else if (sid === 'scn.forgotten-riches') {
     // closed or opened loot not yet on our own tile (an ammo cache is not loot); carried caskets go with their carrier
     const claim = lootAssignment(ctx, state, f.seat).get(f.id)

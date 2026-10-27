@@ -57,7 +57,7 @@
             { "type": "string", "pattern": "^S([+-][0-9]+)?$", "description": "The wielder's S, optionally plus or minus a number: S, S+1, S-1." }
           ]
         },
-        "ap": { "type": "integer", "maximum": 0, "description": "0 for '-' in the books; AP -1 is -1." },
+        "ap": { "type": "integer", "maximum": 1, "description": "0 for '-' in the books; AP -1 is -1. A few blunt weapons print AP +1 (the save gets easier)." },
         "dmg": {
           "anyOf": [
             { "$ref": "common.schema.json#/$defs/DiceExpr" },

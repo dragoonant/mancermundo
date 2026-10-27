@@ -19,7 +19,7 @@ import { addEffect, effectsOf } from './effects'
 import { continueEndPhase } from './endphase'
 import { d6TestChance, d6TestPasses, firepowerFace, rollExpr } from './dice'
 import { runHook } from './hooks'
-import { resolveHit, type HitInput } from './hits'
+import { applyFollowUp, resolveHit, type FollowUpChoice, type HitInput } from './hits'
 import { takeOutOfAction } from './casualties'
 import { hasLos, inVisionArc } from './los'
 import { baseGap, CONTACT_EPS, inContact, refreshEngagement, withinPath } from './measure'
@@ -81,13 +81,18 @@ interface AttackFrame {
   turned: boolean
   weaponIds: string[] | null
   split: Record<string, number> | null
-  stage: 'start' | 'weapons' | 'split' | 'splitting' | 'roll'
+  stage: 'start' | 'weapons' | 'split' | 'splitting' | 'roll' | 'resolve'
   /** a reaction: how many of the target's attacks at this fighter failed to hit (Counter-attack) */
   failed: number
   /** a reaction made because of a Retreat's Initiative test (not the reaction attacks that follow a Fight) */
   escape: boolean
   /** the Lightning Reflexes and Hurl windows of this attack were offered already */
   offered: boolean
+  /** stage 'resolve': the dice rolled, the next one to resolve, the Sidearm Ammo fails, and a Knockback follow-up being asked */
+  rolled?: RolledDie[]
+  next?: number
+  ammoFails?: string[]
+  followUp?: FollowUpChoice | null
 }
 
 /** A skill offered inside the sequence (`skill.choice`): Hit and Run, Lightning Reflexes, Hurl instead of the free Fight. */
@@ -140,6 +145,8 @@ interface FightSeq {
   entangled: string[]
   /** enemies that already made reaction attacks against a Hit and Run Retreat: no second set after the Fight (S4K-B) */
   reacted?: string[]
+  /** where the acting fighter stood when its action began (R-4.1: a move during the action reopens the free turn) */
+  startPos?: Vec2
 }
 
 function seqOf(state: GameState): FightSeq {
@@ -148,7 +155,8 @@ function seqOf(state: GameState): FightSeq {
 }
 
 function newSeq(ctx: Ctx, ownerId: string, resume: Resume): FightSeq {
-  const seq: FightSeq = { stack: [], resume, entangled: [] }
+  const owner = ctx.state.fighters[ownerId]
+  const seq: FightSeq = { stack: [], resume, entangled: [], ...(resume.kind === 'pay' && owner ? { startPos: { x: owner.pos.x, z: owner.pos.z } } : {}) }
   ctx.state.attack = { kind: 'fight', attackerId: ownerId, stage: 'sequence', targets: [], hitQueue: [], reactions: [], data: seq as unknown as Record<string, unknown> }
   return seq
 }
@@ -257,13 +265,26 @@ function outOfContact(f: Fighter, t: Fighter): boolean {
   return !f.engagedWith.includes(t.id)
 }
 
+/** Can these weapons all strike `t`: it is in base contact, or every one of them is Versatile with reach to it. */
+function reachableBy(state: GameState, f: Fighter, t: Fighter, weaponIds: readonly string[]): boolean {
+  if (!outOfContact(f, t)) return true
+  if (weaponIds.length === 0) return false
+  const gap = baseGap(f, t)
+  return weaponIds.every((id) => {
+    const p = meleeProfile(state, f, id)
+    return !!p && (versatileReach(p) ?? -1) >= gap - 1e-9
+  })
+}
+
 /**
  * The weapon combinations of R-10.3 for an attack: two Melee/Sidearm weapons (none Unwieldy; both orders when the odd die
  * matters), one weapon, or unarmed. An attack at Versatile reach may only use Versatile weapons that reach every target;
  * a Disarmed fighter's reaction attacks are unarmed (R-14.3). Ordered best first (pairs, singles, unarmed).
  */
 export function weaponCombos(state: GameState, f: Fighter, targets: readonly Fighter[], role: 'fight' | 'reaction', charge: boolean, failed = 0): string[][] {
-  const atReach = targets.some((t) => outOfContact(f, t))
+  // an attack only at reach must use Versatile weapons; with an enemy in base contact as well, any weapons may be chosen and
+  // the enemies they cannot reach drop out of the split (`reachableBy`)
+  const atReach = targets.length > 0 && targets.every((t) => outOfContact(f, t))
   const disarmed = role === 'reaction' && f.conditions.disarmed !== undefined
   if (disarmed) return atReach ? [] : [[]]
   let pool = meleeWeapons(state, f)
@@ -472,7 +493,7 @@ function escapeFrame(f: Fighter, kind: EscapeFrame['kind']): EscapeFrame {
 export function settleNerve(ctx: Ctx, resume: Resume): void {
   const s = ctx.state
   if (s.nerve.length === 0 || s.attack) {
-    finish(ctx, resume)
+    finish(ctx, { stack: [], resume, entangled: [] })
     return
   }
   newSeq(ctx, s.nerve[0]!.fighterId, resume)
@@ -536,7 +557,7 @@ function pump(ctx: Ctx): void {
       continue
     }
     s.attack = null
-    finish(ctx, seq.resume)
+    finish(ctx, seq)
     return
   }
   throw new EngineInvariantError('a close-combat sequence did not settle')
@@ -553,8 +574,9 @@ function drainInto(ctx: Ctx, seq: FightSeq): void {
   for (let i = broke.length - 1; i >= 0; i--) seq.stack.push(escapeFrame(broke[i]!, 'runForCover'))
 }
 
-function finish(ctx: Ctx, resume: Resume): void {
+function finish(ctx: Ctx, seq: FightSeq): void {
   const s = ctx.state
+  const resume = seq.resume
   switch (resume.kind) {
     case 'pay': {
       const act = s.action.activation
@@ -564,8 +586,11 @@ function finish(ctx: Ctx, resume: Resume): void {
       }
       const f = getFighter(s, resume.fighterId)
       for (const free of resume.free) act.performed.push({ action: free, type: 'free' })
-      // a Retreat is a move: the free turn is open again afterwards (R-4.1)
-      payAndContinue(ctx, f, resume.action, resume.action === 'retreat' && f.location === 'board' && f.posture === 'standing' && f.engagedWith.length === 0)
+      // R-4.1: after any action that moved the fighter (Retreat, Charge, Running for Cover, a consolidate) it may turn for
+      // free, if it ends Standing and not Engaged
+      const start = seq.startPos
+      const moved = !!start && Math.hypot(f.pos.x - start.x, f.pos.z - start.z) > 0.01
+      payAndContinue(ctx, f, resume.action, moved && f.location === 'board' && f.posture === 'standing' && f.engagedWith.length === 0)
       return
     }
     case 'continue':
@@ -617,6 +642,11 @@ function startAttack(ctx: Ctx, fr: AttackFrame): Fighter[] {
     candidates = fr.targets.map((id) => s.fighters[id]).filter(standingOnBoard)
   } else {
     candidates = a.engagedWith.map((id) => s.fighters[id]).filter(standingOnBoard)
+    // R-14.3: in its own activation a fighter with a Versatile weapon also engages every enemy within that weapon's reach
+    // (Standing, in arc and in sight), even while in base contact with another; only that weapon's dice can reach them
+    for (const w of reachFights(s, a)) {
+      for (const id of w.targets) if (!candidates.some((c) => c.id === id)) candidates.push(s.fighters[id]!)
+    }
   }
   if (candidates.length === 0) return []
   fr.engaged = candidates.map((c) => c.id)
@@ -674,6 +704,12 @@ function stepAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): boolean {
   }
   if (fr.stage === 'split') {
     const a = getFighter(s, fr.attackerId)
+    // enemies beyond base contact take dice only when every chosen weapon is Versatile and reaches them (R-14.3)
+    const keep = fr.targets.filter((id) => reachableBy(s, a, getFighter(s, id), fr.weaponIds!))
+    if (keep.length > 0) {
+      fr.targets = keep
+      fr.engaged = fr.engaged.filter((id) => keep.includes(id) || a.engagedWith.includes(id))
+    }
     const n = attackDiceFor(s, a, fr.weaponIds!, fr.charge, { role: fr.role, failed: fr.failed })
     if (fr.targets.length > 1 && n > 0) {
       fr.stage = 'splitting'
@@ -683,10 +719,8 @@ function stepAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): boolean {
     fr.split = { [fr.targets[0]!]: n }
     fr.stage = 'roll'
   }
-  if (fr.stage === 'roll') {
-    rollAttack(ctx, seq, fr)
-    return false
-  }
+  if (fr.stage === 'roll') return rollAttack(ctx, seq, fr)
+  if (fr.stage === 'resolve') return resolveRolled(ctx, seq, fr)
   throw new EngineInvariantError(`attack frame stuck at ${fr.stage}`)
 }
 
@@ -743,7 +777,8 @@ interface RolledDie {
 
 const UNARMED_DMG = { kind: 'fixed' as const, value: 1 }
 
-function rollAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): void {
+/** Roll the attack dice (R-10.5), then Parry and Step Aside; the hits are resolved by `resolveRolled`. True while waiting. */
+function rollAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): boolean {
   const s = ctx.state
   const a = getFighter(s, fr.attackerId)
   const weaponIds = fr.weaponIds ?? []
@@ -796,13 +831,63 @@ function rollAttack(ctx: Ctx, seq: FightSeq, fr: AttackFrame): void {
   // Step Aside: a target with the skill tries once against this attacker to avoid one of the hits that landed
   const tried = new Set<string>()
   for (const targetId of fr.targets) stepAside(ctx, a, getFighter(s, targetId), rolled, tried)
-  // (6) resolve the hits
-  for (const r of rolled) {
+  fr.rolled = rolled
+  fr.next = 0
+  fr.ammoFails = ammoFails
+  fr.followUp = null
+  fr.stage = 'resolve'
+  return resolveRolled(ctx, seq, fr)
+}
+
+/** The follow-up choice after a melee Knockback (R-14.3): stay in base contact with the pushed enemy, or stay put. */
+function raiseFollowUp(ctx: Ctx, a: Fighter, fu: FollowUpChoice): void {
+  ctx.raise({
+    kind: 'fight.followUp',
+    seat: a.seat,
+    window: 'fight.hitRolled',
+    context: { fighterId: a.id, targetId: fu.targetId, distance: Math.round(Math.hypot(fu.shift.x, fu.shift.z) * 100) / 100 },
+    options: [
+      { id: 'follow', labelKey: 'fight.followUp.follow', type: 'fight.followUp', payload: { follow: true } },
+      { id: 'stay', labelKey: 'fight.followUp.stay', type: 'fight.followUp', payload: { follow: false } },
+    ],
+  })
+}
+
+/** (6) Resolve the hits one at a time; a melee Knockback the attacker could follow up pauses on `fight.followUp`. */
+function resolveRolled(ctx: Ctx, seq: FightSeq, fr: AttackFrame): boolean {
+  const s = ctx.state
+  const a = getFighter(s, fr.attackerId)
+  const rolled = fr.rolled ?? []
+  while ((fr.next ?? 0) < rolled.length) {
+    const r = rolled[fr.next ?? 0]!
+    fr.next = (fr.next ?? 0) + 1
     if (!r.ok) continue
     const t = s.fighters[r.targetId]!
     if (t.location !== 'board') continue
-    resolveHit(ctx, meleeHit(s, a, t, r))
+    const res = resolveHit(ctx, meleeHit(s, a, t, r))
+    if (!res.followUp) continue
+    const pushed = s.fighters[res.followUp.targetId]
+    if (standingOnBoard(a) && pushed && pushed.location === 'board') {
+      fr.followUp = res.followUp
+      raiseFollowUp(ctx, a, res.followUp)
+      return true
+    }
+    applyFollowUp(ctx, res.followUp, false)
   }
+  finishRolled(ctx, seq, fr)
+  return false
+}
+
+/** After the hits: natural-6 effects (Disarm, Entangle), Sidearm Ammo, then reactions and the after-attack step. */
+function finishRolled(ctx: Ctx, seq: FightSeq, fr: AttackFrame): void {
+  const s = ctx.state
+  const a = getFighter(s, fr.attackerId)
+  const rolled = fr.rolled ?? []
+  const ammoFails = fr.ammoFails ?? []
+  delete fr.rolled
+  delete fr.next
+  delete fr.ammoFails
+  delete fr.followUp
   // natural-6 effects on the targets still in the fight (Disarm skill: 6+ on any melee weapon, 5+ on one that has Disarm)
   const disarmSkill = skillOf(s, a, 'combatDisarm')
   for (const r of rolled) {
@@ -848,7 +933,7 @@ function pushReactions(state: GameState, seq: FightSeq, fr: AttackFrame, a: Figh
       frames.push(attackFrame(e.id, 'reaction', [a.id], { failed: failedAt(e.id) }))
       continue
     }
-    if (!fr.reachWeapon || !fr.engaged.includes(e.id)) continue
+    if (!fr.engaged.includes(e.id)) continue
     const gap = baseGap(e, a)
     const w = meleeWeapons(state, e).find((m) => (versatileReach(m.profile) ?? -1) >= gap - 1e-9)
     if (w) frames.push(attackFrame(e.id, 'reaction', [a.id], { reachWeapon: w.weaponId, failed: failedAt(e.id) }))
@@ -1228,6 +1313,20 @@ export function resumeAfterMove(ctx: Ctx, f: Fighter, kind: 'retreat' | 'consoli
 function handle(state: GameState, action: Action, pending: PendingDecision): Handled {
   if (!state.attack || state.attack.kind !== 'fight') return reject('E_WRONG_DECISION', 'no close-combat sequence is in progress')
   if (action.type === 'pass') return reject('E_PASS_NOT_ALLOWED', 'close-combat choices cannot be passed')
+  if (action.type === 'fight.followUp') {
+    const follow = action.payload.follow
+    return {
+      run(ctx) {
+        const seq = seqOf(ctx.state)
+        const fr = top(seq)
+        if (!fr || fr.type !== 'attack' || !fr.followUp) throw new EngineInvariantError('no Knockback follow-up is pending')
+        const fu = fr.followUp
+        fr.followUp = null
+        applyFollowUp(ctx, fu, follow)
+        pump(ctx)
+      },
+    }
+  }
   switch (action.type) {
     case 'fight.weapons': {
       const ids = action.payload.weaponIds

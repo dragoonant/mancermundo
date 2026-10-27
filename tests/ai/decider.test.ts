@@ -9,7 +9,7 @@ import { realBundle } from '../fixtures/real'
 
 const ALL_KINDS: DecisionKind[] = [
   'setup.role', 'setup.crew', 'setup.casket', 'setup.zone', 'setup.deploy', 'action.flee', 'action.activate', 'action.group', 'action.choose',
-  'move.path', 'shoot.weapon', 'shoot.target', 'shoot.aim', 'shoot.allocate', 'fight.weapons', 'fight.split', 'fight.after', 'end.bottle',
+  'move.path', 'shoot.weapon', 'shoot.target', 'shoot.aim', 'shoot.allocate', 'shoot.firepower', 'fight.weapons', 'fight.split', 'fight.after', 'fight.followUp', 'end.bottle',
   'end.assist', 'end.recoveryPick', 'skill.choice', 'dice.reroll', 'confirm',
 ]
 

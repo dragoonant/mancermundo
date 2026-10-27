@@ -392,7 +392,7 @@ export function blastPreview(state: GameState, shooterId: string, weaponId: stri
   const radius = blastRadius(p) ?? constants(state).smoke.radius
   const long = profileRanges(p, stat(state, f.id, 'S')).long
   const problem = pointAimProblem(state, f, mode, aim)
-  const at = clampToRange(f, aim, long)
+  const at = mode === 'fireDuct' ? { ...aim } : clampToRange(f, aim, long)
   const distance = Math.max(0, Math.hypot(at.x - f.pos.x, at.z - f.pos.z) - f.baseRadius)
   const band = bandFor(state, f, p, distance).band ?? 'long'
   const n = hitNeedFor(state, f, p, { mode, band, point: true, aimed: aimedNow(state, shooterId) })

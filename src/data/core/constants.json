@@ -45,7 +45,16 @@
       { "min": 2, "max": 3, "result": "nothing" },
       { "min": 4, "max": 6, "result": "ammoCache" }
     ],
-    "ammoCache": { "radius": 1, "ammoBonus": 2, "exhaustedOn": 6 }
+    "ammoCache": { "radius": 1, "ammoBonus": 2, "exhaustedOn": 6 },
+    "fragTrap": {
+      "triggerRange": 2,
+      "dudOn": 1,
+      "explodeOn": 4,
+      "blast": { "inches": 5, "strength": 3, "ap": 0, "damage": 1 },
+      "shotModifier": { "short": -1, "long": -2 },
+      "shotNoEffectMax": 2,
+      "shotExplodeMax": 4
+    }
   },
   "smoke": { "radius": 2.5, "clearDie": "D6", "clearOnAtMost": 4 },
   "blaze": {

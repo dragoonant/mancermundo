@@ -45,7 +45,7 @@ The attacker raids a stash of locked crates; the defender must drive them off be
 - M-3.1 Board: 6 tiles (2x3), any authored v1 board.
 - M-3.2 Attacker and defender: M-1.4.
 - M-3.3 Crews: attacker Custom (8); defender Hybrid (3+D6).
-- M-3.4 Before deployment the defender places 5 loot caskets in its own half, each at least 4" from every board edge, outside walls and obstacles, lids closed. No other caskets are used.
+- M-3.4 Before deployment the defender places 5 loot caskets in its own half, each at least 4" from every board edge, outside walls and obstacles, lids closed. No other caskets are used. No spacing between caskets is set (they may not overlap).
   - RULING: "in their deployment zone" is read as the defender's half of the board (the 6" deployment strip is too small for five caskets 4" from the edge); caskets are also at least 6" apart.
 - M-3.5 Deployment: standard (M-1.6), defender first.
 - M-3.6 Only the attacker may open caskets (Smash Open or Bypass Lock, R-15.11). The defender may not open them but may Carry them.
@@ -64,7 +64,7 @@ Both gangs search a dark sector for abandoned loot and haul it back to their own
 - M-4.1 Board: 7 tiles. One centre tile; the other six each share at least half an edge with the centre tile ("brick" layout: one tile on the left and one on the right, two tiles above offset by half a tile, two below likewise). v1 ships fixed authored 7-tile boards; the tile-placing step is skipped.
 - M-4.2 Crews: Custom; maximum crew size from 2D6: 2-3 = 5, 4-5 = 6, 6-8 = 7, 9-10 = 8, 11-12 = 9. One roll applies to both gangs.
   - RULING: the source does not say whether each gang rolls separately; one shared roll is used for fairness.
-- M-4.3 Loot: players alternately place 5 loot caskets, roll-off winner first: the first in the centre tile, each in a different tile, at least 6" apart, not in inaccessible spots.
+- M-4.3 Loot: players alternately place 5 loot caskets, roll-off winner first: the first in the centre tile, each in a different tile, at least 6" apart, not in inaccessible spots. No distance from the board edge is set.
 - M-4.4 Deployment: the roll-off winner picks a tile without a casket as its deployment tile and deploys within 3" of that tile's outer board edge; the other player then does the same on another remaining casket-free tile. If the two deployment tiles touch, no fighter may be set up within 6" of an enemy.
 - M-4.5 Horrors in the Dark: when a fighter activates more than 8" from every other fighter (friend or enemy), roll D6: 1 = it suffers a S6 AP -1 Damage 2 hit, and if this leaves it Seriously Injured it is dragged off and goes Out of Action; 2-3 = it may take no actions this activation; 4-5 = only one action; 6 = normal.
   - RULING: all fighters on the battlefield, including Seriously Injured and Broken ones, count as "other fighters" (the compilation's opposite reading is a house rule).

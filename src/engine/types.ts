@@ -216,12 +216,13 @@ export interface BoardDef {
 }
 
 export type DoorState = 'closed' | 'open' | 'destroyed'
-export type CasketStateName = 'closed' | 'opened' | 'ammoCache' | 'exhausted' | 'removed'
+export type CasketStateName = 'closed' | 'opened' | 'ammoCache' | 'exhausted' | 'removed' | 'fragTrap'
 
 export interface BoardState {
   def: BoardDef
   doors: Record<string, { state: DoorState; locked: boolean; wounds: number }>
-  caskets: Record<string, { pos: Vec2; state: CasketStateName; carriedBy: string | null; openedBy?: Seat }>
+  /** `checked`: for a frag trap, the fighters that already rolled for it in the activation in progress (once each, [ND]) */
+  caskets: Record<string, { pos: Vec2; state: CasketStateName; carriedBy: string | null; openedBy?: Seat; checked?: string[] }>
   smoke: { id: string; pos: Vec2; radius: number; placedRound: number }[]
 }
 
@@ -545,9 +546,11 @@ export type DecisionKind =
   | 'shoot.target'
   | 'shoot.aim'
   | 'shoot.allocate'
+  | 'shoot.firepower'
   | 'fight.weapons'
   | 'fight.split'
   | 'fight.after'
+  | 'fight.followUp'
   | 'end.bottle'
   | 'end.assist'
   | 'end.recoveryPick'
@@ -583,12 +586,16 @@ export interface ActionPayloadMap {
   }
   'move.path': { waypoints: Waypoint[]; facing?: number }
   'shoot.weapon': { weaponId: string; profileId: string; twinWith?: string }
-  'shoot.target': { targetId?: string; doorId?: string; point?: true }
+  'shoot.target': { targetId?: string; doorId?: string; point?: true; trapId?: string }
   'shoot.aim': { x: number; z: number }
   'shoot.allocate': { targetId: string }
+  /** Rapid Fire (X): how many Firepower dice to roll, 1 to X */
+  'shoot.firepower': { dice: number }
   'fight.weapons': { weaponIds: string[] }
   'fight.split': { split: Record<string, number> }
   'fight.after': { choice: 'coupDeGrace' | 'consolidate' | 'none'; targetId?: string }
+  /** a melee Knockback pushed the target away: follow it up into base contact or stay put */
+  'fight.followUp': { follow: boolean }
   'end.bottle': { choice: 'test' | 'bottle' }
   'end.assist': { assisterId?: string; recoveringId?: string; none?: boolean }
   'end.recoveryPick': { index: number }

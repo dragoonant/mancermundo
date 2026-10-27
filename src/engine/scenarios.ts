@@ -185,7 +185,9 @@ export function casketProblem(state: GameState, seat: Seat, pos: Vec2): Rejectio
   if (distToOutline(def, pos) < rules.minFromEdge - 1e-9) return rej('E_OUT_OF_RANGE', `a casket must be at least ${rules.minFromEdge}" from every board edge`)
   if (!freeAt(state)(pos)) return rej('E_OVERLAP', 'a casket cannot overlap a wall, a door or an obstacle')
   for (const c of Object.values(state.board.caskets)) {
-    if (Math.hypot(c.pos.x - pos.x, c.pos.z - pos.z) < rules.minApart - 1e-9) return rej('E_OUT_OF_RANGE', `caskets must be at least ${rules.minApart}" apart`)
+    const d = Math.hypot(c.pos.x - pos.x, c.pos.z - pos.z)
+    if (d < 2 * CASKET_R - 1e-9) return rej('E_OVERLAP', 'a casket cannot overlap another casket')
+    if (d < rules.minApart - 1e-9) return rej('E_OUT_OF_RANGE', `caskets must be at least ${rules.minApart}" apart`)
   }
   if (!accessible(def)(pos)) return rej('E_NO_PATH', 'that spot cannot be reached')
   return null

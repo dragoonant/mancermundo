@@ -45,6 +45,7 @@ export const T = {
   backstab: 'core.t.backstab',
   pulverise: 'core.t.pulverise',
   sever: 'core.t.sever',
+  reclaimed: 'core.t.reclaimed-scavenged',
 } as const
 
 /** Traits whose rules the engine knows (S3a shooting set + S3b close-combat set, which are inert at range). */

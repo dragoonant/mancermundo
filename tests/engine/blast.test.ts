@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { act, query, step } from '@/engine'
 import { coverFrom } from '@/engine/los'
 import { dice, shootingGame } from '../fixtures/attack'
-import { eventsOf, must, take } from '../fixtures/helpers'
+import { activate, edit, eventsOf, must, take } from '../fixtures/helpers'
 import type { GameState } from '@/engine'
 
 function shoot(s: GameState): GameState {
@@ -107,5 +107,31 @@ describe('BLAST: blasts, scatter and templates (R-9)', () => {
     expect(eventsOf(r.events, 'SaveRolled')[0]).toMatchObject({ targetId: 'B4', need: 6, saved: true, item: null })
     expect(query.saveChance(s, 'B4', 0, { vs: 'blast', coverBonus: 1 })).toMatchObject({ need: 6 })
     expect(query.saveChance(s, 'B4', 0).need).toBeNull()
+  })
+})
+
+describe('BLAST: Rapid Fire Blasts ([ND] Rapid Fire)', () => {
+  it('BLAST-007 a Rapid Fire Blast that misses places one marker per bullet hole, each scattering on its own from the target', () => {
+    const base = shootingGame({ spots: { A3: { x: 0, z: -8, facing: 0 }, B3: { x: 0, z: 4 } }, loadouts: { A3: { weapons: ['atk.w.blast5'] } } })
+    const s = shoot(
+      activate(
+        edit(base, (d) => {
+          const w = d.data.weapons['atk.w.blast5']!
+          const p = w.profiles[0]!
+          d.data = { ...d.data, weapons: { ...d.data.weapons, 'atk.w.blast5': { ...w, profiles: [{ ...p, ammo: 6, traits: [...p.traits, { trait: 'core.t.rapid-fire', x: 1 }] }] } } }
+        }),
+        'A3',
+      ).state,
+    )
+    // miss (1); Firepower 6 (three holes); three scatters: arrow 90 degrees 3", arrow 180 degrees 3", arrow 270 degrees 3"
+    const r = must(take(s, { targetId: 'B3' }, dice(1, 6, 2, 90, 3, 2, 180, 3, 2, 270, 3)))
+    const sc = eventsOf(r.events, 'BlastScattered')
+    expect(sc.map((e) => e.direction)).toEqual([90, 180, 270])
+    expect(sc.every((e) => e.from.x === 0 && e.from.z === 4)).toBe(true)
+    const placed = eventsOf(r.events, 'BlastPlaced').map((e) => e.centre)
+    expect(placed).toHaveLength(3)
+    expect(placed[0]!.x).toBeCloseTo(3, 2)
+    expect(placed[1]!.z).toBeCloseTo(1, 2)
+    expect(placed[2]!.x).toBeCloseTo(-3, 2)
   })
 })

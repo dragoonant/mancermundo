@@ -233,12 +233,97 @@ describe('ZM: Zone Mortalis walls, doors, terminals, ductways, barricades and ca
     // 5 - 1 = 4 is an ammo cache
     const cache = must(step(r.state, smash.action, new ScriptedRng([6, 5])))
     expect(cache.state.board.caskets.k1!.state).toBe('ammoCache')
-    // a contents roll of 1 stays at 1 (booby trapped), never 0: the blast goes to the attack code
+    // a contents roll of 1 stays at 1 (booby trapped), never 0: the casket becomes a frag trap marker, and the opener, ending
+    // its action within 2", rolls for it at once (4+: it goes off as a 5" Blast, S3 AP - D1 Knockback, through the attack code)
     const blasts: BlastSpec[] = []
     registerBlastPort((_ctx, spec) => blasts.push(spec))
-    const trapped = must(step(r.state, smash.action, new ScriptedRng([6, 1])))
+    const trapped = must(step(r.state, smash.action, new ScriptedRng([6, 1, 4])))
     expect(eventsOf(trapped.events, 'CasketOpened')[0]).toMatchObject({ roll: 1, result: 'fragTrap' })
-    expect(blasts).toEqual([expect.objectContaining({ centre: { x: 0, z: -8.5 }, strength: 3, damage: 1, source: 'casket' })])
+    expect(eventsOf(trapped.events, 'TrapTriggered')[0]).toMatchObject({ casketId: 'k1', fighterId: 'A3', roll: 4, result: 'exploded' })
+    expect(blasts).toEqual([expect.objectContaining({ centre: { x: 0, z: -8.5 }, radius: 2.5, strength: 3, ap: 0, damage: 1, knockback: true })])
+    expect(trapped.state.board.caskets.k1!.state).toBe('removed')
+    // 2-3: the trap stays where it is (still counted as opened)
+    const quiet = must(step(r.state, smash.action, new ScriptedRng([6, 1, 3])))
+    expect(quiet.state.board.caskets.k1).toMatchObject({ state: 'fragTrap', checked: ['A3'] })
+    expect(quiet.state.scenario.caskets.opened).toBe(1)
+  })
+
+  it('ZM-013 a frag trap rolls a D6 for a fighter ending an action within 2 inches, once per activation: 1 dud, 2-3 nothing, 4+ it explodes', () => {
+    const blasts: BlastSpec[] = []
+    registerBlastPort((_ctx, spec) => blasts.push(spec))
+    const s = edit(place(startGame().state, { A3: { x: 0, z: -10, facing: 0 } }), (d) => {
+      d.board.caskets.t1 = { pos: { x: 0, z: -7.5 }, state: 'fragTrap', carriedBy: null, checked: [] }
+    })
+    // already within 2" (edge to edge 2.5 - 0.492 - 0.5 = 1.508"): Aim ends an action there
+    const r = activate(s, 'A3')
+    const dud = must(take(r.state, { action: 'aim' }, new ScriptedRng([1])))
+    expect(eventsOf(dud.events, 'TrapTriggered')[0]).toMatchObject({ roll: 1, result: 'dud' })
+    expect(dud.state.board.caskets.t1!.state).toBe('removed')
+    const quiet = must(take(r.state, { action: 'aim' }, new ScriptedRng([2])))
+    expect(quiet.state.board.caskets.t1).toMatchObject({ state: 'fragTrap', checked: ['A3'] })
+    // the same fighter does not roll for it again in this activation
+    const again = must(take(quiet.state, { action: 'end' }))
+    expect(eventsOf(again.events, 'TrapTriggered')).toHaveLength(0)
+    const boom = must(take(r.state, { action: 'aim' }, new ScriptedRng([6])))
+    expect(eventsOf(boom.events, 'TrapTriggered')[0]).toMatchObject({ result: 'exploded' })
+    expect(blasts).toHaveLength(1)
+    expect(boom.state.board.caskets.t1!.state).toBe('removed')
+    // a fighter more than 2" away does not roll
+    const far = edit(s, (d) => (d.board.caskets.t1!.pos = { x: 0, z: -6.9 }))
+    const none = must(take(activate(far, 'A3').state, { action: 'aim' }))
+    expect(eventsOf(none.events, 'TrapTriggered')).toHaveLength(0)
+  })
+
+  it('ZM-014 a move that comes within 2 inches of a frag trap stops there to roll; a blast that pins ends the move, a quiet roll lets it go on', () => {
+    const s = edit(place(startGame().state, { A3: { x: 0, z: -12, facing: 0 } }), (d) => {
+      d.board.caskets.t1 = { pos: { x: 2.5, z: -6 }, state: 'fragTrap', carriedBy: null, checked: [] }
+    })
+    const r = take(activate(s, 'A3').state, { action: 'move' })
+    // 2-3: nothing happens and the move carries on to its end; no second roll when the action ends
+    const on = must(moveTo(r.state, [{ x: 0, z: -7 }], 0, new ScriptedRng([3])))
+    expect(eventsOf(on.events, 'TrapTriggered')).toHaveLength(1)
+    const legs = eventsOf(on.events, 'FighterMoved')
+    expect(legs).toHaveLength(2)
+    const reach = 2 + on.state.fighters.A3!.baseRadius + 0.5 - 0.02 // just inside 2", touching the 5" Blast
+    expect(Math.hypot(legs[0]!.to.x - 2.5, legs[0]!.to.z + 6)).toBeCloseTo(reach, 2)
+    expect(on.state.fighters.A3!.pos).toMatchObject({ x: 0, z: -7 })
+    // 4+: the trap explodes where the fighter was; the blast pins it and the move ends there (knockback 1, wound 1)
+    const stopped = must(moveTo(r.state, [{ x: 0, z: -7 }], 0, new ScriptedRng([4, 1, 1])))
+    expect(eventsOf(stopped.events, 'FighterMoved').filter((e) => e.fighterId === 'A3')).toHaveLength(1)
+    const f = stopped.state.fighters.A3!
+    expect(Math.hypot(f.pos.x - 2.5, f.pos.z + 6)).toBeCloseTo(reach, 2)
+    expect(f.posture).toBe('pinned')
+    expect(stopped.state.action.activation!.performed.map((p) => p.action)).toEqual(['move'])
+  })
+
+  it('ZM-015 a frag trap can be shot (-1 to hit at Short, -2 at Long); a hit rolls a D6: 1-2 nothing, 3-4 it explodes, 5-6 it is removed', () => {
+    const blasts: BlastSpec[] = []
+    registerBlastPort((_ctx, spec) => blasts.push(spec))
+    const base = shootingGame({ spots: { A3: { x: 0, z: -6, facing: 0 }, B3: { x: 11, z: -6 } }, loadouts: { A3: { weapons: ['atk.w.plain'] } } })
+    const withTrap = (at: { x: number; z: number }) =>
+      activate(
+        edit(base, (d) => {
+          d.board.caskets.t1 = { pos: at, state: 'fragTrap', carriedBy: null, checked: [] }
+        }),
+        'A3',
+      ).state
+    const r = must(take(withTrap({ x: 0, z: 0 }), { action: 'shoot' }))
+    const opt = r.pending!.options!.find((o) => o.id === 'trap:t1')!
+    expect(opt.data).toMatchObject({ band: 'short' })
+    expect((opt.data as { modifiers: { label: string; value: number }[] }).modifiers).toContainEqual({ label: 'fragTrap', value: -1 })
+    const exploded = must(take(r.state, { trapId: 't1' }, dice(6, 3)))
+    expect(eventsOf(exploded.events, 'TrapShot')[0]).toMatchObject({ casketId: 't1', roll: 3, result: 'exploded' })
+    expect(blasts).toHaveLength(1)
+    const disarmed = must(take(r.state, { trapId: 't1' }, dice(6, 5)))
+    expect(eventsOf(disarmed.events, 'TrapShot')[0]).toMatchObject({ result: 'disarmed' })
+    expect(disarmed.state.board.caskets.t1!.state).toBe('removed')
+    const shrug = must(take(r.state, { trapId: 't1' }, dice(6, 2)))
+    expect(shrug.state.board.caskets.t1!.state).toBe('fragTrap')
+    // at Long range the modifier is -2
+    const rf = must(take(withTrap({ x: 0, z: 10 }), { action: 'shoot' }))
+    const longOpt = rf.pending!.options!.find((o) => o.id === 'trap:t1')!
+    expect(longOpt.data).toMatchObject({ band: 'long' })
+    expect((longOpt.data as { modifiers: { label: string; value: number }[] }).modifiers).toContainEqual({ label: 'fragTrap', value: -2 })
   })
 
   it('Bypass Lock opens a casket on an Int test with the contents roll unmodified', () => {
@@ -339,5 +424,21 @@ describe('ZM: Zone Mortalis walls, doors, terminals, ductways, barricades and ca
     expect(eventsOf(r.events, 'HitRolled')).toHaveLength(0)
     expect(eventsOf(r.events, 'WoundRolled').map((e) => e.targetId).sort()).toEqual(['B3', 'B4'])
     expect(r.state.fighters.B5!.posture).toBe('standing')
+  })
+
+  it('ZM-016 a Blast fired through a ductway may target a point within 1 inch of the far end, at 5+, and hits everyone under it there', () => {
+    const spots = { A3: { x: 0, z: -1.2, facing: Math.PI }, B3: { x: 0, z: 1.5 }, B4: { x: 1.5, z: 1.5 }, B5: { x: 0, z: 4.5 } }
+    const s = shootingGame({ board: 'test.duct', spots, loadouts: { A3: { weapons: ['atk.w.blast5'] } }, active: 'A3' })
+    let r = must(take(s, { action: 'fireDuct', ductId: 'duct1' }))
+    expect(offered(r.state).sort()).toEqual(['point', 't:B3'])
+    r = must(take(r.state, { point: true }))
+    expect(r.pending!.kind).toBe('shoot.aim')
+    expect(r.pending!.context).toMatchObject({ within: { centre: { x: 0, z: 0.3 }, radius: 1 }, long: null })
+    // more than 1" from the far end: refused; 0.7" from it: hit on a 5, B3 and B4 under the marker (wounds 1, 1)
+    expect(step(r.state, act.aim(r.pending!, { x: 0, z: 2 })).rejection?.code).toBe('E_OUT_OF_RANGE')
+    const hit = must(step(r.state, act.aim(r.pending!, { x: 0, z: 1 }), dice(5, 1, 1)))
+    expect(eventsOf(hit.events, 'HitRolled')[0]).toMatchObject({ need: 5, hit: true })
+    expect(eventsOf(hit.events, 'BlastPlaced')[0]).toMatchObject({ centre: { x: 0, z: 1 } })
+    expect(eventsOf(hit.events, 'WoundRolled').map((e) => e.targetId).sort()).toEqual(['B3', 'B4'])
   })
 })

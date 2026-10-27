@@ -138,3 +138,15 @@ describe('INJ: wounds, saves, injuries (R-11)', () => {
     expect(long.state.fighters.B3!).toMatchObject({ posture: 'seriouslyInjured', fleshWounds: 2, location: 'board' })
   })
 })
+
+describe('INJ: a positive AP (13-gangs 4.5)', () => {
+  it('INJ-010 AP +1 makes the save one easier (the Goliath maul prints S, AP +1, D2)', async () => {
+    const s = edit(base(), (d) => {
+      d.fighters.B4!.wargear = ['atk.g.carapace']
+    })
+    expect(armourSave(s, s.fighters.B4!, { ap: 1 }).need).toBe(3)
+    const { realBundle } = await import('../fixtures/real')
+    const maul = realBundle().weapons['gol.w.maul']!.profiles[0]!
+    expect(maul).toMatchObject({ str: { base: 'user', value: 0 }, ap: 1, dmg: { kind: 'fixed', value: 2 } })
+  })
+})

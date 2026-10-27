@@ -209,6 +209,16 @@ export interface ConstantsData {
     smash: { die: DiceExpr; stat: Stat; target: number; contentsModifier: number }
     contents: { min: number; max: number; result: CasketResult }[]
     ammoCache: { radius: Inches; ammoBonus: number; exhaustedOn: number }
+    /** a booby-trapped casket becomes a frag trap ([ND] Booby Traps: Frag): trigger D6, Blast 5", shooting it */
+    fragTrap: {
+      triggerRange: Inches
+      dudOn: number
+      explodeOn: number
+      blast: { inches: Inches; strength: number; ap: number; damage: number }
+      shotModifier: { short: number; long: number }
+      shotNoEffectMax: number
+      shotExplodeMax: number
+    }
   }
   smoke: { radius: Inches; clearDie: DiceExpr; clearOnAtMost: number }
   blaze: {

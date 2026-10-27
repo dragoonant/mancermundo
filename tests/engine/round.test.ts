@@ -71,8 +71,9 @@ describe('ROUND: rounds, the Priority phase, alternation and group activation', 
     expect(r.pending?.kind).toBe('action.group')
     expect(r.pending!.context).toMatchObject({ left: 1 })
     r = must(step(r.state, act.group(r.pending!, 'A5')))
-    // two nominated: the cap is reached, the leader acts
-    expect(r.pending?.kind).toBe('action.choose')
+    // two nominated: the cap is reached, and the owner picks who of the three goes first
+    expect(r.pending?.kind).toBe('action.activate')
+    expect(offered(r.state).sort()).toEqual(['A1', 'A3', 'A5'])
     expect(eventsOf(r.events, 'GroupNominated')[0]).toMatchObject({ leaderId: 'A1', fighterIds: ['A3', 'A5'] })
 
     // a Champion (X = 1) may nominate one
@@ -80,7 +81,8 @@ describe('ROUND: rounds, the Priority phase, alternation and group activation', 
     let rc = take(c, { fighterId: 'A2' })
     expect(rc.pending!.context).toMatchObject({ max: 1 })
     rc = must(step(rc.state, act.group(rc.pending!, 'A3')))
-    expect(rc.pending?.kind).toBe('action.choose')
+    expect(rc.pending?.kind).toBe('action.activate')
+    expect(offered(rc.state).sort()).toEqual(['A2', 'A3'])
     expect(eventsOf(rc.events, 'GroupNominated')[0]!.fighterIds).toEqual(['A3'])
   })
 
@@ -96,17 +98,20 @@ describe('ROUND: rounds, the Priority phase, alternation and group activation', 
     let r = take(s, { fighterId: 'A1' })
     r = must(step(r.state, act.group(r.pending!, 'A3')))
     r = must(step(r.state, act.group(r.pending!, 'A5')))
-    // nominated members are still Ready and nobody but the leader has activated
-    expect(r.state.fighters.A3!.ready && r.state.fighters.A5!.ready).toBe(true)
-    expect(r.state.action.activation?.fighterId).toBe('A1')
-    // the leader's whole activation first
-    r = must(step(r.state, act.endActivation(r.pending!)))
+    // everyone is nominated before anybody acts: all three are still Ready and no activation has begun
+    expect(r.state.fighters.A1!.ready && r.state.fighters.A3!.ready && r.state.fighters.A5!.ready).toBe(true)
+    expect(r.state.action.activation).toBeNull()
     expect(r.pending).toMatchObject({ kind: 'action.activate', seat: 'A' })
-    expect(offered(r.state).sort()).toEqual(['A3', 'A5'])
-    // the owner chooses the order; a member cannot lead its own group
+    expect(offered(r.state).sort()).toEqual(['A1', 'A3', 'A5'])
+    // the owner picks the order, the leader need not go first; a member cannot lead its own group
     r = take(r.state, { fighterId: 'A5' })
     expect(r.pending?.kind).toBe('action.choose')
     expect(r.state.action.activation).toMatchObject({ fighterId: 'A5', groupLeaderId: 'A1' })
+    r = must(step(r.state, act.endActivation(r.pending!)))
+    expect(offered(r.state).sort()).toEqual(['A1', 'A3'])
+    r = take(r.state, { fighterId: 'A1' })
+    expect(r.pending?.kind).toBe('action.choose')
+    expect(r.state.action.activation).toMatchObject({ fighterId: 'A1' })
     r = must(step(r.state, act.endActivation(r.pending!)))
     expect(offered(r.state)).toEqual(['A3'])
     r = take(r.state, { fighterId: 'A3' })
@@ -121,7 +126,6 @@ describe('ROUND: rounds, the Priority phase, alternation and group activation', 
     let r = take(s, { fighterId: 'A1' })
     r = must(step(r.state, act.group(r.pending!, 'A2')))
     r = must(step(r.state, act.groupDone(r.pending!)))
-    r = must(step(r.state, act.endActivation(r.pending!)))
     r = take(r.state, { fighterId: 'A2' })
     expect(r.pending?.kind).toBe('action.choose')
   })

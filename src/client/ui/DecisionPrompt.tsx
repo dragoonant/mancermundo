@@ -296,6 +296,27 @@ function CasketPrompt({ pending, state }: { pending: PendingDecision; state: Gam
   )
 }
 
+/**
+ * A choice with one usual answer (every Firepower dice of a Rapid Fire weapon, following up a knockback): that option comes
+ * first and highlighted, so a single click takes it; the others are still offered (the engine always asks).
+ */
+function RecommendedPrompt({ pending, state }: { pending: PendingDecision; state: GameState }) {
+  const list = pending.options ?? []
+  const usual =
+    pending.kind === 'shoot.firepower'
+      ? list.reduce<DecisionOption | null>((best, o) => (!best || (o.action.payload as { dice: number }).dice > (best.action.payload as { dice: number }).dice ? o : best), null)
+      : (list.find((o) => (o.action.payload as { follow?: boolean }).follow === true) ?? null)
+  const rest = list.filter((o) => o !== usual)
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+      {usual && <OptionButton opt={usual} state={state} variant="primary" />}
+      {rest.map((o) => (
+        <OptionButton key={o.id} opt={o} state={state} />
+      ))}
+    </div>
+  )
+}
+
 // ---------------------------------------------------------------- the prompt
 
 function Body({ pending, state }: { pending: PendingDecision; state: GameState }) {
@@ -332,6 +353,9 @@ function Body({ pending, state }: { pending: PendingDecision; state: GameState }
       return <FightSplitPrompt pending={pending} state={state} />
     case 'fight.after':
       return <FightAfterPrompt pending={pending} state={state} />
+    case 'shoot.firepower':
+    case 'fight.followUp':
+      return <RecommendedPrompt pending={pending} state={state} />
     case 'end.bottle':
       return <BottlePrompt pending={pending} state={state} />
     case 'end.assist':

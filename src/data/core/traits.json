@@ -515,8 +515,8 @@
     "id": "core.t.reclaimed-scavenged",
     "name": "Reclaimed/Scavenged",
     "param": "none",
-    "implemented": false,
-    "text": "Reclaimed/Scavenged is a weapon variant named by the core rules; its behaviour is not specified for v1.",
-    "source": "10-rules-core.md R-14.2"
+    "implemented": true,
+    "text": "A worn copy of the weapon: a profile with Plentiful loses it, and any other profile has its Ammo roll worsened by 1 (4+ becomes 5+, at worst 6+).",
+    "source": "10-rules-core.md R-14.2; Necrodamus N23 weapon traits"
   }
 ]

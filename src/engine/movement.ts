@@ -19,6 +19,7 @@ import { constants, enemiesOf, getFighter, onBoard, oneInchEnemies } from './sta
 import { pathGapPoints } from './measure'
 import { angleDelta } from './footprint'
 import { markFired } from './code-hooks'
+import { firstTrapOnPath, rollTrap, trapsAlong } from './zm'
 import { hasSkill } from './skills/common'
 import { isImmovable } from './skills/stance'
 import { handleSomersault, suggestSomersault } from './skills/somersault'
@@ -245,8 +246,56 @@ export function normaliseAngle(a: number): number {
 // Applying a move
 // ---------------------------------------------------------------------------
 
-/** Move a fighter along an already validated path: position, facing, `FighterMoved`, contacted Pinned enemies stand up. */
+/** The polyline cut `at` inches along: the part up to the cut and the part from it. */
+function cutPath(path: readonly Vec2[], at: number): { head: Vec2[]; tail: Vec2[] } {
+  const head: Vec2[] = [{ ...path[0]! }]
+  let acc = 0
+  for (let i = 0; i + 1 < path.length; i++) {
+    const a = path[i]!
+    const b = path[i + 1]!
+    const len = Math.hypot(b.x - a.x, b.z - a.z)
+    if (acc + len >= at - 1e-9) {
+      const t = len > 1e-12 ? Math.max(0, Math.min(1, (at - acc) / len)) : 0
+      const p = { x: round3(a.x + (b.x - a.x) * t), z: round3(a.z + (b.z - a.z) * t) }
+      if (Math.hypot(p.x - head[head.length - 1]!.x, p.z - head[head.length - 1]!.z) > 1e-9) head.push(p)
+      const tail = [p, ...path.slice(i + 1).map((q) => ({ ...q }))].filter((q, k, arr) => k === 0 || Math.hypot(q.x - arr[k - 1]!.x, q.z - arr[k - 1]!.z) > 1e-9)
+      return { head, tail }
+    }
+    head.push({ ...b })
+    acc += len
+  }
+  return { head, tail: [] }
+}
+
+/**
+ * Move a fighter along an already validated path: position, facing, `FighterMoved`, contacted Pinned enemies stand up. A
+ * frag trap the path comes within 2" of interrupts it there ([ND] Booby Traps): the trap rolls, and the move goes on only
+ * when the fighter is still Standing where it was and unhurt.
+ */
 export function applyMove(ctx: Ctx, f: Fighter, plan: Extract<MovePlan, { ok: true }>, kind: MoveKind, maxInches: number): void {
+  const trap = firstTrapOnPath(ctx.state, f, plan.path)
+  if (trap) {
+    const { head, tail } = cutPath(plan.path, trap.at)
+    const at = head[head.length - 1]!
+    const from = { ...f.pos }
+    const prev = head.length >= 2 ? head[head.length - 2]! : null
+    f.pos = { x: at.x, y: 0, z: at.z }
+    if (prev && Math.hypot(at.x - prev.x, at.z - prev.z) > 1e-9) f.facing = normaliseAngle(Math.atan2(at.x - prev.x, at.z - prev.z))
+    let headLength = 0
+    for (let i = 0; i + 1 < head.length; i++) headLength += Math.hypot(head[i + 1]!.x - head[i]!.x, head[i + 1]!.z - head[i]!.z)
+    if (head.length >= 2) ctx.emit({ type: 'FighterMoved', fighterId: f.id, kind, from, to: { ...f.pos }, path: head, length: round3(headLength), maxInches }, f.seat)
+    standUpContacted(ctx, f)
+    const before = { x: f.pos.x, z: f.pos.z, wounds: f.wounds, flesh: f.fleshWounds }
+    rollTrap(ctx, f, trap.casketId)
+    const intact =
+      f.location === 'board' && f.posture === 'standing' && f.wounds === before.wounds && f.fleshWounds === before.flesh && Math.hypot(f.pos.x - before.x, f.pos.z - before.z) < 1e-6
+    if (!intact || tail.length < 2) {
+      refreshEngagement(ctx)
+      return
+    }
+    applyMove(ctx, f, { ...plan, path: tail, length: Math.max(0, plan.length - headLength) }, kind, maxInches)
+    return
+  }
   const from = { ...f.pos }
   f.pos = { x: plan.end.x, y: 0, z: plan.end.z }
   f.facing = plan.facing
@@ -463,6 +512,11 @@ export function placeAlong(ctx: Ctx, f: Fighter, kind: MoveKind, to: Vec2, maxIn
   if (facing !== undefined) f.facing = normaliseAngle(facing)
   const length = round3(Math.hypot(to.x - a.x, to.z - a.z))
   ctx.emit({ type: 'FighterMoved', fighterId: f.id, kind, from, to: { ...f.pos }, path: [a, { x: to.x, z: to.z }], length, maxInches: round3(maxInches) }, f.seat)
+  // each frag trap the fighter came within 2" of on the way rolls once it is placed ([ND] "for any reason")
+  for (const id of trapsAlong(ctx.state, f, [a, { x: to.x, z: to.z }])) {
+    if (f.location !== 'board') break
+    rollTrap(ctx, f, id)
+  }
 }
 
 /**

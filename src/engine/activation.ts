@@ -51,7 +51,7 @@ import { blazeMove } from './movement'
 import { clearCondition } from './traits'
 import { raiseActivationChoices } from './skills/choice'
 import { attackOptions, linkedWeaponIds, startRangedAttack, type AttackOption } from './shoot'
-import { ductFireChoices } from './zm'
+import { checkTraps, ductFireChoices, resetTrapChecks } from './zm'
 import type {
   Action,
   ActionCostType,
@@ -62,6 +62,7 @@ import type {
   PendingDecision,
   Rejection,
   RuntimeAction,
+  RuntimeProfile,
   Seat,
 } from './types'
 
@@ -166,32 +167,28 @@ function statusAllows(a: RuntimeAction, st: DerivedStatus | 'broken'): boolean {
 let compassCache: number[] | null = null
 const compass = (): number[] => (compassCache ??= [0, 1, 2, 3, 4, 5, 6, 7].map((k) => normaliseAngle((k * Math.PI) / 4)))
 
-function ammoNeed(state: GameState, weaponId: string): number | null {
-  const w = state.data.weapons[weaponId]
-  if (!w) return null
-  for (const p of w.profiles) if (p.ammo !== null) return p.ammo
-  return null
-}
-
-function weaponHasTrait(state: GameState, weaponId: string, trait: string): boolean {
-  return state.data.weapons[weaponId]?.profiles.some((p) => p.traits.some((t) => t.trait === trait)) ?? false
-}
-
 const T_PLENTIFUL = 'core.t.plentiful'
 const T_SCARCE = 'core.t.scarce'
 const T_SINGLE = 'core.t.single-shot'
 
-/** Weapons a fighter could Reload now (Out of Ammo, not Scarce or Single Shot unless an ammo cache is near, R-8.11). */
-function reloadable(state: GameState, f: Fighter): { weaponId: string; need: number; auto: boolean; bonus: number; cache: string | null }[] {
+/**
+ * Weapons a fighter could Reload now (R-8.11): Out of Ammo, reloaded with any one of its profiles still available (the
+ * engine takes the easiest: Plentiful first, else the lowest Ammo value). A Single Shot profile never reloads; a Scarce one
+ * only next to an ammo cache (which ignores Scarce).
+ */
+function reloadable(state: GameState, f: Fighter): { weaponId: string; profileId: string; need: number; auto: boolean; bonus: number; cache: string | null }[] {
   const cache = ammoCacheNear(state, f)
   const bonus = cache ? constants(state).casket.ammoCache.ammoBonus : 0
-  const out: { weaponId: string; need: number; auto: boolean; bonus: number; cache: string | null }[] = []
+  const out: { weaponId: string; profileId: string; need: number; auto: boolean; bonus: number; cache: string | null }[] = []
   for (const w of f.weapons) {
     if (w.ammo !== 'out') continue
-    const need = ammoNeed(state, w.weaponId)
-    if (need === null) continue
-    if (!cache && (weaponHasTrait(state, w.weaponId, T_SCARCE) || weaponHasTrait(state, w.weaponId, T_SINGLE))) continue
-    out.push({ weaponId: w.weaponId, need, auto: weaponHasTrait(state, w.weaponId, T_PLENTIFUL), bonus, cache })
+    const has = (p: RuntimeProfile, t: string) => p.traits.some((x) => x.trait === t)
+    const usable = (state.data.weapons[w.weaponId]?.profiles ?? []).filter(
+      (p) => p.ammo !== null && !w.lostProfiles.includes(p.id) && !has(p, T_SINGLE) && (cache !== null || !has(p, T_SCARCE)),
+    )
+    if (usable.length === 0) continue
+    const best = usable.find((p) => has(p, T_PLENTIFUL)) ?? usable.reduce((a, b) => (b.ammo! < a.ammo! ? b : a))
+    out.push({ weaponId: w.weaponId, profileId: best.id, need: best.ammo!, auto: has(best, T_PLENTIFUL), bonus, cache })
   }
   return out
 }
@@ -562,7 +559,7 @@ function afterActivation(ctx: Ctx, f: Fighter): void {
   const g = s.action.group
   if (g) {
     if (!g.done.includes(f.id)) g.done.push(f.id)
-    const remaining = g.members.filter((id) => !g.done.includes(id) && s.fighters[id]!.ready && s.fighters[id]!.location === 'board')
+    const remaining = groupRemaining(s, g)
     if (remaining.length > 0) {
       raiseActivate(ctx, g.seat, remaining)
       return
@@ -583,6 +580,7 @@ function startActivation(ctx: Ctx, f: Fighter, leaderId?: string, order?: { over
   f.ready = false
   f.activatedThisRound = true
   s.action.turn = f.seat
+  resetTrapChecks(s)
   s.action.activation = {
     fighterId: f.id,
     seat: f.seat,
@@ -610,14 +608,17 @@ function startActivation(ctx: Ctx, f: Fighter, leaderId?: string, order?: { over
     endActivation(ctx)
     return
   }
-  const x = leaderId || order ? 0 : groupSize(s, f)
-  if (x > 0 && groupCandidates(s, f, []).length > 0) {
-    if (hasSkill(s, f, 'commandingPresence')) markFired('commandingPresence')
-    s.action.group = { leaderId: f.id, seat: f.seat, members: [], done: [] }
-    raiseGroup(ctx, f)
-    return
-  }
   beginActions(ctx, f)
+}
+
+/** Group members (the leader among them) still to activate, in nomination order: Ready and on the battlefield. */
+function groupRemaining(state: GameState, g: NonNullable<GameState['action']['group']>): string[] {
+  return [g.leaderId, ...g.members].filter((id) => !g.done.includes(id) && state.fighters[id]!.ready && state.fighters[id]!.location === 'board')
+}
+
+/** May this fighter lead a group now (R-5.5): Group Activation (X) and at least one Ready friend within reach. */
+function canLeadGroup(state: GameState, f: Fighter): boolean {
+  return groupSize(state, f) > 0 && groupCandidates(state, f, []).length > 0
 }
 
 /** After activation (and any group nomination): a burning fighter's activation is the Blaze sequence, otherwise the menu. */
@@ -757,6 +758,8 @@ export function payAndContinue(ctx: Ctx, f: Fighter, key: string, turnAfter = fa
   act.actionsLeft -= costOf(a)
   act.declared = null
   ctx.emit({ type: 'ActionResolved', fighterId: f.id, action: key }, f.seat)
+  // a fighter that ends an action within 2" of a frag trap risks setting it off (once per trap per activation, [ND])
+  if (f.location === 'board') checkTraps(ctx, f)
   refreshEngagement(ctx)
   continueActivation(ctx)
 }
@@ -799,7 +802,7 @@ export function resumeFlow(ctx: Ctx, seat: Seat): void {
   if (!s.action.group && s.action.flightDone.length < 2 && raiseFlee(ctx)) return
   const g = s.action.group
   if (g) {
-    const remaining = g.members.filter((id) => !g.done.includes(id) && s.fighters[id]!.ready && s.fighters[id]!.location === 'board')
+    const remaining = groupRemaining(s, g)
     if (remaining.length > 0) {
       raiseActivate(ctx, g.seat, remaining)
       return
@@ -1062,9 +1065,22 @@ function handleActivate(state: GameState, action: Action): Handled {
   const id = action.payload.fighterId
   return {
     run(ctx) {
-      const f = getFighter(ctx.state, id)
-      const g = ctx.state.action.group
-      startActivation(ctx, f, g && g.members.includes(id) ? g.leaderId : undefined)
+      const s = ctx.state
+      const f = getFighter(s, id)
+      const g = s.action.group
+      if (g) {
+        startActivation(ctx, f, g.leaderId)
+        return
+      }
+      // R-5.5: a leader nominates its group before anyone acts; then the owner activates them one at a time in any order
+      if (canLeadGroup(s, f)) {
+        if (hasSkill(s, f, 'commandingPresence')) markFired('commandingPresence')
+        s.action.turn = f.seat
+        s.action.group = { leaderId: f.id, seat: f.seat, members: [], done: [] }
+        raiseGroup(ctx, f)
+        return
+      }
+      startActivation(ctx, f)
     },
   }
 }
@@ -1084,9 +1100,13 @@ function handleGroup(state: GameState, action: Action): Handled {
         raiseGroup(ctx, leader)
         return
       }
-      if (g.members.length > 0) ctx.emit({ type: 'GroupNominated', leaderId: leader.id, fighterIds: g.members.slice() }, leader.seat)
-      else s.action.group = null
-      beginActions(ctx, leader)
+      if (g.members.length === 0) {
+        s.action.group = null
+        startActivation(ctx, leader)
+        return
+      }
+      ctx.emit({ type: 'GroupNominated', leaderId: leader.id, fighterIds: g.members.slice() }, leader.seat)
+      raiseActivate(ctx, g.seat, groupRemaining(s, g))
     },
   }
 }

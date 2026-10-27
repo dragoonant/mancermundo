@@ -661,7 +661,7 @@
           "long": null
         },
         "str": "S",
-        "ap": 0,
+        "ap": 1,
         "dmg": 2,
         "ammo": "-",
         "traits": [
@@ -672,7 +672,7 @@
       }
     ],
     "flavour": "maul",
-    "text": "The source table prints AP +1 for this weapon, which the schema cannot hold (AP is 0 or negative); encoded as AP 0. See docs/needs-rules-check.md.",
+    "text": "A blunt weapon: AP +1 makes the target's save one easier, but each hit does 2 Damage.",
     "source": "13-gangs.md 4.5"
   },
   {

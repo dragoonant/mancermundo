@@ -130,3 +130,27 @@ describe('NERVE: nerve tests and Broken (R-12)', () => {
     expect(eventsOf(cdg.events, 'NerveTest').map((e) => e.fighterId)).toEqual(['B4'])
   })
 })
+
+describe('NERVE: an already Broken fighter (R-12.2)', () => {
+  it('NERVE-006 an already Broken fighter still takes the nerve test; failing it, it loses Ready and runs for cover again at once', () => {
+    const s = meleeGame({
+      spots: { A3: { x: 0, z: -TOUCH, facing: N }, B3: { x: 0, z: 0, facing: S }, B4: { x: 2.5 + 2 * R, z: 0, facing: S } },
+      tweak: (d) => {
+        d.fighters.B4!.conditions.broken = { since: 1 }
+      },
+      active: 'A3',
+    })
+    // hit, wound, injury (Seriously Injured); B4 nerve 1+1 fails; Running for Cover 2D6 = 3 + 3
+    const rng = dice(6, 6, 3, 1, 1, 3, 3)
+    const r = must(answer(s, optionWhere(s, { action: 'fight' }), rng))
+    expect(eventsOf(r.events, 'NerveTest').map((e) => [e.fighterId, e.passed])).toEqual([['B4', false]])
+    expect(r.state.fighters.B4!.ready).toBe(false)
+    expect(eventsOf(r.events, 'RunningForCover').map((e) => e.fighterId)).toEqual(['B4'])
+    expect(rng.remaining).toBe(0)
+    // a pass leaves it where it is (still Broken)
+    const held = must(answer(s, optionWhere(s, { action: 'fight' }), dice(6, 6, 3, 6, 6)))
+    expect(eventsOf(held.events, 'NerveTest')[0]).toMatchObject({ fighterId: 'B4', passed: true })
+    expect(eventsOf(held.events, 'RunningForCover')).toHaveLength(0)
+    expect(held.state.fighters.B4!.conditions.broken).toBeDefined()
+  })
+})

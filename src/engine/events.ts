@@ -96,6 +96,8 @@ export type GameEventBody =
   | { type: 'DamageInflicted'; targetId: string; amount: number; wounds: number }
   | { type: 'InjuryRolled'; targetId: string; faces: string[]; applied: string }
   | { type: 'KnockedBack'; targetId: string }
+  /** a melee attacker chose whether to follow up a Knockback into base contact (R-14.3) */
+  | { type: 'FollowedUp'; fighterId: string; targetId: string; follow: boolean }
   | { type: 'CaughtFire'; targetId: string }
   // fight
   | { type: 'FightStarted'; attackerId: string; targets: string[]; weapons: string[]; dice: number; charge: boolean }
@@ -123,6 +125,10 @@ export type GameEventBody =
   | { type: 'TerminalAccessed'; fighterId: string; terminalId: string }
   | { type: 'DuctUsed'; fighterId: string; ductId: string }
   | { type: 'CasketOpened'; casketId: string; by: string; roll: number; result: CasketStateName | string }
+  /** a fighter came within 2" of a frag trap or ended an action there: 1 dud (removed), 2-3 nothing, 4+ explodes */
+  | { type: 'TrapTriggered'; casketId: string; fighterId: string; roll: number; result: 'dud' | 'quiet' | 'exploded' }
+  /** a ranged hit on a frag trap: 1-2 no effect, 3-4 it explodes, 5-6 it is disarmed and removed */
+  | { type: 'TrapShot'; casketId: string; fighterId: string; roll: number; result: 'none' | 'exploded' | 'disarmed' }
   | { type: 'CasketMoved'; casketId: string; to: Vec2; carriedBy: string | null }
   | { type: 'SmokePlaced'; smokeId: string; pos: Vec2; radius: number }
   | { type: 'SmokeCleared'; smokeId: string }

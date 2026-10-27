@@ -215,3 +215,21 @@ describe('ACT: close-combat actions (S3b)', () => {
     expect(refused.rejection?.code).toBe('E_ACTION_RESTRICTED')
   })
 })
+
+describe('ACT: the free turn after a move inside a close-combat action (R-4.1)', () => {
+  it('ACT-008 after a Fight that ends in a consolidate move the fighter may turn for free again; a Fight without a move closes the turn', () => {
+    const s = meleeGame({ spots: { A3: { x: 0, z: -10, facing: 0 }, B3: { x: 0, z: -10 + TOUCH, facing: Math.PI } }, active: 'A3' })
+    // hit 6, wound 6, injury 3 (Seriously Injured): every engaged enemy is down
+    const fought = must(answer(s, optionWhere(s, { action: 'fight' }), dice(6, 6, 3)))
+    expect(fought.pending!.kind).toBe('fight.after')
+    const stay = must(step(fought.state, act.after(fought.pending!, 'none')))
+    expect(stay.pending!.kind).toBe('action.choose')
+    expect(stay.state.action.activation!.canTurn).toBe(false)
+    const moving = must(step(fought.state, act.after(fought.pending!, 'consolidate')))
+    expect(moving.pending!.kind).toBe('move.path')
+    const moved = must(moveTo(moving.state, [{ x: -1.5, z: -10 }]))
+    expect(moved.pending!.kind).toBe('action.choose')
+    expect(moved.state.action.activation!.canTurn).toBe(true)
+    expect(offered(moved.state).some((id) => id.startsWith('turn:'))).toBe(true)
+  })
+})

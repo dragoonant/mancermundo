@@ -63,6 +63,7 @@ export function target(ctx: AiCtx): Action | null {
     let v: number
     if (pl.targetId) v = values.get(pl.targetId) ?? -1
     else if (pl.doorId) v = -0.3
+    else if (pl.trapId) v = -0.5 // a frag trap is left alone
     else v = values.get('point') ?? -1
     if (!best || v > best.v) best = { o, v }
   }
@@ -100,6 +101,17 @@ export function aim(ctx: AiCtx): Action | null {
     return best ? act.aim(p, best.aim) : null
   }
   return act.aim(p, best.aim)
+}
+
+/** `shoot.firepower`: roll every Firepower dice the Rapid Fire weapon allows (the most hits). */
+export function firepower(ctx: AiCtx): Action | null {
+  const p = ctx.pending
+  let best: DecisionOption | null = null
+  for (const o of p.options ?? []) {
+    if (o.action.type !== 'shoot.firepower') continue
+    if (!best || o.action.payload.dice > (best.action.payload as { dice: number }).dice) best = o
+  }
+  return best ? best.action : null
 }
 
 /** `shoot.allocate`: each extra Rapid Fire hit goes to the target it hurts most. */

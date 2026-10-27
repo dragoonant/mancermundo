@@ -116,7 +116,7 @@ describe('core data: traits (R-14.2, R-14.3)', () => {
   ]
   const R143 = [
     'Backstab', 'Blast', 'Blaze', 'Concussion', 'Disarm', 'Entangle', 'Flash', 'Gas', 'Grenade', 'Knockback', 'Limited', 'Melee', 'Melta', 'Paired', 'Parry', 'Plentiful', 'Power',
-    'Pulverise', 'Rapid Fire', 'Rending', 'Scarce', 'Scattershot', 'Sever', 'Shock', 'Shred', 'Sidearm', 'Silent', 'Single Shot', 'Smoke', 'Template', 'Toxin', 'Unstable', 'Unwieldy', 'Versatile',
+    'Pulverise', 'Rapid Fire', 'Reclaimed/Scavenged', 'Rending', 'Scarce', 'Scattershot', 'Sever', 'Shock', 'Shred', 'Sidearm', 'Silent', 'Single Shot', 'Smoke', 'Template', 'Toxin', 'Unstable', 'Unwieldy', 'Versatile',
   ]
   it('has every R-14.2 trait name plus the four weapon variants', () => {
     const ids = new Set(traits.map((t) => t.id))
@@ -124,7 +124,7 @@ describe('core data: traits (R-14.2, R-14.3)', () => {
     for (const n of ['Master-crafted', 'Twin-linked', 'Ironhead', 'Reclaimed/Scavenged']) expect(ids.has(`core.t.${slug(n)}`), n).toBe(true)
     expect(traits).toHaveLength(R142.length + 4)
   })
-  it('marks exactly the R-14.3 list implemented', () => {
+  it('marks exactly the R-14.3 list implemented (plus the Reclaimed/Scavenged variant)', () => {
     expect(traits.filter((t) => t.implemented).map((t) => t.name).sort()).toEqual([...R143].sort())
   })
   it('gives Rapid Fire a count and Blast an inches parameter, every other trait none', () => {

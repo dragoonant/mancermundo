@@ -345,6 +345,27 @@ describe('SKC: skill actions', () => {
     expect(eventsOf(r.events, 'WoundRolled').map((e) => e.targetId).sort()).toEqual(['B3', 'B4'])
   })
 
+  it('SKC-030 Hurl: the hurled fighter passes over Prone fighters without hitting them and stops short of ending on one', () => {
+    const z0 = -10 + TOUCH
+    // B4 lies Pinned 1.5" along the throw: the 3" hurl passes over it, and only B3 is hit
+    const over = meleeGame({ spots: { ...face, B4: { x: 0, z: z0 + 1.5, facing: S } }, tweak: (d) => { give(d, 'A3', SKILL.hurl); d.fighters.B4!.posture = 'pinned' }, active: 'A3' })
+    const asked = must(step(over, choose(over, { action: 'hurl', targetId: 'B3' }), dice(1, 6)))
+    const dir0 = asked.pending!.options!.find((o) => o.id === 'dir:0')!
+    expect(dir0.data).toMatchObject({ moved: 3, contacts: [], stoppedShort: false })
+    const r = must(step(asked.state, dir0.action, dice(1)))
+    expect(r.state.fighters.B3!.pos.z).toBeCloseTo(z0 + 3, 2)
+    expect(eventsOf(r.events, 'WoundRolled').map((e) => e.targetId)).toEqual(['B3'])
+    // B4 lies exactly where the hurl would end: B3 stops at the last clear spot before it, and B4 is not hit
+    const onto = meleeGame({ spots: { ...face, B4: { x: 0, z: z0 + 3, facing: S } }, tweak: (d) => { give(d, 'A3', SKILL.hurl); d.fighters.B4!.posture = 'seriouslyInjured' }, active: 'A3' })
+    const a2 = must(step(onto, choose(onto, { action: 'hurl', targetId: 'B3' }), dice(1, 6)))
+    const d0 = a2.pending!.options!.find((o) => o.id === 'dir:0')!
+    expect(d0.data).toMatchObject({ contacts: [] })
+    expect((d0.data as { moved: number }).moved).toBeLessThan(3 - 2 * R + 0.06)
+    const r2 = must(step(a2.state, d0.action, dice(1)))
+    expect(eventsOf(r2.events, 'WoundRolled').map((e) => e.targetId)).toEqual(['B3'])
+    expect(r2.state.fighters.B4!.posture).toBe('seriouslyInjured')
+  })
+
   it('SKC-016 Hurl can replace the free Fight after a charge', () => {
     const spots = { A3: { x: 0, z: -10, facing: N }, B3: { x: 0, z: -6, facing: S } }
     const s = meleeGame({ spots, tweak: (d) => give(d, 'A3', SKILL.hurl), active: 'A3' })
@@ -680,7 +701,7 @@ describe('SKC: random games with the skills in play', () => {
       for (const seat of ['A', 'B'] as const) for (const f of setup.gangs[seat].roster) f.skills = [...new Set([...f.skills, ...all])]
       return setup
     }
-    const report = runSim({ games: 6, seed: 'skc', bundle, setupFor })
+    const report = runSim({ games: 8, seed: 'skc', bundle, setupFor })
     expect(report.failing.map((f) => `${f.seed}: ${f.violations.map((v) => v.message).join('; ')}`)).toEqual([])
     expect(report.rejections).toBe(0)
     expect(report.completed).toBe(report.games)

@@ -3,12 +3,14 @@
 //
 // Hurl: the target is an enemy in base contact with the fighter or a Seriously Injured enemy within 1". It passes an Initiative
 // test or is hurled D3" in a direction the Hurler picks (a `skill.choice` of up to eight directions, each listing what it would
-// touch). It stops against any fighter or terrain; it and every fighter it stopped against take a Strength 3 hit and are Pinned.
+// touch). It stops against terrain or a Standing fighter and passes over Prone ones; it and every Standing fighter it stopped
+// against take a Strength 3 hit and are Pinned.
 import { d6TestChance } from '../dice'
 import { markFired } from '../code-hooks'
 import { resolveHit, type HitInput } from '../hits'
 import { baseGap, CONTACT_EPS, refreshEngagement, withinPath } from '../measure'
-import { placeAlong, pushApart, slide } from '../movement'
+import { placeAlong, pushApart, slide, spotProblem } from '../movement'
+import { round3 } from '../geometry'
 import { stat } from '../query'
 import type { Ctx } from '../registry'
 import { constants, enemiesOf, getFighter, onBoard } from '../state'
@@ -70,11 +72,36 @@ function fighterHit(attackerId: string | null, targetId: string, strength: numbe
   }
 }
 
-/** Fighters (other than `t` and `thrower`) whose base `t` touches at `at`: what a hurled fighter stopped against. */
+/** Standing fighters (other than `t` and `thrower`) whose base `t` touches at `at`: what a hurled fighter stopped against. */
 function touchedAt(state: GameState, t: Fighter, thrower: Fighter, at: Vec2): Fighter[] {
   return onBoard(state)
-    .filter((e) => e.id !== t.id && e.id !== thrower.id && Math.hypot(e.pos.x - at.x, e.pos.z - at.z) - e.baseRadius - t.baseRadius < 0.1)
+    .filter((e) => e.id !== t.id && e.id !== thrower.id && e.posture === 'standing' && Math.hypot(e.pos.x - at.x, e.pos.z - at.z) - e.baseRadius - t.baseRadius < 0.1)
     .sort((a, b) => (a.id < b.id ? -1 : 1))
+}
+
+/**
+ * The straight-line path of a hurled fighter (13-gangs 7.3, [ND] Brawn): it stops only against terrain or a Standing
+ * fighter; it passes over Prone (Pinned or Seriously Injured) fighters, and when it would end on one it stops at the last
+ * point where its base is clear. `stopped` says that terrain or a Standing fighter cut the hurl short.
+ */
+function hurlPath(state: GameState, t: Fighter, ux: number, uz: number, distance: number): { to: Vec2; stopped: boolean } {
+  const start = { x: t.pos.x, z: t.pos.z }
+  const prone = onBoard(state)
+    .filter((e) => e.id !== t.id && e.posture !== 'standing')
+    .map((e) => e.id)
+  const step = 0.05
+  let clear = start
+  let stopped = false
+  for (let d = Math.min(step, distance); ; d = Math.min(distance, d + step)) {
+    const c = { x: round3(start.x + ux * d), z: round3(start.z + uz * d) }
+    if (spotProblem(state, t, c, { ignoreIds: prone })) {
+      stopped = true
+      break
+    }
+    if (!spotProblem(state, t, c)) clear = c
+    if (d >= distance - 1e-9) break
+  }
+  return { to: clear, stopped }
 }
 
 export interface HurlDirection {
@@ -90,10 +117,10 @@ export function hurlDirections(state: GameState, thrower: Fighter, t: Fighter, d
   const out: HurlDirection[] = []
   for (let k = 0; k < 8; k++) {
     const u = unit(k)
-    const to = slide(state, t, u.x, u.z, distance)
+    const { to, stopped } = hurlPath(state, t, u.x, u.z, distance)
     const moved = Math.hypot(to.x - t.pos.x, to.z - t.pos.z)
     if (moved < 0.01) continue
-    const stoppedShort = moved < distance - 0.01
+    const stoppedShort = stopped && moved < distance - 0.01
     out.push({ k, to, moved, stoppedShort, contacts: stoppedShort ? touchedAt(state, t, thrower, to).map((e) => e.id) : [] })
   }
   return out
@@ -141,9 +168,9 @@ export function applyHurl(ctx: Ctx, thrower: Fighter, t: Fighter, k: number | nu
   let contacted: Fighter[] = []
   if (k !== null) {
     const u = unit(k)
-    const to = slide(s, t, u.x, u.z, distance)
+    const { to, stopped } = hurlPath(s, t, u.x, u.z, distance)
     const moved = Math.hypot(to.x - t.pos.x, to.z - t.pos.z)
-    const stoppedShort = moved < distance - 0.01
+    const stoppedShort = stopped && moved < distance - 0.01
     if (moved > 0) placeAlong(ctx, t, 'hurled', to, distance)
     if (stoppedShort) contacted = touchedAt(s, t, thrower, to)
   }

@@ -96,3 +96,10 @@ export function after(ctx: AiCtx): Action | null {
   }
   return none ? none.action : (p.options[0]?.action ?? act.pass(p))
 }
+
+/** `fight.followUp`: stay in base contact with the fighter just knocked back (keeps it Engaged, the stronger choice). */
+export function followUp(ctx: AiCtx): Action | null {
+  const p = ctx.pending
+  const yes = p.options?.find((o) => o.action.type === 'fight.followUp' && o.action.payload.follow)
+  return yes ? yes.action : (p.options?.[0]?.action ?? null)
+}
