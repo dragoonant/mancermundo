@@ -26,5 +26,12 @@ Zone Mortalis skirmish, Goliath vs Escher, 2023 rules, player vs AI. M0 to a pla
 - **The AI bench caught a regression that was not in the skill code:** merged skills shifted Smash & Grab enough that raiders broke the defenders before the third casket (a defender win). Fixed in the AI's kill discount, not the rules.
 - **Flip "pending code hooks allowed" off once the hooks land**, and make `validate:data` check registrations, so a new data record cannot silently do nothing.
 
+## Rulebook pass and watch mode, same day
+- **Inherited rulings pollute the log.** 82 Kill Team rulings came along with the copied codebase; strip the sibling's rulings at the copy step.
+- **Research read-only, fix in one place.** Three session-model researchers classified 154 rulings into JSON (Confirmed / Fan-source / NeedsFix / Port choice / Doubtful / Unsourced); one fixer re-read each cited passage before coding. The fixer overruled a researcher once (positive AP exists), so the second read is worth it.
+- **"Port choice" is a useful status** for deliberate digital deviations (pre-measuring, scope cuts); it keeps them from inflating "Unsourced".
+- **The bench caught a second AI bug through a rules fix:** tighter casket spacing exposed raiders ignoring caskets behind closed doors.
+- **Watch mode is cheap and shows the mechanics best:** pause/step/speed in the store's bot loop plus a card showing each decision with engine odds. One `uiHidden` flag in the UI store hides every panel.
+
 ## Numbers at the end of the night (before S4K)
 50 test files / 535 tests; sim 50 games 0 violations; normal AI beats random 39/40 and easy 18-2-4; Playwright 26/26 plus one full browser game per scenario; 271 rulings (204 Unsourced).
