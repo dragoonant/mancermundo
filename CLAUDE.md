@@ -1,6 +1,6 @@
 # Mancermundo — agent orientation
 
-Fan-made 3D browser game of Necromunda (2023 Rulebook edition + current House of Chains / House of Blades lists and FAQ, mechanics 1:1), MGSD figures, player vs AI. v1: skirmish battles (no campaign), Zone Mortalis board, Goliath vs Escher. Read in this order, nothing else up front: `HANDOFF.md` (current state, next steps) → `STATUS.md` (what exists) → `PLAN.md` (decisions, milestones) → `KICKOFF.md` (owner's answers and reasoning) → the `docs/spec/` sections a task names. Cross-project lessons live in `docs/knowledge-base/README.md`; read only the section a task needs.
+Fan-made 3D browser game of Necromunda (2023 Rulebook edition + current House of Chains / House of Blades lists and FAQ, mechanics 1:1), large-head miniature figures (about 2-2.5 heads tall; plain measurements in prompts, never style labels; banned prompt words: see ~/.claude/CLAUDE.md 'Image prompts'), player vs AI. v1: skirmish battles (no campaign), Zone Mortalis board, Goliath vs Escher. Read in this order, nothing else up front: `HANDOFF.md` (current state, next steps) → `STATUS.md` (what exists) → `PLAN.md` (decisions, milestones) → `KICKOFF.md` (owner's answers and reasoning) → the `docs/spec/` sections a task names. Cross-project lessons live in `docs/knowledge-base/README.md`; read only the section a task needs.
 
 Lineage: the code base started as a copy of the Kill Team sibling (`wh40k-murder-squad`, M7) on 2026-10-26. Its engine contract, client, AI framework, presentation director, dice tray, audio manager and tools carry over; the Kill Team rules modules, data and art are replaced.
 
@@ -28,7 +28,7 @@ Lineage: the code base started as a copy of the Kill Team sibling (`wh40k-murder
 - Commit messages: `M<n>: <what>` + blank line + `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`. Pushing to `main` after each stage is pre-approved; Pages deploys from `main`.
 
 ## IP and privacy
-Mechanics are ported 1:1; gang, fighter, weapon and skill names may match; all prose (rules text, lore, UI copy) is our own wording, never Games Workshop text. No GW art, icons or logos. `docs/sources/` (PDFs, extracted text, web dumps) is gitignored and never published. Figures are original MGSD designs. Credit the owner as **evilgouki**; never write the owner's real name or home path into any file; the pre-commit hook (`.git/hooks/pre-commit`) refuses both, and grep before every commit anyway.
+Mechanics are ported 1:1; gang, fighter, weapon and skill names may match; all prose (rules text, lore, UI copy) is our own wording, never Games Workshop text. No GW art, icons or logos. `docs/sources/` (PDFs, extracted text, web dumps) is gitignored and never published. Figures are original large-head miniature designs. Credit the owner as **evilgouki**; never write the owner's real name or home path into any file; the pre-commit hook (`.git/hooks/pre-commit`) refuses both, and grep before every commit anyway.
 
 ## Edition leak list (paste into every rules prompt)
 See `docs/knowledge-base/necromunda-rules-primer.md` §Edition leak list. In short: not 1995 Necromunda (IGOUGO gang turns, combat score), not Kill Team (APL, Engage/Conceal, defence dice, crit/tac ops), not 40k (unit coherency, CP, Leadership battle-shock). Inches only; alternating fighter activations; hit vs BS/WS, wound S vs T, save with AP, Injury dice.
